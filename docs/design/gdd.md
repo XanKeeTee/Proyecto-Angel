@@ -29,7 +29,7 @@ _Pendiente: qué se personaliza (nombre, aspecto, trasfondo, atributos) y qué e
 
 Detalle en [sistemas/combate.md](sistemas/combate.md) y [sistemas/cuerpo-y-heridas.md](sistemas/cuerpo-y-heridas.md).
 
-**Aprobado:** recursos **Cuerpo + Mente**; heridas **mixtas**; turnos **por rondas** resueltas por velocidad; grupo de **hasta 3**.
+**Aprobado:** recursos **Cuerpo + Mente**; heridas **mixtas**; turnos **por rondas** resueltas por velocidad; grupo de **hasta 3**; **muerte permanente** para todos; huida **en grupo o individual**; el Cuerpo **solo se recupera curándose**; los traumas se definen **según el lore**.
 
 ### 5.1 Selección de partes del cuerpo
 `[PROPUESTA]` Al atacar se elige enemigo y parte. Cabeza: difícil de acertar, mucho daño. Torso: fácil, daño normal. Extremidades: poco daño, pero inutilizan ataques.
@@ -47,7 +47,7 @@ _Pendiente (`sistemas/estados.md`)._ Ya usados: Sangrado, Aturdido, Inquieto, P�
 _Pendiente (`sistemas/equipamiento.md`)._ Tipos de daño: cortante, contundente, perforante, horror.
 
 ### 5.6 Decisiones tácticas
-`[PROPUESTA]` Guardia sobre una parte o un aliado como respuesta al telegrafiado; Respirar para recuperar Mente; huir puede dejar atrás a quien no puede andar.
+`[PROPUESTA]` Guardia sobre una parte o un aliado como respuesta al telegrafiado; Respirar para recuperar Mente. Huir en grupo o solo (aprobado); quien no puede andar no puede huir.
 
 ## 6. Narrativa y decisiones
 

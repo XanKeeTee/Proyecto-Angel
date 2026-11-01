@@ -68,7 +68,7 @@ Los penalizadores se suman. AGI nunca baja de 0.
 | **Rota** | Sí; integridad a 0 | Férula o cirugía, o descanso largo en un refugio | Raro |
 | **Amputada** | **Permanente** | **Prótesis** o **ritual** | Muy raro / con coste |
 
-El **Cuerpo global no se regenera solo**: se recupera con consumibles y descanso. (Ver pregunta abierta 1.)
+**Aprobado:** el **Cuerpo global no se regenera solo**. Solo se recupera curándose, dentro del combate (objetos, habilidades) o fuera (objetos, tratamientos, descanso en refugios).
 
 ### Prótesis
 
@@ -89,8 +89,9 @@ Una parte Herida o Rota que no se trata en **3 combates** se **infecta**: −10 
 
 - Se reciben al llegar a **Quiebre** (Mente 0) en un combate.
 - Son persistentes y se curan con **eventos narrativos** o en refugios, nunca con objetos comunes.
-- Ejemplos de efecto: −5 acierto permanente (temblor); doble daño de Mente al ver sangre; el descanso recupera la mitad.
-- Propuesta: con **3 traumas**, el siguiente Quiebre hace que el personaje **abandone el grupo** (o algo peor, según el lore).
+- **Aprobado:** los tipos de trauma y sus consecuencias **dependen del lore** y se irán definiendo y revisando durante el desarrollo.
+- Ejemplos provisionales de efecto, solo para prototipar: −5 acierto permanente (temblor); doble daño de Mente al ver sangre; el descanso recupera la mitad.
+- Qué pasa al acumular traumas: pendiente del lore.
 
 ## Reglas contra bloqueos
 
@@ -128,8 +129,11 @@ Ajuste del multiplicador de la cabeza: con 1.5, apuntar a la cabeza era peor que
 
 ## Preguntas abiertas
 
-1. ¿Se recupera algo de Cuerpo al terminar un combate? Propuesta: no; solo consumibles y descanso.
-2. ¿Entra la infección?
-3. ¿Qué pasa con el tercer trauma (abandonar el grupo, muerte, transformación)? Depende del lore.
-4. ¿Puede el jugador elegir el brazo dominante al crear al protagonista?
-5. ¿Se muestran las heridas en el sprite de mapa (vendas, prótesis) o solo en el menú?
+1. ¿Entra la infección?
+2. ¿Puede el jugador elegir el brazo dominante al crear al protagonista?
+3. ¿Se muestran las heridas en el sprite de mapa (vendas, prótesis) o solo en el menú?
+
+### Resueltas
+
+- Recuperación de Cuerpo → **no se recupera solo**; solo curándose, dentro o fuera del combate.
+- Traumas → **según el lore**; se revisan durante el desarrollo.

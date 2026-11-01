@@ -11,6 +11,9 @@
 | Heridas | **Mixtas**: la mayoría se curan con recursos escasos; las amputaciones son permanentes salvo prótesis o rituales con coste |
 | Turnos | **Por rondas**: se eligen las acciones de todo el grupo y se resuelven por velocidad |
 | Grupo | **Hasta 3** personajes en combate |
+| Muerte | **Permanente para todos**, protagonista incluido |
+| Huida | Se puede huir **en grupo** o **solo ese personaje** |
+| Cuerpo | **No se recupera solo**: solo curándose, dentro o fuera del combate |
 
 ## Objetivo del sistema
 
@@ -142,19 +145,51 @@ Algunos enemigos tienen Mente (humanos) y pueden entrar en pánico; otros no (`t
 
 ## Derrota y muerte
 
+**Aprobado:** la muerte es **permanente para todos**, protagonista incluido.
+
 - **Caído** (Cuerpo 0): no actúa. Sigue en el campo.
-- Un personaje **Caído** que recibe otro ataque físico **muere** (permanente). Los enemigos con el rasgo `remata` eligen a propósito a los caídos; el telegrafiado lo muestra (`REMATA → [personaje]`).
-- Al terminar el combate, los Caídos vuelven con **Cuerpo 1** y una herida grave en el torso.
-- **Derrota**: todo el grupo Caído o en Quiebre → fin de partida (salvo combates narrativos marcados como `derrota_continua`).
+- Un personaje **Caído** que recibe otro ataque físico **muere** para siempre. Los enemigos con el rasgo `remata` eligen a propósito a los caídos; el telegrafiado lo muestra (`REMATA → [personaje]`).
+- Al terminar el combate, los Caídos vuelven con **Cuerpo 1** y una herida grave en el torso. No recuperan más Cuerpo solos (ver Curación).
+- **Muerte del protagonista** → fin de partida. `[PROPUESTA]`
+- **Derrota**: todo el grupo Caído, en Quiebre o muerto → fin de partida (salvo combates narrativos marcados como `derrota_continua`).
+
+## Curación
+
+**Aprobado:** el Cuerpo **no se regenera solo**, ni al terminar el combate ni con el tiempo. Solo se recupera **curándose**:
+
+- **En combate**: con la acción Objeto o con habilidades de curación.
+- **Fuera de combate**: con objetos, tratamientos o descanso en refugios.
+
+La integridad de las partes sigue sus propias reglas (ver [cuerpo-y-heridas.md](cuerpo-y-heridas.md)).
 
 ## Huida
+
+**Aprobado:** al elegir Huir, el personaje decide entre **huir todos** o **huir solo él**.
+
+### Huir todos
 
 ```
 prob_huida% = clamp(50 + 3 × (AGI_media_grupo − AGI_media_enemigos), 10, 90)
 ```
 
-- Un personaje con **las dos piernas Rotas o Amputadas** no puede huir. Si el grupo huye, **se queda atrás** salvo que un aliado use su acción para cargar con él (el que carga tampoco ataca esa ronda).
+- Si sale bien, termina el combate para todo el grupo.
+- Un personaje con **las dos piernas Rotas o Amputadas** no puede huir: **se queda atrás** salvo que un aliado use su acción para cargar con él (el que carga tampoco ataca esa ronda). `[PROPUESTA]`
+
+### Huir solo
+
+```
+prob_huida_solo% = clamp(50 + 3 × (AGI_personaje − AGI_media_enemigos), 10, 90)
+```
+
+- Si sale bien, ese personaje sale del combate; el resto sigue luchando.
+- Si el resto gana o huye después, el que huyó vuelve al grupo al terminar. `[PROPUESTA]`
+- Los aliados que se quedan pierden **10 de Mente** al verle marcharse (5 si VOL ≥ 12). `[PROPUESTA]`
+- Imposible con las dos piernas Rotas o Amputadas.
+
+### Común
+
 - Huir falla en combates marcados `sin_huida`.
+- Si la tirada falla, se pierde la acción.
 
 ## Intenciones ocultas
 
@@ -197,8 +232,14 @@ Ver la simulación en [cuerpo-y-heridas.md § Balance](cuerpo-y-heridas.md#balan
 
 ## Preguntas abiertas
 
-1. ¿Muerte permanente del protagonista? Propuesta: si muere el protagonista → fin de partida; los secundarios sí pueden morir para siempre.
-2. ¿Dejar atrás a un aliado al huir es demasiado cruel o es exactamente el tono que queremos?
+1. Si muere el protagonista, ¿fin de partida, o la historia puede seguir con otro personaje? Propuesta: fin de partida.
+2. Si alguien huye solo y el resto del grupo muere, ¿qué pasa con él? ¿Sigue la partida con un superviviente?
 3. ¿Las habilidades cuestan Cuerpo/Mente/objetos, o añadimos un tercer recurso? Propuesta: sin tercer recurso.
 4. ¿Se ve la integridad exacta de las partes enemigas o solo su estado (Sana / Herida / Rota)? Propuesta: solo el estado.
 5. ¿El orden de iniciativa de la ronda se muestra antes de confirmar órdenes?
+
+### Resueltas
+
+- Muerte permanente → **sí, para todos**.
+- Huida → **en grupo o individual**, a elección.
+- Recuperación de Cuerpo → **solo curándose**, dentro o fuera del combate.
