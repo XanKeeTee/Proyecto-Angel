@@ -1,321 +1,503 @@
 [gd_scene format=4]
 
-[ext_resource type="Script" path="res://scenes/world/hospital/hospital_intro.gd" id="1_hdrpd"]
-[ext_resource type="TileSet" path="res://assets/tilesets/hospital_tileset.tres" id="2_tpq5p"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/footprint.png" id="3_nk8e1"]
-[ext_resource type="Script" path="res://scenes/world/interactable.gd" id="4_ylwhj"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/stretcher.png" id="5_33gw7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/monitor.png" id="6_81cyg"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/iv_stand.png" id="7_h6jxs"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/cabinet.png" id="8_0nbvp"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/tray.png" id="9_israr"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/wheelchair.png" id="10_26qgy"]
-[ext_resource type="PackedScene" path="res://scenes/world/player/player.tscn" id="11_2wnmv"]
-[ext_resource type="Script" path="res://scenes/world/player/player.gd" id="12_i5o0v"]
-[ext_resource type="Texture2D" path="res://assets/sprites/lights/light_round.png" id="13_d88gb"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/emergency_light.png" id="14_xc752"]
+[ext_resource type="Script" path="res://scenes/world/hospital/hospital_intro.gd" id="1_h6jxs"]
+[ext_resource type="TileSet" path="res://assets/tilesets/hospital_tileset.tres" id="2_0nbvp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decals/decals_canvas.tres" id="3_israr"]
+[ext_resource type="Script" path="res://scenes/world/interactable.gd" id="4_26qgy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/stretcher_canvas.tres" id="5_2wnmv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/monitor_canvas.tres" id="6_i5o0v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/monitor_glow.png" id="7_d88gb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/iv_stand_canvas.tres" id="8_xc752"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/locker_canvas.tres" id="9_7scvr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/sink_canvas.tres" id="10_6t87h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/curtain_canvas.tres" id="11_diny2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tray_canvas.tres" id="12_5wngx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/trash_bin_canvas.tres" id="13_81gip"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/wheelchair_canvas.tres" id="14_ych3u"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chair_canvas.tres" id="15_uhkjp"]
+[ext_resource type="PackedScene" path="res://scenes/world/player/player.tscn" id="16_3y7ky"]
+[ext_resource type="Script" path="res://scenes/world/player/player.gd" id="17_s4h2p"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lights/light_round.png" id="18_sacpa"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/emergency_light_canvas.tres" id="19_5l3f4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/emergency_light_glow.png" id="20_widtu"]
 
-[node name="HospitalIntro" type="Node2D" unique_id=620885298]
-script = ExtResource("1_hdrpd")
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sy8rh"]
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_v0a2u"]
+light_mode = 1
+
+[node name="HospitalIntro" type="Node2D" unique_id=900975737]
+script = ExtResource("1_h6jxs")
 intro_lines = PackedStringArray("Frío.", "Huele a desinfectante. Debajo, a algo dulce.", "Al moverte, algo tira en la espalda. Puntos. Recientes.")
 footprints_lines = PackedStringArray("Huellas de pies descalzos en el suelo.", "Todavía están húmedas.")
 
-[node name="Darkness" type="CanvasModulate" parent="." unique_id=466202066]
-color = Color(0.045, 0.045, 0.07, 1)
+[node name="Darkness" type="CanvasModulate" parent="." unique_id=756462880]
+color = Color(0.05, 0.05, 0.068, 1)
 
-[node name="Map" type="TileMapLayer" parent="." unique_id=1483155380]
+[node name="Map" type="TileMapLayer" parent="." unique_id=2104003595]
 unique_name_in_owner = true
-tile_map_data = PackedByteArray("AAAAAAAAAAAAAAIAAAABAAAAAAAAAAIAAAACAAAAAAAAAAIAAAADAAAAAAAAAAIAAAAEAAAAAAAAAAIAAAAFAAAAAAAAAAIAAAAGAAAAAAAAAAIAAAAHAAAAAAAAAAIAAAAIAAAAAAAAAAIAAAAJAAAAAAAAAAIAAAAKAAAAAAAAAAIAAAALAAAAAAAAAAIAAAAMAAAAAAAAAAIAAAANAAAAAAAAAAIAAAAOAAAAAAAAAAIAAAAPAAAAAAAAAAIAAAAQAAAAAAAAAAIAAAARAAAAAAAAAAIAAAASAAAAAAAAAAIAAAATAAAAAAAAAAIAAAAUAAAAAAAAAAIAAAAVAAAAAAAAAAIAAAAWAAAAAAAAAAIAAAAXAAAAAAAAAAIAAAAYAAAAAAAAAAIAAAAZAAAAAAAAAAIAAAAaAAAAAAAAAAIAAAAbAAAAAAAAAAIAAAAcAAAAAAAAAAIAAAAdAAAAAAAAAAIAAAAeAAAAAAAAAAIAAAAfAAAAAAAAAAIAAAAgAAAAAAAAAAIAAAAhAAAAAAAAAAIAAAAiAAAAAAAAAAIAAAAjAAAAAAAAAAIAAAAAAAEAAAAAAAIAAAABAAEAAAACAAIAAAACAAEAAAACAAIAAAADAAEAAAABAAIAAAAEAAEAAAABAAIAAAAFAAEAAAABAAIAAAAGAAEAAAABAAIAAAAHAAEAAAABAAIAAAAIAAEAAAADAAIAAAAJAAEAAAABAAIAAAAKAAEAAAACAAIAAAALAAEAAAABAAIAAAAMAAEAAAABAAIAAAANAAEAAAABAAIAAAAOAAEAAAAEAAIAAAAPAAEAAAABAAIAAAAQAAEAAAABAAIAAAARAAEAAAACAAIAAAASAAEAAAACAAIAAAATAAEAAAABAAIAAAAUAAEAAAAEAAIAAAAVAAEAAAABAAIAAAAWAAEAAAABAAIAAAAXAAEAAAABAAIAAAAYAAEAAAABAAIAAAAZAAEAAAABAAIAAAAaAAEAAAAEAAIAAAAbAAEAAAABAAIAAAAcAAEAAAACAAIAAAAdAAEAAAACAAIAAAAeAAEAAAABAAIAAAAfAAEAAAAGAAIAAAAgAAEAAAAHAAIAAAAhAAEAAAABAAIAAAAiAAEAAAABAAIAAAAjAAEAAAAAAAIAAAAAAAIAAAAAAAIAAAABAAIAAAACAAEAAAACAAIAAAAAAAEAAAADAAIAAAAAAAEAAAAEAAIAAAAAAAEAAAAFAAIAAAAAAAEAAAAGAAIAAAAAAAEAAAAHAAIAAAAAAAEAAAAIAAIAAAAAAAEAAAAJAAIAAAAAAAEAAAAKAAIAAAAAAAEAAAALAAIAAAABAAEAAAAMAAIAAAAAAAEAAAANAAIAAAAAAAEAAAAOAAIAAAACAAEAAAAPAAIAAAACAAEAAAAQAAIAAAAAAAEAAAARAAIAAAAAAAEAAAASAAIAAAAAAAEAAAATAAIAAAAAAAEAAAAUAAIAAAAAAAEAAAAVAAIAAAAAAAEAAAAWAAIAAAAAAAEAAAAXAAIAAAAAAAEAAAAYAAIAAAAAAAEAAAAZAAIAAAAAAAEAAAAaAAIAAAACAAEAAAAbAAIAAAAAAAEAAAAcAAIAAAABAAEAAAAdAAIAAAAAAAEAAAAeAAIAAAABAAEAAAAfAAIAAAAAAAEAAAAgAAIAAAACAAEAAAAhAAIAAAABAAEAAAAiAAIAAAAAAAEAAAAjAAIAAAAAAAIAAAAAAAMAAAAAAAIAAAABAAMAAAAAAAEAAAACAAMAAAAAAAEAAAADAAMAAAAAAAEAAAAEAAMAAAAAAAEAAAAFAAMAAAAAAAEAAAAGAAMAAAAAAAEAAAAHAAMAAAAAAAEAAAAIAAMAAAAAAAEAAAAJAAMAAAAAAAEAAAAKAAMAAAACAAEAAAALAAMAAAAAAAEAAAAMAAMAAAAAAAEAAAANAAMAAAABAAEAAAAOAAMAAAAAAAEAAAAPAAMAAAACAAEAAAAQAAMAAAAAAAEAAAARAAMAAAAAAAEAAAASAAMAAAAAAAEAAAATAAMAAAAAAAEAAAAUAAMAAAAAAAEAAAAVAAMAAAACAAEAAAAWAAMAAAAAAAEAAAAXAAMAAAAAAAEAAAAYAAMAAAABAAEAAAAZAAMAAAAAAAEAAAAaAAMAAAABAAEAAAAbAAMAAAAAAAEAAAAcAAMAAAAAAAEAAAAdAAMAAAAAAAEAAAAeAAMAAAAAAAEAAAAfAAMAAAAAAAEAAAAgAAMAAAAAAAEAAAAhAAMAAAAAAAEAAAAiAAMAAAAAAAEAAAAjAAMAAAAAAAIAAAAAAAQAAAAAAAIAAAABAAQAAAABAAEAAAACAAQAAAABAAEAAAADAAQAAAACAAEAAAAEAAQAAAABAAEAAAAFAAQAAAABAAEAAAAGAAQAAAABAAEAAAAHAAQAAAAAAAEAAAAIAAQAAAAAAAEAAAAJAAQAAAAAAAEAAAAKAAQAAAAAAAEAAAALAAQAAAAAAAEAAAAMAAQAAAAAAAEAAAANAAQAAAAAAAEAAAAOAAQAAAAAAAEAAAAPAAQAAAAAAAEAAAAQAAQAAAABAAEAAAARAAQAAAABAAEAAAASAAQAAAAAAAEAAAATAAQAAAAAAAEAAAAUAAQAAAAAAAEAAAAVAAQAAAABAAEAAAAWAAQAAAAAAAEAAAAXAAQAAAAAAAEAAAAYAAQAAAAAAAEAAAAZAAQAAAAAAAEAAAAaAAQAAAAAAAEAAAAbAAQAAAAAAAEAAAAcAAQAAAAAAAEAAAAdAAQAAAAAAAEAAAAeAAQAAAAAAAEAAAAfAAQAAAAAAAEAAAAgAAQAAAAAAAEAAAAhAAQAAAABAAEAAAAiAAQAAAAAAAEAAAAjAAQAAAAAAAIAAAAAAAUAAAAAAAIAAAABAAUAAAAAAAIAAAACAAUAAAAAAAIAAAADAAUAAAAAAAIAAAAEAAUAAAAAAAIAAAAFAAUAAAAAAAEAAAAGAAUAAAAAAAIAAAAHAAUAAAAAAAIAAAAIAAUAAAAAAAIAAAAJAAUAAAAAAAIAAAAKAAUAAAAAAAIAAAALAAUAAAAAAAIAAAAMAAUAAAAAAAIAAAANAAUAAAAAAAIAAAAOAAUAAAAAAAIAAAAPAAUAAAAAAAIAAAAQAAUAAAAAAAIAAAARAAUAAAAAAAIAAAASAAUAAAAAAAIAAAATAAUAAAAAAAIAAAAUAAUAAAAAAAIAAAAVAAUAAAAAAAIAAAAWAAUAAAAAAAIAAAAXAAUAAAAAAAIAAAAYAAUAAAAAAAIAAAAZAAUAAAAAAAIAAAAaAAUAAAAAAAIAAAAbAAUAAAAAAAIAAAAcAAUAAAAAAAIAAAAdAAUAAAAAAAIAAAAeAAUAAAAAAAIAAAAfAAUAAAAAAAIAAAAgAAUAAAAAAAIAAAAhAAUAAAAAAAIAAAAiAAUAAAAAAAIAAAAjAAUAAAAAAAIAAAAAAAYAAAAAAAIAAAABAAYAAAACAAIAAAACAAYAAAABAAIAAAADAAYAAAABAAIAAAAEAAYAAAACAAIAAAAFAAYAAAAEAAIAAAAGAAYAAAABAAIAAAAHAAYAAAABAAIAAAAIAAYAAAACAAIAAAAJAAYAAAABAAIAAAAKAAYAAAABAAIAAAALAAYAAAAAAAIAAAAAAAcAAAAAAAIAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAABAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAACAAAAAAALAAcAAAAAAAIAAAAAAAgAAAAAAAIAAAABAAgAAAABAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAACAAAAAAAGAAgAAAACAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAIAAAAAAAkAAAAAAAIAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAAAAAAAAAAHAAkAAAAAAAAAAAAIAAkAAAACAAAAAAAJAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAALAAkAAAAAAAIAAAAAAAoAAAAAAAIAAAABAAoAAAABAAAAAAACAAoAAAADAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAABAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAIAAAAAAAsAAAAAAAIAAAABAAsAAAAAAAAAAAACAAsAAAAAAAAAAAADAAsAAAAAAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAABAAAAAAAIAAsAAAAAAAAAAAAJAAsAAAAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAIAAAAAAAwAAAAAAAIAAAABAAwAAAACAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAABAAAAAAALAAwAAAAAAAIAAAAAAA0AAAAAAAIAAAABAA0AAAAAAAIAAAACAA0AAAAAAAIAAAADAA0AAAAAAAIAAAAEAA0AAAAAAAIAAAAFAA0AAAAAAAIAAAAGAA0AAAAAAAIAAAAHAA0AAAAAAAIAAAAIAA0AAAAAAAIAAAAJAA0AAAAAAAIAAAAKAA0AAAAAAAIAAAALAA0AAAAAAAIAAAA=")
-tile_set = ExtResource("2_tpq5p")
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAUAAAABAAAAAAAAAAUAAAACAAAAAAAAAAUAAAADAAAAAAAAAAUAAAAEAAAAAAAAAAUAAAAFAAAAAAAAAAUAAAAGAAAAAAAAAAUAAAAHAAAAAAAAAAUAAAAIAAAAAAAAAAUAAAAJAAAAAAAAAAUAAAAKAAAAAAAAAAUAAAALAAAAAAAAAAUAAAAMAAAAAAAAAAUAAAANAAAAAAAAAAUAAAAOAAAAAAAAAAUAAAAPAAAAAAAAAAUAAAAQAAAAAAAAAAUAAAARAAAAAAAAAAUAAAASAAAAAAAAAAUAAAATAAAAAAAAAAUAAAAUAAAAAAAAAAUAAAAVAAAAAAAAAAUAAAAWAAAAAAAAAAUAAAAXAAAAAAAAAAUAAAAYAAAAAAAAAAUAAAAZAAAAAAAAAAUAAAAaAAAAAAAAAAUAAAAbAAAAAAAAAAUAAAAcAAAAAAAAAAUAAAAdAAAAAAAAAAUAAAAeAAAAAAAAAAUAAAAfAAAAAAAAAAUAAAAgAAAAAAAAAAUAAAAhAAAAAAAAAAUAAAAiAAAAAAAAAAUAAAAjAAAAAAAAAAUAAAAAAAEAAAAAAAUAAAABAAEAAAADAAIAAAACAAEAAAACAAIAAAADAAEAAAADAAIAAAAEAAEAAAAFAAUAAAAFAAEAAAAAAAIAAAAGAAEAAAADAAIAAAAHAAEAAAADAAIAAAAIAAEAAAADAAIAAAAJAAEAAAADAAIAAAAKAAEAAAABAAIAAAALAAEAAAABAAIAAAAMAAEAAAAAAAIAAAANAAEAAAAAAAIAAAAOAAEAAAAEAAIAAAAPAAEAAAABAAIAAAAQAAEAAAACAAIAAAARAAEAAAAFAAUAAAASAAEAAAADAAIAAAATAAEAAAAAAAIAAAAUAAEAAAAEAAIAAAAVAAEAAAADAAIAAAAWAAEAAAABAAIAAAAXAAEAAAADAAIAAAAYAAEAAAACAAIAAAAZAAEAAAABAAIAAAAaAAEAAAAEAAIAAAAbAAEAAAACAAIAAAAcAAEAAAADAAIAAAAdAAEAAAACAAIAAAAeAAEAAAAAAAIAAAAfAAEAAAAGAAIAAAAgAAEAAAAHAAIAAAAhAAEAAAABAAIAAAAiAAEAAAABAAIAAAAjAAEAAAAAAAUAAAAAAAIAAAAAAAUAAAABAAIAAAADAAMAAAACAAIAAAACAAMAAAADAAIAAAADAAMAAAAEAAIAAAADAAMAAAAFAAIAAAAAAAMAAAAGAAIAAAADAAMAAAAHAAIAAAADAAMAAAAIAAIAAAACAAUAAAAJAAIAAAADAAMAAAAKAAIAAAABAAMAAAALAAIAAAAGAAUAAAAMAAIAAAAAAAMAAAANAAIAAAAAAAMAAAAOAAIAAAAEAAMAAAAPAAIAAAABAAMAAAAQAAIAAAACAAMAAAARAAIAAAADAAMAAAASAAIAAAADAAMAAAATAAIAAAAAAAMAAAAUAAIAAAAEAAMAAAAVAAIAAAADAAMAAAAWAAIAAAABAAMAAAAXAAIAAAABAAUAAAAYAAIAAAACAAMAAAAZAAIAAAABAAMAAAAaAAIAAAAEAAMAAAAbAAIAAAACAAMAAAAcAAIAAAADAAMAAAAdAAIAAAAHAAUAAAAeAAIAAAAAAAMAAAAfAAIAAAAGAAMAAAAgAAIAAAAHAAMAAAAhAAIAAAABAAMAAAAiAAIAAAABAAMAAAAjAAIAAAAAAAUAAAAAAAMAAAAAAAUAAAABAAMAAAADAAQAAAACAAMAAAACAAQAAAADAAMAAAADAAQAAAAEAAMAAAADAAQAAAAFAAMAAAAAAAQAAAAGAAMAAAADAAQAAAAHAAMAAAADAAQAAAAIAAMAAAADAAQAAAAJAAMAAAADAAQAAAAKAAMAAAABAAQAAAALAAMAAAABAAQAAAAMAAMAAAAAAAQAAAANAAMAAAAAAAQAAAAOAAMAAAAEAAQAAAAPAAMAAAABAAQAAAAQAAMAAAACAAQAAAARAAMAAAADAAQAAAASAAMAAAADAAQAAAATAAMAAAAAAAQAAAAUAAMAAAAEAAQAAAAVAAMAAAADAAQAAAAWAAMAAAABAAQAAAAXAAMAAAADAAQAAAAYAAMAAAAEAAUAAAAZAAMAAAABAAQAAAAaAAMAAAAEAAQAAAAbAAMAAAACAAQAAAAcAAMAAAADAAQAAAAdAAMAAAACAAQAAAAeAAMAAAAAAAQAAAAfAAMAAAAGAAQAAAAgAAMAAAAHAAQAAAAhAAMAAAABAAQAAAAiAAMAAAABAAQAAAAjAAMAAAAAAAUAAAAAAAQAAAAAAAUAAAABAAQAAAAGAAEAAAACAAQAAAAAAAEAAAADAAQAAAAAAAEAAAAEAAQAAAAAAAEAAAAFAAQAAAAHAAEAAAAGAAQAAAAAAAEAAAAHAAQAAAAAAAEAAAAIAAQAAAAAAAEAAAAJAAQAAAAAAAEAAAAKAAQAAAAGAAEAAAALAAQAAAABAAEAAAAMAAQAAAAAAAEAAAANAAQAAAAAAAEAAAAOAAQAAAAAAAEAAAAPAAQAAAAAAAEAAAAQAAQAAAAAAAEAAAARAAQAAAAGAAEAAAASAAQAAAAAAAEAAAATAAQAAAACAAEAAAAUAAQAAAAGAAEAAAAVAAQAAAAGAAEAAAAWAAQAAAABAAEAAAAXAAQAAAAGAAEAAAAYAAQAAAAAAAEAAAAZAAQAAAAAAAEAAAAaAAQAAAAAAAEAAAAbAAQAAAABAAEAAAAcAAQAAAAAAAEAAAAdAAQAAAAGAAEAAAAeAAQAAAACAAEAAAAfAAQAAAAGAAEAAAAgAAQAAAAGAAEAAAAhAAQAAAAGAAEAAAAiAAQAAAAGAAEAAAAjAAQAAAAAAAUAAAAAAAUAAAAAAAUAAAABAAUAAAAAAAEAAAACAAUAAAAAAAEAAAADAAUAAAAHAAEAAAAEAAUAAAAAAAEAAAAFAAUAAAAGAAEAAAAGAAUAAAAGAAEAAAAHAAUAAAACAAEAAAAIAAUAAAAAAAEAAAAJAAUAAAAGAAEAAAAKAAUAAAABAAEAAAALAAUAAAAHAAEAAAAMAAUAAAAGAAEAAAANAAUAAAAAAAEAAAAOAAUAAAAGAAEAAAAPAAUAAAAAAAEAAAAQAAUAAAACAAEAAAARAAUAAAAGAAEAAAASAAUAAAAGAAEAAAATAAUAAAAAAAEAAAAUAAUAAAAHAAEAAAAVAAUAAAAGAAEAAAAWAAUAAAAEAAEAAAAXAAUAAAACAAEAAAAYAAUAAAABAAEAAAAZAAUAAAAAAAEAAAAaAAUAAAAGAAEAAAAbAAUAAAAAAAEAAAAcAAUAAAAAAAEAAAAdAAUAAAAGAAEAAAAeAAUAAAAEAAEAAAAfAAUAAAAAAAEAAAAgAAUAAAAAAAEAAAAhAAUAAAACAAEAAAAiAAUAAAAAAAEAAAAjAAUAAAAAAAUAAAAAAAYAAAAAAAUAAAABAAYAAAAAAAEAAAACAAYAAAAAAAEAAAADAAYAAAAAAAEAAAAEAAYAAAAAAAEAAAAFAAYAAAAHAAEAAAAGAAYAAAAAAAEAAAAHAAYAAAAGAAEAAAAIAAYAAAAAAAEAAAAJAAYAAAAHAAEAAAAKAAYAAAACAAEAAAALAAYAAAAAAAEAAAAMAAYAAAAHAAEAAAANAAYAAAACAAEAAAAOAAYAAAABAAEAAAAPAAYAAAABAAEAAAAQAAYAAAAFAAEAAAARAAYAAAAGAAEAAAASAAYAAAAHAAEAAAATAAYAAAAGAAEAAAAUAAYAAAAAAAEAAAAVAAYAAAAAAAEAAAAWAAYAAAAGAAEAAAAXAAYAAAAAAAEAAAAYAAYAAAABAAEAAAAZAAYAAAAHAAEAAAAaAAYAAAAGAAEAAAAbAAYAAAADAAEAAAAcAAYAAAAAAAEAAAAdAAYAAAAHAAEAAAAeAAYAAAAAAAEAAAAfAAYAAAAHAAEAAAAgAAYAAAAGAAEAAAAhAAYAAAAAAAEAAAAiAAYAAAAHAAEAAAAjAAYAAAAAAAUAAAAAAAcAAAAAAAUAAAABAAcAAAAAAAUAAAACAAcAAAAAAAUAAAADAAcAAAAAAAUAAAAEAAcAAAAAAAUAAAAFAAcAAAAAAAEAAAAGAAcAAAAAAAUAAAAHAAcAAAAAAAUAAAAIAAcAAAAAAAUAAAAJAAcAAAAAAAUAAAAKAAcAAAAAAAUAAAALAAcAAAAAAAUAAAAMAAcAAAAAAAUAAAANAAcAAAAAAAUAAAAOAAcAAAAAAAUAAAAPAAcAAAAAAAUAAAAQAAcAAAAAAAUAAAARAAcAAAAAAAUAAAASAAcAAAAAAAUAAAATAAcAAAAAAAUAAAAUAAcAAAAAAAUAAAAVAAcAAAAAAAUAAAAWAAcAAAAAAAUAAAAXAAcAAAAAAAUAAAAYAAcAAAAAAAUAAAAZAAcAAAAAAAUAAAAaAAcAAAAAAAUAAAAbAAcAAAAAAAUAAAAcAAcAAAAAAAUAAAAdAAcAAAAAAAUAAAAeAAcAAAAAAAUAAAAfAAcAAAAAAAUAAAAgAAcAAAAAAAUAAAAhAAcAAAAAAAUAAAAiAAcAAAAAAAUAAAAjAAcAAAAAAAUAAAAAAAgAAAAAAAUAAAABAAgAAAABAAIAAAACAAgAAAAAAAIAAAADAAgAAAAFAAUAAAAEAAgAAAABAAIAAAAFAAgAAAAEAAIAAAAGAAgAAAAAAAIAAAAHAAgAAAADAAIAAAAIAAgAAAACAAIAAAAJAAgAAAAAAAIAAAAKAAgAAAADAAIAAAALAAgAAAAAAAUAAAAAAAkAAAAAAAUAAAABAAkAAAABAAMAAAACAAkAAAABAAUAAAADAAkAAAADAAMAAAAEAAkAAAABAAMAAAAFAAkAAAAEAAMAAAAGAAkAAAAAAAMAAAAHAAkAAAADAAUAAAAIAAkAAAACAAMAAAAJAAkAAAAAAAMAAAAKAAkAAAADAAMAAAALAAkAAAAAAAUAAAAAAAoAAAAAAAUAAAABAAoAAAABAAQAAAACAAoAAAAAAAQAAAADAAoAAAADAAQAAAAEAAoAAAABAAQAAAAFAAoAAAAEAAQAAAAGAAoAAAAAAAQAAAAHAAoAAAADAAQAAAAIAAoAAAACAAQAAAAJAAoAAAAAAAQAAAAKAAoAAAADAAQAAAALAAoAAAAAAAUAAAAAAAsAAAAAAAUAAAABAAsAAAAHAAAAAAACAAsAAAAAAAAAAAADAAsAAAAHAAAAAAAEAAsAAAAGAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAABAAAAAAAIAAsAAAACAAAAAAAJAAsAAAAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAUAAAAAAAwAAAAAAAUAAAABAAwAAAAAAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAEAAAAAAAHAAwAAAACAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAHAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAUAAAAAAA0AAAAAAAUAAAABAA0AAAAAAAAAAAACAA0AAAAHAAAAAAADAA0AAAABAAAAAAAEAA0AAAACAAAAAAAFAA0AAAABAAAAAAAGAA0AAAAAAAAAAAAHAA0AAAAAAAAAAAAIAA0AAAAAAAAAAAAJAA0AAAAAAAAAAAAKAA0AAAACAAAAAAALAA0AAAAAAAUAAAAAAA4AAAAAAAUAAAABAA4AAAABAAAAAAACAA4AAAADAAAAAAADAA4AAAAAAAAAAAAEAA4AAAABAAAAAAAFAA4AAAAAAAAAAAAGAA4AAAACAAAAAAAHAA4AAAAAAAAAAAAIAA4AAAAHAAAAAAAJAA4AAAABAAAAAAAKAA4AAAACAAAAAAALAA4AAAAAAAUAAAAAAA8AAAAAAAUAAAABAA8AAAAAAAAAAAACAA8AAAAAAAAAAAADAA8AAAAAAAAAAAAEAA8AAAAAAAAAAAAFAA8AAAAHAAAAAAAGAA8AAAAHAAAAAAAHAA8AAAAAAAAAAAAIAA8AAAAAAAAAAAAJAA8AAAAAAAAAAAAKAA8AAAAAAAAAAAALAA8AAAAAAAUAAAAAABAAAAAAAAUAAAABABAAAAAAAAAAAAACABAAAAAAAAAAAAADABAAAAAHAAAAAAAEABAAAAAAAAAAAAAFABAAAAAFAAAAAAAGABAAAAAAAAAAAAAHABAAAAAHAAAAAAAIABAAAAAAAAAAAAAJABAAAAAAAAAAAAAKABAAAAACAAAAAAALABAAAAAAAAUAAAAAABEAAAAAAAUAAAABABEAAAAAAAUAAAACABEAAAAAAAUAAAADABEAAAAAAAUAAAAEABEAAAAAAAUAAAAFABEAAAAAAAUAAAAGABEAAAAAAAUAAAAHABEAAAAAAAUAAAAIABEAAAAAAAUAAAAJABEAAAAAAAUAAAAKABEAAAAAAAUAAAALABEAAAAAAAUAAAA=")
+tile_set = ExtResource("2_0nbvp")
 
-[node name="Footprints" type="Node2D" parent="." unique_id=1757508505]
+[node name="Decals" type="Node2D" parent="." unique_id=1579335155]
 
-[node name="Footprint0" type="Sprite2D" parent="Footprints" unique_id=2049931988]
-position = Vector2(368, 106)
+[node name="Footprints0" type="Sprite2D" parent="Decals" unique_id=1989376039]
+position = Vector2(368, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint1" type="Sprite2D" parent="Footprints" unique_id=398644025]
-position = Vector2(400, 118)
+[node name="Footprints1" type="Sprite2D" parent="Decals" unique_id=858168977]
+position = Vector2(400, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint2" type="Sprite2D" parent="Footprints" unique_id=628636304]
-position = Vector2(432, 106)
+[node name="Footprints2" type="Sprite2D" parent="Decals" unique_id=1930058526]
+position = Vector2(432, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint3" type="Sprite2D" parent="Footprints" unique_id=554749920]
-position = Vector2(464, 118)
+[node name="Footprints3" type="Sprite2D" parent="Decals" unique_id=467699152]
+position = Vector2(464, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint4" type="Sprite2D" parent="Footprints" unique_id=1376738669]
-position = Vector2(496, 106)
+[node name="Footprints4" type="Sprite2D" parent="Decals" unique_id=1366442935]
+position = Vector2(496, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint5" type="Sprite2D" parent="Footprints" unique_id=370546135]
-position = Vector2(528, 118)
+[node name="Footprints5" type="Sprite2D" parent="Decals" unique_id=1929388087]
+position = Vector2(528, 176)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint6" type="Sprite2D" parent="Footprints" unique_id=1928354405]
-position = Vector2(543.7574, 87.75736)
-rotation = 0.7853982
-texture = ExtResource("3_nk8e1")
-
-[node name="Footprint7" type="Sprite2D" parent="Footprints" unique_id=1778025871]
-position = Vector2(592, 86)
+[node name="Footprints6" type="Sprite2D" parent="Decals" unique_id=298847439]
+position = Vector2(560, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint8" type="Sprite2D" parent="Footprints" unique_id=1256588134]
-position = Vector2(624, 74)
+[node name="Footprints7" type="Sprite2D" parent="Decals" unique_id=223614433]
+position = Vector2(624, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint9" type="Sprite2D" parent="Footprints" unique_id=31502419]
-position = Vector2(656, 86)
+[node name="Footprints8" type="Sprite2D" parent="Decals" unique_id=1982532137]
+position = Vector2(656, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint10" type="Sprite2D" parent="Footprints" unique_id=940293441]
-position = Vector2(688, 74)
+[node name="Footprints9" type="Sprite2D" parent="Decals" unique_id=1177459430]
+position = Vector2(688, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint11" type="Sprite2D" parent="Footprints" unique_id=1072032434]
-position = Vector2(720, 86)
+[node name="Footprints10" type="Sprite2D" parent="Decals" unique_id=923237962]
+position = Vector2(720, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint12" type="Sprite2D" parent="Footprints" unique_id=1216276962]
-position = Vector2(752, 74)
+[node name="Footprints11" type="Sprite2D" parent="Decals" unique_id=1860783138]
+position = Vector2(752, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint13" type="Sprite2D" parent="Footprints" unique_id=1775567021]
-position = Vector2(784, 86)
+[node name="Footprints12" type="Sprite2D" parent="Decals" unique_id=461477643]
+position = Vector2(784, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint14" type="Sprite2D" parent="Footprints" unique_id=1560347060]
-position = Vector2(816, 74)
+[node name="Footprints13" type="Sprite2D" parent="Decals" unique_id=2093557748]
+position = Vector2(816, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint15" type="Sprite2D" parent="Footprints" unique_id=1473702537]
-position = Vector2(848, 86)
+[node name="Footprints14" type="Sprite2D" parent="Decals" unique_id=1252648637]
+position = Vector2(848, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint16" type="Sprite2D" parent="Footprints" unique_id=1234808516]
-position = Vector2(880, 74)
+[node name="Footprints15" type="Sprite2D" parent="Decals" unique_id=1160536737]
+position = Vector2(880, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint17" type="Sprite2D" parent="Footprints" unique_id=1647396237]
-position = Vector2(912, 86)
+[node name="Footprints16" type="Sprite2D" parent="Decals" unique_id=532697169]
+position = Vector2(912, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint18" type="Sprite2D" parent="Footprints" unique_id=1409506357]
-position = Vector2(944, 74)
+[node name="Footprints17" type="Sprite2D" parent="Decals" unique_id=144308022]
+position = Vector2(944, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint19" type="Sprite2D" parent="Footprints" unique_id=793343421]
-position = Vector2(976, 86)
+[node name="Footprints18" type="Sprite2D" parent="Decals" unique_id=1624425562]
+position = Vector2(976, 144)
 rotation = 1.5707964
-texture = ExtResource("3_nk8e1")
-flip_h = true
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="Footprint20" type="Sprite2D" parent="Footprints" unique_id=198867112]
-position = Vector2(1006, 72)
-texture = ExtResource("3_nk8e1")
+[node name="Footprints19" type="Sprite2D" parent="Decals" unique_id=1962436710]
+position = Vector2(1008, 136)
+texture = ExtResource("3_israr")
+hframes = 5
 
-[node name="World" type="Node2D" parent="." unique_id=626238917]
-y_sort_enabled = true
+[node name="Papers20" type="Sprite2D" parent="Decals" unique_id=1964227485]
+position = Vector2(208, 496)
+rotation = 0.4
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 1
 
-[node name="Stretcher" type="Node2D" parent="World" unique_id=1708724264]
-unique_name_in_owner = true
-position = Vector2(80, 304)
-script = ExtResource("4_ylwhj")
-footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
-lines = PackedStringArray("La sábana conserva la forma de tu cuerpo.", "No recuerdas haberte tumbado aquí.")
-lines_repeat = PackedStringArray("Hay una mancha donde tenías la espalda.")
+[node name="Glass21" type="Sprite2D" parent="Decals" unique_id=490561548]
+position = Vector2(240, 402)
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Stretcher" unique_id=1739658536]
-texture = ExtResource("5_33gw7")
-offset = Vector2(0, -16)
-hframes = 4
+[node name="Drops22" type="Sprite2D" parent="Decals" unique_id=2092396054]
+position = Vector2(112, 464)
+texture = ExtResource("3_israr")
+hframes = 5
 frame = 3
 
-[node name="Monitor" type="Node2D" parent="World" unique_id=168420921]
-position = Vector2(48, 272)
-script = ExtResource("4_ylwhj")
+[node name="Drops23" type="Sprite2D" parent="Decals" unique_id=1842520600]
+position = Vector2(168, 372)
+rotation = 1.0
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 3
+
+[node name="Papers24" type="Sprite2D" parent="Decals" unique_id=33488108]
+position = Vector2(496, 204)
+rotation = 2.0
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 1
+
+[node name="Glass25" type="Sprite2D" parent="Decals" unique_id=1794090722]
+position = Vector2(368, 138)
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 2
+
+[node name="Drag26" type="Sprite2D" parent="Decals" unique_id=45211742]
+position = Vector2(688, 210)
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 4
+
+[node name="Drag27" type="Sprite2D" parent="Decals" unique_id=1812106366]
+position = Vector2(720, 210)
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 4
+
+[node name="Drag28" type="Sprite2D" parent="Decals" unique_id=1652601990]
+position = Vector2(752, 206)
+rotation = -0.2
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 4
+
+[node name="Drops29" type="Sprite2D" parent="Decals" unique_id=1673405015]
+position = Vector2(784, 180)
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 3
+
+[node name="Papers30" type="Sprite2D" parent="Decals" unique_id=820502889]
+position = Vector2(906, 176)
+rotation = 1.2
+texture = ExtResource("3_israr")
+hframes = 5
+frame = 1
+
+[node name="World" type="Node2D" parent="." unique_id=28322089]
+y_sort_enabled = true
+
+[node name="Stretcher" type="Node2D" parent="World" unique_id=1953621685]
+unique_name_in_owner = true
+position = Vector2(80, 432)
+script = ExtResource("4_26qgy")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
+lines = PackedStringArray("La sábana conserva la forma de tu cuerpo.", "Las correas están desabrochadas. Alguien las soltó.")
+lines_repeat = PackedStringArray("Hay una mancha donde tenías la espalda.")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Stretcher" unique_id=2082129245]
+texture = ExtResource("5_2wnmv")
+offset = Vector2(0, -34)
+hframes = 5
+frame = 3
+
+[node name="Monitor" type="Node2D" parent="World" unique_id=674013044]
+position = Vector2(48, 400)
+script = ExtResource("4_26qgy")
 lines = PackedStringArray("El monitor sigue encendido.", "Los cables cuelgan sueltos, pero la línea verde sigue latiendo.")
 lines_repeat = PackedStringArray("La línea verde sigue latiendo.")
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Monitor" unique_id=1947983959]
-texture = ExtResource("6_81cyg")
-offset = Vector2(0, -8)
+[node name="Sprite2D" type="Sprite2D" parent="World/Monitor" unique_id=1241158397]
+texture = ExtResource("6_i5o0v")
+offset = Vector2(0, -28)
 
-[node name="IvStand" type="Node2D" parent="World" unique_id=226802406]
-position = Vector2(112, 272)
-script = ExtResource("4_ylwhj")
+[node name="Glow" type="Sprite2D" parent="World/Monitor/Sprite2D" unique_id=1234640721]
+material = SubResource("CanvasItemMaterial_sy8rh")
+texture = ExtResource("7_d88gb")
+offset = Vector2(0, -28)
+
+[node name="IvStand" type="Node2D" parent="World" unique_id=660892292]
+position = Vector2(112, 400)
+script = ExtResource("4_26qgy")
 lines = PackedStringArray("La bolsa del gotero está vacía.", "El tubo está arrancado. La aguja todavía tiene sangre.")
 lines_repeat = PackedStringArray("La aguja todavía tiene sangre.")
 
-[node name="Sprite2D" type="Sprite2D" parent="World/IvStand" unique_id=73754963]
-texture = ExtResource("7_h6jxs")
-offset = Vector2(0, -16)
+[node name="Sprite2D" type="Sprite2D" parent="World/IvStand" unique_id=1128606821]
+texture = ExtResource("8_xc752")
+offset = Vector2(0, -36)
 
-[node name="Cabinet" type="Node2D" parent="World" unique_id=1976512070]
+[node name="Cabinet" type="Node2D" parent="World" unique_id=367853251]
 unique_name_in_owner = true
-position = Vector2(304, 240)
-script = ExtResource("4_ylwhj")
+position = Vector2(304, 368)
+script = ExtResource("4_26qgy")
 event_id = &"flashlight"
-lines = PackedStringArray("Un armario metálico. Las puertas están cerradas con llave.", "El cajón de abajo cede.", "Dentro hay una linterna.")
+lines = PackedStringArray("Una taquilla oxidada. Las puertas están cerradas con llave.", "El cajón de abajo cede.", "Dentro hay una linterna.")
 lines_repeat = PackedStringArray("El cajón está vacío.")
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Cabinet" unique_id=161942335]
-texture = ExtResource("8_0nbvp")
-offset = Vector2(0, -8)
+[node name="Sprite2D" type="Sprite2D" parent="World/Cabinet" unique_id=561980287]
+texture = ExtResource("9_7scvr")
+offset = Vector2(0, -39)
 hframes = 2
 
-[node name="OtherBed" type="Node2D" parent="World" unique_id=963090756]
-position = Vector2(272, 368)
-script = ExtResource("4_ylwhj")
+[node name="Sink" type="Node2D" parent="World" unique_id=1522280674]
+position = Vector2(240, 368)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("El espejo está roto desde dentro hacia fuera.", "El grifo no da agua.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Sink" unique_id=16666205]
+texture = ExtResource("10_6t87h")
+offset = Vector2(0, -24)
+
+[node name="Curtain" type="Node2D" parent="World" unique_id=1710339950]
+position = Vector2(208, 432)
+script = ExtResource("4_26qgy")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
+lines = PackedStringArray("Una cortina separadora. El bajo está empapado de algo oscuro.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Curtain" unique_id=1831973686]
+texture = ExtResource("11_diny2")
+offset = Vector2(16, -30)
+
+[node name="OtherBed" type="Node2D" parent="World" unique_id=1852070856]
+position = Vector2(304, 528)
+script = ExtResource("4_26qgy")
 footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
-lines = PackedStringArray("Otra camilla. Las sábanas están revueltas y frías.")
+lines = PackedStringArray("Otra camilla. Las correas están rotas, no desabrochadas.")
 lines_repeat = PackedStringArray()
 
-[node name="Sprite2D" type="Sprite2D" parent="World/OtherBed" unique_id=1944731007]
-texture = ExtResource("5_33gw7")
+[node name="Sprite2D" type="Sprite2D" parent="World/OtherBed" unique_id=1657257383]
+texture = ExtResource("5_2wnmv")
+offset = Vector2(0, -34)
+hframes = 5
+frame = 4
+
+[node name="Tray" type="Node2D" parent="World" unique_id=292968618]
+position = Vector2(144, 496)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("Instrumental quirúrgico, limpio y en orden.", "Falta una pieza en el centro. Queda su silueta en sangre.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Tray" unique_id=1366288698]
+texture = ExtResource("12_5wngx")
 offset = Vector2(0, -16)
-hframes = 4
-frame = 3
 
-[node name="Tray" type="Node2D" parent="World" unique_id=1672224887]
-position = Vector2(176, 368)
-script = ExtResource("4_ylwhj")
-lines = PackedStringArray("Instrumental quirúrgico, limpio y en orden.", "Falta una pieza en el centro.")
+[node name="TrashBin" type="Node2D" parent="World" unique_id=420133260]
+position = Vector2(48, 528)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("Gasas usadas. Muchas.")
 lines_repeat = PackedStringArray()
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Tray" unique_id=670521103]
-texture = ExtResource("9_israr")
+[node name="Sprite2D" type="Sprite2D" parent="World/TrashBin" unique_id=1985148634]
+texture = ExtResource("13_81gip")
+offset = Vector2(0, -10)
 
-[node name="Wheelchair" type="Node2D" parent="World" unique_id=1619224998]
-position = Vector2(304, 112)
-script = ExtResource("4_ylwhj")
+[node name="Wheelchair" type="Node2D" parent="World" unique_id=1178266604]
+position = Vector2(304, 176)
+script = ExtResource("4_26qgy")
 lines = PackedStringArray("Una silla de ruedas volcada.")
 lines_repeat = PackedStringArray()
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Wheelchair" unique_id=1959350611]
-texture = ExtResource("10_26qgy")
+[node name="Sprite2D" type="Sprite2D" parent="World/Wheelchair" unique_id=2140240521]
+texture = ExtResource("14_ych3u")
+offset = Vector2(0, -12)
 
-[node name="Gurney" type="Node2D" parent="World" unique_id=312311087]
-position = Vector2(592, 144)
-script = ExtResource("4_ylwhj")
-footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
-lines = PackedStringArray("Una camilla vacía, aparcada contra la pared.")
+[node name="Chair1" type="Node2D" parent="World" unique_id=1420645846]
+position = Vector2(400, 144)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("Sillas de espera. Nadie espera.")
 lines_repeat = PackedStringArray()
 
-[node name="Sprite2D" type="Sprite2D" parent="World/Gurney" unique_id=1570505715]
-texture = ExtResource("5_33gw7")
-offset = Vector2(0, -16)
-hframes = 4
+[node name="Sprite2D" type="Sprite2D" parent="World/Chair1" unique_id=678713229]
+texture = ExtResource("15_uhkjp")
+offset = Vector2(0, -14)
+hframes = 2
 
-[node name="Player" type="Node2D" parent="World" unique_id=157403874 instance=ExtResource("11_2wnmv")]
+[node name="Chair2" type="Node2D" parent="World" unique_id=1854016253]
+position = Vector2(432, 144)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("Una silla tirada.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Chair2" unique_id=1157935698]
+texture = ExtResource("15_uhkjp")
+offset = Vector2(0, -14)
+hframes = 2
+frame = 1
+
+[node name="Gurney" type="Node2D" parent="World" unique_id=181475530]
+position = Vector2(592, 208)
+script = ExtResource("4_26qgy")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
+lines = PackedStringArray("Una camilla vacía con las correas abrochadas.", "Abrochadas sobre nadie.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Gurney" unique_id=1817530645]
+texture = ExtResource("5_2wnmv")
+offset = Vector2(0, -34)
+hframes = 5
+
+[node name="TrashBin2" type="Node2D" parent="World" unique_id=1668436863]
+position = Vector2(816, 144)
+script = ExtResource("4_26qgy")
+lines = PackedStringArray("Más gasas.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/TrashBin2" unique_id=794917008]
+texture = ExtResource("13_81gip")
+offset = Vector2(0, -10)
+
+[node name="Player" type="Node2D" parent="World" unique_id=2095550314 instance=ExtResource("16_3y7ky")]
 unique_name_in_owner = true
-script = ExtResource("12_i5o0v")
+script = ExtResource("17_s4h2p")
 
-[node name="TileTriggers" type="Node2D" parent="." unique_id=1063295086]
+[node name="TileTriggers" type="Node2D" parent="." unique_id=1813651159]
 
-[node name="RoomDoor" type="Node2D" parent="TileTriggers" unique_id=1688688429]
-position = Vector2(176, 208)
-script = ExtResource("4_ylwhj")
+[node name="RoomDoor" type="Node2D" parent="TileTriggers" unique_id=1071950400]
+position = Vector2(176, 336)
+script = ExtResource("4_26qgy")
 blocks = false
 event_id = &"room_door"
 lines = PackedStringArray("Al otro lado de la puerta no se ve nada. Ni siquiera el suelo.", "No puedes salir a ciegas.")
 lines_repeat = PackedStringArray()
 
-[node name="Notice" type="Node2D" parent="TileTriggers" unique_id=529682879]
-position = Vector2(272, 48)
-script = ExtResource("4_ylwhj")
+[node name="Notice" type="Node2D" parent="TileTriggers" unique_id=1177910962]
+position = Vector2(272, 112)
+script = ExtResource("4_26qgy")
 blocks = false
 lines = PackedStringArray("Un cartel con el horario de visitas.", "Alguien lo ha arañado hasta romper el papel.")
 lines_repeat = PackedStringArray()
 
-[node name="LockedDoor1" type="Node2D" parent="TileTriggers" unique_id=1117268002]
-position = Vector2(464, 48)
-script = ExtResource("4_ylwhj")
+[node name="Window" type="Node2D" parent="TileTriggers" unique_id=385985487]
+position = Vector2(368, 112)
+script = ExtResource("4_26qgy")
+blocks = false
+lines = PackedStringArray("Una ventana a una sala a oscuras. Las persianas están arrancadas.")
+lines_repeat = PackedStringArray()
+
+[node name="Handprint" type="Node2D" parent="TileTriggers" unique_id=1627522029]
+position = Vector2(752, 112)
+script = ExtResource("4_26qgy")
+blocks = false
+lines = PackedStringArray("Una mano. Arrastrada hacia abajo.")
+lines_repeat = PackedStringArray()
+
+[node name="LockedDoor1" type="Node2D" parent="TileTriggers" unique_id=1777114844]
+position = Vector2(464, 112)
+script = ExtResource("4_26qgy")
 blocks = false
 lines = PackedStringArray("Cerrada.")
 lines_repeat = PackedStringArray()
 
-[node name="LockedDoor2" type="Node2D" parent="TileTriggers" unique_id=76950844]
-position = Vector2(656, 48)
-script = ExtResource("4_ylwhj")
+[node name="LockedDoor2" type="Node2D" parent="TileTriggers" unique_id=1977189540]
+position = Vector2(656, 112)
+script = ExtResource("4_26qgy")
 blocks = false
 lines = PackedStringArray("Cerrada. No se oye nada al otro lado.")
 lines_repeat = PackedStringArray()
 
-[node name="LockedDoor3" type="Node2D" parent="TileTriggers" unique_id=2047919991]
-position = Vector2(848, 48)
-script = ExtResource("4_ylwhj")
+[node name="LockedDoor3" type="Node2D" parent="TileTriggers" unique_id=985617402]
+position = Vector2(848, 112)
+script = ExtResource("4_26qgy")
 blocks = false
 lines = PackedStringArray("Cerrada. El pomo está helado.")
 lines_repeat = PackedStringArray()
 
-[node name="DoubleDoor" type="Node2D" parent="TileTriggers" unique_id=2135152606]
-position = Vector2(1008, 48)
-script = ExtResource("4_ylwhj")
+[node name="DoubleDoor" type="Node2D" parent="TileTriggers" unique_id=1283098211]
+position = Vector2(1008, 112)
+script = ExtResource("4_26qgy")
 footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
 blocks = false
 event_id = &"ending"
 lines = PackedStringArray("Las huellas terminan delante de esta puerta.", "Son del tamaño de tus pies.")
 lines_repeat = PackedStringArray()
 
-[node name="MonitorLight" type="PointLight2D" parent="." unique_id=1656423322]
+[node name="MonitorLight" type="PointLight2D" parent="." unique_id=593445667]
 unique_name_in_owner = true
-position = Vector2(48, 258)
-color = Color(0.72156864, 0.83137256, 0.3529412, 1)
-energy = 1.15
+position = Vector2(48, 374)
+color = Color(0.6117647, 0.7529412, 0.2901961, 1)
+energy = 1.3
+range_item_cull_mask = 3
 shadow_enabled = true
-texture = ExtResource("13_d88gb")
-texture_scale = 0.8
+texture = ExtResource("18_sacpa")
+texture_scale = 0.9
+height = 80.0
 
-[node name="EmergencySprite" type="Sprite2D" parent="." unique_id=2056442556]
+[node name="EmergencySprite" type="Sprite2D" parent="." unique_id=1550796559]
 unique_name_in_owner = true
-position = Vector2(944, 38)
-texture = ExtResource("14_xc752")
+position = Vector2(1024, 38)
+texture = ExtResource("19_5l3f4")
 hframes = 2
 
-[node name="EmergencyLight" type="PointLight2D" parent="." unique_id=85260980]
-unique_name_in_owner = true
-position = Vector2(944, 48)
-color = Color(0.7529412, 0.22352941, 0.16862746, 1)
-energy = 1.3
-shadow_enabled = true
-texture = ExtResource("13_d88gb")
-texture_scale = 1.2
+[node name="Glow" type="Sprite2D" parent="EmergencySprite" unique_id=798971616]
+material = SubResource("CanvasItemMaterial_v0a2u")
+texture = ExtResource("20_widtu")
+hframes = 2
 
-[node name="FadeLayer" type="CanvasLayer" parent="." unique_id=1586423593]
+[node name="EmergencyLight" type="PointLight2D" parent="." unique_id=1731161524]
+unique_name_in_owner = true
+position = Vector2(1024, 64)
+color = Color(0.7529412, 0.22352941, 0.16862746, 1)
+energy = 2.2
+range_item_cull_mask = 3
+shadow_enabled = true
+texture = ExtResource("18_sacpa")
+texture_scale = 1.6
+height = 80.0
+
+[node name="FadeLayer" type="CanvasLayer" parent="." unique_id=380498987]
 layer = 15
 
-[node name="Fade" type="ColorRect" parent="FadeLayer" unique_id=267995939]
+[node name="Fade" type="ColorRect" parent="FadeLayer" unique_id=937975332]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0

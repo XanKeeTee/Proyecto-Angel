@@ -36,6 +36,11 @@ func set_tint(color: Color) -> void:
 	_material.set_shader_parameter("tint", color)
 
 
+## Cambia un uniform del shader (ver shaders/vhs_post.gdshader).
+func set_param(param: StringName, value: Variant) -> void:
+	_material.set_shader_parameter(param, value)
+
+
 func set_enabled(enabled: bool) -> void:
 	_rect.visible = enabled
 

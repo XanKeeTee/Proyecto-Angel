@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f4gihwf54wty"
-path="res://.godot/imported/footprint.png-bfe9df6b24372942fcad951259056c74.ctex"
+uid="uid://dkqgxswvmaf0c"
+path="res://.godot/imported/protagonist_n.png-de10d3424859e747a5f5fdcfe41ea79e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/props/footprint.png"
-dest_files=["res://.godot/imported/footprint.png-bfe9df6b24372942fcad951259056c74.ctex"]
+source_file="res://assets/sprites/characters/protagonist_n.png"
+dest_files=["res://.godot/imported/protagonist_n.png-de10d3424859e747a5f5fdcfe41ea79e.ctex"]
 
 [params]
 

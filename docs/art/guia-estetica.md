@@ -44,9 +44,36 @@ Reglas:
 ## Pixel art (estilo RPG Maker)
 
 - Resolución base del juego: **640×360** con escalado entero (provisional, ver `docs/tech/README.md`).
-- Tamaño de tile: **32 px** (aprobado). Personajes de **32×48 px** por fotograma (sobresalen media casilla por arriba), 3 fotogramas por dirección en el orden abajo, izquierda, derecha y arriba.
-- Arte provisional del hospital: `tools/art/gen_hospital_placeholders.py`. Al sustituirlo por arte definitivo, mantener tamaños y disposición de los PNG.
-- **Mapas** (ref_06): vista cenital RPG Maker, personajes chibi de 4 direcciones y 3 frames. Texturas densas y "sucias", no limpias. Iluminación con máscara de oscuridad alrededor del jugador.
+- Tamaño de tile: **32 px** (aprobado).
+
+### Personajes: realismo sucio
+
+Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su interfaz: proporciones humanas reales, cuerpos frágiles, paleta apagada, suciedad y heridas visibles. Nada de cabezones chibi.
+
+- Fotograma de **48×68 px**. La figura mide unos **58 px**, con la cabeza a ~1/7 de la altura. Los pies apoyan en la parte baja de la casilla.
+- 3 fotogramas por dirección, en el orden abajo, izquierda, derecha y arriba. El fotograma central es de pie.
+- Postura encorvada, zancada corta. Ojos hundidos (cuencas oscuras, sin pupila visible a esta escala).
+- Contorno de color: el tono más oscuro del material, mezclado con `#0E0A12`. Nunca negro puro.
+- Cada sprite lleva **mapa de normales** (`*_n.png`), para que la linterna revele el volumen.
+- **Rasgos propios del protagonista** (lo que lo hace nuestro):
+  - cabeza rapada con una cicatriz cosida en el cráneo;
+  - bata abierta por detrás con una incisión cosida a lo largo de la columna;
+  - una pieza metálica entre los omóplatos `[PROPUESTA]`;
+  - vía arrancada con sangre en la mano izquierda;
+  - pulsera de paciente;
+  - pies sucios.
+
+### Escenarios
+
+- Paredes de **3 casillas** (96 px): arriba yeso con humedades, moho y pintura levantada; en medio una barandilla metálica; abajo azulejo agrietado y zócalo. Las puertas miden casi toda la pared.
+- Los objetos se ven en vista oblicua: la tapa se ve desde arriba y el frente de cara, como en RPG Maker, pero con volumen real y desgaste (óxido, abolladuras, manchas).
+- Suciedad que se acumula donde se acumularía de verdad: juntas, rincones, la parte baja de las paredes y el bajo de las telas.
+- Lo que emite luz (pantallas, pilotos) lleva una capa `*_glow.png` que se dibuja sin sombra.
+
+### Arte provisional generado
+
+Todo el arte actual se genera con `python -I tools/art/build_all.py`, con un renderizador propio (`tools/art/pxrender.py`) que modela con volúmenes simples, reduce a rampas de color con tramado y saca los mapas de normales. Sirve para fijar el estilo y la escala. El arte definitivo puede pintarse a mano encima, **manteniendo tamaños de fotograma, puntos de apoyo (`tools/art/sprite_meta.json`) y la disposición del atlas** (ver `tools/art/tiles.py`).
+- **Mapas** (ref_06): vista cenital RPG Maker, personajes **de proporciones realistas** (ver abajo) de 4 direcciones y 3 frames. Texturas densas y "sucias", no limpias. Iluminación con máscara de oscuridad alrededor del jugador.
 - **Combate** (ref_05): enemigo grande de frente en el centro, grupo del jugador de espaldas en primer plano, escenario con perspectiva. Los enemigos deben tener **partes del cuerpo distinguibles a simple vista**, porque son objetivos de combate.
 - **Retratos y escenas ilustradas** (ref_02, ref_04): pueden tener más detalle, estilo pintado o anime oscuro, siempre con la paleta del juego. Útiles para momentos clave y finales.
 - Contorno oscuro de color (azul o granate muy oscuro), no negro puro.

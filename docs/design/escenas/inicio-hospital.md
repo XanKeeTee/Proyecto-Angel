@@ -34,15 +34,16 @@ El juego empieza con el protagonista levantándose de una camilla de hospital, d
 ### 2. La habitación (casi a ciegas)
 
 - Solo se ve un radio de unas 2 casillas alrededor del personaje y lo que ilumina el monitor.
-- Hay objetos que se pueden examinar: la camilla, el monitor, el gotero, otra camilla y la bandeja de instrumental.
+- Hay objetos que se pueden examinar: la camilla (con las correas desabrochadas), el monitor, el gotero, el lavabo bajo un espejo roto, una cortina separadora, otra camilla con las correas rotas, la bandeja de instrumental y una papelera llena de gasas.
 - **La puerta no se abre sin luz**: "No puedes salir a ciegas." Así el jugador tiene que explorar la habitación.
-- **El armario**: en el cajón de abajo está la **linterna**. Al cogerla se enciende con un parpadeo.
+- **La taquilla**: en el cajón de abajo está la **linterna**. Al cogerla se enciende con un parpadeo.
+- Con la linterna, la puerta se abre. Al cruzarla hay un fundido corto y apareces en el pasillo (y al revés).
 
 ### 3. El pasillo (con linterna)
 
 - La linterna ilumina un cono hacia donde mira el personaje; las paredes proyectan sombra.
 - Al fondo, una **luz de emergencia roja** parpadea. Es el acento de color de la escena.
-- Hay tres puertas cerradas con texto distinto, un cartel arañado, una silla de ruedas volcada y una camilla vacía.
+- Hay tres puertas cerradas con texto distinto, un cartel arañado, una ventana a una sala a oscuras, una mano de sangre arrastrada pared abajo, una rejilla de ventilación, sillas de espera (una tirada), una silla de ruedas volcada, una camilla vacía **con las correas abrochadas** y un rastro de arrastre en el suelo.
 - A mitad de pasillo aparecen **huellas de pies descalzos, húmedas**, que llevan hasta la puerta doble del fondo.
 
 ### 4. Final del prototipo
@@ -58,17 +59,23 @@ Todo se edita en el inspector de Godot: cada objeto es un nodo `Interactable` co
 | Momento / objeto | Primera vez | Después |
 |---|---|---|
 | Intro | "Frío." / "Huele a desinfectante. Debajo, a algo dulce." / "Al moverte, algo tira en la espalda. Puntos. Recientes." | — |
-| Camilla | "La sábana conserva la forma de tu cuerpo." / "No recuerdas haberte tumbado aquí." | "Hay una mancha donde tenías la espalda." |
+| Camilla | "La sábana conserva la forma de tu cuerpo." / "Las correas están desabrochadas. Alguien las soltó." | "Hay una mancha donde tenías la espalda." |
 | Monitor | "El monitor sigue encendido." / "Los cables cuelgan sueltos, pero la línea verde sigue latiendo." | "La línea verde sigue latiendo." |
 | Gotero | "La bolsa del gotero está vacía." / "El tubo está arrancado. La aguja todavía tiene sangre." | "La aguja todavía tiene sangre." |
-| Armario | "Un armario metálico. Las puertas están cerradas con llave." / "El cajón de abajo cede." / "Dentro hay una linterna." → "Has cogido la LINTERNA." | "El cajón está vacío." |
-| Otra camilla | "Otra camilla. Las sábanas están revueltas y frías." | igual |
-| Bandeja | "Instrumental quirúrgico, limpio y en orden." / "Falta una pieza en el centro." | igual |
+| Taquilla | "Una taquilla oxidada. Las puertas están cerradas con llave." / "El cajón de abajo cede." / "Dentro hay una linterna." → "Has cogido la LINTERNA." | "El cajón está vacío." |
+| Lavabo | "El espejo está roto desde dentro hacia fuera." / "El grifo no da agua." | igual |
+| Cortina | "Una cortina separadora. El bajo está empapado de algo oscuro." | igual |
+| Otra camilla | "Otra camilla. Las correas están rotas, no desabrochadas." | igual |
+| Bandeja | "Instrumental quirúrgico, limpio y en orden." / "Falta una pieza en el centro. Queda su silueta en sangre." | igual |
+| Papelera | "Gasas usadas. Muchas." (la del pasillo: "Más gasas.") | igual |
 | Puerta (sin luz) | "Al otro lado de la puerta no se ve nada. Ni siquiera el suelo." / "No puedes salir a ciegas." | igual |
 | Cartel | "Un cartel con el horario de visitas." / "Alguien lo ha arañado hasta romper el papel." | igual |
+| Ventana | "Una ventana a una sala a oscuras. Las persianas están arrancadas." | igual |
+| Mano de sangre | "Una mano. Arrastrada hacia abajo." | igual |
 | Puertas cerradas | "Cerrada." · "Cerrada. No se oye nada al otro lado." · "Cerrada. El pomo está helado." | igual |
+| Sillas | "Sillas de espera. Nadie espera." · "Una silla tirada." | igual |
 | Silla de ruedas | "Una silla de ruedas volcada." | igual |
-| Camilla del pasillo | "Una camilla vacía, aparcada contra la pared." | igual |
+| Camilla del pasillo | "Una camilla vacía con las correas abrochadas." / "Abrochadas sobre nadie." | igual |
 | Huellas | "Huellas de pies descalzos en el suelo." / "Todavía están húmedas." | — |
 | Puerta doble | "Las huellas terminan delante de esta puerta." / "Son del tamaño de tus pies." | — |
 
@@ -84,7 +91,10 @@ Ninguna es canon. Son ganchos que el equipo puede aprovechar o quitar:
 - **"Falta una pieza en el centro"** de la bandeja de instrumental.
 - **El monitor sigue latiendo** con los cables sueltos.
 - **Huellas húmedas del tamaño de sus pies** que van por delante de él.
-- **Venda en la cabeza** con una mancha.
+- **Cicatriz cosida en el cráneo** rapado.
+- **Pieza metálica entre los omóplatos**, al final de la incisión.
+- **Correas**: las suyas, desabrochadas ("alguien las soltó"); las de la otra camilla, rotas; las del pasillo, abrochadas sobre nadie.
+- **Espejo roto desde dentro.**
 
 > Antes de aprobar, pasar estos ganchos por `lore-keeper`: no deben chocar con la idea central ni acercarse a la premisa prohibida.
 
@@ -102,11 +112,21 @@ Ninguna es canon. Son ganchos que el equipo puede aprovechar o quitar:
 
 ## Arte
 
-Todo el arte es **provisional**. Se genera con `tools/art/gen_hospital_placeholders.py` y sigue la guía estética: ambiente verde de hospital, la bata en blanco hueso como foco y el rojo de emergencia como único acento.
+Arte **provisional** generado con `python -I tools/art/build_all.py` (ver "Personajes: realismo sucio" en la guía estética). Ambiente verde de hospital muy oscuro, la bata como foco y el rojo de emergencia como único acento.
 
-- Tileset: `assets/tilesets/hospital.png` (suelo, linóleo, pared, puertas, cartel).
-- Protagonista: `assets/sprites/characters/protagonist.png`, con fotogramas de 32×48 px, 3 por dirección, en el orden abajo, izquierda, derecha y arriba.
-- Camilla: 4 estados (vacía, tumbado, sentado, revuelta).
+- Tileset: `assets/tilesets/hospital.png` + normales. Contiene ocho suelos y ocho linóleos, paredes de 3 casillas en cuatro variantes, puertas (cerrada, abierta, doble) y extras de pared: mano de sangre, cartel, espejo roto, arañazos, rejilla, ventana y chorreón.
+- Protagonista: `assets/sprites/characters/protagonist.png` (48×68 px por fotograma).
+- Camilla: 5 estados (correas abrochadas, tumbado, sentado, revuelta, destrozada).
+- Objetos: gotero, monitor (pantalla emisiva), taquilla (cajón cerrado/abierto), bandeja, silla de ruedas, papelera, lavabo, cortina, sillas, luz de emergencia.
+- Calcomanías de suelo: huellas, papeles, cristales, gotas y arrastre.
+
+### Distribución
+
+Pasillo arriba (filas 4–6) y habitación abajo (filas 11–16). Las paredes miden 3 casillas. Puntos clave:
+- empiezas en `(3,13)`;
+- la linterna está en `(9,11)`;
+- la puerta de la habitación está en `(5,10)` y lleva al pasillo en `(5,6)`;
+- el final está en la puerta doble, `(31,3)`.
 
 ## Falta
 

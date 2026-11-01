@@ -26,3 +26,6 @@ desktop.ini
 # Ver docs/art/referencias/README.md
 docs/art/referencias/*
 !docs/art/referencias/README.md
+
+# Python
+__pycache__/

@@ -31,7 +31,7 @@ Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn`
 - **Depuración** (argumentos tras `--`):
 
   ```bash
-  "$GODOT_BIN" --path . -- --at=20,3 --face=right --screenshot=captura.png
+  "$GODOT_BIN" --path . -- --at=20,5 --face=right --screenshot=captura.png
   "$GODOT_BIN" --path . -- --ending --auto-advance=0.8
   ```
 
@@ -52,11 +52,17 @@ Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn`
 | `scenes/world/interactable.gd` | Objeto o tile examinable; textos en el inspector |
 | `scenes/ui/message_box.gd` | Caja de texto, rótulos y pistas |
 | `scenes/ui/vhs_overlay.gd` | Filtro VHS reutilizable, `glitch()` para eventos |
-| `assets/tilesets/hospital_tileset.tres` | Tiles con dato `solid` (paso) y oclusores (sombras) |
+| `assets/tilesets/hospital_tileset.tres` | Tiles con dato `solid` (paso) y oclusores (sombras); textura con normales |
+| `tools/art/` | Generador del arte provisional (`build_all.py`) y puntos de apoyo (`sprite_meta.json`) |
 
 Notas:
 - **Paso**: un tile bloquea si su dato personalizado `solid` es verdadero. Los objetos bloquean con `Interactable.blocks` y su `footprint`.
 - **Sombras**: solo las tapas de muro (y una franja de la puerta cerrada) tienen oclusor, así la cara de la pared se ilumina y la luz no atraviesa muros.
+- **Mapas de normales**: cada sprite y el tileset usan un `CanvasTexture` (`*_canvas.tres`) con el PNG y su `*_n.png`. Las luces llevan `height` alto (70–110) para que iluminen superficies que miran a cámara; con altura baja todo queda negro.
+- **Capas de luz**: el sprite del protagonista usa `light_mask = 2`. La linterna solo ilumina la capa 1 (no ilumina a quien la lleva); el halo, el monitor y la emergencia iluminan las dos.
+- **Brillos**: lo que emite luz tiene un hijo `Glow` con `CanvasItemMaterial` sin sombreado.
+- **Puertas entre zonas**: `WARPS` en `hospital_intro.gd` (casilla pisada → destino y dirección), con fundido.
+- `--screenshot` abre una ventana; para comprobar sin ventana usa `--headless` con `--quit-after`.
 - **Mandos**: algunos mandos (visto con un DualSense) mandan valores falsos los primeros fotogramas; por eso el control llega 0,5 s después al saltarse la intro.
 
 ## Prototipo de combate

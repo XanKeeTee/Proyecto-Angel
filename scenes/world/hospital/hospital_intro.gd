@@ -16,9 +16,12 @@ extends Node2D
 
 const TILE_SIZE: int = 32
 const SOURCE_ID: int = 0
-const DOOR_OPEN_TILE: Vector2i = Vector2i(5, 2)
-const START_CELL: Vector2i = Vector2i(3, 9)
-const ENDING_CELL: Vector2i = Vector2i(31, 2)
+## Columna del atlas con la puerta abierta (tramos alto, medio y bajo en las filas 2, 3 y 4).
+const DOOR_OPEN_COLUMN: int = 5
+const START_CELL: Vector2i = Vector2i(3, 13)
+const ENDING_CELL: Vector2i = Vector2i(31, 4)
+## Primera fila del pasillo y última (las paredes miden 3 casillas).
+const CORRIDOR_ROWS: Vector2i = Vector2i(4, 6)
 const STRETCHER_EMPTY: int = 0
 const STRETCHER_LYING: int = 1
 const STRETCHER_SITTING: int = 2
@@ -27,6 +30,11 @@ const STRETCHER_MESSY: int = 3
 const ZONE_TINT: Color = Color(0.9, 1.0, 0.96)
 const EMERGENCY_ON_TIME: float = 0.9
 const EMERGENCY_OFF_TIME: float = 0.55
+## Puertas que llevan a otra casilla: celda pisada -> [destino, dirección al llegar].
+const WARPS: Dictionary[Vector2i, Array] = {
+	Vector2i(5, 10): [Vector2i(5, 6), Vector2i.UP],
+	Vector2i(5, 7): [Vector2i(5, 11), Vector2i.DOWN],
+}
 
 ## Texto al despertar, antes de levantarse.
 @export var intro_lines: PackedStringArray = []
@@ -64,6 +72,8 @@ func _ready() -> void:
 	_vhs = VhsOverlay.new()
 	add_child(_vhs)
 	_vhs.set_tint(ZONE_TINT)
+	_vhs.set_param("grain_amount", 0.085)
+	_vhs.set_param("vignette_strength", 0.95)
 	_vhs.set_enabled(not _debug.has("no-vhs"))
 
 	for node: Node in find_children("*", "Interactable", true, false):
@@ -94,8 +104,7 @@ func _process(delta: float) -> void:
 	_emergency_timer -= delta
 	if _emergency_timer <= 0.0:
 		var on: bool = not _emergency_light.enabled
-		_emergency_light.enabled = on
-		_emergency_sprite.frame = 0 if on else 1
+		_set_emergency(on)
 		_emergency_timer = EMERGENCY_ON_TIME if on else EMERGENCY_OFF_TIME
 
 
@@ -141,11 +150,11 @@ func _start_without_intro() -> void:
 	}
 	var default_face: String = "up" if _debug.has("ending") else "down"
 	_player.place(start, facing_by_name.get(_debug.get("face", default_face), Vector2i.DOWN))
-	if _debug.has("flashlight") or _debug.has("ending") or start.y < 6:
+	if _debug.has("flashlight") or _debug.has("ending") or start.y <= CORRIDOR_ROWS.y:
 		_give_flashlight(false)
 		_open_room_door()
 	if _debug.has("ending"):
-		_run_ending(_interactables[Vector2i(31, 1)])
+		_run_ending(_interactables[ENDING_CELL + Vector2i.UP])
 		return
 	# Algunos mandos mandan valores falsos en los primeros fotogramas.
 	await _wait(0.5)
@@ -181,7 +190,10 @@ func _on_interact_requested(cell: Vector2i) -> void:
 
 
 func _on_step_finished(cell: Vector2i) -> void:
-	if _footprints_seen or cell.y > 4 or cell.x < footprints_trigger_x:
+	if WARPS.has(cell):
+		await _warp(WARPS[cell][0], WARPS[cell][1])
+		return
+	if _footprints_seen or cell.y < CORRIDOR_ROWS.x or cell.y > CORRIDOR_ROWS.y or cell.x < footprints_trigger_x:
 		return
 	_footprints_seen = true
 	_lock()
@@ -219,8 +231,28 @@ func _open_room_door() -> void:
 	for cell: Vector2i in _interactables.keys():
 		var door: Interactable = _interactables[cell]
 		if door.event_id == &"room_door":
-			_map.set_cell(cell, SOURCE_ID, DOOR_OPEN_TILE)
+			# La puerta ocupa la casilla de abajo y las dos de encima.
+			for row: int in 3:
+				_map.set_cell(cell + Vector2i(0, row - 2), SOURCE_ID, Vector2i(DOOR_OPEN_COLUMN, 2 + row))
 			_interactables.erase(cell)
+
+
+func _warp(target: Vector2i, facing: Vector2i) -> void:
+	_lock()
+	await _fade_to(1.0, 0.25)
+	_player.place(target, facing)
+	await _wait(0.15)
+	await _fade_to(0.0, 0.35)
+	_unlock()
+
+
+func _set_emergency(on: bool) -> void:
+	_emergency_light.enabled = on
+	_emergency_sprite.frame = 0 if on else 1
+	var glow: Sprite2D = _emergency_sprite.get_node_or_null(^"Glow") as Sprite2D
+	if glow != null:
+		glow.frame = _emergency_sprite.frame
+		glow.visible = on
 
 
 # --- final ------------------------------------------------------------------------
@@ -233,8 +265,7 @@ func _run_ending(doors: Interactable) -> void:
 	_ending = true
 	_vhs.glitch(2.4, 0.8)
 	await _player.flicker_flashlight(1.4)
-	_emergency_light.enabled = false
-	_emergency_sprite.frame = 1
+	_set_emergency(false)
 	await _wait(0.8)
 	await _fade_to(1.0, 0.6)
 	await _wait(1.2)
