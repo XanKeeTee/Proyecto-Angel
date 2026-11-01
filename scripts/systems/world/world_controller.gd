@@ -12,7 +12,7 @@ const TILE_SIZE: int = 32
 ## Carga que gasta la linterna por segundo encendida (100 = carga completa).
 const FLASHLIGHT_DRAIN: float = 100.0 / 540.0
 const SAVE_SPECIAL: StringName = &"save"
-const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
+const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --custody --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
 
 ## Virado de color de la zona.
 @export var zone_tint: Color = Color(0.9, 1.0, 0.96)
@@ -515,6 +515,10 @@ func _start_debug() -> void:
 	on_debug_start()
 	await get_tree().create_timer(0.5).timeout
 	unlock()
+	if debug.has("custody") or debug.has("doc"):
+		if debug.has("doc"):
+			GameState.give_document(Registry.document(StringName(debug["doc"])))
+		open_custody(StringName(debug.get("doc", "")))
 
 
 ## Gancho: arranque de depuración (las escenas preparan su estado).

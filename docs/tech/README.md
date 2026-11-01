@@ -47,6 +47,7 @@ Con argumentos tras `--`, el título salta directamente al hospital:
 | `--face=up\|down\|left\|right\|up_left\|…` | Dirección inicial |
 | `--give=id,id` | Da objetos (montón completo) |
 | `--flag=f,f` | Activa banderas (p. ej. `power_on`, `pasillo_imposible`) |
+| `--custody` / `--doc=id` | Abre la custodia (o el expediente en ese documento) |
 | `--auto-advance=S` | Los textos avanzan solos |
 | `--screenshot=RUTA` y `--screenshot-delay=S` | Captura y cierra. **Abre una ventana** |
 | `--no-vhs` | Sin filtro |

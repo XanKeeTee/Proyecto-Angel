@@ -40,4 +40,6 @@ func _run() -> void:
 	for f: String in failed:
 		print("  - ", f)
 	print("%d pruebas, %d fallos" % [total, failed.size()])
+	# Deja terminar sonidos y esperas pendientes de las escenas liberadas antes de salir.
+	await get_tree().create_timer(0.5).timeout
 	get_tree().quit(0 if failed.is_empty() else 1)
