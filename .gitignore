@@ -1,0 +1,28 @@
+# Godot 4
+.godot/
+/android/
+*.translation
+export.cfg
+export_credentials.cfg
+export_presets.cfg
+
+# Builds
+/build/
+*.exe
+*.pck
+*.zip
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.tmp
+
+# Claude Code (ajustes locales de cada persona)
+.claude/settings.local.json
+
+# Imágenes de referencia de terceros: solo en local (repo público).
+# Ver docs/art/referencias/README.md
+docs/art/referencias/*
+!docs/art/referencias/README.md
