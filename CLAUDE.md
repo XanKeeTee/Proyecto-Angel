@@ -1,6 +1,6 @@
 # Proyecto-Angel — guía para Claude
 
-JRPG 2D de terror analógico hecho en **Godot 4.7.2** con **GDScript**. Equipo de 2 personas: ambas guionizan y revisan código y arte. Los documentos y comentarios se escriben en **español**; los identificadores de código, en **inglés**.
+**La Novena Vigilia**: RPG 2D de terror analógico y supervivencia hecho en **Godot 4.7.2** con **GDScript**. Equipo de 2 personas: ambas guionizan y revisan código y arte. Los documentos y comentarios se escriben en **español**; los identificadores de código, en **inglés**.
 
 ## Motor
 
@@ -32,15 +32,17 @@ export GODOT_BIN="/c/Users/usuario/Documents/Godot_v4.7.2-stable_win64.exe/Godot
 
 ## Tests
 
-El framework **aún no está instalado**. Propuesta y comparativa en [docs/tech/tests.md](docs/tech/tests.md) (recomendación: GUT). Cuando se instale, este apartado tendrá el comando exacto. Previsto:
+Mientras no se instale GUT (propuesta en [docs/tech/tests.md](docs/tech/tests.md)), hay un **ejecutor mínimo propio**. Se lanza como escena para que existan los autoloads:
 
 ```bash
-"$GODOT_BIN" --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit
+"$GODOT_BIN" --headless --path . res://tests/run_tests.tscn
 ```
 
-- Los tests viven en `tests/unit/` (lógica pura: daño, heridas, estados) y `tests/integration/` (escenas, flujo de combate).
-- Archivo de test: `test_<sistema>.gd`. Cada bug corregido añade un test que lo reproduce.
-- No se hace merge a `main` con tests en rojo.
+- Las pruebas viven en `tests/unit/` (lógica pura) y `tests/integration/` (escenas reales: el prólogo completo, el guardado, la interfaz).
+- Archivo `test_<sistema>.gd`, que hereda de `TestCase` (`tests/test_case.gd`). Cada método `test_*` es una prueba; puede usar `await`. Para comprobar: `check()` y `check_eq()`.
+- Cada bug corregido añade una prueba que lo reproduce.
+- No se hace merge a `main` con pruebas en rojo.
+- Ojo: con `-s` (scripts sueltos) Godot **no carga los autoloads**. Los scripts que usan `GameState`, `EventBus` o `SaveSystem` no compilan así; se prueban desde la escena de pruebas.
 
 ## Convenciones de GDScript
 
@@ -54,10 +56,10 @@ El framework **aún no está instalado**. Propuesta y comparativa en [docs/tech/
   - Señales: `snake_case` en pasado (`wound_inflicted`, `turn_ended`).
 - **Orden dentro de un script** (guía oficial de Godot): `class_name`, `extends`, docstring `##`, señales, enums, constantes, `@export`, variables públicas, privadas, `@onready`, `_init`, `_ready`, otros callbacks, métodos públicos, métodos privados.
 - **Señales**: "llama hacia abajo, señaliza hacia arriba". Un nodo hijo nunca busca a su padre con `get_parent()`; emite una señal. Conectar por código con `signal.connect(callable)`, no con strings.
-- **Autoloads**: solo para estado global y servicios transversales. Mantenerlos pocos y finos. Previstos (todavía no existen):
+- **Autoloads**: solo para estado global y servicios transversales. Mantenerlos pocos y finos. Existen tres (`autoload/`):
   - `EventBus`: señales globales desacopladas.
-  - `GameState`: banderas de historia, decisiones, rutas.
-  - `SaveSystem`: guardado/carga.
+  - `GameState`: banderas, estado de los objetos del mundo, protagonista activo (custodia y constantes), posición.
+  - `SaveSystem`: guardado/carga en JSON.
   La lógica de combate **no** va en un autoload: vive en la escena de combate y en `Resource`s.
 - **Datos como `Resource`**: enemigos, objetos, armas, partes del cuerpo, heridas y estados se definen como `Resource` con `class_name` y se guardan como `.tres` en `data/`. Nada de números mágicos en el código.
 - Separar lógica de presentación: las reglas de combate deben poder ejecutarse y testearse sin escena ni nodos visuales.
@@ -79,7 +81,7 @@ scripts/           Código que no pertenece a una escena concreta
   systems/         combat/, dialogue/, inventory/, save/
 shaders/           .gdshader (VHS, CRT, aberración, grano)
 tests/             unit/, integration/
-tools/             Scripts auxiliares fuera del juego: balance/ (simulaciones), art/ (arte provisional generado). Godot lo ignora.
+tools/             Generadores fuera del juego: art/ (arte y sonido), data/ (objetos, documentos), levels/ (mapas), balance/. Godot lo ignora.
 docs/              lore/, design/, tech/, art/ (Godot lo ignora: .gdignore)
 .claude/agents/    Subagentes del proyecto
 ```
@@ -116,5 +118,5 @@ Un script ligado a una escena va junto a ella (`scenes/battle/battle_scene.tscn`
 
 - [docs/lore/](docs/lore/README.md) — canon del mundo (vacío por ahora).
 - [docs/design/](docs/design/README.md) — GDD y sistemas.
-- [docs/tech/](docs/tech/README.md) — arquitectura, tests, convenciones técnicas.
+- [docs/tech/](docs/tech/README.md) — técnica, depuración, regenerar contenido. [arquitectura.md](docs/tech/arquitectura.md): módulos del prólogo.
 - [docs/art/guia-estetica.md](docs/art/guia-estetica.md) — dirección de arte.

@@ -4,7 +4,8 @@ Las convenciones de código, comandos y estructura de carpetas están en [CLAUDE
 
 ## Documentos
 
-- [tests.md](tests.md) — propuesta de framework de tests (pendiente de decisión).
+- [arquitectura.md](arquitectura.md) — módulos del prólogo y cómo se amplían.
+- [tests.md](tests.md) — propuesta de framework de tests (GUT, pendiente). Mientras tanto hay un ejecutor mínimo (ver CLAUDE.md).
 
 ## Configuración del proyecto (provisional)
 
@@ -23,61 +24,70 @@ Valores puestos en `project.godot`. Se pueden cambiar; si se cambian, actualizar
 
 Tamaño de tile: **32 px** (aprobado).
 
-## Inicio en el hospital
+## Prólogo (hospital)
 
-Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn` (F5). Diseño en [inicio-hospital.md](../design/escenas/inicio-hospital.md).
+Arquitectura del código: [arquitectura.md](arquitectura.md). Diseño: [prologo.md](../design/escenas/prologo.md). Inventario: [custodia.md](../design/sistemas/custodia.md).
 
-- **Controles**: flechas para moverse, Intro para examinar y pasar texto, F2 para el filtro VHS.
-- **Depuración** (argumentos tras `--`):
+- **Escena principal**: `res://scenes/ui/title/title_screen.tscn` (título → Nueva partida / Continuar).
+- **El hospital**: `res://scenes/world/hospital/hospital.tscn` + `hospital.gd` (guion), que hereda de `WorldController`.
+- **Guardado**: en las grabadoras de cinta (control de enfermería y sala eléctrica), en `user://saves/slot_0.json`.
 
-  ```bash
-  "$GODOT_BIN" --path . -- --at=20,5 --face=right --screenshot=captura.png
-  "$GODOT_BIN" --path . -- --ending --auto-advance=0.8
-  ```
+### Depuración
 
-  | Argumento | Qué hace |
-  |---|---|
-  | `--skip-intro` | Empieza con control, sin la secuencia de despertar |
-  | `--flashlight` | Empieza con la linterna |
-  | `--at=X,Y` / `--face=up\|down\|left\|right\|up_left\|…` | Casilla y dirección iniciales. En el pasillo da la linterna y abre la puerta |
-  | `--ending` | Lanza el final en la puerta doble |
-  | `--auto-advance=S` | Los textos avanzan solos (pruebas sin manos) |
-  | `--screenshot=RUTA` y `--screenshot-delay=S` | Guarda una captura y cierra (sin control del jugador) |
-  | `--no-vhs` | Sin filtro |
+Con argumentos tras `--`, el título salta directamente al hospital:
 
-| Archivo | Qué hace |
+```bash
+"$GODOT_BIN" --path . -- --at=30,15 --face=up --give=linterna,pilas --flag=power_on
+"$GODOT_BIN" --path . -- --skip-intro --screenshot=captura.png --screenshot-delay=2
+```
+
+| Argumento | Qué hace |
 |---|---|
-| `scenes/world/hospital/hospital_intro.gd` | Secuencia, eventos (linterna, puerta, huellas, final) y luces |
-| `scenes/world/player/player.gd` | Movimiento por casillas, linterna, cámara |
-| `scenes/world/interactable.gd` | Objeto o tile examinable; textos en el inspector |
-| `scenes/ui/message_box.gd` | Caja de texto, rótulos y pistas |
-| `scenes/ui/vhs_overlay.gd` | Filtro VHS reutilizable, `glitch()` para eventos |
-| `assets/tilesets/hospital_tileset.tres` | Tiles con dato `solid` (paso) y oclusores (sombras); textura con normales |
-| `tools/art/` | Generador del arte provisional (`build_all.py`) y puntos de apoyo (`sprite_meta.json`) |
+| `--skip-intro` / `--at=X,Y` | Empieza con control (en la casilla indicada), sin el despertar |
+| `--face=up\|down\|left\|right\|up_left\|…` | Dirección inicial |
+| `--give=id,id` | Da objetos (montón completo) |
+| `--flag=f,f` | Activa banderas (p. ej. `power_on`, `pasillo_imposible`) |
+| `--auto-advance=S` | Los textos avanzan solos |
+| `--screenshot=RUTA` y `--screenshot-delay=S` | Captura y cierra. **Abre una ventana** |
+| `--no-vhs` | Sin filtro |
 
-Notas:
+### Regenerar contenido
+
+Cada generador recrea sus archivos desde cero. Si se ha retocado algo a mano en el editor, se pierde.
+
+```bash
+python -I tools/art/build_all.py
+"$GODOT_BIN" --headless --path . --import
+"$GODOT_BIN" --headless --path . -s tools/data/build_items.gd
+"$GODOT_BIN" --headless --path . -s tools/data/build_documents.gd
+"$GODOT_BIN" --headless --path . res://tools/levels/build_hospital.tscn
+```
+
+1. `build_all.py` genera el arte (tiles, personaje, objetos, iconos), los sonidos y las imágenes de documentos.
+2. `--import` hace que Godot importe todo eso.
+3. `build_items` crea los objetos y recetas, `build_documents` los documentos, y `build_hospital` la escena del hospital.
+
+El generador del hospital se ejecuta como escena (no con `-s`) porque necesita los autoloads.
+
+### Notas
+
 - **Movimiento libre**: el protagonista es un `CharacterBody2D` (modo flotante) con un círculo de 6 px en los pies; el nodo está en los pies. Colisiona con la capa 1:
-  - tiles con `solid = true`: tienen polígono de colisión en la capa de física del tileset;
-  - muebles con `Interactable.blocks`: un `StaticBody2D` llamado `Body` con la huella de su `footprint`.
-- **Eventos por casilla**: `Player.cell_entered` se emite al cambiar de casilla (puertas, huellas). Examinar emite `interact_requested` con las casillas que tiene delante.
-- **Píxel nítido**: `rendering/2d/snap/*` está activado para que el movimiento suave no haga temblar el pixel art. La cámara sigue con suavizado.
-- **Sombras**: solo las tapas de muro (y una franja de la puerta cerrada) tienen oclusor, así la cara de la pared se ilumina y la luz no atraviesa muros.
-- **Mapas de normales**: cada sprite y el tileset usan un `CanvasTexture` (`*_canvas.tres`) con el PNG y su `*_n.png`. Las luces llevan `height` alto (70–110) para que iluminen superficies que miran a cámara; con altura baja todo queda negro.
+  - los tiles con `solid = true` tienen polígono de colisión en la capa de física del tileset;
+  - los muebles con `Interactable.blocks` tienen un `StaticBody2D` llamado `Body` con la huella de su `footprint`.
+- **Casillas de interacción**: `Interactable.interact_cells`, si está, sustituye a `footprint` para interactuar (p. ej. un escritorio con el ordenador en una casilla y los cajones en la otra).
+- **Puertas entre salas**: las de la pared norte cambian sus 4 tiles (3 de puerta y el umbral del otro lado) y llevan al otro lado con un fundido (`Door.warp_*`).
+- **Sombras**: solo las tapas de muro, el umbral cerrado y una franja de la puerta cerrada tienen oclusor; los muebles llevan un `LightOccluder2D` llamado `Shadow`.
+- **Mapas de normales**: cada sprite y el tileset usan un `CanvasTexture` (`*_canvas.tres`). Las luces llevan `height` alto (70–110).
 - **Capas de luz** (`light_mask`):
 
   | Capa | Qué | La linterna lo ilumina | Recibe sombras |
   |---|---|---|---|
   | 1 | Suelo, paredes, calcomanías, polvo | Sí | Sí |
   | 2 | Protagonista | No (la lleva él) | No |
-  | 4 | Muebles | Sí | No (si no, se oscurecerían con su propia sombra) |
+  | 4 | Muebles | Sí | No |
 
-  El resto de luces iluminan las tres capas. Las sombras se configuran con `shadow_item_cull_mask = 1`.
-- **Sombras de muebles**: cada mueble tiene un `LightOccluder2D` llamado `Shadow` con su huella en el suelo.
-- **Animación del protagonista**: `player.gd` elige la columna según el estado (reposo, paso, con o sin linterna). El paso avanza con los píxeles recorridos de verdad (también al deslizarse contra una pared). La fila sale del ángulo: `round((ángulo - 90°) / 45°) mod 8`. El origen de la linterna por dirección (`flashlight_offsets`) sale de `sprite_meta.json` (`lens`).
-- **Brillos**: lo que emite luz tiene un hijo `Glow` con `CanvasItemMaterial` sin sombreado.
-- **Puertas entre zonas**: `WARPS` en `hospital_intro.gd` (casilla pisada → destino y dirección), con fundido.
-- `--screenshot` abre una ventana; para comprobar sin ventana usa `--headless` con `--quit-after`.
-- **Mandos**: algunos mandos (visto con un DualSense) mandan valores falsos los primeros fotogramas; por eso el control llega 0,5 s después al saltarse la intro.
+- **Animación del protagonista**: 24 columnas × 8 orientaciones. El paso avanza con la distancia recorrida de verdad. El origen de la linterna por orientación sale de `sprite_meta.json` (`lens`).
+- **Mandos**: algunos (visto con un DualSense) mandan valores falsos en los primeros fotogramas; por eso el control llega 0,5 s después en el arranque de depuración.
 
 ## Prototipo de combate
 

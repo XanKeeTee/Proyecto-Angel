@@ -19,7 +19,8 @@ Documentación de sistemas de juego. El documento principal es el [GDD](gdd.md).
 | `sistemas/cuerpo-y-heridas.md` | Partes del cuerpo, mutilación, heridas permanentes |
 | `sistemas/estados.md` | Estados alterados |
 | `sistemas/enemigos.md` | Patrones de ataque y telegrafiado |
-| `sistemas/equipamiento.md` | Armas, armaduras, objetos |
+| `sistemas/custodia.md` | Sistema de Custodia: inventario, objetos, combinaciones |
+| `sistemas/equipamiento.md` | Armas, armaduras |
 | `sistemas/decisiones.md` | Banderas de historia, rutas y finales (lado técnico del lore) |
-| `escenas/` | Diseño de escenas concretas: secuencia, textos y mecánicas. Ver [inicio-hospital.md](escenas/inicio-hospital.md) |
+| `escenas/` | Diseño de escenas concretas: secuencia, textos y mecánicas. Ver [prologo.md](escenas/prologo.md) |
 | `plantillas/` | Plantillas de enemigo y de sistema |
