@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/player/player.gd" id="1_th0cw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/protagonist.png" id="2_wv1tt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lights/light_round.png" id="3_vbrce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lights/flashlight_cone.png" id="4_kpit1"]
+
+[node name="Player" type="Node2D" unique_id=157403874]
+script = ExtResource("1_th0cw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1975752559]
+texture = ExtResource("2_wv1tt")
+offset = Vector2(0, -10)
+hframes = 3
+vframes = 4
+frame = 1
+
+[node name="Aura" type="PointLight2D" parent="." unique_id=738046233]
+color = Color(0.9098039, 0.88235295, 0.827451, 1)
+energy = 0.55
+shadow_enabled = true
+texture = ExtResource("3_vbrce")
+texture_scale = 0.45
+
+[node name="Flashlight" type="PointLight2D" parent="." unique_id=1334455223]
+enabled = false
+color = Color(1, 0.95, 0.86, 1)
+energy = 1.3
+shadow_enabled = true
+texture = ExtResource("4_kpit1")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1705050195]

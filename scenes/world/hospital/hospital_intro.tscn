@@ -1,0 +1,324 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scenes/world/hospital/hospital_intro.gd" id="1_hdrpd"]
+[ext_resource type="TileSet" path="res://assets/tilesets/hospital_tileset.tres" id="2_tpq5p"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/footprint.png" id="3_nk8e1"]
+[ext_resource type="Script" path="res://scenes/world/interactable.gd" id="4_ylwhj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/stretcher.png" id="5_33gw7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/monitor.png" id="6_81cyg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/iv_stand.png" id="7_h6jxs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/cabinet.png" id="8_0nbvp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tray.png" id="9_israr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/wheelchair.png" id="10_26qgy"]
+[ext_resource type="PackedScene" path="res://scenes/world/player/player.tscn" id="11_2wnmv"]
+[ext_resource type="Script" path="res://scenes/world/player/player.gd" id="12_i5o0v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lights/light_round.png" id="13_d88gb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/emergency_light.png" id="14_xc752"]
+
+[node name="HospitalIntro" type="Node2D" unique_id=620885298]
+script = ExtResource("1_hdrpd")
+intro_lines = PackedStringArray("Frío.", "Huele a desinfectante. Debajo, a algo dulce.", "Al moverte, algo tira en la espalda. Puntos. Recientes.")
+footprints_lines = PackedStringArray("Huellas de pies descalzos en el suelo.", "Todavía están húmedas.")
+
+[node name="Darkness" type="CanvasModulate" parent="." unique_id=466202066]
+color = Color(0.045, 0.045, 0.07, 1)
+
+[node name="Map" type="TileMapLayer" parent="." unique_id=1483155380]
+unique_name_in_owner = true
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAIAAAABAAAAAAAAAAIAAAACAAAAAAAAAAIAAAADAAAAAAAAAAIAAAAEAAAAAAAAAAIAAAAFAAAAAAAAAAIAAAAGAAAAAAAAAAIAAAAHAAAAAAAAAAIAAAAIAAAAAAAAAAIAAAAJAAAAAAAAAAIAAAAKAAAAAAAAAAIAAAALAAAAAAAAAAIAAAAMAAAAAAAAAAIAAAANAAAAAAAAAAIAAAAOAAAAAAAAAAIAAAAPAAAAAAAAAAIAAAAQAAAAAAAAAAIAAAARAAAAAAAAAAIAAAASAAAAAAAAAAIAAAATAAAAAAAAAAIAAAAUAAAAAAAAAAIAAAAVAAAAAAAAAAIAAAAWAAAAAAAAAAIAAAAXAAAAAAAAAAIAAAAYAAAAAAAAAAIAAAAZAAAAAAAAAAIAAAAaAAAAAAAAAAIAAAAbAAAAAAAAAAIAAAAcAAAAAAAAAAIAAAAdAAAAAAAAAAIAAAAeAAAAAAAAAAIAAAAfAAAAAAAAAAIAAAAgAAAAAAAAAAIAAAAhAAAAAAAAAAIAAAAiAAAAAAAAAAIAAAAjAAAAAAAAAAIAAAAAAAEAAAAAAAIAAAABAAEAAAACAAIAAAACAAEAAAACAAIAAAADAAEAAAABAAIAAAAEAAEAAAABAAIAAAAFAAEAAAABAAIAAAAGAAEAAAABAAIAAAAHAAEAAAABAAIAAAAIAAEAAAADAAIAAAAJAAEAAAABAAIAAAAKAAEAAAACAAIAAAALAAEAAAABAAIAAAAMAAEAAAABAAIAAAANAAEAAAABAAIAAAAOAAEAAAAEAAIAAAAPAAEAAAABAAIAAAAQAAEAAAABAAIAAAARAAEAAAACAAIAAAASAAEAAAACAAIAAAATAAEAAAABAAIAAAAUAAEAAAAEAAIAAAAVAAEAAAABAAIAAAAWAAEAAAABAAIAAAAXAAEAAAABAAIAAAAYAAEAAAABAAIAAAAZAAEAAAABAAIAAAAaAAEAAAAEAAIAAAAbAAEAAAABAAIAAAAcAAEAAAACAAIAAAAdAAEAAAACAAIAAAAeAAEAAAABAAIAAAAfAAEAAAAGAAIAAAAgAAEAAAAHAAIAAAAhAAEAAAABAAIAAAAiAAEAAAABAAIAAAAjAAEAAAAAAAIAAAAAAAIAAAAAAAIAAAABAAIAAAACAAEAAAACAAIAAAAAAAEAAAADAAIAAAAAAAEAAAAEAAIAAAAAAAEAAAAFAAIAAAAAAAEAAAAGAAIAAAAAAAEAAAAHAAIAAAAAAAEAAAAIAAIAAAAAAAEAAAAJAAIAAAAAAAEAAAAKAAIAAAAAAAEAAAALAAIAAAABAAEAAAAMAAIAAAAAAAEAAAANAAIAAAAAAAEAAAAOAAIAAAACAAEAAAAPAAIAAAACAAEAAAAQAAIAAAAAAAEAAAARAAIAAAAAAAEAAAASAAIAAAAAAAEAAAATAAIAAAAAAAEAAAAUAAIAAAAAAAEAAAAVAAIAAAAAAAEAAAAWAAIAAAAAAAEAAAAXAAIAAAAAAAEAAAAYAAIAAAAAAAEAAAAZAAIAAAAAAAEAAAAaAAIAAAACAAEAAAAbAAIAAAAAAAEAAAAcAAIAAAABAAEAAAAdAAIAAAAAAAEAAAAeAAIAAAABAAEAAAAfAAIAAAAAAAEAAAAgAAIAAAACAAEAAAAhAAIAAAABAAEAAAAiAAIAAAAAAAEAAAAjAAIAAAAAAAIAAAAAAAMAAAAAAAIAAAABAAMAAAAAAAEAAAACAAMAAAAAAAEAAAADAAMAAAAAAAEAAAAEAAMAAAAAAAEAAAAFAAMAAAAAAAEAAAAGAAMAAAAAAAEAAAAHAAMAAAAAAAEAAAAIAAMAAAAAAAEAAAAJAAMAAAAAAAEAAAAKAAMAAAACAAEAAAALAAMAAAAAAAEAAAAMAAMAAAAAAAEAAAANAAMAAAABAAEAAAAOAAMAAAAAAAEAAAAPAAMAAAACAAEAAAAQAAMAAAAAAAEAAAARAAMAAAAAAAEAAAASAAMAAAAAAAEAAAATAAMAAAAAAAEAAAAUAAMAAAAAAAEAAAAVAAMAAAACAAEAAAAWAAMAAAAAAAEAAAAXAAMAAAAAAAEAAAAYAAMAAAABAAEAAAAZAAMAAAAAAAEAAAAaAAMAAAABAAEAAAAbAAMAAAAAAAEAAAAcAAMAAAAAAAEAAAAdAAMAAAAAAAEAAAAeAAMAAAAAAAEAAAAfAAMAAAAAAAEAAAAgAAMAAAAAAAEAAAAhAAMAAAAAAAEAAAAiAAMAAAAAAAEAAAAjAAMAAAAAAAIAAAAAAAQAAAAAAAIAAAABAAQAAAABAAEAAAACAAQAAAABAAEAAAADAAQAAAACAAEAAAAEAAQAAAABAAEAAAAFAAQAAAABAAEAAAAGAAQAAAABAAEAAAAHAAQAAAAAAAEAAAAIAAQAAAAAAAEAAAAJAAQAAAAAAAEAAAAKAAQAAAAAAAEAAAALAAQAAAAAAAEAAAAMAAQAAAAAAAEAAAANAAQAAAAAAAEAAAAOAAQAAAAAAAEAAAAPAAQAAAAAAAEAAAAQAAQAAAABAAEAAAARAAQAAAABAAEAAAASAAQAAAAAAAEAAAATAAQAAAAAAAEAAAAUAAQAAAAAAAEAAAAVAAQAAAABAAEAAAAWAAQAAAAAAAEAAAAXAAQAAAAAAAEAAAAYAAQAAAAAAAEAAAAZAAQAAAAAAAEAAAAaAAQAAAAAAAEAAAAbAAQAAAAAAAEAAAAcAAQAAAAAAAEAAAAdAAQAAAAAAAEAAAAeAAQAAAAAAAEAAAAfAAQAAAAAAAEAAAAgAAQAAAAAAAEAAAAhAAQAAAABAAEAAAAiAAQAAAAAAAEAAAAjAAQAAAAAAAIAAAAAAAUAAAAAAAIAAAABAAUAAAAAAAIAAAACAAUAAAAAAAIAAAADAAUAAAAAAAIAAAAEAAUAAAAAAAIAAAAFAAUAAAAAAAEAAAAGAAUAAAAAAAIAAAAHAAUAAAAAAAIAAAAIAAUAAAAAAAIAAAAJAAUAAAAAAAIAAAAKAAUAAAAAAAIAAAALAAUAAAAAAAIAAAAMAAUAAAAAAAIAAAANAAUAAAAAAAIAAAAOAAUAAAAAAAIAAAAPAAUAAAAAAAIAAAAQAAUAAAAAAAIAAAARAAUAAAAAAAIAAAASAAUAAAAAAAIAAAATAAUAAAAAAAIAAAAUAAUAAAAAAAIAAAAVAAUAAAAAAAIAAAAWAAUAAAAAAAIAAAAXAAUAAAAAAAIAAAAYAAUAAAAAAAIAAAAZAAUAAAAAAAIAAAAaAAUAAAAAAAIAAAAbAAUAAAAAAAIAAAAcAAUAAAAAAAIAAAAdAAUAAAAAAAIAAAAeAAUAAAAAAAIAAAAfAAUAAAAAAAIAAAAgAAUAAAAAAAIAAAAhAAUAAAAAAAIAAAAiAAUAAAAAAAIAAAAjAAUAAAAAAAIAAAAAAAYAAAAAAAIAAAABAAYAAAACAAIAAAACAAYAAAABAAIAAAADAAYAAAABAAIAAAAEAAYAAAACAAIAAAAFAAYAAAAEAAIAAAAGAAYAAAABAAIAAAAHAAYAAAABAAIAAAAIAAYAAAACAAIAAAAJAAYAAAABAAIAAAAKAAYAAAABAAIAAAALAAYAAAAAAAIAAAAAAAcAAAAAAAIAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAABAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAACAAAAAAALAAcAAAAAAAIAAAAAAAgAAAAAAAIAAAABAAgAAAABAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAACAAAAAAAGAAgAAAACAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAIAAAAAAAkAAAAAAAIAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAAAAAAAAAAHAAkAAAAAAAAAAAAIAAkAAAACAAAAAAAJAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAALAAkAAAAAAAIAAAAAAAoAAAAAAAIAAAABAAoAAAABAAAAAAACAAoAAAADAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAABAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAIAAAAAAAsAAAAAAAIAAAABAAsAAAAAAAAAAAACAAsAAAAAAAAAAAADAAsAAAAAAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAABAAAAAAAIAAsAAAAAAAAAAAAJAAsAAAAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAIAAAAAAAwAAAAAAAIAAAABAAwAAAACAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAABAAAAAAALAAwAAAAAAAIAAAAAAA0AAAAAAAIAAAABAA0AAAAAAAIAAAACAA0AAAAAAAIAAAADAA0AAAAAAAIAAAAEAA0AAAAAAAIAAAAFAA0AAAAAAAIAAAAGAA0AAAAAAAIAAAAHAA0AAAAAAAIAAAAIAA0AAAAAAAIAAAAJAA0AAAAAAAIAAAAKAA0AAAAAAAIAAAALAA0AAAAAAAIAAAA=")
+tile_set = ExtResource("2_tpq5p")
+
+[node name="Footprints" type="Node2D" parent="." unique_id=1757508505]
+
+[node name="Footprint0" type="Sprite2D" parent="Footprints" unique_id=2049931988]
+position = Vector2(368, 106)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint1" type="Sprite2D" parent="Footprints" unique_id=398644025]
+position = Vector2(400, 118)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint2" type="Sprite2D" parent="Footprints" unique_id=628636304]
+position = Vector2(432, 106)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint3" type="Sprite2D" parent="Footprints" unique_id=554749920]
+position = Vector2(464, 118)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint4" type="Sprite2D" parent="Footprints" unique_id=1376738669]
+position = Vector2(496, 106)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint5" type="Sprite2D" parent="Footprints" unique_id=370546135]
+position = Vector2(528, 118)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint6" type="Sprite2D" parent="Footprints" unique_id=1928354405]
+position = Vector2(543.7574, 87.75736)
+rotation = 0.7853982
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint7" type="Sprite2D" parent="Footprints" unique_id=1778025871]
+position = Vector2(592, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint8" type="Sprite2D" parent="Footprints" unique_id=1256588134]
+position = Vector2(624, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint9" type="Sprite2D" parent="Footprints" unique_id=31502419]
+position = Vector2(656, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint10" type="Sprite2D" parent="Footprints" unique_id=940293441]
+position = Vector2(688, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint11" type="Sprite2D" parent="Footprints" unique_id=1072032434]
+position = Vector2(720, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint12" type="Sprite2D" parent="Footprints" unique_id=1216276962]
+position = Vector2(752, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint13" type="Sprite2D" parent="Footprints" unique_id=1775567021]
+position = Vector2(784, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint14" type="Sprite2D" parent="Footprints" unique_id=1560347060]
+position = Vector2(816, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint15" type="Sprite2D" parent="Footprints" unique_id=1473702537]
+position = Vector2(848, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint16" type="Sprite2D" parent="Footprints" unique_id=1234808516]
+position = Vector2(880, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint17" type="Sprite2D" parent="Footprints" unique_id=1647396237]
+position = Vector2(912, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint18" type="Sprite2D" parent="Footprints" unique_id=1409506357]
+position = Vector2(944, 74)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+
+[node name="Footprint19" type="Sprite2D" parent="Footprints" unique_id=793343421]
+position = Vector2(976, 86)
+rotation = 1.5707964
+texture = ExtResource("3_nk8e1")
+flip_h = true
+
+[node name="Footprint20" type="Sprite2D" parent="Footprints" unique_id=198867112]
+position = Vector2(1006, 72)
+texture = ExtResource("3_nk8e1")
+
+[node name="World" type="Node2D" parent="." unique_id=626238917]
+y_sort_enabled = true
+
+[node name="Stretcher" type="Node2D" parent="World" unique_id=1708724264]
+unique_name_in_owner = true
+position = Vector2(80, 304)
+script = ExtResource("4_ylwhj")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
+lines = PackedStringArray("La sábana conserva la forma de tu cuerpo.", "No recuerdas haberte tumbado aquí.")
+lines_repeat = PackedStringArray("Hay una mancha donde tenías la espalda.")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Stretcher" unique_id=1739658536]
+texture = ExtResource("5_33gw7")
+offset = Vector2(0, -16)
+hframes = 4
+frame = 3
+
+[node name="Monitor" type="Node2D" parent="World" unique_id=168420921]
+position = Vector2(48, 272)
+script = ExtResource("4_ylwhj")
+lines = PackedStringArray("El monitor sigue encendido.", "Los cables cuelgan sueltos, pero la línea verde sigue latiendo.")
+lines_repeat = PackedStringArray("La línea verde sigue latiendo.")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Monitor" unique_id=1947983959]
+texture = ExtResource("6_81cyg")
+offset = Vector2(0, -8)
+
+[node name="IvStand" type="Node2D" parent="World" unique_id=226802406]
+position = Vector2(112, 272)
+script = ExtResource("4_ylwhj")
+lines = PackedStringArray("La bolsa del gotero está vacía.", "El tubo está arrancado. La aguja todavía tiene sangre.")
+lines_repeat = PackedStringArray("La aguja todavía tiene sangre.")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/IvStand" unique_id=73754963]
+texture = ExtResource("7_h6jxs")
+offset = Vector2(0, -16)
+
+[node name="Cabinet" type="Node2D" parent="World" unique_id=1976512070]
+unique_name_in_owner = true
+position = Vector2(304, 240)
+script = ExtResource("4_ylwhj")
+event_id = &"flashlight"
+lines = PackedStringArray("Un armario metálico. Las puertas están cerradas con llave.", "El cajón de abajo cede.", "Dentro hay una linterna.")
+lines_repeat = PackedStringArray("El cajón está vacío.")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Cabinet" unique_id=161942335]
+texture = ExtResource("8_0nbvp")
+offset = Vector2(0, -8)
+hframes = 2
+
+[node name="OtherBed" type="Node2D" parent="World" unique_id=963090756]
+position = Vector2(272, 368)
+script = ExtResource("4_ylwhj")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
+lines = PackedStringArray("Otra camilla. Las sábanas están revueltas y frías.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/OtherBed" unique_id=1944731007]
+texture = ExtResource("5_33gw7")
+offset = Vector2(0, -16)
+hframes = 4
+frame = 3
+
+[node name="Tray" type="Node2D" parent="World" unique_id=1672224887]
+position = Vector2(176, 368)
+script = ExtResource("4_ylwhj")
+lines = PackedStringArray("Instrumental quirúrgico, limpio y en orden.", "Falta una pieza en el centro.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Tray" unique_id=670521103]
+texture = ExtResource("9_israr")
+
+[node name="Wheelchair" type="Node2D" parent="World" unique_id=1619224998]
+position = Vector2(304, 112)
+script = ExtResource("4_ylwhj")
+lines = PackedStringArray("Una silla de ruedas volcada.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Wheelchair" unique_id=1959350611]
+texture = ExtResource("10_26qgy")
+
+[node name="Gurney" type="Node2D" parent="World" unique_id=312311087]
+position = Vector2(592, 144)
+script = ExtResource("4_ylwhj")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1)])
+lines = PackedStringArray("Una camilla vacía, aparcada contra la pared.")
+lines_repeat = PackedStringArray()
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Gurney" unique_id=1570505715]
+texture = ExtResource("5_33gw7")
+offset = Vector2(0, -16)
+hframes = 4
+
+[node name="Player" type="Node2D" parent="World" unique_id=157403874 instance=ExtResource("11_2wnmv")]
+unique_name_in_owner = true
+script = ExtResource("12_i5o0v")
+
+[node name="TileTriggers" type="Node2D" parent="." unique_id=1063295086]
+
+[node name="RoomDoor" type="Node2D" parent="TileTriggers" unique_id=1688688429]
+position = Vector2(176, 208)
+script = ExtResource("4_ylwhj")
+blocks = false
+event_id = &"room_door"
+lines = PackedStringArray("Al otro lado de la puerta no se ve nada. Ni siquiera el suelo.", "No puedes salir a ciegas.")
+lines_repeat = PackedStringArray()
+
+[node name="Notice" type="Node2D" parent="TileTriggers" unique_id=529682879]
+position = Vector2(272, 48)
+script = ExtResource("4_ylwhj")
+blocks = false
+lines = PackedStringArray("Un cartel con el horario de visitas.", "Alguien lo ha arañado hasta romper el papel.")
+lines_repeat = PackedStringArray()
+
+[node name="LockedDoor1" type="Node2D" parent="TileTriggers" unique_id=1117268002]
+position = Vector2(464, 48)
+script = ExtResource("4_ylwhj")
+blocks = false
+lines = PackedStringArray("Cerrada.")
+lines_repeat = PackedStringArray()
+
+[node name="LockedDoor2" type="Node2D" parent="TileTriggers" unique_id=76950844]
+position = Vector2(656, 48)
+script = ExtResource("4_ylwhj")
+blocks = false
+lines = PackedStringArray("Cerrada. No se oye nada al otro lado.")
+lines_repeat = PackedStringArray()
+
+[node name="LockedDoor3" type="Node2D" parent="TileTriggers" unique_id=2047919991]
+position = Vector2(848, 48)
+script = ExtResource("4_ylwhj")
+blocks = false
+lines = PackedStringArray("Cerrada. El pomo está helado.")
+lines_repeat = PackedStringArray()
+
+[node name="DoubleDoor" type="Node2D" parent="TileTriggers" unique_id=2135152606]
+position = Vector2(1008, 48)
+script = ExtResource("4_ylwhj")
+footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
+blocks = false
+event_id = &"ending"
+lines = PackedStringArray("Las huellas terminan delante de esta puerta.", "Son del tamaño de tus pies.")
+lines_repeat = PackedStringArray()
+
+[node name="MonitorLight" type="PointLight2D" parent="." unique_id=1656423322]
+unique_name_in_owner = true
+position = Vector2(48, 258)
+color = Color(0.72156864, 0.83137256, 0.3529412, 1)
+energy = 1.15
+shadow_enabled = true
+texture = ExtResource("13_d88gb")
+texture_scale = 0.8
+
+[node name="EmergencySprite" type="Sprite2D" parent="." unique_id=2056442556]
+unique_name_in_owner = true
+position = Vector2(944, 38)
+texture = ExtResource("14_xc752")
+hframes = 2
+
+[node name="EmergencyLight" type="PointLight2D" parent="." unique_id=85260980]
+unique_name_in_owner = true
+position = Vector2(944, 48)
+color = Color(0.7529412, 0.22352941, 0.16862746, 1)
+energy = 1.3
+shadow_enabled = true
+texture = ExtResource("13_d88gb")
+texture_scale = 1.2
+
+[node name="FadeLayer" type="CanvasLayer" parent="." unique_id=1586423593]
+layer = 15
+
+[node name="Fade" type="ColorRect" parent="FadeLayer" unique_id=267995939]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

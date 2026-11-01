@@ -59,7 +59,9 @@ _Pendiente._
 
 ## 8. Exploración y mapa
 
-_Pendiente._
+**Aprobado:** tiles de **32 px**.
+
+`[PROPUESTA]` Vista cenital estilo RPG Maker, movimiento por casillas en 4 direcciones, oscuridad casi total salvo cerca de fuentes de luz, y linterna que ilumina hacia donde se mira. Primera escena: [escenas/inicio-hospital.md](escenas/inicio-hospital.md).
 
 ## 9. Interfaz
 

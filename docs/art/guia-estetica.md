@@ -44,7 +44,8 @@ Reglas:
 ## Pixel art (estilo RPG Maker)
 
 - Resolución base del juego: **640×360** con escalado entero (provisional, ver `docs/tech/README.md`).
-- Tamaño de tile: **pendiente**.
+- Tamaño de tile: **32 px** (aprobado). Personajes de **32×48 px** por fotograma (sobresalen media casilla por arriba), 3 fotogramas por dirección en el orden abajo, izquierda, derecha y arriba.
+- Arte provisional del hospital: `tools/art/gen_hospital_placeholders.py`. Al sustituirlo por arte definitivo, mantener tamaños y disposición de los PNG.
 - **Mapas** (ref_06): vista cenital RPG Maker, personajes chibi de 4 direcciones y 3 frames. Texturas densas y "sucias", no limpias. Iluminación con máscara de oscuridad alrededor del jugador.
 - **Combate** (ref_05): enemigo grande de frente en el centro, grupo del jugador de espaldas en primer plano, escenario con perspectiva. Los enemigos deben tener **partes del cuerpo distinguibles a simple vista**, porque son objetivos de combate.
 - **Retratos y escenas ilustradas** (ref_02, ref_04): pueden tener más detalle, estilo pintado o anime oscuro, siempre con la paleta del juego. Útiles para momentos clave y finales.

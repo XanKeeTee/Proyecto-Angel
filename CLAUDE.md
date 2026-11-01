@@ -79,7 +79,7 @@ scripts/           Código que no pertenece a una escena concreta
   systems/         combat/, dialogue/, inventory/, save/
 shaders/           .gdshader (VHS, CRT, aberración, grano)
 tests/             unit/, integration/
-tools/             Scripts auxiliares fuera del juego (p. ej. balance/ con simulaciones en Python). Godot lo ignora.
+tools/             Scripts auxiliares fuera del juego: balance/ (simulaciones), art/ (arte provisional generado). Godot lo ignora.
 docs/              lore/, design/, tech/, art/ (Godot lo ignora: .gdignore)
 .claude/agents/    Subagentes del proyecto
 ```

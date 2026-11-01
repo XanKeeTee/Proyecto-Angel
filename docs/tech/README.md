@@ -19,14 +19,52 @@ Valores puestos en `project.godot`. Se pueden cambiar; si se cambian, actualizar
 | Filtro de texturas | Nearest | Pixel art sin difuminar |
 | Avisos GDScript | `untyped_declaration`, `inferred_declaration` = warning | Empujar al tipado estático |
 
-> Decisión abierta: RPG Maker MV/MZ usa 816×624 (casi 4:3) con tiles de 48 px. Si queremos ese encuadre más "cuadrado", hay que decidirlo antes de producir arte. Tamaño de tile: **pendiente** (16, 24, 32 o 48 px).
+| Color de fondo | Negro | Lo que queda fuera del mapa no se ve gris |
+
+Tamaño de tile: **32 px** (aprobado).
+
+## Inicio en el hospital
+
+Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn` (F5). Diseño en [inicio-hospital.md](../design/escenas/inicio-hospital.md).
+
+- **Controles**: flechas para moverse, Intro para examinar y pasar texto, F2 para el filtro VHS.
+- **Depuración** (argumentos tras `--`):
+
+  ```bash
+  "$GODOT_BIN" --path . -- --at=20,3 --face=right --screenshot=captura.png
+  "$GODOT_BIN" --path . -- --ending --auto-advance=0.8
+  ```
+
+  | Argumento | Qué hace |
+  |---|---|
+  | `--skip-intro` | Empieza con control, sin la secuencia de despertar |
+  | `--flashlight` | Empieza con la linterna |
+  | `--at=X,Y` / `--face=up\|down\|left\|right` | Casilla y dirección iniciales. En el pasillo da la linterna y abre la puerta |
+  | `--ending` | Lanza el final en la puerta doble |
+  | `--auto-advance=S` | Los textos avanzan solos (pruebas sin manos) |
+  | `--screenshot=RUTA` y `--screenshot-delay=S` | Guarda una captura y cierra (sin control del jugador) |
+  | `--no-vhs` | Sin filtro |
+
+| Archivo | Qué hace |
+|---|---|
+| `scenes/world/hospital/hospital_intro.gd` | Secuencia, eventos (linterna, puerta, huellas, final) y luces |
+| `scenes/world/player/player.gd` | Movimiento por casillas, linterna, cámara |
+| `scenes/world/interactable.gd` | Objeto o tile examinable; textos en el inspector |
+| `scenes/ui/message_box.gd` | Caja de texto, rótulos y pistas |
+| `scenes/ui/vhs_overlay.gd` | Filtro VHS reutilizable, `glitch()` para eventos |
+| `assets/tilesets/hospital_tileset.tres` | Tiles con dato `solid` (paso) y oclusores (sombras) |
+
+Notas:
+- **Paso**: un tile bloquea si su dato personalizado `solid` es verdadero. Los objetos bloquean con `Interactable.blocks` y su `footprint`.
+- **Sombras**: solo las tapas de muro (y una franja de la puerta cerrada) tienen oclusor, así la cara de la pared se ilumina y la luz no atraviesa muros.
+- **Mandos**: algunos mandos (visto con un DualSense) mandan valores falsos los primeros fotogramas; por eso el control llega 0,5 s después al saltarse la intro.
 
 ## Prototipo de combate
 
-Escena principal del proyecto: `res://scenes/battle/battle_scene.tscn`. Pulsa F5 en el editor o ejecuta:
+Ya no es la escena principal: abre `res://scenes/battle/battle_scene.tscn` y pulsa **F6** (ejecutar escena actual), o ejecuta:
 
 ```bash
-"$GODOT_BIN" --path .
+"$GODOT_BIN" --path . res://scenes/battle/battle_scene.tscn
 ```
 
 - **Controles**: ratón, o flechas + Intro. **F2** activa o desactiva el filtro VHS.
@@ -35,7 +73,7 @@ Escena principal del proyecto: `res://scenes/battle/battle_scene.tscn`. Pulsa F5
 - **Depuración** (argumentos tras `--`):
 
   ```bash
-  "$GODOT_BIN" --path . -- --autoplay=3 --screenshot=captura.png
+  "$GODOT_BIN" --path . res://scenes/battle/battle_scene.tscn -- --autoplay=3 --screenshot=captura.png
   ```
 
   `--autoplay=N` juega N rondas solo; `--screenshot=RUTA` guarda una captura y cierra.

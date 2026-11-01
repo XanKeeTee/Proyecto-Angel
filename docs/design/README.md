@@ -21,4 +21,5 @@ Documentación de sistemas de juego. El documento principal es el [GDD](gdd.md).
 | `sistemas/enemigos.md` | Patrones de ataque y telegrafiado |
 | `sistemas/equipamiento.md` | Armas, armaduras, objetos |
 | `sistemas/decisiones.md` | Banderas de historia, rutas y finales (lado técnico del lore) |
+| `escenas/` | Diseño de escenas concretas: secuencia, textos y mecánicas. Ver [inicio-hospital.md](escenas/inicio-hospital.md) |
 | `plantillas/` | Plantillas de enemigo y de sistema |
