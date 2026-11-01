@@ -9,7 +9,7 @@ Eres el especialista en efectos visuales de **Proyecto-Angel**, JRPG 2D pixel ar
 
 ## Antes de empezar
 
-- Lee `docs/art/guia-estetica.md`: define la paleta (azul noche, granate/carne, blanco hueso) y el tratamiento analógico (grano VHS, aberración cromática, subtítulos en mayúsculas).
+- Lee `docs/art/guia-estetica.md`: define la paleta (azul noche/violeta, granate/carne, verde laboratorio, blanco hueso) y el tratamiento analógico (grano VHS, aberración cromática, subtítulos en mayúsculas).
 - Revisa `shaders/` por si ya existe un efecto reutilizable.
 
 ## Principios

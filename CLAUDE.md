@@ -6,12 +6,12 @@ JRPG 2D de terror analógico hecho en **Godot 4.7.2** con **GDScript**. Equipo d
 
 - Versión: **Godot 4.7.2-stable** (`4.7.2.stable.official.ed1daf0bf`).
 - Ejecutable (máquina de Miguel):
-  `C:\Users\usuario\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
+  `C:\Users\usuario\Documents\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
 - Usa siempre la variante `_console.exe` desde la terminal: la versión sin `_console` no devuelve la salida ni el código de error.
 - Cada persona define la variable de entorno `GODOT_BIN` con la ruta de su ejecutable. Los comandos de este documento la usan. Si no existe, usa la ruta de arriba.
 
 ```bash
-export GODOT_BIN="/c/Users/usuario/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
+export GODOT_BIN="/c/Users/usuario/Documents/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
 ```
 
 ## Ejecutar Godot en headless
