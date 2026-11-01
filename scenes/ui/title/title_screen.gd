@@ -39,6 +39,14 @@ func _ready() -> void:
 	var new_game: Button = UiStyle.button("Nueva partida")
 	new_game.pressed.connect(_on_new_game)
 	box.add_child(new_game)
+	var options: OptionsMenu = OptionsMenu.new()
+	add_child(options)
+	var options_button: Button = UiStyle.button("Opciones")
+	options_button.pressed.connect(func() -> void:
+		options.open()
+		await options.closed
+		options_button.grab_focus())
+	box.add_child(options_button)
 	var quit: Button = UiStyle.button("Salir")
 	quit.pressed.connect(get_tree().quit)
 	box.add_child(quit)

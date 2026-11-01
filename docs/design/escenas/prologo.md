@@ -51,7 +51,7 @@ La distribución está en `tools/levels/hospital_layout.json`. La escena se gene
 
 | # | Dónde | Qué se consigue | Qué abre |
 |---|---|---|---|
-| 1 | Hab. 09 · mesita | **Linterna** (35 % de batería) | Ver |
+| 1 | Hab. 09 · mesita | **Linterna** (35 % de batería) y **2 pilas** | Ver |
 | 2 | Almacén · armario | **Palanca** (ocupa 1×3) | La puerta atascada del quirófano (la palanca se queda encajada) |
 | 3 | Quirófano · bandeja | **Destornillador** (4 usos) | — |
 | 4 | Hab. 11 · cama (tras oír el chirrido) | **Llave pequeña** | Armario de medicación de la enfermería |
@@ -129,6 +129,17 @@ El pasillo nuevo repite puertas con el número 09. Al fondo hay una puerta abier
 El camino principal, sabiendo qué hacer, dura unos 15 minutos. Explorando, leyendo los 21 documentos, registrando los ~110 objetos y gestionando la batería, el objetivo es de **30–45 minutos**.
 
 **Sin medir**: nadie lo ha jugado entero todavía.
+
+## Opciones
+
+Desde el título y la pausa:
+- volumen general, de ambiente, de efectos y de interfaz;
+- **brillo**, con una muestra de calibración;
+- intensidad del filtro VHS;
+- pantalla completa;
+- velocidad del texto.
+
+Se guardan en `user://settings.cfg`, aparte de la partida.
 
 ## Controles
 

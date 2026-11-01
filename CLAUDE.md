@@ -56,10 +56,11 @@ Mientras no se instale GUT (propuesta en [docs/tech/tests.md](docs/tech/tests.md
   - Señales: `snake_case` en pasado (`wound_inflicted`, `turn_ended`).
 - **Orden dentro de un script** (guía oficial de Godot): `class_name`, `extends`, docstring `##`, señales, enums, constantes, `@export`, variables públicas, privadas, `@onready`, `_init`, `_ready`, otros callbacks, métodos públicos, métodos privados.
 - **Señales**: "llama hacia abajo, señaliza hacia arriba". Un nodo hijo nunca busca a su padre con `get_parent()`; emite una señal. Conectar por código con `signal.connect(callable)`, no con strings.
-- **Autoloads**: solo para estado global y servicios transversales. Mantenerlos pocos y finos. Existen tres (`autoload/`):
+- **Autoloads**: solo para estado global y servicios transversales. Mantenerlos pocos y finos. Existen cuatro (`autoload/`):
   - `EventBus`: señales globales desacopladas.
   - `GameState`: banderas, estado de los objetos del mundo, protagonista activo (custodia y constantes), posición.
   - `SaveSystem`: guardado/carga en JSON.
+  - `Settings`: opciones del jugador (volumen por canal, brillo, filtro, pantalla, texto).
   La lógica de combate **no** va en un autoload: vive en la escena de combate y en `Resource`s.
 - **Datos como `Resource`**: enemigos, objetos, armas, partes del cuerpo, heridas y estados se definen como `Resource` con `class_name` y se guardan como `.tres` en `data/`. Nada de números mágicos en el código.
 - Separar lógica de presentación: las reglas de combate deben poder ejecutarse y testearse sin escena ni nodos visuales.

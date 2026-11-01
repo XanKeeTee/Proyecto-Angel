@@ -6,7 +6,6 @@ extends CanvasLayer
 
 signal _advanced
 
-const CHARS_PER_SECOND: float = 45.0
 const BONE: Color = Color("e8e1d3")
 const BONE_DIM: Color = Color("bfb6a3")
 const BOX_BG: Color = Color(0.04, 0.035, 0.07, 0.88)
@@ -49,7 +48,7 @@ func _process(delta: float) -> void:
 		return
 	var total: int = _label.get_total_character_count()
 	if _label.visible_characters >= 0 and _label.visible_characters < total:
-		_typed += delta * CHARS_PER_SECOND
+		_typed += delta * Settings.text_chars_per_second()
 		_label.visible_characters = mini(int(_typed), total)
 	if auto_advance > 0.0:
 		_auto_timer += delta

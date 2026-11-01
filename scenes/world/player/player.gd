@@ -23,16 +23,24 @@ const ACCELERATION: float = 520.0
 const FRICTION: float = 700.0
 ## Un ciclo completo de paso (8 fotogramas) cubre esta distancia.
 const STRIDE_PIXELS: float = 64.0
-const IDLE_FPS: float = 1.6
+## Respiración: 8 fotogramas en unos 2,4 s.
+const IDLE_FPS: float = 3.3
+## Gestos ocasionales en reposo (mano a la herida, mirar alrededor).
+const FIDGET_FPS: float = 7.0
+const FIDGET_EVERY: Vector2 = Vector2(7.0, 13.0)
+## Tiempo por paso de orientación al girar (pasa por las intermedias).
+const TURN_STEP: float = 0.045
 ## Por debajo de esta velocidad se considera parado (animación de reposo).
 const WALK_THRESHOLD: float = 12.0
 ## Hoja del protagonista: 24 columnas y 8 filas (ver tools/art/sprite_meta.json).
-const COLUMNS: int = 24
+const COLUMNS: int = 64
 const DIRECTIONS: int = 8
-const ANIM_IDLE: Vector2i = Vector2i(0, 4)
-const ANIM_WALK: Vector2i = Vector2i(4, 8)
-const ANIM_IDLE_FLASH: Vector2i = Vector2i(12, 4)
-const ANIM_WALK_FLASH: Vector2i = Vector2i(16, 8)
+const ANIM_IDLE: Vector2i = Vector2i(0, 8)
+const ANIM_FIDGET: Vector2i = Vector2i(8, 12)
+const ANIM_WALK: Vector2i = Vector2i(20, 12)
+const ANIM_IDLE_FLASH: Vector2i = Vector2i(32, 8)
+const ANIM_LOOK: Vector2i = Vector2i(40, 12)
+const ANIM_WALK_FLASH: Vector2i = Vector2i(52, 12)
 const BOUNCE_DISTANCE: float = 76.0
 ## Distancias a las que se mira al examinar.
 const REACH: Array[float] = [18.0, 30.0]
@@ -40,6 +48,9 @@ const REACH: Array[float] = [18.0, 30.0]
 ## Origen de la luz (la mano) por fila de orientación: abajo, abajo-izq., izq., arriba-izq.,
 ## arriba, arriba-der., der., abajo-der.
 @export var flashlight_offsets: Array[Vector2] = []
+## Posición de la lente en cada fotograma con linterna: [fila][columna] -> [x, y] respecto a los pies
+## (la luz sale de la propia linterna). La rellena tools/levels/build_player.
+@export var lens_frames: Array = []
 ## Rapidez con que el haz sigue al giro (más alto = menos inercia).
 @export var light_turn_speed: float = 9.0
 ## Balanceo del haz al andar, en radianes.
@@ -62,6 +73,10 @@ var _flashlight_energy: float = 1.0
 var _bounce_energy: float = 0.0
 ## Intensidad de la linterna según la batería (0..1); por debajo de 0,2 parpadea y amarillea.
 var _light_level: float = 1.0
+var _display_row: int = 0
+var _turn_timer: float = 0.0
+var _fidget_time: float = -1.0
+var _next_fidget: float = 9.0
 ## Multiplicador de velocidad (heridas, sangrado…).
 var speed_scale: float = 1.0
 
@@ -99,7 +114,7 @@ func _physics_process(delta: float) -> void:
 	var stepped: float = position.distance_to(before)
 	# Un paso cada media zancada: suena el pie descalzo.
 	if floori(_walk_distance / (STRIDE_PIXELS / 2.0)) != floori((_walk_distance + stepped) / (STRIDE_PIXELS / 2.0)):
-		Sfx.at(get_parent(), "step_%d" % randi_range(1, 4), position, -16.0, 0.08)
+		Sfx.at(get_parent(), "step_%d" % randi_range(1, 4), position, -10.0, 0.08)
 	_walk_distance += stepped
 	if cell != _last_cell:
 		_last_cell = cell
@@ -109,6 +124,19 @@ func _physics_process(delta: float) -> void:
 func _process(delta: float) -> void:
 	if not _is_walking():
 		_idle_time += delta
+		if _fidget_time < 0.0 and _idle_time > _next_fidget:
+			_fidget_time = 0.0
+		elif _fidget_time >= 0.0:
+			_fidget_time += delta
+			var anim: Vector2i = ANIM_LOOK if _holding_flashlight else ANIM_FIDGET
+			if _fidget_time * FIDGET_FPS >= anim.y:
+				_fidget_time = -1.0
+				_idle_time = 0.0
+				_next_fidget = randf_range(FIDGET_EVERY.x, FIDGET_EVERY.y)
+	else:
+		_idle_time = 0.0
+		_fidget_time = -1.0
+	_turn(delta)
 	_update_frame()
 	_update_light(delta)
 
@@ -120,6 +148,7 @@ func place(target: Vector2i, direction: Vector2i) -> void:
 	_last_cell = target
 	face(direction)
 	_light_angle = facing_angle
+	_display_row = _row()
 	_camera.reset_smoothing()
 
 
@@ -207,16 +236,33 @@ func _row() -> int:
 	return posmod(index, DIRECTIONS)
 
 
+## Gira el sprite hacia la orientación deseada pasando por las intermedias.
+func _turn(delta: float) -> void:
+	var target: int = _row()
+	if target == _display_row:
+		_turn_timer = 0.0
+		return
+	_turn_timer += delta
+	if _turn_timer < TURN_STEP:
+		return
+	_turn_timer = 0.0
+	var diff: int = posmod(target - _display_row, DIRECTIONS)
+	_display_row = posmod(_display_row + (1 if diff <= DIRECTIONS / 2 else -1), DIRECTIONS)
+
+
 func _update_frame() -> void:
 	var anim: Vector2i
 	var index: int
 	if _is_walking():
 		anim = ANIM_WALK_FLASH if _holding_flashlight else ANIM_WALK
 		index = int(fposmod(_walk_distance, STRIDE_PIXELS) / STRIDE_PIXELS * anim.y) % anim.y
+	elif _fidget_time >= 0.0:
+		anim = ANIM_LOOK if _holding_flashlight else ANIM_FIDGET
+		index = mini(int(_fidget_time * FIDGET_FPS), anim.y - 1)
 	else:
 		anim = ANIM_IDLE_FLASH if _holding_flashlight else ANIM_IDLE
 		index = int(_idle_time * IDLE_FPS) % anim.y
-	_sprite.frame = _row() * COLUMNS + anim.x + index
+	_sprite.frame = _display_row * COLUMNS + anim.x + index
 	_glow.frame = _sprite.frame
 	_glow.visible = _flashlight.enabled
 
@@ -229,9 +275,9 @@ func _update_light(delta: float) -> void:
 	else:
 		sway = sin(_idle_time * TAU * IDLE_FPS / 4.0) * light_sway * 0.25
 	_flashlight.rotation = _light_angle + sway
-	var row: int = _row()
-	var hand: Vector2 = flashlight_offsets[row] if row < flashlight_offsets.size() else Vector2.ZERO
-	_flashlight.position = _flashlight.position.lerp(hand, 1.0 - exp(-14.0 * delta))
+	# La luz sale de la lente de la linterna, fotograma a fotograma.
+	var hand: Vector2 = _lens_offset()
+	_flashlight.position = _flashlight.position.lerp(hand, 1.0 - exp(-30.0 * delta))
 	# Pequeñas variaciones de una bombilla vieja.
 	var jitter: float = 0.96 + 0.04 * randf()
 	if randf() < 0.004:
@@ -245,6 +291,17 @@ func _update_light(delta: float) -> void:
 	_flashlight.energy = _flashlight_energy * jitter
 	_bounce.position = _flashlight.position + Vector2.from_angle(_flashlight.rotation) * BOUNCE_DISTANCE
 	_bounce.energy = _bounce_energy * jitter
+
+
+func _lens_offset() -> Vector2:
+	var row: int = _display_row
+	var column: int = _sprite.frame % COLUMNS
+	if row < lens_frames.size():
+		var row_data: Array = lens_frames[row]
+		if column < row_data.size() and row_data[column] != null:
+			var p: Array = row_data[column]
+			return Vector2(float(p[0]), float(p[1]))
+	return flashlight_offsets[row] if row < flashlight_offsets.size() else Vector2.ZERO
 
 
 func _set_light_enabled(on: bool) -> void:

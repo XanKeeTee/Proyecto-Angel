@@ -59,39 +59,53 @@ def sheet(name: str, rel: str, frames: list, w: int, h: int, origin: tuple[int, 
                   "origin": list(origin), "anchor": list(anchor), "glow": glow}
 
 
-# Columnas de la hoja del protagonista (por fila de dirección).
-ANIMS = {"idle": (0, 4), "walk": (4, 8), "idle_flash": (12, 4), "walk_flash": (16, 8)}
+# Columnas de la hoja del protagonista (por fila de orientación): inicio y nº de fotogramas.
+ANIMS = {"idle": (0, 8), "fidget": (8, 12), "walk": (20, 12), "idle_flash": (32, 8), "look": (40, 12), "walk_flash": (52, 12)}
+COLUMNS = 64
 # 8 orientaciones, en el orden del ángulo en pantalla: abajo, abajo-izq., izq., arriba-izq.,
 # arriba, arriba-der., der., abajo-der. (fila = round((ángulo - 90°) / 45°) mod 8).
 YAWS = (0.0, -math.pi / 4, -math.pi / 2, -3 * math.pi / 4, math.pi, 3 * math.pi / 4, math.pi / 2, math.pi / 4)
 
 
 def _pose_for(anim: str, i: int):
-    count = ANIMS[anim][1]
-    flash = anim.endswith("flash")
-    if anim.startswith("idle"):
-        return human.idle_pose(i / count, flash)
-    return human.walk_pose(i / count, flash)
+    t = i / ANIMS[anim][1]
+    return {
+        "idle": lambda: human.idle_pose(t),
+        "fidget": lambda: human.fidget_pose(t),
+        "walk": lambda: human.walk_pose(t),
+        "idle_flash": lambda: human.idle_pose(t, True),
+        "look": lambda: human.look_pose(t),
+        "walk_flash": lambda: human.walk_pose(t, True),
+    }[anim]()
 
 
 def build_protagonist() -> None:
+    from pxrender import rot_y
     frames = []
     lens = []
+    lens_frames = []
     view = View()
     for yaw in YAWS:
+        row_lens = [None] * COLUMNS
         for anim in ANIMS:
-            for i in range(ANIMS[anim][1]):
-                frames.append(render(human.build_pose(_pose_for(anim, i)), human.FRAME_W, human.FRAME_H, human.ORIGIN,
-                                     View(yaw=yaw)))
-        # Lente en reposo con linterna: posición en pantalla y su proyección en el suelo.
-        from pxrender import rot_y
-        p = rot_y(human.lens_position(human.idle_pose(0.0, True)), yaw)
-        lens.append({"screen": [round(p[0], 1), round(-(view.a * p[1] - view.b * p[2]), 1)],
-                     "floor": [round(p[0], 1), round(view.b * p[2], 1)]})
+            start, count = ANIMS[anim]
+            for i in range(count):
+                pose = _pose_for(anim, i)
+                frames.append(render(human.build_pose(pose), human.FRAME_W, human.FRAME_H, human.ORIGIN, View(yaw=yaw)))
+                if pose.flashlight:
+                    p = rot_y(human.lens_position(pose), yaw)
+                    # Píxel de la lente respecto a los pies (el nodo del jugador).
+                    row_lens[start + i] = [round(p[0], 1), round(-(view.a * p[1] - view.b * p[2]), 1)]
+        lens_frames.append(row_lens)
+        p0 = rot_y(human.lens_position(human.idle_pose(0.0, True)), yaw)
+        lens.append({"screen": [round(p0[0], 1), round(-(view.a * p0[1] - view.b * p0[2]), 1)],
+                     "floor": [round(p0[0], 1), round(view.b * p0[2], 1)]})
     sheet("protagonist", "assets/sprites/characters/protagonist.png", frames, human.FRAME_W, human.FRAME_H,
           human.ORIGIN, rows=len(YAWS), glow=True)
     META["protagonist"]["anims"] = {k: list(v) for k, v in ANIMS.items()}
+    META["protagonist"]["columns"] = COLUMNS
     META["protagonist"]["lens"] = lens
+    META["protagonist"]["lens_frames"] = lens_frames
 
 
 def build_lights() -> None:

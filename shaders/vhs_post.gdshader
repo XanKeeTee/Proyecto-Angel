@@ -18,6 +18,8 @@ uniform bool animate_noise = true;
 uniform float tracking : hint_range(0.0, 1.0) = 0.0;
 // Virado de color de la zona (multiplica la imagen).
 uniform vec3 tint : source_color = vec3(1.0);
+// Brillo (opción del jugador): >1 aclara las sombras, <1 las oscurece.
+uniform float gamma : hint_range(0.4, 2.0) = 1.0;
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -53,5 +55,6 @@ void fragment() {
 	float vignette = 1.0 - dot(centered, centered) * vignette_strength * 2.0;
 	color *= clamp(vignette, 0.0, 1.0);
 
+	color = pow(max(color, vec3(0.0)), vec3(1.0 / gamma));
 	COLOR = vec4(color, 1.0);
 }

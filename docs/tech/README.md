@@ -30,6 +30,7 @@ Arquitectura del código: [arquitectura.md](arquitectura.md). Diseño: [prologo.
 
 - **Escena principal**: `res://scenes/ui/title/title_screen.tscn` (título → Nueva partida / Continuar).
 - **El hospital**: `res://scenes/world/hospital/hospital.tscn` + `hospital.gd` (guion), que hereda de `WorldController`.
+- **Opciones** (`autoload/settings.gd`, menú en `scenes/ui/options_menu.gd`): volúmenes por canal de audio (`Ambiente`, `Efectos` e `Interfaz`, que van al `Master`, con un limitador), brillo (gamma en el shader VHS), intensidad del filtro, pantalla completa y velocidad del texto. Se guardan en `user://settings.cfg`.
 - **Guardado**: en las grabadoras de cinta (control de enfermería y sala eléctrica), en `user://saves/slot_0.json`.
 
 ### Depuración
@@ -61,12 +62,13 @@ python -I tools/art/build_all.py
 "$GODOT_BIN" --headless --path . --import
 "$GODOT_BIN" --headless --path . -s tools/data/build_items.gd
 "$GODOT_BIN" --headless --path . -s tools/data/build_documents.gd
+"$GODOT_BIN" --headless --path . res://tools/levels/build_player.tscn
 "$GODOT_BIN" --headless --path . res://tools/levels/build_hospital.tscn
 ```
 
 1. `build_all.py` genera el arte (tiles, personaje, objetos, iconos), los sonidos y las imágenes de documentos.
 2. `--import` hace que Godot importe todo eso.
-3. `build_items` crea los objetos y recetas, `build_documents` los documentos, y `build_hospital` la escena del hospital.
+3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
 El generador del hospital se ejecuta como escena (no con `-s`) porque necesita los autoloads.
 
@@ -87,7 +89,7 @@ El generador del hospital se ejecuta como escena (no con `-s`) porque necesita l
   | 2 | Protagonista | No (la lleva él) | No |
   | 4 | Muebles | Sí | No |
 
-- **Animación del protagonista**: 24 columnas × 8 orientaciones. El paso avanza con la distancia recorrida de verdad. El origen de la linterna por orientación sale de `sprite_meta.json` (`lens`).
+- **Animación del protagonista**: 64 columnas × 8 orientaciones (ver la guía estética). El paso avanza con la distancia recorrida de verdad; los giros pasan por las orientaciones intermedias; tras un rato quieto, un gesto. La luz de la linterna sale de la lente: `Player.lens_frames` guarda su posición en cada fotograma. El origen de la linterna por orientación sale de `sprite_meta.json` (`lens`).
 - **Mandos**: algunos (visto con un DualSense) mandan valores falsos en los primeros fotogramas; por eso el control llega 0,5 s después en el arranque de depuración.
 
 ## Prototipo de combate

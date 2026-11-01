@@ -38,7 +38,7 @@ static func at(parent: Node, sound: Variant, position: Vector2, volume_db: float
 	player.max_distance = max_distance
 	player.attenuation = 1.6
 	player.pitch_scale = 1.0 + randf_range(-pitch_jitter, pitch_jitter)
-	player.bus = &"Master"
+	player.bus = &"Efectos"
 	parent.add_child(player)
 	player.finished.connect(player.queue_free)
 	player.play()
@@ -53,6 +53,7 @@ static func ui(parent: Node, sound: Variant, volume_db: float = 0.0) -> AudioStr
 	var player: AudioStreamPlayer = AudioStreamPlayer.new()
 	player.stream = s
 	player.volume_db = volume_db
+	player.bus = &"Interfaz"
 	player.process_mode = Node.PROCESS_MODE_ALWAYS
 	parent.add_child(player)
 	player.finished.connect(player.queue_free)

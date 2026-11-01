@@ -6,6 +6,7 @@ const TITLE_SCENE: String = "res://scenes/ui/title/title_screen.tscn"
 
 var _box: VBoxContainer
 var _resume: Button
+var _options: OptionsMenu
 
 
 func _init() -> void:
@@ -15,6 +16,8 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	_options = OptionsMenu.new()
+	add_child(_options)
 	var dim: ColorRect = ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.8)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -30,6 +33,12 @@ func _ready() -> void:
 	_resume = UiStyle.button("Reanudar")
 	_resume.pressed.connect(close)
 	_box.add_child(_resume)
+	var options_button: Button = UiStyle.button("Opciones")
+	options_button.pressed.connect(func() -> void:
+		_options.open()
+		await _options.closed
+		options_button.grab_focus())
+	_box.add_child(options_button)
 	var quit_title: Button = UiStyle.button("Volver al título")
 	quit_title.pressed.connect(_to_title)
 	_box.add_child(quit_title)
@@ -53,7 +62,7 @@ func close() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and (event.is_action_pressed(InputActions.PAUSE) or event.is_action_pressed("ui_cancel")):
+	if visible and not _options.visible and (event.is_action_pressed(InputActions.PAUSE) or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
 		close()
 

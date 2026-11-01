@@ -16,6 +16,7 @@ import math
 from dataclasses import dataclass, field
 
 from pxrender import (
+    basis_rot, lerp, rot_y, transform,
     Mat3, Prim, Vec, add, basis_from_y, box, capsule, cylinder, ellipsoid, fbm, limb, mul, norm,
     ramp, rot_x, sphere, sub, to_local, to_world,
 )
@@ -182,11 +183,11 @@ def _leg(hip: Vec, swing: float, bend: float) -> tuple[Vec, Vec, Vec]:
     return hip, knee, ankle
 
 
-def _arm(shoulder: Vec, side: float, swing: float, flex: float) -> tuple[Vec, Vec, Vec, Vec]:
-    upper = norm((side * 0.1, -math.cos(swing), math.sin(swing)))
+def _arm(shoulder: Vec, side: float, swing: float, flex: float, abduct: float = 0.1) -> tuple[Vec, Vec, Vec, Vec]:
+    upper = norm((side * abduct, -math.cos(swing), math.sin(swing)))
     elbow = add(shoulder, mul(upper, 11.2))
     fore_ang = swing + flex
-    fore = norm((side * 0.04, -math.cos(fore_ang), math.sin(fore_ang)))
+    fore = norm((side * (0.04 + abduct * 0.4), -math.cos(fore_ang), math.sin(fore_ang)))
     wrist = add(elbow, mul(fore, 9.8))
     return shoulder, elbow, wrist, fore
 
@@ -196,11 +197,21 @@ class Pose:
     """Postura completa. Lado 1.0 = izquierda del personaje (x+), -1.0 = derecha."""
     leg_swing: dict = field(default_factory=lambda: {1.0: 0.0, -1.0: 0.0})
     leg_bend: dict = field(default_factory=lambda: {1.0: 0.06, -1.0: 0.06})
+    foot_pitch: dict = field(default_factory=lambda: {1.0: 0.0, -1.0: 0.0})
     arm_swing: dict = field(default_factory=lambda: {1.0: 0.0, -1.0: 0.0})
     arm_flex: dict = field(default_factory=lambda: {1.0: 0.2, -1.0: 0.2})
+    arm_abduct: dict = field(default_factory=lambda: {1.0: 0.1, -1.0: 0.1})
     sway_x: float = 0.0
     breath: float = 0.0
     spread: float = 0.0
+    ## Giro de la pelvis y de los hombros (radianes, alrededor del eje vertical).
+    hip_twist: float = 0.0
+    shoulder_twist: float = 0.0
+    ## Cabeza: giro (mirar a los lados) e inclinación (positivo = mirar abajo).
+    head_yaw: float = 0.0
+    head_pitch: float = 0.0
+    ## Inclinación del tronco hacia delante (unidades en z a la altura de los hombros).
+    lean: float = 0.6
     flashlight: bool = False
     sitting: bool = False
 
@@ -211,30 +222,67 @@ FLASH_FLEX = 1.2
 
 
 def walk_pose(t: float, flashlight: bool = False) -> Pose:
-    """Ciclo de paso (t en 0..1). Cojea un poco: la pierna derecha da un paso más corto."""
+    """Ciclo de paso (t en 0..1), con giro de cadera, contragiro de hombros, apoyo de talón
+    y despegue de dedos, brazos con retraso y cabeza estabilizada. Cojea: la pierna derecha
+    da el paso más corto."""
     s, c = math.sin(math.tau * t), math.cos(math.tau * t)
+    lag = math.sin(math.tau * (t - 0.06))
     pose = Pose(flashlight=flashlight)
     pose.leg_swing = {1.0: 0.36 * s, -1.0: -0.29 * s}
-    pose.leg_bend = {1.0: 0.06 + 0.55 * max(0.0, c), -1.0: 0.06 + 0.5 * max(0.0, -c)}
-    pose.arm_swing = {1.0: -0.24 * s, -1.0: 0.2 * s}
-    pose.arm_flex = {1.0: 0.2 + 0.1 * abs(s), -1.0: 0.2 + 0.1 * abs(s)}
-    pose.sway_x = 0.45 * c
+    pose.leg_bend = {1.0: 0.06 + 0.58 * max(0.0, c) ** 1.2, -1.0: 0.06 + 0.5 * max(0.0, -c) ** 1.2}
+    pose.foot_pitch = {1.0: -0.42 * s, -1.0: 0.36 * s}
+    pose.arm_swing = {1.0: -0.26 * lag, -1.0: 0.22 * lag}
+    pose.arm_flex = {1.0: 0.18 + 0.16 * max(0.0, -lag), -1.0: 0.18 + 0.14 * max(0.0, lag)}
+    pose.hip_twist = -0.13 * s
+    pose.shoulder_twist = 0.1 * s
+    pose.head_yaw = -0.05 * s
+    pose.head_pitch = 0.05 + 0.03 * math.sin(2 * math.tau * t)
+    pose.sway_x = 0.5 * c
     pose.spread = abs(s)
+    pose.lean = 0.9
     if flashlight:
-        pose.arm_swing[-1.0] = FLASH_SWING + 0.035 * math.sin(2 * math.tau * t)
+        pose.arm_swing[-1.0] = FLASH_SWING + 0.03 * math.sin(2 * math.tau * t)
         pose.arm_flex[-1.0] = FLASH_FLEX
+        pose.shoulder_twist *= 0.5
     return pose
 
 
 def idle_pose(t: float, flashlight: bool = False) -> Pose:
-    """Respiración en reposo (t en 0..1)."""
+    """Respiración en reposo (t en 0..1): pecho y hombros suben, peso que oscila un poco."""
     pose = Pose(flashlight=flashlight)
-    pose.breath = (1 - math.cos(math.tau * t)) / 2
-    pose.arm_flex = {1.0: 0.2 + 0.05 * pose.breath, -1.0: 0.2 + 0.05 * pose.breath}
-    pose.sway_x = 0.15 * math.sin(math.tau * t)
+    b = (1 - math.cos(math.tau * t)) / 2
+    pose.breath = b
+    pose.arm_flex = {1.0: 0.2 + 0.05 * b, -1.0: 0.2 + 0.05 * b}
+    pose.sway_x = 0.2 * math.sin(math.tau * t)
+    pose.head_pitch = 0.06 - 0.03 * b
+    pose.leg_bend = {1.0: 0.12, -1.0: 0.04}  # carga el peso en la pierna buena
     if flashlight:
-        pose.arm_swing[-1.0] = FLASH_SWING + 0.03 * pose.breath
+        pose.arm_swing[-1.0] = FLASH_SWING + 0.03 * b
         pose.arm_flex[-1.0] = FLASH_FLEX
+    return pose
+
+
+def fidget_pose(t: float) -> Pose:
+    """Gesto en reposo sin linterna: se lleva la mano izquierda a la herida de la espalda y mira al suelo."""
+    e = math.sin(math.pi * t) ** 1.5
+    pose = idle_pose(t)
+    pose.arm_swing[1.0] = -1.15 * e
+    pose.arm_flex[1.0] = 0.2 + 1.7 * e
+    pose.arm_abduct[1.0] = 0.1 + 0.12 * e
+    pose.head_pitch = 0.06 + 0.3 * e
+    pose.head_yaw = 0.3 * e
+    pose.shoulder_twist = 0.15 * e
+    pose.lean = 0.6 + 0.5 * e
+    return pose
+
+
+def look_pose(t: float) -> Pose:
+    """Gesto en reposo con linterna: mira a un lado y a otro."""
+    pose = idle_pose(t, True)
+    turn = math.sin(math.tau * t)
+    pose.head_yaw = 0.75 * turn
+    pose.shoulder_twist = 0.18 * turn
+    pose.arm_swing[-1.0] = FLASH_SWING + 0.1 * abs(turn)
     return pose
 
 
@@ -244,6 +292,7 @@ def sit_pose() -> Pose:
     pose.leg_bend = {1.0: 0.0, -1.0: 0.0}
     pose.arm_swing = {1.0: 0.35, -1.0: 0.35}
     pose.arm_flex = {1.0: 0.75, -1.0: 0.75}
+    pose.lean = 0.0
     return pose
 
 
@@ -252,10 +301,14 @@ def build(phase: float = 0.0, pose: str = "stand") -> list[Prim]:
     return build_pose(sit_pose() if pose == "sit" else walk_pose(0.0 if phase == 0 else 0.25 * phase))
 
 
+def _hip(side: float, pose: Pose) -> Vec:
+    return rot_y((side * 2.7, 29.4, 0.0), pose.hip_twist)
+
+
 def _bob(pose: Pose) -> float:
     if pose.sitting:
         return 0.0
-    ankles = [_leg((side * 2.7, 29.4, 0.0), pose.leg_swing[side], pose.leg_bend[side])[2][1] for side in (1.0, -1.0)]
+    ankles = [_leg(_hip(side, pose), pose.leg_swing[side], pose.leg_bend[side])[2][1] for side in (1.0, -1.0)]
     return 2.4 - min(ankles)
 
 
@@ -263,10 +316,15 @@ def _torso_offset(pose: Pose) -> Vec:
     return (pose.sway_x, _bob(pose) + 0.6 * pose.breath, 0.0)
 
 
+def _shoulder(side: float, pose: Pose) -> Vec:
+    base = rot_y((side * 6.0, 44.2, 0.2 + pose.lean), pose.shoulder_twist)
+    return add(base, _torso_offset(pose))
+
+
 def lens_position(pose: Pose) -> Vec:
     """Posición (modelo) de la lente de la linterna para esa postura."""
-    shoulder = add(add((-6.0, 44.2, 0.2), _torso_offset(pose)), (-0.4, -0.2, 0.0))
-    s, e, w, fore = _arm(shoulder, -1.0, pose.arm_swing[-1.0], pose.arm_flex[-1.0])
+    shoulder = add(_shoulder(-1.0, pose), (-0.4, -0.2, 0.0))
+    s, e, w, fore = _arm(shoulder, -1.0, pose.arm_swing[-1.0], pose.arm_flex[-1.0], pose.arm_abduct[-1.0])
     return add(add(w, mul(fore, 1.9)), mul(fore, 5.4))
 
 
@@ -278,14 +336,35 @@ def lens_mat(p: Vec, n: Vec) -> tuple:
     return ("!lens", 0.95)
 
 
+def _head(pose: Pose, torso_up: Vec) -> list[Prim]:
+    """Cabeza en su sitio y girada alrededor del cuello (las texturas giran con ella)."""
+    prims: list[Prim] = []
+    lean: Vec = (0.0, 0.0, pose.lean * 1.3)
+    head_c = add(add((0.0, 53.9, 0.7), torso_up), lean)
+    face_c = add(add((0.0, 51.5, 1.6), torso_up), lean)
+    prims.append(ellipsoid(head_c, (3.35, 4.05, 3.85), make_head_mat(head_c)))
+    prims.append(ellipsoid(face_c, (2.7, 2.6, 2.85), make_face_mat(face_c)))
+    prims.append(ellipsoid(add(face_c, (0.0, 0.85, 2.15)), (0.42, 0.9, 0.7), skin_mat))
+    prims.append(ellipsoid(add(head_c, (0.0, -0.25, 2.75)), (2.5, 0.55, 1.0), make_head_mat(head_c)))
+    for side in (1.0, -1.0):
+        prims.append(ellipsoid(add(head_c, (side * 3.3, -1.1, -0.6)), (0.55, 1.1, 0.8), skin_mat))
+    if abs(pose.head_yaw) < 1e-4 and abs(pose.head_pitch) < 1e-4:
+        return prims
+    pivot: Vec = add(add((0.0, 49.6, 0.6), torso_up), mul(lean, 0.7))
+    basis = basis_rot(rx=pose.head_pitch, ry=pose.head_yaw)
+    offset: Vec = sub(pivot, to_world(basis, pivot))
+    return transform(prims, basis, offset)
+
+
 def build_pose(pose: Pose) -> list[Prim]:
     prims: list[Prim] = []
-    legs = {side: _leg((side * 2.7, 29.4, 0.0), pose.leg_swing[side], pose.leg_bend[side]) for side in (1.0, -1.0)}
+    legs = {side: _leg(_hip(side, pose), pose.leg_swing[side], pose.leg_bend[side]) for side in (1.0, -1.0)}
     bob = _bob(pose)
     up = (0.0, bob, 0.0)
     hips_up = (pose.sway_x * 0.6, bob, 0.0)
-    # Desplazamiento lateral del peso y respiración (tronco, brazos y cabeza).
     torso_up = _torso_offset(pose)
+    lean_mid: Vec = (0.0, 0.0, pose.lean * 0.5)
+    lean_top: Vec = (0.0, 0.0, pose.lean)
 
     for side in (1.0, -1.0):
         hip, knee, ankle = (add(v, up) for v in legs[side])
@@ -294,33 +373,37 @@ def build_pose(pose: Pose) -> list[Prim]:
         calf = add(knee, mul(sub(ankle, knee), 0.3))
         prims += limb([hip, mid_thigh, knee], [2.45, 2.05, 1.65], skin_mat)
         prims += limb([knee, calf, ankle], [1.6, 1.7, 1.0], skin_mat)
-        foot_c = add(ankle, (0.0, -1.25, 1.35))
-        prims.append(ellipsoid(foot_c, (1.25, 0.9, 2.5), skin_mat))
-        prims.append(ellipsoid(add(foot_c, (0.0, -0.1, 2.0)), (1.2, 0.7, 0.9), skin_mat))
+        # Pie: talón en el tobillo, puntera girada según el apoyo.
+        pitch = pose.foot_pitch[side]
+        heel = add(ankle, (0.0, -1.25, 0.2))
+        dir_foot: Vec = (0.0, -math.sin(pitch), math.cos(pitch))
+        foot_basis = basis_rot(rx=pitch)
+        prims.append(ellipsoid(add(heel, mul(dir_foot, 1.3)), (1.25, 0.9, 2.5), skin_mat, basis=foot_basis))
+        prims.append(ellipsoid(add(heel, mul(dir_foot, 3.3)), (1.2, 0.7, 0.9), skin_mat, basis=foot_basis))
 
-    prims.append(ellipsoid(add((0.0, 30.2, 0.0), hips_up), (5.1, 3.6, 3.2), skin_mat))
-    prims.append(ellipsoid(add((0.0, 35.2, 0.3), torso_up), (4.5, 4.3, 2.9), torso_skin_mat))
-    prims.append(ellipsoid(add((0.0, 41.3, 0.3), torso_up), (5.7, 5.1, 3.3 + 0.25 * pose.breath), torso_skin_mat))
-    shoulder_l = add((6.0, 44.2, 0.2), torso_up)
-    shoulder_r = add((-6.0, 44.2, 0.2), torso_up)
+    pelvis_basis = basis_rot(ry=pose.hip_twist)
+    chest_basis = basis_rot(ry=pose.shoulder_twist)
+    prims.append(ellipsoid(add((0.0, 30.2, 0.0), hips_up), (5.1, 3.6, 3.2), skin_mat, basis=pelvis_basis))
+    prims.append(ellipsoid(add(add((0.0, 35.2, 0.3), torso_up), lean_mid), (4.5, 4.3, 2.9), torso_skin_mat))
+    prims.append(ellipsoid(add(add((0.0, 41.3, 0.3), torso_up), lean_top), (5.7, 5.1, 3.3 + 0.25 * pose.breath), torso_skin_mat,
+                           basis=chest_basis))
+    shoulder_l = _shoulder(1.0, pose)
+    shoulder_r = _shoulder(-1.0, pose)
     prims.append(capsule(shoulder_r, shoulder_l, 1.9, torso_skin_mat))
-    prims.append(capsule(add((0.0, 45.5, -0.2), torso_up), add((0.0, 49.6, 0.6), torso_up), 1.45, skin_mat))
+    prims.append(capsule(add(add((0.0, 45.5, -0.2), torso_up), lean_top), add(add((0.0, 49.6, 0.6), torso_up), mul(lean_top, 1.2)),
+                         1.45, skin_mat))
 
     # Pieza metálica entre los omóplatos [PROPUESTA].
-    prims.append(cylinder(add((0.0, 43.4, -2.4), torso_up), add((0.0, 43.4, -3.7), torso_up), 0.75, metal_mat))
-    prims.append(sphere(add((0.0, 43.4, -3.75), torso_up), 0.35, metal_mat))
+    port: Vec = add(add(rot_y((0.0, 43.4, -2.4), pose.shoulder_twist), torso_up), lean_top)
+    port_out: Vec = add(add(rot_y((0.0, 43.4, -3.7), pose.shoulder_twist), torso_up), lean_top)
+    prims.append(cylinder(port, port_out, 0.75, metal_mat))
+    prims.append(sphere(add(port_out, rot_y((0.0, 0.0, -0.05), pose.shoulder_twist)), 0.35, metal_mat))
 
-    head_c = add((0.0, 53.9, 0.7), torso_up)
-    face_c = add((0.0, 51.5, 1.6), torso_up)
-    prims.append(ellipsoid(head_c, (3.35, 4.05, 3.85), make_head_mat(head_c)))
-    prims.append(ellipsoid(face_c, (2.7, 2.6, 2.85), make_face_mat(face_c)))
-    prims.append(ellipsoid(add(face_c, (0.0, 0.85, 2.15)), (0.42, 0.9, 0.7), skin_mat))
-    prims.append(ellipsoid(add(head_c, (0.0, -0.25, 2.75)), (2.5, 0.55, 1.0), make_head_mat(head_c)))
-    for side in (1.0, -1.0):
-        prims.append(ellipsoid(add(head_c, (side * 3.3, -1.1, -0.6)), (0.55, 1.1, 0.8), skin_mat))
+    prims += _head(pose, torso_up)
 
     for side, shoulder in ((1.0, shoulder_l), (-1.0, shoulder_r)):
-        s, e, w, fore = _arm(add(shoulder, (side * 0.4, -0.2, 0.0)), side, pose.arm_swing[side], pose.arm_flex[side])
+        s, e, w, fore = _arm(add(shoulder, (side * 0.4, -0.2, 0.0)), side, pose.arm_swing[side], pose.arm_flex[side],
+                             pose.arm_abduct[side])
         prims += limb([s, e], [1.55, 1.3], skin_mat)
         prims += limb([e, w], [1.25, 0.95], skin_mat)
         hand_basis: Mat3 = basis_from_y(fore, (side, 0.0, 0.0))
@@ -355,12 +438,16 @@ def build_pose(pose: Pose) -> list[Prim]:
     bottom = 28.0 if pose.sitting else 17.4
     while y > bottom:
         rx, rz, cz = _profile(y)
-        offset = torso_up if y > 33 else hips_up
+        # La bata sigue al tronco arriba y a la pelvis abajo; el bajo va con retraso (se balancea).
+        k = max(0.0, min(1.0, (y - 31.0) / 14.0))
+        offset = add(lerp(hips_up, torso_up, k), (0.0, 0.0, pose.lean * k))
         if y < 31.0:
             t = (31.0 - y) / 13.5
             rz += pose.spread * 1.1 * t
-            cz += knee_z * 0.55 * t
-        prims.append(ellipsoid(add((0.0, y, cz), offset), (rx, 1.0, rz), gown_slice_mat, cut=gown_cut))
+            cz += knee_z * 0.5 * t
+            offset = add(offset, (-pose.sway_x * 0.5 * t, 0.0, 0.0))
+        prims.append(ellipsoid(add((0.0, y, cz), offset), (rx, 1.0, rz), gown_slice_mat, cut=gown_cut,
+                               basis=basis_rot(ry=pose.hip_twist * (1 - k) + pose.shoulder_twist * k)))
         y -= 0.75
     if pose.sitting:
         prims.append(ellipsoid(add((0.0, 29.0, 7.0), up), (6.0, 2.4, 8.5), gown_mat))

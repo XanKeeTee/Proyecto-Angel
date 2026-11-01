@@ -42,6 +42,7 @@ func _ready() -> void:
 	if loop != null:
 		loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		loop.loop_end = int(loop.get_length() * loop.mix_rate)
+	_ambience.bus = &"Ambiente"
 	_ambience.play()
 	EventBus.flag_set.connect(_on_flag)
 	_apply_power_state()
@@ -108,7 +109,7 @@ func on_special(id: StringName, it: Interactable) -> void:
 		&"phone":
 			await _phone(it)
 		&"elevator":
-			Sfx.at(self, "metal_bang", it.position + Vector2(0, -40), 2.0)
+			Sfx.at(self, "metal_bang", it.position + Vector2(0, -40), -4.0)
 			character.vitals.change_mind(-4)
 		&"generator":
 			await _generator(it)
@@ -117,7 +118,7 @@ func on_special(id: StringName, it: Interactable) -> void:
 func _phone(it: Interactable) -> void:
 	if GameState.has_flag(&"telefono_sonando") and not GameState.has_flag(&"telefono_contestado"):
 		GameState.set_flag(&"telefono_contestado")
-		Sfx.at(self, "phone_static", it.position, 0.0)
+		Sfx.at(self, "phone_static", it.position, -4.0)
 		await message.show_lines(PackedStringArray([
 			"Descuelgas. Estática.",
 			"Debajo, alguien respira despacio. Al mismo ritmo que tú.",
@@ -145,7 +146,7 @@ func _generator(it: Interactable) -> void:
 
 func _power_on(generator: Interactable) -> void:
 	lock()
-	Sfx.at(self, "generator_start", generator.position, 0.0)
+	Sfx.at(self, "generator_start", generator.position, -4.0)
 	await message.show_lines(PackedStringArray(["Tiras de la palanca. El motor tose, se sacude… y aguanta."]))
 	await get_tree().create_timer(2.5).timeout
 	var hum: AudioStreamPlayer2D = Sfx.at(self, "generator_loop", generator.position, -6.0, 0.0)
@@ -155,7 +156,7 @@ func _power_on(generator: Interactable) -> void:
 	Sfx.ui(self, "fluorescent_on", -6.0)
 	glitch(0.6, 0.4)
 	await get_tree().create_timer(3.0).timeout
-	Sfx.ui(self, "pa_chime", -2.0)
+	Sfx.ui(self, "pa_chime", -4.0)
 	await get_tree().create_timer(2.6).timeout
 	Sfx.ui(self, "pa_static", -6.0)
 	glitch(1.2, 0.5)

@@ -51,14 +51,28 @@ Reglas:
 Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su interfaz: proporciones humanas reales, cuerpos frágiles, paleta apagada, suciedad y heridas visibles. Nada de cabezones chibi.
 
 - Fotograma de **48×68 px**. La figura mide unos **58 px**, con la cabeza a ~1/7 de la altura. Los pies apoyan en la parte baja de la casilla.
-- Hoja de **24 columnas por orientación** y **8 filas** (abajo, abajo-izq., izq., arriba-izq., arriba, arriba-der., der., abajo-der.):
+- Hoja de **64 columnas por orientación** y **8 filas** (abajo, abajo-izq., izq., arriba-izq., arriba, arriba-der., der., abajo-der.):
 
   | Columnas | Animación | Fotogramas |
   |---|---|---|
-  | 0–3 | Reposo (respira) | 4 |
-  | 4–11 | Paso | 8 (un ciclo = 2 casillas) |
-  | 12–15 | Reposo con linterna | 4 |
-  | 16–23 | Paso con linterna | 8 |
+  | 0–7 | Reposo (respira) | 8 |
+  | 8–19 | Gesto: se lleva la mano a la herida y mira al suelo | 12 |
+  | 20–31 | Paso | 12 (un ciclo = 2 casillas) |
+  | 32–39 | Reposo con linterna | 8 |
+  | 40–51 | Gesto con linterna: mira a un lado y a otro | 12 |
+  | 52–63 | Paso con linterna | 12 |
+
+- **Movimiento secundario del paso**:
+  - la cadera gira con la pierna que avanza y los hombros giran al contrario;
+  - el pie apoya el talón y despega con los dedos;
+  - los brazos van con un poco de retraso;
+  - la cabeza se estabiliza con un leve cabeceo;
+  - el tronco va inclinado hacia delante;
+  - el bajo de la bata se balancea.
+- **En el juego**:
+  - los giros pasan por las orientaciones intermedias;
+  - tras unos segundos quieto, el personaje hace uno de sus gestos;
+  - la luz de la linterna sale de la lente en cada fotograma.
 
 - **Movimiento realista**: rodilla que se dobla al adelantar la pierna, peso que pasa de un pie a otro, brazos en contrapeso y una **ligera cojera** (la pierna derecha da el paso más corto). En reposo, el pecho y los hombros suben y bajan.
 - **La linterna se sujeta con la mano derecha**, codo pegado al cuerpo y antebrazo al frente, a la altura del pecho. La lente es emisiva (capa `*_glow.png`). De espaldas queda tapada por el cuerpo.

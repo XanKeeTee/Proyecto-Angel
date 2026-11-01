@@ -17,6 +17,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `EventBus` | `autoload/event_bus.gd` | Señales globales (objeto recibido, documento nuevo, bandera activada, corriente…) |
 | `GameState` | `autoload/game_state.gd` | Banderas, estado de cada objeto del mundo, personaje activo (custodia, constantes), posición |
 | `SaveSystem` | `autoload/save_system.gd` | Guardar y cargar `GameState` en JSON (`user://saves/`) |
+| `Settings` | `autoload/settings.gd` | Opciones del jugador y canales de audio (`user://settings.cfg`) |
 
 ## Módulos
 

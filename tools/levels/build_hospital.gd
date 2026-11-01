@@ -191,7 +191,8 @@ func _build_scene() -> void:
 	var ambience: AudioStreamPlayer = AudioStreamPlayer.new()
 	ambience.name = "Ambience"
 	ambience.stream = load("res://assets/audio/sfx/ambience_loop.wav")
-	ambience.volume_db = -14.0
+	ambience.volume_db = -10.0
+	ambience.bus = &"Ambiente"
 	_add(scene_root, ambience, true)
 
 	var fade_layer: CanvasLayer = CanvasLayer.new()
@@ -603,7 +604,9 @@ func _room_hab09() -> void:
 		"empty": ""})
 	obj({"id": "mesita_09", "name": "Mesita", "sprite": "nightstand", "cell": [3, 22], "kind": "container", "openable": true,
 		"examine": "Una mesita de hospital con un vaso de agua. El agua tiene una película de polvo.",
-		"search": "En el cajón hay una linterna. Tiene un número grabado en el mango: 09.", "loot": [["linterna", 1]],
+		"search": "En el cajón hay una linterna. Tiene un número grabado en el mango: 09.
+Debajo, un par de pilas de repuesto.",
+		"loot": [["linterna", 1], ["pilas", 2]],
 		"flag_search": "linterna_cogida", "empty": "El cajón está vacío."})
 	obj({"id": "monitor_09", "name": "Monitor", "sprite": "monitor", "cell": [1, 22],
 		"examine": "El monitor sigue encendido. Los cables cuelgan sueltos, pero la línea verde sigue latiendo.\nAl ritmo de tu pulso.",
@@ -1157,10 +1160,10 @@ func _build_events() -> void:
 	var corridor: Rect2i = _rect("pasillo")
 	# Teléfono que suena al pasar por el control (una vez).
 	_ev("telefono_suena", ENTER, Rect2i(26, 14, 10, 3), ["linterna_cogida"], [], [
-		EventActions.sound("phone_ring", Vector2i(32, 23), 2.0), EventActions.flag(&"telefono_sonando"), EventActions.mind(-3)], 0.6)
+		EventActions.sound("phone_ring", Vector2i(32, 23), -2.0), EventActions.flag(&"telefono_sonando"), EventActions.mind(-3)], 0.6)
 	# Cama que cruje en la 11, habitación vacía.
 	_ev("cruje_11", ENTER, Rect2i(24, 14, 9, 3), ["linterna_cogida"], [], [
-		EventActions.wait(0.8), EventActions.sound("bed_creak", Vector2i(26, 6), 4.0), EventActions.mind(-3),
+		EventActions.wait(0.8), EventActions.sound("bed_creak", Vector2i(26, 6), 0.0), EventActions.mind(-3),
 		EventActions.flag(&"oyo_crujido")])
 	_ev("entra_11", ENTER, _rect("hab11"), ["oyo_crujido"], [], [
 		EventActions.message(PackedStringArray(["No hay nadie.", "La cama todavía se balancea un poco, como si alguien acabara de levantarse."])),
@@ -1179,14 +1182,14 @@ func _build_events() -> void:
 		EventActions.message(PackedStringArray(["La sábana está en el suelo.", "Lo que había debajo, no."]))])
 	# Golpes al otro lado de la pared de la 12 (desde la 10, cerrada).
 	_ev("golpes_10", ENTER, _rect("hab12"), [], ["event:entra_10"], [
-		EventActions.wait(1.5), EventActions.sound("knock", Vector2i(20, 6), 2.0), EventActions.mind(-2)])
+		EventActions.wait(1.5), EventActions.sound("knock", Vector2i(20, 6), -2.0), EventActions.mind(-2)])
 	_ev("entra_10", ENTER, _rect("hab10"), [], [], [EventActions.message(PackedStringArray(["Aquí no hay nadie que pueda haber llamado."]))], 0.5)
 	# Pasos en el pasillo cuando estás en una habitación.
 	_ev("pasos_pasillo", ENTER, _rect("hab07"), ["linterna_cogida"], [], [
-		EventActions.wait(2.0), EventActions.sound("steps_far", Vector2i(10, 15), 0.0)])
+		EventActions.wait(2.0), EventActions.sound("steps_far", Vector2i(10, 15), -3.0)])
 	# Una puerta que estaba abierta aparece cerrada.
 	_ev("puerta_cerrada_sola", LEAVE, _rect("archivo"), ["fusible_cogido"], [], [
-		EventActions.object_state(&"puerta_hab07", false), EventActions.sound("door_close", Vector2i(4, 13), 4.0),
+		EventActions.object_state(&"puerta_hab07", false), EventActions.sound("door_close", Vector2i(4, 13), -2.0),
 		EventActions.flicker(corridor, 1.2)])
 	# Susurro en el archivo, junto a tu expediente.
 	_ev("susurro_archivo", ENTER, _rect("archivo"), [], [], [EventActions.wait(3.0), EventActions.sound("whisper", Vector2i(49, 5), -4.0)])

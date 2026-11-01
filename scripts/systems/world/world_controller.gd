@@ -247,7 +247,7 @@ func save_at_station() -> void:
 		GameState.player_position = player.position
 		GameState.player_facing = player.facing_angle
 		if SaveSystem.save_game():
-			Sfx.at(self, "tape_save", player.position)
+			Sfx.at(self, "tape_save", player.position, -4.0)
 			await message.show_lines(PackedStringArray(["Pulsas el botón rojo y hablas cerca del micrófono.", "No reconoces del todo tu propia voz."]))
 	unlock()
 
@@ -319,7 +319,7 @@ func _perform(it: Interactable, action: StringName) -> void:
 	lock()
 	var result: InteractionResult = it.perform(action, character)
 	if result.sound != null:
-		Sfx.at(self, result.sound, it.position, -2.0)
+		Sfx.at(self, result.sound, it.position, -4.0)
 	await on_interacted(it, action, result)
 	if result.inspect_sheet != null:
 		inspector.show_item(result.inspect_title, "\n".join(result.lines), result.inspect_sheet, result.inspect_views)
@@ -515,6 +515,10 @@ func _start_debug() -> void:
 	on_debug_start()
 	await get_tree().create_timer(0.5).timeout
 	unlock()
+	if debug.has("options"):
+		var options: OptionsMenu = OptionsMenu.new()
+		add_child(options)
+		options.open()
 	if debug.has("custody") or debug.has("doc"):
 		if debug.has("doc"):
 			GameState.give_document(Registry.document(StringName(debug["doc"])))

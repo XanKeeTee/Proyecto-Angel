@@ -52,9 +52,9 @@ def flashlight_cone(size: int = 512) -> Image.Image:
             v = 0.45 * max(0.0, 1 - d / 18.0) ** 2  # resplandor pegado a la lente
             if dx > 0 and d < length:
                 ang = abs(math.atan2(dy, dx))
-                dist = 1 / (1 + (d / 95.0) ** 2) * (1 - (d / length) ** 3)
+                dist = 1 / (1 + (d / 125.0) ** 2) * (1 - (d / length) ** 3)
                 core = math.exp(-(ang / hot) ** 2 * 1.6)
-                halo = 0.32 * max(0.0, 1 - (ang / spill) ** 2.2)
+                halo = 0.42 * max(0.0, 1 - (ang / spill) ** 2.2)
                 ring = 0.08 * math.exp(-((ang - hot * 1.25) / (hot * 0.25)) ** 2)  # borde del reflector
                 flaw = 0.92 + 0.16 * vnoise((ang * 40, d * 0.03, 0.0), 7)
                 v = max(v, (core + halo + ring) * dist * flaw)
