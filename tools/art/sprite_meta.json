@@ -30,7 +30,7 @@
    48,
    68
   ],
-  "hframes": 3,
+  "hframes": 24,
   "vframes": 4,
   "origin": [
    24,
@@ -40,7 +40,67 @@
    0,
    0
   ],
-  "glow": false
+  "glow": true,
+  "anims": {
+   "idle": [
+    0,
+    4
+   ],
+   "walk": [
+    4,
+    8
+   ],
+   "idle_flash": [
+    12,
+    4
+   ],
+   "walk_flash": [
+    16,
+    8
+   ]
+  },
+  "lens": [
+   {
+    "screen": [
+     -8.2,
+     -22.2
+    ],
+    "floor": [
+     -8.2,
+     9.2
+    ]
+   },
+   {
+    "screen": [
+     -20.5,
+     -35.1
+    ],
+    "floor": [
+     -20.5,
+     -3.7
+    ]
+   },
+   {
+    "screen": [
+     20.5,
+     -27.7
+    ],
+    "floor": [
+     20.5,
+     3.7
+    ]
+   },
+   {
+    "screen": [
+     8.2,
+     -40.7
+    ],
+    "floor": [
+     8.2,
+     -9.2
+    ]
+   }
+  ]
  },
  "stretcher": {
   "path": "res://assets/sprites/props/stretcher.png",

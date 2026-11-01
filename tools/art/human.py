@@ -13,6 +13,7 @@ Detalles propios del proyecto (ver docs/art/guia-estetica.md):
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass, field
 
 from pxrender import (
     Mat3, Prim, Vec, add, basis_from_y, box, capsule, cylinder, ellipsoid, fbm, limb, mul, norm,
@@ -34,6 +35,8 @@ ramp("gown_print", [(36, 42, 50), (54, 62, 70), (76, 86, 92), (98, 110, 114), (1
 ramp("stain", [(42, 36, 24), (66, 58, 38), (92, 82, 54), (118, 106, 72), (142, 130, 92)])
 ramp("blood_dry", [(24, 8, 10), (42, 12, 16), (64, 18, 22), (88, 28, 30), (110, 44, 42)])
 ramp("metal", [(20, 22, 26), (40, 44, 48), (66, 70, 74), (98, 102, 104), (138, 142, 142), (182, 184, 180)])
+ramp("grip", [(12, 12, 14), (22, 22, 26), (34, 34, 38), (48, 48, 52)])
+ramp("lens", [(200, 180, 120), (236, 222, 170), (255, 248, 220)])
 ramp("band", [(36, 48, 56), (62, 78, 86), (94, 112, 118), (130, 146, 148), (166, 178, 178)])
 
 FRAME_W, FRAME_H = 48, 68
@@ -188,25 +191,105 @@ def _arm(shoulder: Vec, side: float, swing: float, flex: float) -> tuple[Vec, Ve
     return shoulder, elbow, wrist, fore
 
 
+@dataclass
+class Pose:
+    """Postura completa. Lado 1.0 = izquierda del personaje (x+), -1.0 = derecha."""
+    leg_swing: dict = field(default_factory=lambda: {1.0: 0.0, -1.0: 0.0})
+    leg_bend: dict = field(default_factory=lambda: {1.0: 0.06, -1.0: 0.06})
+    arm_swing: dict = field(default_factory=lambda: {1.0: 0.0, -1.0: 0.0})
+    arm_flex: dict = field(default_factory=lambda: {1.0: 0.2, -1.0: 0.2})
+    sway_x: float = 0.0
+    breath: float = 0.0
+    spread: float = 0.0
+    flashlight: bool = False
+    sitting: bool = False
+
+
+# Brazo derecho al frente sujetando la linterna.
+FLASH_SWING = 0.3
+FLASH_FLEX = 1.2
+
+
+def walk_pose(t: float, flashlight: bool = False) -> Pose:
+    """Ciclo de paso (t en 0..1). Cojea un poco: la pierna derecha da un paso más corto."""
+    s, c = math.sin(math.tau * t), math.cos(math.tau * t)
+    pose = Pose(flashlight=flashlight)
+    pose.leg_swing = {1.0: 0.36 * s, -1.0: -0.29 * s}
+    pose.leg_bend = {1.0: 0.06 + 0.55 * max(0.0, c), -1.0: 0.06 + 0.5 * max(0.0, -c)}
+    pose.arm_swing = {1.0: -0.24 * s, -1.0: 0.2 * s}
+    pose.arm_flex = {1.0: 0.2 + 0.1 * abs(s), -1.0: 0.2 + 0.1 * abs(s)}
+    pose.sway_x = 0.45 * c
+    pose.spread = abs(s)
+    if flashlight:
+        pose.arm_swing[-1.0] = FLASH_SWING + 0.035 * math.sin(2 * math.tau * t)
+        pose.arm_flex[-1.0] = FLASH_FLEX
+    return pose
+
+
+def idle_pose(t: float, flashlight: bool = False) -> Pose:
+    """Respiración en reposo (t en 0..1)."""
+    pose = Pose(flashlight=flashlight)
+    pose.breath = (1 - math.cos(math.tau * t)) / 2
+    pose.arm_flex = {1.0: 0.2 + 0.05 * pose.breath, -1.0: 0.2 + 0.05 * pose.breath}
+    pose.sway_x = 0.15 * math.sin(math.tau * t)
+    if flashlight:
+        pose.arm_swing[-1.0] = FLASH_SWING + 0.03 * pose.breath
+        pose.arm_flex[-1.0] = FLASH_FLEX
+    return pose
+
+
+def sit_pose() -> Pose:
+    pose = Pose(sitting=True)
+    pose.leg_swing = {1.0: 1.5, -1.0: 1.5}
+    pose.leg_bend = {1.0: 0.0, -1.0: 0.0}
+    pose.arm_swing = {1.0: 0.35, -1.0: 0.35}
+    pose.arm_flex = {1.0: 0.75, -1.0: 0.75}
+    return pose
+
+
 def build(phase: float = 0.0, pose: str = "stand") -> list[Prim]:
-    """Paciente. `phase` -1..1: pierna izquierda (x+) adelante con 1.
-    `pose`: "stand" (de pie / andando) o "sit" (sentado con las piernas estiradas)."""
+    """Compatibilidad: de pie (phase = 0) o sentado (pose = "sit")."""
+    return build_pose(sit_pose() if pose == "sit" else walk_pose(0.0 if phase == 0 else 0.25 * phase))
+
+
+def _bob(pose: Pose) -> float:
+    if pose.sitting:
+        return 0.0
+    ankles = [_leg((side * 2.7, 29.4, 0.0), pose.leg_swing[side], pose.leg_bend[side])[2][1] for side in (1.0, -1.0)]
+    return 2.4 - min(ankles)
+
+
+def _torso_offset(pose: Pose) -> Vec:
+    return (pose.sway_x, _bob(pose) + 0.6 * pose.breath, 0.0)
+
+
+def lens_position(pose: Pose) -> Vec:
+    """Posición (modelo) de la lente de la linterna para esa postura."""
+    shoulder = add(add((-6.0, 44.2, 0.2), _torso_offset(pose)), (-0.4, -0.2, 0.0))
+    s, e, w, fore = _arm(shoulder, -1.0, pose.arm_swing[-1.0], pose.arm_flex[-1.0])
+    return add(add(w, mul(fore, 1.9)), mul(fore, 5.4))
+
+
+def flash_mat(p: Vec, n: Vec) -> tuple:
+    return ("grip", 1.1)
+
+
+def lens_mat(p: Vec, n: Vec) -> tuple:
+    return ("!lens", 0.95)
+
+
+def build_pose(pose: Pose) -> list[Prim]:
     prims: list[Prim] = []
-    sitting = pose == "sit"
-    stride = 0.26 * phase
-    legs = {}
-    for side, swing in ((1.0, stride), (-1.0, -stride)):
-        back_leg = swing < -0.01
-        bend = 0.32 if back_leg else 0.06
-        if sitting:
-            swing, bend = 1.5, 0.0
-        legs[side] = _leg((side * 2.7, 29.4, 0.0), swing, bend)
-    lowest = min(legs[1.0][2][1], legs[-1.0][2][1])
-    bob = 0.0 if sitting else 2.4 - lowest
+    legs = {side: _leg((side * 2.7, 29.4, 0.0), pose.leg_swing[side], pose.leg_bend[side]) for side in (1.0, -1.0)}
+    bob = _bob(pose)
     up = (0.0, bob, 0.0)
+    hips_up = (pose.sway_x * 0.6, bob, 0.0)
+    # Desplazamiento lateral del peso y respiración (tronco, brazos y cabeza).
+    torso_up = _torso_offset(pose)
 
     for side in (1.0, -1.0):
         hip, knee, ankle = (add(v, up) for v in legs[side])
+        hip = add(hip, (pose.sway_x * 0.6, 0.0, 0.0))
         mid_thigh = add(hip, mul(sub(knee, hip), 0.45))
         calf = add(knee, mul(sub(ankle, knee), 0.3))
         prims += limb([hip, mid_thigh, knee], [2.45, 2.05, 1.65], skin_mat)
@@ -215,38 +298,29 @@ def build(phase: float = 0.0, pose: str = "stand") -> list[Prim]:
         prims.append(ellipsoid(foot_c, (1.25, 0.9, 2.5), skin_mat))
         prims.append(ellipsoid(add(foot_c, (0.0, -0.1, 2.0)), (1.2, 0.7, 0.9), skin_mat))
 
-    # Torso (piel; se ve por la abertura de la bata).
-    prims.append(ellipsoid(add((0.0, 30.2, 0.0), up), (5.1, 3.6, 3.2), skin_mat))
-    prims.append(ellipsoid(add((0.0, 35.2, 0.3), up), (4.5, 4.3, 2.9), torso_skin_mat))
-    prims.append(ellipsoid(add((0.0, 41.3, 0.3), up), (5.7, 5.1, 3.3), torso_skin_mat))
-    shoulder_l = add((6.0, 44.2, 0.2), up)
-    shoulder_r = add((-6.0, 44.2, 0.2), up)
+    prims.append(ellipsoid(add((0.0, 30.2, 0.0), hips_up), (5.1, 3.6, 3.2), skin_mat))
+    prims.append(ellipsoid(add((0.0, 35.2, 0.3), torso_up), (4.5, 4.3, 2.9), torso_skin_mat))
+    prims.append(ellipsoid(add((0.0, 41.3, 0.3), torso_up), (5.7, 5.1, 3.3 + 0.25 * pose.breath), torso_skin_mat))
+    shoulder_l = add((6.0, 44.2, 0.2), torso_up)
+    shoulder_r = add((-6.0, 44.2, 0.2), torso_up)
     prims.append(capsule(shoulder_r, shoulder_l, 1.9, torso_skin_mat))
-    neck_base = add((0.0, 45.5, -0.2), up)
-    neck_top = add((0.0, 49.6, 0.6), up)
-    prims.append(capsule(neck_base, neck_top, 1.45, skin_mat))
+    prims.append(capsule(add((0.0, 45.5, -0.2), torso_up), add((0.0, 49.6, 0.6), torso_up), 1.45, skin_mat))
 
     # Pieza metálica entre los omóplatos [PROPUESTA].
-    prims.append(cylinder(add((0.0, 43.4, -2.4), up), add((0.0, 43.4, -3.7), up), 0.75, metal_mat))
-    prims.append(sphere(add((0.0, 43.4, -3.75), up), 0.35, metal_mat))
+    prims.append(cylinder(add((0.0, 43.4, -2.4), torso_up), add((0.0, 43.4, -3.7), torso_up), 0.75, metal_mat))
+    prims.append(sphere(add((0.0, 43.4, -3.75), torso_up), 0.35, metal_mat))
 
-    # Cabeza, adelantada (postura encorvada).
-    head_c = add((0.0, 53.9, 0.7), up)
-    face_c = add((0.0, 51.5, 1.6), up)
+    head_c = add((0.0, 53.9, 0.7), torso_up)
+    face_c = add((0.0, 51.5, 1.6), torso_up)
     prims.append(ellipsoid(head_c, (3.35, 4.05, 3.85), make_head_mat(head_c)))
     prims.append(ellipsoid(face_c, (2.7, 2.6, 2.85), make_face_mat(face_c)))
-    prims.append(ellipsoid(add(face_c, (0.0, 0.85, 2.15)), (0.42, 0.9, 0.7), skin_mat))  # nariz
-    prims.append(ellipsoid(add(head_c, (0.0, -0.25, 2.75)), (2.5, 0.55, 1.0), make_head_mat(head_c)))  # ceja
+    prims.append(ellipsoid(add(face_c, (0.0, 0.85, 2.15)), (0.42, 0.9, 0.7), skin_mat))
+    prims.append(ellipsoid(add(head_c, (0.0, -0.25, 2.75)), (2.5, 0.55, 1.0), make_head_mat(head_c)))
     for side in (1.0, -1.0):
         prims.append(ellipsoid(add(head_c, (side * 3.3, -1.1, -0.6)), (0.55, 1.1, 0.8), skin_mat))
 
-    # Brazos: el izquierdo (x+) se balancea con la pierna derecha.
     for side, shoulder in ((1.0, shoulder_l), (-1.0, shoulder_r)):
-        swing = -0.22 * phase * side
-        flex = 0.18 + 0.12 * abs(phase)
-        if sitting:
-            swing, flex = 0.35, 0.75
-        s, e, w, fore = _arm(add(shoulder, (side * 0.4, -0.2, 0.0)), side, swing, flex)
+        s, e, w, fore = _arm(add(shoulder, (side * 0.4, -0.2, 0.0)), side, pose.arm_swing[side], pose.arm_flex[side])
         prims += limb([s, e], [1.55, 1.3], skin_mat)
         prims += limb([e, w], [1.25, 0.95], skin_mat)
         hand_basis: Mat3 = basis_from_y(fore, (side, 0.0, 0.0))
@@ -257,31 +331,38 @@ def build(phase: float = 0.0, pose: str = "stand") -> list[Prim]:
             prims.append(box(tape_c, (0.25, 0.75, 0.7), tape_mat, basis=hand_basis))
             prims.append(sphere(add(tape_c, (side * 0.3, 0.7, 0.0)), 0.35, metal_mat))
         else:
-            prims.append(ellipsoid(hand_c, (0.95, 2.0, 1.3), skin_mat, basis=hand_basis))
+            prims.append(ellipsoid(hand_c, (1.05, 2.0, 1.35), skin_mat, basis=hand_basis))
             for i in range(8):  # pulsera
                 ang = i / 8 * math.tau
                 ring = to_world(hand_basis, (math.cos(ang) * 1.12, 0.0, math.sin(ang) * 1.12))
                 prims.append(sphere(add(add(w, mul(fore, -0.5)), ring), 0.42, band_mat))
+            if pose.flashlight:
+                start = add(hand_c, mul(fore, -1.2))
+                body_end = add(hand_c, mul(fore, 3.8))
+                head_end = add(hand_c, mul(fore, 5.2))
+                prims.append(cylinder(start, body_end, 1.0, flash_mat))
+                prims.append(cylinder(body_end, head_end, 1.5, metal_mat))
+                prims.append(cylinder(head_end, add(head_end, mul(fore, 0.25)), 1.25, lens_mat))
         prims.append(ellipsoid(add(hand_c, to_world(hand_basis, (0.0, -0.2, 1.0))), (0.5, 1.1, 0.5), skin_mat,
-                               basis=hand_basis))  # pulgar
-        # Manga corta de la bata.
+                               basis=hand_basis))
         sleeve_end = add(s, mul(sub(e, s), 0.42))
         prims.append(capsule(s, sleeve_end, 2.0, gown_mat))
 
-    # Bata: rodajas con perfil continuo; la parte baja sigue a las rodillas al andar.
-    prims.append(capsule(add(shoulder_r, (0.4, -0.3, 0.0)), add(shoulder_l, (-0.4, -0.3, 0.0)), 2.25, gown_mat, cut=gown_cut))
+    prims.append(capsule(add(shoulder_r, (0.4, -0.3, 0.0)), add(shoulder_l, (-0.4, -0.3, 0.0)), 2.25, gown_mat,
+                         cut=gown_cut))
     knee_z = (legs[1.0][1][2] + legs[-1.0][1][2]) / 2
     y = 45.6
-    bottom = 28.0 if sitting else 17.4
+    bottom = 28.0 if pose.sitting else 17.4
     while y > bottom:
         rx, rz, cz = _profile(y)
+        offset = torso_up if y > 33 else hips_up
         if y < 31.0:
             t = (31.0 - y) / 13.5
-            rz += abs(phase) * 1.2 * t
+            rz += pose.spread * 1.1 * t
             cz += knee_z * 0.55 * t
-        prims.append(ellipsoid(add((0.0, y, cz), up), (rx, 1.0, rz), gown_slice_mat, cut=gown_cut))
+        prims.append(ellipsoid(add((0.0, y, cz), offset), (rx, 1.0, rz), gown_slice_mat, cut=gown_cut))
         y -= 0.75
-    if sitting:
+    if pose.sitting:
         prims.append(ellipsoid(add((0.0, 29.0, 7.0), up), (6.0, 2.4, 8.5), gown_mat))
     return prims
 

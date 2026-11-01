@@ -102,11 +102,16 @@ Ninguna es canon. Son ganchos que el equipo puede aprovechar o quitar:
 
 | Mecánica | Detalle | Dónde vive |
 |---|---|---|
-| Movimiento por casillas | 4 direcciones, un paso = 1 tile de 32 px en 0,27 s (lento a propósito). Sin correr | `player.gd` (`STEP_TIME`) |
+| Movimiento por casillas | 4 direcciones, 1 casilla en 0,4 s (lento a propósito). Sin correr. Un toque corto en otra dirección solo gira | `player.gd` (`STEP_TIME`, `TURN_DELAY`) |
+| Animación | Paso de 8 fotogramas sincronizado con la distancia (los pies no patinan), respiración en reposo, versión con linterna | `player.gd`, hoja de 24 columnas |
 | Examinar | Intro sobre la casilla de enfrente | `interactable.gd` |
 | Oscuridad | Ambiente casi negro (`CanvasModulate`); solo se ve lo iluminado | Nodo `Darkness` |
 | Luz propia | Radio de unas 2 casillas, tenue | `Player/Aura` |
-| Linterna | Cono de unos 7 tiles hacia donde se mira, con sombras de las paredes | `Player/Flashlight` |
+| Linterna | Sale de la mano derecha. Punto caliente estrecho y halo exterior débil, unas 7 casillas de alcance. Sigue los giros con algo de inercia, se balancea al andar y parpadea un poco | `Player/Flashlight` |
+| Luz rebotada | Lo que ilumina la linterna devuelve un poco de luz cálida al entorno | `Player/Bounce` |
+| Polvo | Motas en suspensión que solo se ven dentro de la luz | `Player/Dust` |
+| Sombras | Paredes y muebles proyectan sombras suaves sobre el suelo | tileset + `Shadow` en cada mueble |
+| Luz de emergencia | Palpita con subida y bajada suaves; el monitor late | `hospital_intro.gd` |
 | Texto | Caja inferior con efecto de máquina de escribir; rótulos centrados en mayúsculas | `scenes/ui/message_box.gd` |
 | VHS | Grano, aberración, scanlines, viñeta, virado frío y distorsión en eventos | `scenes/ui/vhs_overlay.gd` |
 

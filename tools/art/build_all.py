@@ -55,13 +55,45 @@ def sheet(name: str, rel: str, frames: list, w: int, h: int, origin: tuple[int, 
                   "origin": list(origin), "anchor": list(anchor), "glow": glow}
 
 
+# Columnas de la hoja del protagonista (por fila de dirección).
+ANIMS = {"idle": (0, 4), "walk": (4, 8), "idle_flash": (12, 4), "walk_flash": (16, 8)}
+YAWS = (0.0, -math.pi / 2, math.pi / 2, math.pi)  # abajo, izquierda, derecha, arriba
+
+
+def _pose_for(anim: str, i: int):
+    count = ANIMS[anim][1]
+    flash = anim.endswith("flash")
+    if anim.startswith("idle"):
+        return human.idle_pose(i / count, flash)
+    return human.walk_pose(i / count, flash)
+
+
 def build_protagonist() -> None:
     frames = []
-    for yaw in (0.0, -math.pi / 2, math.pi / 2, math.pi):  # abajo, izquierda, derecha, arriba
-        for phase in (1.0, 0.0, -1.0):
-            frames.append(render(human.build(phase), human.FRAME_W, human.FRAME_H, human.ORIGIN, View(yaw=yaw)))
+    lens = []
+    view = View()
+    for yaw in YAWS:
+        for anim in ANIMS:
+            for i in range(ANIMS[anim][1]):
+                frames.append(render(human.build_pose(_pose_for(anim, i)), human.FRAME_W, human.FRAME_H, human.ORIGIN,
+                                     View(yaw=yaw)))
+        # Lente en reposo con linterna: posición en pantalla y su proyección en el suelo.
+        from pxrender import rot_y
+        p = rot_y(human.lens_position(human.idle_pose(0.0, True)), yaw)
+        lens.append({"screen": [round(p[0], 1), round(-(view.a * p[1] - view.b * p[2]), 1)],
+                     "floor": [round(p[0], 1), round(view.b * p[2], 1)]})
     sheet("protagonist", "assets/sprites/characters/protagonist.png", frames, human.FRAME_W, human.FRAME_H,
-          human.ORIGIN, rows=4)
+          human.ORIGIN, rows=4, glow=True)
+    META["protagonist"]["anims"] = {k: list(v) for k, v in ANIMS.items()}
+    META["protagonist"]["lens"] = lens
+
+
+def build_lights() -> None:
+    import lights
+    for name, img in (("light_round", lights.round_light()), ("flashlight_cone", lights.flashlight_cone())):
+        path = ROOT / f"assets/sprites/lights/{name}.png"
+        img.save(path)
+        print("  ", path.relative_to(ROOT).as_posix(), f"{img.width}x{img.height}")
 
 
 def build_props() -> None:
@@ -165,6 +197,7 @@ def main() -> None:
     print("Generando arte provisional del hospital:")
     build_tiles()
     build_decals()
+    build_lights()
     build_protagonist()
     build_props()
     (ROOT / "tools/art/sprite_meta.json").write_text(json.dumps(META, indent=1), encoding="utf-8")

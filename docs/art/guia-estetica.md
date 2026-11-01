@@ -51,7 +51,17 @@ Reglas:
 Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su interfaz: proporciones humanas reales, cuerpos frágiles, paleta apagada, suciedad y heridas visibles. Nada de cabezones chibi.
 
 - Fotograma de **48×68 px**. La figura mide unos **58 px**, con la cabeza a ~1/7 de la altura. Los pies apoyan en la parte baja de la casilla.
-- 3 fotogramas por dirección, en el orden abajo, izquierda, derecha y arriba. El fotograma central es de pie.
+- Hoja de **24 columnas por dirección** (filas: abajo, izquierda, derecha, arriba):
+
+  | Columnas | Animación | Fotogramas |
+  |---|---|---|
+  | 0–3 | Reposo (respira) | 4 |
+  | 4–11 | Paso | 8 (un ciclo = 2 casillas) |
+  | 12–15 | Reposo con linterna | 4 |
+  | 16–23 | Paso con linterna | 8 |
+
+- **Movimiento realista**: rodilla que se dobla al adelantar la pierna, peso que pasa de un pie a otro, brazos en contrapeso y una **ligera cojera** (la pierna derecha da el paso más corto). En reposo, el pecho y los hombros suben y bajan.
+- **La linterna se sujeta con la mano derecha**, codo pegado al cuerpo y antebrazo al frente, a la altura del pecho. La lente es emisiva (capa `*_glow.png`). De espaldas queda tapada por el cuerpo.
 - Postura encorvada, zancada corta. Ojos hundidos (cuencas oscuras, sin pupila visible a esta escala).
 - Contorno de color: el tono más oscuro del material, mezclado con `#0E0A12`. Nunca negro puro.
 - Cada sprite lleva **mapa de normales** (`*_n.png`), para que la linterna revele el volumen.

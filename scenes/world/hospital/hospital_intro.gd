@@ -28,8 +28,11 @@ const STRETCHER_SITTING: int = 2
 const STRETCHER_MESSY: int = 3
 ## Virado frío y verdoso del hospital (guía estética: laboratorios en frío).
 const ZONE_TINT: Color = Color(0.9, 1.0, 0.96)
-const EMERGENCY_ON_TIME: float = 0.9
-const EMERGENCY_OFF_TIME: float = 0.55
+## Ciclo de la luz de emergencia: sube y baja como una bombilla que se calienta y se enfría.
+const EMERGENCY_PERIOD: float = 1.5
+const EMERGENCY_LIT_FRACTION: float = 0.62
+## Latido del monitor (segundos entre pulsos).
+const HEARTBEAT_PERIOD: float = 0.95
 ## Puertas que llevan a otra casilla: celda pisada -> [destino, dirección al llegar].
 const WARPS: Dictionary[Vector2i, Array] = {
 	Vector2i(5, 10): [Vector2i(5, 6), Vector2i.UP],
@@ -48,7 +51,8 @@ var _interactables: Dictionary[Vector2i, Interactable] = {}
 var _has_flashlight: bool = false
 var _footprints_seen: bool = false
 var _ending: bool = false
-var _emergency_timer: float = 0.0
+var _emergency_on: bool = true
+var _emergency_base_energy: float = 1.0
 var _monitor_base_energy: float = 1.0
 var _message: MessageBox
 var _vhs: VhsOverlay
@@ -82,6 +86,7 @@ func _ready() -> void:
 			_interactables[c] = interactable
 
 	_monitor_base_energy = _monitor_light.energy
+	_emergency_base_energy = _emergency_light.energy
 	# Sin límites de cámara: fuera del mapa es negro y el personaje queda siempre centrado.
 	_player.walkable_check = _is_walkable
 	_player.interact_requested.connect(_on_interact_requested)
@@ -95,17 +100,20 @@ func _ready() -> void:
 		_run_intro()
 
 
-func _process(delta: float) -> void:
-	_monitor_light.energy = _monitor_base_energy * (0.85 + 0.15 * sin(Time.get_ticks_msec() * 0.004))
-	if randf() < 0.01:
-		_monitor_light.energy *= 0.4
-	if _ending:
+func _process(_delta: float) -> void:
+	var now: float = Time.get_ticks_msec() / 1000.0
+	# Monitor: destello corto en cada latido y caída lenta.
+	var beat: float = fposmod(now, HEARTBEAT_PERIOD) / HEARTBEAT_PERIOD
+	_monitor_light.energy = _monitor_base_energy * (0.75 + 0.45 * exp(-beat * 9.0))
+	if randf() < 0.006:
+		_monitor_light.energy *= 0.35
+	if not _emergency_on:
 		return
-	_emergency_timer -= delta
-	if _emergency_timer <= 0.0:
-		var on: bool = not _emergency_light.enabled
-		_set_emergency(on)
-		_emergency_timer = EMERGENCY_ON_TIME if on else EMERGENCY_OFF_TIME
+	var phase: float = fposmod(now, EMERGENCY_PERIOD) / EMERGENCY_PERIOD
+	var level: float = 0.0
+	if phase < EMERGENCY_LIT_FRACTION:
+		level = pow(sin(phase / EMERGENCY_LIT_FRACTION * PI), 0.7)
+	_set_emergency_level(level)
 
 
 # --- secuencia de inicio -------------------------------------------------------
@@ -246,13 +254,16 @@ func _warp(target: Vector2i, facing: Vector2i) -> void:
 	_unlock()
 
 
-func _set_emergency(on: bool) -> void:
-	_emergency_light.enabled = on
-	_emergency_sprite.frame = 0 if on else 1
+func _set_emergency_level(level: float) -> void:
+	_emergency_light.enabled = level > 0.01
+	_emergency_light.energy = _emergency_base_energy * level
+	_emergency_sprite.frame = 0 if level > 0.3 else 1
 	var glow: Sprite2D = _emergency_sprite.get_node_or_null(^"Glow") as Sprite2D
 	if glow != null:
-		glow.frame = _emergency_sprite.frame
-		glow.visible = on
+		glow.frame = 0
+		glow.modulate.a = level
+		glow.visible = level > 0.01
+
 
 
 # --- final ------------------------------------------------------------------------
@@ -265,7 +276,8 @@ func _run_ending(doors: Interactable) -> void:
 	_ending = true
 	_vhs.glitch(2.4, 0.8)
 	await _player.flicker_flashlight(1.4)
-	_set_emergency(false)
+	_emergency_on = false
+	_set_emergency_level(0.0)
 	await _wait(0.8)
 	await _fade_to(1.0, 0.6)
 	await _wait(1.2)
