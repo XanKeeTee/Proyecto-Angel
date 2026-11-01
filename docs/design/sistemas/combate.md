@@ -153,7 +153,7 @@ Algunos enemigos tienen Mente (humanos) y pueden entrar en pánico; otros no (`t
 - **Muerte del protagonista** → **fin de partida** (aprobado). La partida depende solo de que el protagonista siga vivo.
 - **Derrota en combate**: todos los que siguen en el combate están Caídos, en Quiebre o muertos. Lo que pasa después depende de dónde esté el protagonista:
   - **El protagonista está en el combate** → fin de partida (salvo combates narrativos marcados como `derrota_continua`).
-  - **El protagonista huyó solo** → la partida **sigue** con él. Los que se quedaron en el combate **mueren**. `[PROPUESTA]`
+  - **El protagonista huyó solo** → la partida **sigue** con él. Los que murieron se pierden (aprobado). Los que quedaron Caídos o en Quiebre al perder el combate también mueren. `[PROPUESTA]`
 
 ## Curación
 
@@ -183,11 +183,13 @@ prob_huida% = clamp(50 + 3 × (AGI_media_grupo − AGI_media_enemigos), 10, 90)
 prob_huida_solo% = clamp(50 + 3 × (AGI_personaje − AGI_media_enemigos), 10, 90)
 ```
 
-- Si sale bien, ese personaje sale del combate; el resto sigue luchando.
-- Si el resto gana o huye después, el que huyó vuelve al grupo al terminar. `[PROPUESTA]`
-- Si el resto pierde (aprobado):
-  - quien huyó **no es el protagonista** → el protagonista se quedó en el combate y muere: **fin de partida**;
-  - quien huyó **es el protagonista** → la partida sigue con él solo.
+Aprobado:
+
+- Si sale bien, ese personaje **queda fuera del combate** y el jugador **sigue peleando** con los que quedan. Esto vale también si el que huye es el **protagonista**: el combate continúa con el resto del grupo, bajo control del jugador.
+- Si los que quedan **ganan** (o huyen después), los que sigan vivos sobreviven y el que huyó vuelve al grupo.
+- Si los que quedan **mueren**, se pierden para siempre.
+- Si quien huyó **no es el protagonista**, el protagonista sigue en el combate: si muere, **fin de partida**.
+- Si quien huyó **es el protagonista**, la partida sigue con él aunque muera el resto.
 - Los aliados que se quedan pierden **10 de Mente** al verle marcharse (5 si VOL ≥ 12). `[PROPUESTA]`
 - Imposible con las dos piernas Rotas o Amputadas.
 
@@ -245,6 +247,6 @@ Ver la simulación en [cuerpo-y-heridas.md § Balance](cuerpo-y-heridas.md#balan
 
 - Muerte permanente → **sí, para todos**.
 - Muerte del protagonista → **fin de partida**.
-- Huida individual y derrota del resto → **fin de partida si el que huyó no es el protagonista**; si lo es, la partida sigue.
+- Huida individual → quien huye sale del combate y **se sigue peleando** con el resto, también si huye el protagonista. Los que ganan sobreviven; los que mueren se pierden. Solo es fin de partida si muere el protagonista.
 - Huida → **en grupo o individual**, a elección.
 - Recuperación de Cuerpo → **solo curándose**, dentro o fuera del combate.
