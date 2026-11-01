@@ -28,13 +28,13 @@ func _run() -> void:
 				total += 1
 				case.current = "%s · %s" % [file.get_basename(), name]
 				var before: int = case.failures.size()
-				var result: Variant = case.call(name)
-				if result is Signal:
-					await result
+				var started: int = Time.get_ticks_msec()
+				await case.call(name)
+				var ms: int = Time.get_ticks_msec() - started
 				if case.failures.size() > before:
 					print("FALLA  ", case.current)
 				else:
-					print("ok     ", case.current)
+					print("ok     ", case.current, "  (%d ms)" % ms if ms > 200 else "")
 			failed.append_array(case.failures)
 	print("")
 	for f: String in failed:

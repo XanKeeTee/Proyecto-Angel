@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_attdg"]
+
+[resource]
+script = ExtResource("1_attdg")
+id = &"diario_celador"
+title = "Libreta del celador"
+style = 1
+body = "Lo he medido dos veces con la cinta. El pasillo del ala de pacientes mide once metros más por dentro que por fuera.
+
+Los planos dicen que al oeste está la fachada. Yo he tocado la fachada desde la calle. Y sin embargo, cuando cortan la luz, se oye a alguien andar al otro lado del muro.
+
+Dirección dice que no lo apunte. Lo apunto."

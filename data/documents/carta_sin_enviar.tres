@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_clvxb"]
+
+[resource]
+script = ExtResource("1_clvxb")
+id = &"carta_sin_enviar"
+title = "Carta sin enviar"
+style = 1
+body = "Querida Elena:
+
+No duermo desde el Desvelo. Aquí dicen que eso es bueno, que estoy en vigilia, que así es como se cura. Me ponen suero y me miran.
+
+Por las noches alguien camina descalzo por el pasillo. Las enfermeras dicen que es el de la nueve, pero el de la nueve no se levanta nunca.
+
+Si vienes a verme, no traigas flores. Aquí todo lo que está vivo dura poco.
+
+Tu padre."

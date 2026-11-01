@@ -35,7 +35,7 @@ var debug: Dictionary[String, String] = {}
 var _map: TileMapLayer
 var _world: Node2D
 var _fade: ColorRect
-var _interactables: Dictionary[Vector2i, Interactable] = {}
+var _interactables: Dictionary[Vector2i, Array] = {}
 var _doors: Array[Door] = []
 var _focused: Interactable
 var _busy: bool = false
@@ -51,8 +51,8 @@ func _ready() -> void:
 	_world = %World
 	_fade = %Fade
 	_build_ui()
-	_index_interactables()
 	_restore_scenery()
+	_index_interactables()
 	player.interact_requested.connect(_on_interact)
 	player.examine_requested.connect(_on_examine)
 	player.cell_entered.connect(_on_cell_entered)
@@ -116,6 +116,11 @@ func cell_center(cell: Vector2i) -> Vector2:
 	return Vector2(cell * TILE_SIZE) + Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0)
 
 
+## Vuelve a indexar los objetos (tras mover u ocultar algo).
+func reindex() -> void:
+	_index_interactables()
+
+
 func find_object(id: StringName) -> Interactable:
 	for node: Node in find_children("*", "Interactable", true, false):
 		var it: Interactable = node as Interactable
@@ -173,21 +178,28 @@ func move_scenery(node_name: String, offset: Vector2, frame: int = -1) -> void:
 		push_warning("Escenario: no existe " + node_name)
 		return
 	node.position += offset
-	var sprite: Sprite2D = node.get_node_or_null(^"Sprite2D") as Sprite2D
-	if frame >= 0 and sprite != null:
-		sprite.frame = frame
+	var it: Interactable = node as Interactable
+	if frame >= 0 and it != null:
+		it.set_frames(frame)
+	elif frame >= 0:
+		var sprite: Sprite2D = node.get_node_or_null(^"Sprite2D") as Sprite2D
+		if sprite != null:
+			sprite.frame = frame
 	_save_scenery(node)
+	reindex()
 
 
 func set_scenery_visible(node_name: String, show: bool) -> void:
 	var node: Node2D = _world.find_child(node_name, true, false) as Node2D
 	if node == null:
 		return
-	node.visible = show
-	var body: CollisionObject2D = node.get_node_or_null(^"Body") as CollisionObject2D
-	if body != null:
-		body.process_mode = Node.PROCESS_MODE_INHERIT if show else Node.PROCESS_MODE_DISABLED
-	_save_scenery(node)
+	var it: Interactable = node as Interactable
+	if it != null:
+		it.set_hidden(not show)
+	else:
+		node.visible = show
+		_save_scenery(node)
+	reindex()
 
 
 func open_custody(document_id: StringName = &"") -> void:
@@ -253,14 +265,17 @@ func _index_interactables() -> void:
 			door._apply_visuals()
 			_doors.append(door)
 		for c: Vector2i in it.cells():
-			_interactables[c] = it
+			if not _interactables.has(c):
+				_interactables[c] = []
+			_interactables[c].append(it)
 
 
 func _target(cells: Array[Vector2i]) -> Interactable:
 	for c: Vector2i in cells:
-		var it: Interactable = _interactables.get(c)
-		if it != null and it.is_active():
-			return it
+		for node: Variant in _interactables.get(c, []):
+			var it: Interactable = node as Interactable
+			if it != null and it.is_active():
+				return it
 	return null
 
 
@@ -440,7 +455,8 @@ func _restore_scenery() -> void:
 			continue
 		var s: Dictionary = GameState.objects[key]
 		node.position = Vector2(float(s.get("x", node.position.x)), float(s.get("y", node.position.y)))
-		node.visible = bool(s.get("visible", true))
+		if not node is Interactable:
+			node.visible = bool(s.get("visible", true))
 		var sprite: Sprite2D = node.get_node_or_null(^"Sprite2D") as Sprite2D
 		if sprite != null and int(s.get("frame", -1)) >= 0:
 			sprite.frame = int(s["frame"])

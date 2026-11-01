@@ -96,7 +96,11 @@ func _physics_process(delta: float) -> void:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 	var before: Vector2 = position
 	move_and_slide()
-	_walk_distance += position.distance_to(before)
+	var stepped: float = position.distance_to(before)
+	# Un paso cada media zancada: suena el pie descalzo.
+	if floori(_walk_distance / (STRIDE_PIXELS / 2.0)) != floori((_walk_distance + stepped) / (STRIDE_PIXELS / 2.0)):
+		Sfx.at(get_parent(), "step_%d" % randi_range(1, 4), position, -16.0, 0.08)
+	_walk_distance += stepped
 	if cell != _last_cell:
 		_last_cell = cell
 		cell_entered.emit(cell)

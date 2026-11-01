@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_lx3lc"]
+
+[resource]
+script = ExtResource("1_lx3lc")
+id = &"parte_turno"
+title = "Parte de incidencias · Turno de noche"
+kind = 2
+date_text = "Sin fecha"
+body = "02:14  Ruidos en la 11 (vacía desde marzo). Se comprueba: nada.
+02:40  La cama de la 08 aparece separada de la pared. Nadie la ha movido.
+02:58  El monitor de la 09 marca actividad. Aviso a dirección.
+03:05  Dirección ordena desalojar la planta 3, salvo la 09.
+03:06  ¿Desalojar a quién? Aquí ya no queda nadie.
+03:07  [s]Me quedo.[/s]
+03:31  Se oyen pasos en el pasillo. Llevo veinte minutos sin moverme del control.
+
+El resto del parte está en blanco."

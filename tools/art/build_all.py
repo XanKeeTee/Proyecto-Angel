@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from PIL import Image  # noqa: E402
 
+import doc_images  # noqa: E402
 import human  # noqa: E402
 import items  # noqa: E402
 import props  # noqa: E402
@@ -255,6 +256,7 @@ def main() -> None:
     build_props2()
     build_items()
     sounds.build()
+    doc_images.build()
     (ROOT / "tools/art/sprite_meta.json").write_text(json.dumps(META, indent=1), encoding="utf-8")
     preview()
 

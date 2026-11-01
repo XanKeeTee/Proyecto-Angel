@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_ups21"]
+
+[resource]
+script = ExtResource("1_ups21")
+id = &"nota_lavanderia"
+title = "Etiqueta de un saco de ropa"
+style = 1
+body = "Sábanas de la 09: lavar aparte.
+No mirar las manchas.
+No preguntar por qué brillan."

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_dyefw"]
+
+[resource]
+script = ExtResource("1_dyefw")
+id = &"hoja_constantes"
+title = "Hoja de constantes · Hab. 09"
+kind = 1
+style = 2
+date_text = "Ciclo IX"
+body = "Día 3.208 — TA 90/60 · FC 41 · Tª 35,1 · Sin sueño REM. Sin cambios.
+Día 3.209 — TA 90/60 · FC 40 · Sin sueño REM. Sin cambios.
+Día 3.210 — TA 88/58 · FC 40 · Sin sueño REM. Sin cambios.
+Día 3.211 — Sin cambios. [s]El paciente habla en vigilia.[/s]
+Día 3.212 — [b]ACTIVIDAD.[/b] Avisar a dirección. No entrar.
+
+La última línea está escrita con otra letra, muy deprisa."

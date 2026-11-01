@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_x8gmn"]
+
+[resource]
+script = ExtResource("1_x8gmn")
+id = &"expediente_09"
+title = "Expediente clínico · Habitación 09"
+kind = 1
+date_text = "14 de marzo — antes del Desvelo"
+body = "INGRESO: 14 de marzo. [b]Antes del Desvelo.[/b]
+MOTIVO: [s]████████████████████[/s]
+DIAGNÓSTICO: Ninguno. Paciente sano.
+
+OBSERVACIONES DE INGRESO:
+«El paciente pidió que no lo despertáramos. Dijo que, si lo hacíamos, tendríamos que hacerlo nueve veces.»
+
+EVOLUCIÓN: Vigilia I · II · III · IV · V · VI · VII · VIII · IX
+
+DESTINO TRAS LA NOVENA VIGILIA: [b]Protocolo de recuperación.[/b]
+RESPONSABLE: Dirección."
+stamp = "NO ARCHIVAR"

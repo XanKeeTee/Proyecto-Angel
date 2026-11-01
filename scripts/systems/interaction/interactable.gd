@@ -40,6 +40,11 @@ const ACT_ITEM_PREFIX: String = "item:"
 @export var footprint: Array[Vector2i] = [Vector2i.ZERO]
 ## Si impide el paso (la escena crea su colisión).
 @export var blocks: bool = true
+## Casillas desde las que se interactúa, si no son todas las de `footprint` (p. ej. un escritorio
+## con el ordenador en una casilla y los cajones en la otra).
+@export var interact_cells: Array[Vector2i] = []
+## Empieza oculto (lo muestra un evento).
+@export var start_hidden: bool = false
 
 @export_group("Textos")
 @export_multiline var examine_text: String = ""
@@ -114,6 +119,8 @@ var inspected: bool = false
 var taken: bool = false
 var device_used: bool = false
 var uses_done: Array[int] = []
+## Oculto por un evento (no se ve, no choca y no se puede usar).
+var concealed: bool = false
 ## Cantidades que quedan de cada entrada de `contents` (por índice).
 var remaining: Array[int] = []
 
@@ -123,6 +130,7 @@ var remaining: Array[int] = []
 func _ready() -> void:
 	is_open = start_open
 	is_locked = start_locked
+	concealed = start_hidden
 	remaining.clear()
 	for entry: LootEntry in contents:
 		remaining.append(entry.quantity if entry.item != null else 1)
@@ -138,7 +146,7 @@ func base_cell() -> Vector2i:
 
 func cells() -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
-	for offset: Vector2i in footprint:
+	for offset: Vector2i in (interact_cells if not interact_cells.is_empty() else footprint):
 		result.append(base_cell() + offset)
 	return result
 
@@ -151,7 +159,22 @@ func is_empty() -> bool:
 
 
 func is_active() -> bool:
-	return not (taken and hide_when_taken)
+	return not concealed and not (taken and hide_when_taken)
+
+
+func set_hidden(value: bool) -> void:
+	concealed = value
+	_save_state()
+	_apply_visuals()
+	state_changed.emit()
+
+
+## Cambia los fotogramas del sprite (y lo recuerda): una cama hecha de nuevo, un cajón vacío…
+func set_frames(closed: int, open: int = -1) -> void:
+	frame_closed = closed
+	frame_open = open if open >= 0 else closed
+	_save_state()
+	_apply_visuals()
 
 
 ## Estado legible (para depurar y para el texto de examinar).
@@ -403,7 +426,7 @@ func _save_state() -> void:
 	GameState.save_object_state(object_id, {
 		"open": is_open, "locked": is_locked, "searched": searched, "inspected": inspected,
 		"taken": taken, "device": device_used, "uses": uses_done.duplicate(), "remaining": remaining.duplicate(),
-		"frames": [frame_closed, frame_open],
+		"frames": [frame_closed, frame_open], "hidden": concealed,
 	})
 
 
@@ -416,6 +439,7 @@ func _load_state() -> void:
 	searched = s.get("searched", false)
 	inspected = s.get("inspected", false)
 	taken = s.get("taken", false)
+	concealed = s.get("hidden", concealed)
 	device_used = s.get("device", false)
 	uses_done.clear()
 	for u: Variant in s.get("uses", []):
@@ -430,6 +454,9 @@ func _load_state() -> void:
 
 func _apply_visuals() -> void:
 	visible = is_active()
+	var body: CollisionObject2D = get_node_or_null(^"Body") as CollisionObject2D
+	if body != null:
+		body.process_mode = Node.PROCESS_MODE_INHERIT if visible else Node.PROCESS_MODE_DISABLED
 	if _sprite == null:
 		return
 	var frame: int = frame_open if (openable and is_open) else frame_closed

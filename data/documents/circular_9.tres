@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_s3wgf"]
+
+[resource]
+script = ExtResource("1_s3wgf")
+id = &"circular_9"
+title = "Circular interna nº 9"
+kind = 2
+date_text = "Dirección"
+body = "ASUNTO: Protocolo de recuperación.
+
+Cuando un paciente en vigilia recupere la consciencia por sí mismo, el personal abandonará la planta de inmediato y sin hablar con él.
+
+No intenten contenerlo. No intenten ayudarle a salir.
+
+[b]El edificio se encarga.[/b]"
+stamp = "CONFIDENCIAL"

@@ -14,6 +14,8 @@ extends Interactable
 ## Capa de tiles donde están (la escena la asigna).
 @export var tile_layer: TileMapLayer
 @export var tile_source: int = 0
+## Siempre abierta y sin acciones (escaleras, pasos sin puerta).
+@export var always_open: bool = false
 
 @export_group("Paso al otro lado")
 ## Si es >= 0, entrar en la casilla base estando abierta lleva a esta casilla.
@@ -28,6 +30,8 @@ extends Interactable
 func _ready() -> void:
 	openable = true
 	kind = Kind.CONTAINER
+	if always_open:
+		start_open = true
 	super._ready()
 
 
@@ -50,6 +54,8 @@ func cells() -> Array[Vector2i]:
 
 
 func _container_actions(actions: Array[Dictionary], character: CharacterState) -> void:
+	if always_open:
+		return
 	if is_locked:
 		if key_item != null and character.custody.has(key_item.id):
 			actions.append({"id": ACT_UNLOCK, "label": "Abrir con " + key_item.display_name.to_lower()})

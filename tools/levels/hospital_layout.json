@@ -1,0 +1,57 @@
+{
+  "_doc": "Distribución del hospital del prólogo. Rect = suelo [x, y, ancho, alto] en casillas. Lo usan tools/levels/build_hospital.gd y tools/art/doc_images.py (plano).",
+  "rooms": [
+    {"id": "hab07", "name": "Habitación 07", "rect": [1, 4, 7, 6], "floor": "room", "walls": "ward", "map": true},
+    {"id": "hab08", "name": "Habitación 08", "rect": [9, 4, 7, 6], "floor": "room", "walls": "ward", "map": true},
+    {"id": "hab10", "name": "Habitación 10", "rect": [17, 4, 7, 6], "floor": "room", "walls": "ward", "map": true},
+    {"id": "hab11", "name": "Habitación 11", "rect": [25, 4, 7, 6], "floor": "room", "walls": "ward", "map": true},
+    {"id": "enfermeria", "name": "Enfermería", "rect": [33, 4, 12, 6], "floor": "room", "walls": "ward", "map": true},
+    {"id": "archivo", "name": "Archivo médico", "rect": [46, 4, 12, 6], "floor": "wood", "walls": "ward", "map": true},
+    {"id": "escalera", "name": "Escalera de servicio", "rect": [59, 4, 5, 6], "floor": "lino", "walls": "ward", "map": true},
+    {"id": "vestibulo", "name": "Vestíbulo", "rect": [65, 4, 7, 6], "floor": "terrazzo", "walls": "ward", "map": true},
+    {"id": "pasillo", "name": "Pasillo del ala de pacientes", "rect": [1, 14, 71, 3], "floor": "lino", "walls": "ward", "map": true},
+    {"id": "hab09", "name": "Habitación 09", "rect": [1, 21, 7, 7], "floor": "room", "walls": "ward", "map": true},
+    {"id": "hab12", "name": "Habitación 12", "rect": [9, 21, 7, 7], "floor": "room", "walls": "ward", "map": true},
+    {"id": "almacen", "name": "Almacén de limpieza", "rect": [17, 21, 5, 7], "floor": "room", "walls": "ward", "map": true},
+    {"id": "banos", "name": "Baños", "rect": [23, 21, 6, 7], "floor": "room", "walls": "ward", "map": true},
+    {"id": "control", "name": "Control de enfermería", "rect": [30, 21, 7, 7], "floor": "lino", "walls": "ward", "map": true},
+    {"id": "quirofano", "name": "Quirófano", "rect": [38, 21, 15, 7], "floor": "or", "walls": "or", "map": true},
+    {"id": "recepcion", "name": "Recepción y admisiones", "rect": [54, 21, 18, 7], "floor": "terrazzo", "walls": "ward", "map": true},
+
+    {"id": "b_escalera", "name": "Escalera (sótano)", "rect": [1, 34, 6, 6], "floor": "concrete", "walls": "basement"},
+    {"id": "b_electrica", "name": "Sala eléctrica", "rect": [8, 34, 10, 6], "floor": "concrete", "walls": "basement"},
+    {"id": "b_lavanderia", "name": "Lavandería", "rect": [19, 34, 9, 6], "floor": "concrete", "walls": "basement"},
+    {"id": "b_pasillo", "name": "Pasillo de mantenimiento", "rect": [1, 44, 34, 3], "floor": "concrete", "walls": "basement"},
+    {"id": "b_morgue", "name": "Morgue", "rect": [1, 51, 10, 7], "floor": "or", "walls": "basement"},
+    {"id": "b_calderas", "name": "Sala de calderas", "rect": [12, 51, 13, 7], "floor": "concrete", "walls": "basement"},
+    {"id": "b_taller", "name": "Taller de mantenimiento", "rect": [26, 51, 9, 7], "floor": "concrete", "walls": "basement"}
+  ],
+  "doors": [
+    {"id": "puerta_hab07", "room": "hab07", "x": 4, "from": "pasillo"},
+    {"id": "puerta_hab08", "room": "hab08", "x": 12, "from": "pasillo"},
+    {"id": "puerta_hab10", "room": "hab10", "x": 20, "from": "pasillo", "key": "llave_habitacion_10"},
+    {"id": "puerta_hab11", "room": "hab11", "x": 28, "from": "pasillo"},
+    {"id": "puerta_enfermeria", "room": "enfermeria", "x": 38, "from": "pasillo"},
+    {"id": "puerta_archivo", "room": "archivo", "x": 51, "from": "pasillo", "key": "llave_archivo"},
+    {"id": "puerta_escalera", "room": "escalera", "x": 61, "from": "pasillo", "key": "llave_sotano"},
+    {"id": "puerta_vestibulo", "room": "vestibulo", "x": 67, "from": "pasillo"},
+    {"id": "puerta_hab09", "room": "hab09", "x": 4, "from": "pasillo"},
+    {"id": "puerta_hab12", "room": "hab12", "x": 12, "from": "pasillo"},
+    {"id": "puerta_almacen", "room": "almacen", "x": 19, "from": "pasillo"},
+    {"id": "puerta_banos", "room": "banos", "x": 25, "from": "pasillo"},
+    {"id": "puerta_control", "room": "control", "x": 33, "from": "pasillo"},
+    {"id": "puerta_quirofano", "room": "quirofano", "x": 45, "from": "pasillo", "jammed": "palanca"},
+    {"id": "puerta_recepcion", "room": "recepcion", "x": 62, "from": "pasillo"},
+    {"id": "b_puerta_escalera", "room": "b_escalera", "x": 4, "from": "b_pasillo"},
+    {"id": "b_puerta_electrica", "room": "b_electrica", "x": 12, "from": "b_pasillo"},
+    {"id": "b_puerta_lavanderia", "room": "b_lavanderia", "x": 23, "from": "b_pasillo"},
+    {"id": "b_puerta_morgue", "room": "b_morgue", "x": 5, "from": "b_pasillo"},
+    {"id": "b_puerta_calderas", "room": "b_calderas", "x": 18, "from": "b_pasillo"},
+    {"id": "b_puerta_taller", "room": "b_taller", "x": 30, "from": "b_pasillo"}
+  ],
+  "stairs": [
+    {"id": "escalera_bajar", "room": "escalera", "x": 61, "to": [4, 34]},
+    {"id": "escalera_subir", "room": "b_escalera", "x": 4, "to": [61, 4]}
+  ],
+  "impossible": {"rows": [14, 16], "from_x": 0, "to_x": -26, "end_trigger_x": -18}
+}

@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tape_recorder.png" id="1_4mr3r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tape_recorder_n.png" id="2_fwmpw"]
+
+[resource]
+diffuse_texture = ExtResource("1_4mr3r")
+normal_texture = ExtResource("2_fwmpw")
+texture_filter = 1

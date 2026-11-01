@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_yw76i"]
+
+[resource]
+script = ExtResource("1_yw76i")
+id = &"nota_panel"
+title = "Nota en el cuadro eléctrico"
+style = 1
+body = "F1 fundido. Hay repuestos en el archivo de la 3.ª (caja de mantenimiento, estantería del fondo).
+
+Las bornas del cuadro están sueltas: hace falta un destornillador.
+
+Y que nadie arranque el grupo sin avisar a dirección. Cuando vuelve la luz, vuelve todo."

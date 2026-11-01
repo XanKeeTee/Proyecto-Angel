@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/op_lamp.png" id="1_ltmsf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/op_lamp_n.png" id="2_a75tf"]
+
+[resource]
+diffuse_texture = ExtResource("1_ltmsf")
+normal_texture = ExtResource("2_a75tf")
+texture_filter = 1

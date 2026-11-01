@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_hd0cf"]
+
+[resource]
+script = ExtResource("1_hd0cf")
+id = &"pulsera_09"
+title = "Pulsera de paciente"
+kind = 5
+style = 2
+body = "HOSPITAL CLÍNICO SAN LÁZARO · PLANTA 3
+
+PACIENTE: [b]09[/b]
+NOMBRE: ███████████
+UNIDAD: VIGILIA
+CICLO: [b]IX[/b]
+ALERGIAS: —
+
+[b]NO DESPERTAR SIN AUTORIZACIÓN DE DIRECCIÓN[/b]
+
+El plástico está gastado por dentro, como si la hubieras llevado muchos años."
+stamp = "IX"

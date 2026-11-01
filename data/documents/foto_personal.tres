@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/documents/foto_personal.png" id="1_kaimk"]
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="2_l5is5"]
+
+[resource]
+script = ExtResource("2_l5is5")
+id = &"foto_personal"
+title = "Fotografía del personal"
+kind = 3
+style = 3
+body = "Foto de grupo frente a la entrada del hospital. Catorce personas con bata. Alguien ha rayado una de las caras hasta romper el papel.
+
+Al dorso, a lápiz: [i]«Inauguración de la Unidad de Vigilia. Antes de todo.»[/i]"
+image = ExtResource("1_kaimk")

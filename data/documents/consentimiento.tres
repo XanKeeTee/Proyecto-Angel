@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_a6ei6"]
+
+[resource]
+script = ExtResource("1_a6ei6")
+id = &"consentimiento"
+title = "Consentimiento informado"
+kind = 1
+style = 2
+body = "Yo, ████████████, paciente de la Unidad de Vigilia, acepto someterme al procedimiento de recuperación y a sus repeticiones.
+
+Firma del paciente: ______________ (en blanco)
+Firma del tutor legal: [b]Dirección del Hospital Clínico San Lázaro[/b]
+
+El papel tiene la marca de una mano que lo sujetó con fuerza."
+stamp = "SIN FIRMA"
