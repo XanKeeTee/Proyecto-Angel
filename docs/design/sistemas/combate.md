@@ -118,7 +118,7 @@ Se tira solo si el ataque acierta. Crítico: daño × 1.5 y la herida resultante
 
 - **Cubrir parte propia**: esa parte recibe −50 % de daño esta ronda y **no puede ser amputada**.
 - **Cubrir a un aliado**: el primer ataque dirigido a ese aliado esta ronda lo recibe quien cubre, **en la misma parte** a la que apuntaba.
-- Guardia actúa con iniciativa +10, así que casi siempre se resuelve antes del golpe.
+- La Guardia se aplica **siempre al principio** de la resolución, antes de cualquier ataque. `[PROPUESTA]` (antes: iniciativa +10; se simplificó en el prototipo porque una guardia que llega tarde se siente injusta).
 
 La Guardia es la respuesta directa al telegrafiado: si un enemigo anuncia `TAJO → BRAZO DER.`, cubrir ese brazo salva el arma.
 
@@ -219,6 +219,10 @@ Si al resolverse una acción su objetivo ya no es válido:
 - Cada ataque enemigo puede requerir una **parte** (`parte_requerida`). Si esa parte está Rota o Amputada, el ataque **deja de estar disponible**. Mutilar al enemigo cambia lo que puede hacer.
 - Patrones: secuencia fija, condicional (por Cuerpo, por partes perdidas, por número de aliados) o mezcla. Un patrón debe poder aprenderse en 2–3 rondas.
 - Hasta **4 enemigos** a la vez en pantalla.
+- Los enemigos **mueren** al llegar a Cuerpo 0 (no pasan por Caído). `[PROPUESTA]`
+- Comportamiento base (prototipo) `[PROPUESTA]`:
+  - 50 % de las veces van a por el aliado con menos Cuerpo;
+  - 65 % de las veces vuelven a golpear una parte ya Herida o Rota ("huelen la sangre"), lo que hace útil la Guardia.
 
 ## Recursos de datos (para implementación)
 

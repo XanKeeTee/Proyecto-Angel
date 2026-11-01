@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_mn5nf"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_s03oy"]
+[ext_resource type="Resource" path="res://data/body_parts/head.tres" id="3_jntch"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_sd3jj"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_opyod"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_f851t"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_s7w1r"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_hsh6e"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_7l233"]
+[ext_resource type="Resource" path="res://data/items/knife.tres" id="10_re2jd"]
+
+[resource]
+script = ExtResource("9_7l233")
+display_name = "PROTAGONISTA"
+is_protagonist = true
+willpower = 9
+weapon = ExtResource("10_re2jd")
+armor = 1
+parts = Array[ExtResource("2_s03oy")]([ExtResource("3_jntch"), ExtResource("4_sd3jj"), ExtResource("5_opyod"), ExtResource("6_f851t"), ExtResource("7_s7w1r"), ExtResource("8_hsh6e")])

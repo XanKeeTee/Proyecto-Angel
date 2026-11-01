@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_6gkat"]
+
+[resource]
+script = ExtResource("1_6gkat")
+id = &"torso"
+display_name = "Torso"
+integrity_fraction = 0.5
+hit_mod = 10
+vital = true

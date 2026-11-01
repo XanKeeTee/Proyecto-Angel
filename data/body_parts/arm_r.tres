@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_sbmk7"]
+
+[resource]
+script = ExtResource("1_sbmk7")
+id = &"arm_r"
+display_name = "Brazo der."
+hit_mod = -10
+body_mult = 0.6
+amputable = true

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_wxlce"]
+
+[resource]
+script = ExtResource("1_wxlce")
+id = &"head"
+display_name = "Cabeza"
+integrity_fraction = 0.25
+hit_mod = -25
+body_mult = 2.0
+vital = true

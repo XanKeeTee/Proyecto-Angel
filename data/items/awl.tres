@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_mnlwe"]
+
+[resource]
+script = ExtResource("1_mnlwe")
+display_name = "Punzón"
+accuracy = 80
+damage_type = 2
+crit_mod = 5

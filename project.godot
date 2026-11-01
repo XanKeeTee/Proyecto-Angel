@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Proyecto-Angel"
+run/main_scene="res://scenes/battle/battle_scene.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [debug]
