@@ -569,3 +569,32 @@ def composite(results: list[tuple[RenderResult, int, int]], width: int, height: 
         sheet.alpha_composite(result.color, (x, y))
         nsheet.paste(result.normal, (x, y), result.normal)
     return sheet, nsheet
+
+
+def scale_prims(prims: list["Prim"], k: float) -> list["Prim"]:
+    """Escala un grupo de primitivas (las texturas se siguen calculando a escala original)."""
+    import copy
+
+    result = []
+    for prim in prims:
+        q = copy.copy(prim)
+        q.center = mul(prim.center, k)
+        q.bound = prim.bound * k
+        if hasattr(prim, "a"):
+            q.a = mul(prim.a, k)
+            q.b = mul(prim.b, k)
+            q.r = prim.r * k
+        if hasattr(prim, "radii"):
+            q.radii = mul(prim.radii, k)
+        if hasattr(prim, "half"):
+            q.half = mul(prim.half, k)
+        mat = prim.material
+
+        def wrapped(p: Vec, n: Vec, _mat=mat) -> tuple:
+            return _mat(mul(p, 1.0 / k), n)
+
+        q.material = wrapped
+        if prim.cut is not None:
+            q.cut = lambda p, _cut=prim.cut: _cut(mul(p, 1.0 / k))
+        result.append(q)
+    return result

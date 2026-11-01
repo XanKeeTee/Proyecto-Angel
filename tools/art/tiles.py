@@ -8,6 +8,7 @@ Distribución del atlas (8 columnas x 6 filas de 32 px):
   fila 4  pared, tramo BAJO:     ídem
   fila 5  remate de muro, y extras: mano de sangre (medio), cartel (medio), espejo roto (medio),
           arañazos (bajo), rejilla (alto), ventana oscura (medio), sangre que chorrea (medio)
+  filas 6-10  ver tiles_extra.py (sótano, quirófano, archivo, recepción, pasos de puerta)
 
 La pared mide 3 casillas (96 px) para que la escala case con personajes realistas.
 Las bases son periódicas: cualquier variante encaja con cualquier otra.
@@ -417,8 +418,8 @@ def wall_extra(kind: str) -> Canvas:
 # --- montaje ----------------------------------------------------------------------
 
 def build() -> tuple[Image.Image, Image.Image]:
-    color = Image.new("RGBA", (T * 8, T * 6))
-    normal = Image.new("RGBA", (T * 8, T * 6))
+    color = Image.new("RGBA", (T * 8, T * 11))
+    normal = Image.new("RGBA", (T * 8, T * 11))
 
     def put(canvas: Canvas, col: int, row: int) -> None:
         img, nrm = canvas.to_images()
@@ -439,4 +440,6 @@ def build() -> tuple[Image.Image, Image.Image]:
     put(cap_tile(), 0, 5)
     for i, kind in enumerate(("handprint", "notice", "mirror", "scratch", "vent", "window", "smear")):
         put(wall_extra(kind), i + 1, 5)
+    import tiles_extra
+    tiles_extra.build_into(color, normal)
     return color, normal

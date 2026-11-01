@@ -1,13 +1,18 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_qsth2"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_8csme"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/valvula_averiada.png" id="1_yx0ni"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/valvula_averiada_inspect.png" id="2_8bmdb"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_tr5e2"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_xr85k"]
 
 [resource]
-script = ExtResource("1_qsth2")
+script = ExtResource("3_tr5e2")
 id = &"valvula_averiada"
 display_name = "Válvula averiada"
 description = "La válvula de presión del generador. El cuerpo está bien, pero el asiento se ha soltado: le faltan los tornillos apretados."
 category = 5
+icon = ExtResource("1_yx0ni")
+inspect_sheet = ExtResource("2_8bmdb")
+inspect_views = 8
 size = Vector2i(2, 2)
 key_item = true

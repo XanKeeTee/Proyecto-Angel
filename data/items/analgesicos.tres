@@ -1,21 +1,26 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_rwusn"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_mtx3f"]
-[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_d4u2k"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/analgesicos.png" id="1_d4u2k"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/analgesicos_inspect.png" id="2_ogum0"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_eo63x"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_vlaha"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_l2syj"]
 
-[sub_resource type="Resource" id="Resource_ogum0"]
-script = ExtResource("3_d4u2k")
+[sub_resource type="Resource" id="Resource_7yyk4"]
+script = ExtResource("5_l2syj")
 body = 12
 message = "Los tragas en seco. El dolor se aleja un poco."
 
 [resource]
-script = ExtResource("1_rwusn")
+script = ExtResource("3_eo63x")
 id = &"analgesicos"
 display_name = "Analgésicos"
 description = "Comprimidos sueltos en un bote sin etiqueta. Alguien escribió a mano: «para el dolor de los vigilantes»."
 category = 2
+icon = ExtResource("1_d4u2k")
+inspect_sheet = ExtResource("2_ogum0")
+inspect_views = 8
 max_stack = 6
 usable = true
-use_effects = Array[ExtResource("2_mtx3f")]([SubResource("Resource_ogum0")])
+use_effects = Array[ExtResource("4_vlaha")]([SubResource("Resource_7yyk4")])
 use_verb = "Tomar"

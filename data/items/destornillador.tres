@@ -1,13 +1,18 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_xqsb3"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_nb1w2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/destornillador.png" id="1_37d68"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/destornillador_inspect.png" id="2_ff4d7"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_dtlk0"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_lpwi1"]
 
 [resource]
-script = ExtResource("1_xqsb3")
+script = ExtResource("3_dtlk0")
 id = &"destornillador"
 display_name = "Destornillador"
 description = "Destornillador de electricista con el mango agrietado. Aguantará unos pocos usos."
 category = 0
+icon = ExtResource("1_37d68")
+inspect_sheet = ExtResource("2_ff4d7")
+inspect_views = 8
 size = Vector2i(1, 2)
 max_durability = 4

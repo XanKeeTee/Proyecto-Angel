@@ -1,21 +1,26 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_f4uo4"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_m4ry7"]
-[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_lf5ej"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/sedante.png" id="1_lf5ej"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/sedante_inspect.png" id="2_mmlgu"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_dhdgg"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_yhbih"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_eve3x"]
 
-[sub_resource type="Resource" id="Resource_mmlgu"]
-script = ExtResource("3_lf5ej")
+[sub_resource type="Resource" id="Resource_vv0bv"]
+script = ExtResource("5_eve3x")
 mind = 35
 message = "El frío te sube por el brazo. Los ruidos se apagan un poco."
 
 [resource]
-script = ExtResource("1_f4uo4")
+script = ExtResource("3_dhdgg")
 id = &"sedante"
 display_name = "Sedante preparado"
 description = "Una dosis lista para inyectar. Calma la mente; no hace que duermas."
 category = 2
+icon = ExtResource("1_lf5ej")
+inspect_sheet = ExtResource("2_mmlgu")
+inspect_views = 8
 max_stack = 3
 usable = true
-use_effects = Array[ExtResource("2_m4ry7")]([SubResource("Resource_mmlgu")])
+use_effects = Array[ExtResource("4_yhbih")]([SubResource("Resource_vv0bv")])
 use_verb = "Inyectar"

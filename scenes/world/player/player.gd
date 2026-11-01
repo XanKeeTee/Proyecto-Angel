@@ -9,8 +9,10 @@ extends CharacterBody2D
 ##   hacia donde camina, con un poco de inercia y balanceo.
 ## El nodo está en los PIES del personaje.
 
-## Pide examinar lo que hay delante: casillas candidatas, de la más cercana a la más lejana.
+## Pide interactuar con lo que hay delante: casillas candidatas, de la más cercana a la más lejana.
 signal interact_requested(cells: Array[Vector2i])
+## Pide examinar lo que hay delante.
+signal examine_requested(cells: Array[Vector2i])
 ## Ha entrado en una casilla nueva.
 signal cell_entered(cell: Vector2i)
 
@@ -58,6 +60,10 @@ var _holding_flashlight: bool = false
 var _light_angle: float = PI / 2.0
 var _flashlight_energy: float = 1.0
 var _bounce_energy: float = 0.0
+## Intensidad de la linterna según la batería (0..1); por debajo de 0,2 parpadea y amarillea.
+var _light_level: float = 1.0
+## Multiplicador de velocidad (heridas, sangrado…).
+var speed_scale: float = 1.0
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _glow: Sprite2D = $Sprite2D/Glow
@@ -78,11 +84,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var wish: Vector2 = Vector2.ZERO
 	if input_enabled:
-		if Input.is_action_just_pressed("ui_accept"):
+		if Input.is_action_just_pressed(InputActions.INTERACT):
 			interact_requested.emit(_probe_cells())
-		wish = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+		elif Input.is_action_just_pressed(InputActions.EXAMINE):
+			examine_requested.emit(_probe_cells())
+		wish = Input.get_vector(InputActions.MOVE_LEFT, InputActions.MOVE_RIGHT, InputActions.MOVE_UP, InputActions.MOVE_DOWN)
 	if wish != Vector2.ZERO:
-		velocity = velocity.move_toward(wish * MAX_SPEED, ACCELERATION * delta)
+		velocity = velocity.move_toward(wish * MAX_SPEED * speed_scale, ACCELERATION * delta)
 		facing_angle = wish.angle()
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
@@ -123,6 +131,27 @@ func stop() -> void:
 
 func has_flashlight_on() -> bool:
 	return _flashlight.enabled
+
+
+## Si sujeta la linterna (cambia la animación). No la enciende.
+func set_holding_flashlight(holding: bool) -> void:
+	_holding_flashlight = holding
+
+
+## Enciende o apaga la luz sin parpadeo (lo decide la escena según la batería).
+func set_light_on(on: bool) -> void:
+	if on != _flashlight.enabled:
+		_set_light_enabled(on)
+
+
+## Nivel de la batería (0..1).
+func set_light_level(level: float) -> void:
+	_light_level = clampf(level, 0.0, 1.0)
+
+
+## Casillas que tiene delante (para el indicador de interacción).
+func probe_cells() -> Array[Vector2i]:
+	return _probe_cells()
 
 
 ## Coge la linterna y la enciende con un parpadeo corto (o la apaga).
@@ -203,6 +232,12 @@ func _update_light(delta: float) -> void:
 	var jitter: float = 0.96 + 0.04 * randf()
 	if randf() < 0.004:
 		jitter = 0.55
+	# Batería baja: más débil, más amarilla y con caídas frecuentes.
+	var weak: float = clampf(_light_level / 0.25, 0.0, 1.0)
+	if _light_level < 0.2 and randf() < 0.05:
+		jitter *= randf_range(0.1, 0.5)
+	jitter *= lerpf(0.45, 1.0, weak)
+	_flashlight.color = Color(1.0, 0.93, 0.8).lerp(Color(1.0, 0.72, 0.42), 1.0 - weak)
 	_flashlight.energy = _flashlight_energy * jitter
 	_bounce.position = _flashlight.position + Vector2.from_angle(_flashlight.rotation) * BOUNCE_DISTANCE
 	_bounce.energy = _bounce_energy * jitter

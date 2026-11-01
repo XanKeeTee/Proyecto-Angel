@@ -26,6 +26,10 @@ var _hint: Label
 var _typed: float = 0.0
 var _waiting_accept: bool = false
 var _hint_tween: Tween
+var _choices: PackedStringArray = []
+var _choice_index: int = 0
+var _choosing: bool = false
+var _choice_label: Label
 
 
 func _init() -> void:
@@ -56,7 +60,21 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not event.is_action_pressed("ui_accept"):
+	if _choosing:
+		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_left") or event.is_action_pressed("ui_up") or event.is_action_pressed(&"move_left"):
+			_choice_index = posmod(_choice_index - 1, _choices.size())
+			_update_choice()
+		elif event.is_action_pressed("ui_right") or event.is_action_pressed("ui_down") or event.is_action_pressed(&"move_right"):
+			_choice_index = posmod(_choice_index + 1, _choices.size())
+			_update_choice()
+		elif event.is_action_pressed("ui_accept") or event.is_action_pressed(&"interact"):
+			_advanced.emit()
+		elif event.is_action_pressed("ui_cancel"):
+			_choice_index = _choices.size() - 1
+			_advanced.emit()
+		return
+	if not (event.is_action_pressed("ui_accept") or event.is_action_pressed(&"interact")):
 		return
 	if _panel.visible:
 		get_viewport().set_input_as_handled()
@@ -82,6 +100,30 @@ func show_lines(lines: PackedStringArray) -> void:
 		_auto_timer = 0.0
 		await _advanced
 	_panel.visible = false
+
+
+## Pregunta con opciones (izquierda/derecha e Intro). Devuelve el índice elegido;
+## Esc elige la última opción (pon ahí la de cancelar).
+func ask(question: String, options: PackedStringArray) -> int:
+	_panel.visible = true
+	_label.text = question
+	_label.visible_characters = -1
+	_choices = options
+	_choice_index = 0
+	_choosing = true
+	_update_choice()
+	await _advanced
+	_choosing = false
+	_choice_label.text = ""
+	_panel.visible = false
+	return _choice_index
+
+
+func _update_choice() -> void:
+	var parts: PackedStringArray = []
+	for i: int in _choices.size():
+		parts.append(("▸ " if i == _choice_index else "   ") + _choices[i])
+	_choice_label.text = "      ".join(parts)
 
 
 ## Rótulo centrado en mayúsculas (estilo sello). Aparece, se mantiene y se va.
@@ -152,6 +194,13 @@ func _build_box() -> void:
 	_label.add_theme_font_size_override("font_size", 14)
 	_label.add_theme_color_override("font_color", BONE)
 	_panel.add_child(_label)
+
+	_choice_label = Label.new()
+	_choice_label.add_theme_font_override("font", _font)
+	_choice_label.add_theme_font_size_override("font_size", 12)
+	_choice_label.add_theme_color_override("font_color", BONE)
+	_choice_label.position = Vector2(40, 322)
+	add_child(_choice_label)
 
 	_arrow = Label.new()
 	_arrow.text = "▼"

@@ -1,13 +1,18 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_tenei"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_lmg35"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/fusible.png" id="1_5ukti"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/fusible_inspect.png" id="2_uvv46"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_r1ukj"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_ntt6g"]
 
 [resource]
-script = ExtResource("1_tenei")
+script = ExtResource("3_r1ukj")
 id = &"fusible"
 display_name = "Fusible de alta tensión"
 description = "Cartucho cerámico con contactos de latón. Lleva escrito: «CUADRO GENERAL — SÓTANO»."
 category = 5
+icon = ExtResource("1_5ukti")
+inspect_sheet = ExtResource("2_uvv46")
+inspect_views = 8
 size = Vector2i(1, 2)
 key_item = true

@@ -1,23 +1,28 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_xy8ip"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_e3pv0"]
-[ext_resource type="Script" path="res://scripts/core/items/effects/toggle_flashlight_effect.gd" id="3_d0xoe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/linterna.png" id="1_d0xoe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/linterna_inspect.png" id="2_opdrp"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_5wp4g"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_p7ujg"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/toggle_flashlight_effect.gd" id="5_pjo6e"]
 
-[sub_resource type="Resource" id="Resource_opdrp"]
-script = ExtResource("3_d0xoe")
+[sub_resource type="Resource" id="Resource_eoxsh"]
+script = ExtResource("5_pjo6e")
 
 [resource]
-script = ExtResource("1_xy8ip")
+script = ExtResource("3_5wp4g")
 id = &"linterna"
 display_name = "Linterna"
 description = "Una linterna de bolsillo de metal, con la pintura desconchada. Alguien grabó un número en el mango: 09.
 Funciona con pilas."
 category = 0
+icon = ExtResource("1_d0xoe")
+inspect_sheet = ExtResource("2_opdrp")
+inspect_views = 8
 size = Vector2i(1, 2)
 max_charge = 100.0
 usable = true
 consumed_on_use = false
-use_effects = Array[ExtResource("2_e3pv0")]([SubResource("Resource_opdrp")])
+use_effects = Array[ExtResource("4_p7ujg")]([SubResource("Resource_eoxsh")])
 use_verb = "Encender / apagar"
 key_item = true

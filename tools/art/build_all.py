@@ -22,7 +22,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from PIL import Image  # noqa: E402
 
 import human  # noqa: E402
+import items  # noqa: E402
 import props  # noqa: E402
+import props2  # noqa: E402
+import sounds  # noqa: E402
 import tiles  # noqa: E402
 from pxrender import View, composite, render  # noqa: E402
 
@@ -100,8 +103,10 @@ def build_lights() -> None:
 
 def build_props() -> None:
     v = props.MAP_VIEW
+    # Camilla: 0 correas abrochadas, 1 tumbado, 2 sentado, 3 revuelta, 4 destrozada, 5 cadáver tapado, 6 sábana sin nadie.
     sheet("stretcher", "assets/sprites/props/stretcher.png",
-          props.render_sheet(props.stretcher_frames(), 40, 112, (20, 74), v), 40, 112, (20, 74), anchor=(0, -16))
+          props.render_sheet(props.stretcher_frames() + props2.stretcher_extra(), 40, 112, (20, 74), v), 40, 112, (20, 74),
+          anchor=(0, -16))
     sheet("iv_stand", "assets/sprites/props/iv_stand.png", [render(props.iv_stand(), 24, 84, (12, 78), v)], 24, 84, (12, 78))
     sheet("monitor", "assets/sprites/props/monitor.png", [render(props.monitor(), 32, 72, (16, 64), v)], 32, 72, (16, 64),
           glow=True)
@@ -118,6 +123,51 @@ def build_props() -> None:
     sheet("emergency_light", "assets/sprites/props/emergency_light.png",
           [render(props.emergency_light(on), 16, 12, (8, 6), props.WALL_VIEW) for on in (True, False)], 16, 12, (8, 6),
           glow=True)
+
+
+def build_props2() -> None:
+    v = props.MAP_VIEW
+    w = props.WALL_VIEW
+
+    def frames(fns: list, fw: int, fh: int, origin: tuple[int, int], view: View = v) -> list:
+        return [render(fn(), fw, fh, origin, view) for fn in fns]
+
+    two = lambda f: [lambda: f(False), lambda: f(True)]  # noqa: E731
+    sheet("nightstand", "assets/sprites/props/nightstand.png", frames(two(props2.nightstand), 24, 40, (12, 30)), 24, 40, (12, 30),
+          anchor=(0, -4))
+    sheet("desk", "assets/sprites/props/desk.png", frames(two(props2.desk), 68, 64, (34, 44)), 68, 64, (34, 44), anchor=(16, 0))
+    sheet("computer", "assets/sprites/props/computer.png", frames(two(props2.computer), 24, 56, (12, 52)), 24, 56, (12, 52),
+          anchor=(1, 0), glow=True)
+    sheet("phone", "assets/sprites/props/phone.png", frames(two(props2.phone), 24, 20, (12, 14)), 24, 20, (12, 14), anchor=(0, -25))
+    sheet("filing_cabinet", "assets/sprites/props/filing_cabinet.png", frames(two(props2.filing_cabinet), 24, 72, (12, 56)),
+          24, 72, (12, 56), anchor=(0, -6))
+    sheet("shelf", "assets/sprites/props/shelf.png", frames(two(props2.shelf), 68, 80, (34, 70)), 68, 80, (34, 70), anchor=(16, -10))
+    sheet("med_cabinet", "assets/sprites/props/med_cabinet.png", frames(two(props2.med_cabinet), 36, 72, (18, 66)), 36, 72, (18, 66),
+          anchor=(0, -10), glow=True)
+    sheet("counter", "assets/sprites/props/counter.png", frames(two(props2.counter), 68, 52, (34, 40)), 68, 52, (34, 40),
+          anchor=(16, -6))
+    sheet("op_table", "assets/sprites/props/op_table.png", frames([props2.op_table], 32, 96, (16, 62)), 32, 96, (16, 62),
+          anchor=(0, -16))
+    sheet("op_lamp", "assets/sprites/props/op_lamp.png", frames(two(props2.op_lamp), 48, 88, (16, 76)), 48, 88, (16, 76), glow=True)
+    sheet("morgue", "assets/sprites/props/morgue.png", frames([lambda: props2.morgue(0), lambda: props2.morgue(1), lambda: props2.morgue(2)],
+          68, 84, (34, 58)), 68, 84, (34, 58), anchor=(16, -8))
+    sheet("elec_panel", "assets/sprites/props/elec_panel.png", frames([lambda i=i: props2.elec_panel(i) for i in range(4)], 44, 64, (24, 58)),
+          44, 64, (24, 58), anchor=(0, -10))
+    sheet("generator", "assets/sprites/props/generator.png", frames(two(props2.generator), 76, 72, (38, 50)), 76, 72, (38, 50),
+          anchor=(16, -16), glow=True)
+    sheet("boiler", "assets/sprites/props/boiler.png", frames([props2.boiler], 32, 88, (16, 76)), 32, 88, (16, 76), anchor=(0, -6))
+    sheet("crates", "assets/sprites/props/crates.png", frames([props2.crates], 32, 48, (16, 38)), 32, 48, (16, 38))
+    sheet("tape_recorder", "assets/sprites/props/tape_recorder.png", frames([props2.tape_recorder], 32, 48, (16, 40)), 32, 48, (16, 40),
+          glow=True)
+    sheet("wall_lamp", "assets/sprites/props/wall_lamp.png", frames(two(props2.wall_lamp)[::-1], 20, 10, (10, 4), w), 20, 10, (10, 4),
+          glow=True)
+    sheet("laundry_cart", "assets/sprites/props/laundry_cart.png", frames([props2.laundry_cart], 32, 48, (16, 38)), 32, 48, (16, 38))
+    sheet("mop_bucket", "assets/sprites/props/mop_bucket.png", frames([props2.mop_bucket], 24, 48, (12, 40)), 24, 48, (12, 40))
+
+
+def build_items() -> None:
+    built = items.build(ROOT / "assets/sprites/items")
+    print("  ", "assets/sprites/items/", f"{len(built)} objetos (icono + 8 vistas)")
 
 
 def build_tiles() -> None:
@@ -202,6 +252,9 @@ def main() -> None:
     build_lights()
     build_protagonist()
     build_props()
+    build_props2()
+    build_items()
+    sounds.build()
     (ROOT / "tools/art/sprite_meta.json").write_text(json.dumps(META, indent=1), encoding="utf-8")
     preview()
 

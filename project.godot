@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="La Novena Vigilia"
-run/main_scene="res://scenes/world/hospital/hospital_intro.tscn"
+run/main_scene="res://scenes/ui/title/title_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]

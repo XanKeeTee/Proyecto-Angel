@@ -148,7 +148,7 @@
    40,
    112
   ],
-  "hframes": 5,
+  "hframes": 7,
   "vframes": 1,
   "origin": [
    20,
@@ -339,5 +339,347 @@
    0
   ],
   "glow": true
+ },
+ "nightstand": {
+  "path": "res://assets/sprites/props/nightstand.png",
+  "frame": [
+   24,
+   40
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   12,
+   30
+  ],
+  "anchor": [
+   0,
+   -4
+  ],
+  "glow": false
+ },
+ "desk": {
+  "path": "res://assets/sprites/props/desk.png",
+  "frame": [
+   68,
+   64
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   34,
+   44
+  ],
+  "anchor": [
+   16,
+   0
+  ],
+  "glow": false
+ },
+ "computer": {
+  "path": "res://assets/sprites/props/computer.png",
+  "frame": [
+   24,
+   56
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   12,
+   52
+  ],
+  "anchor": [
+   1,
+   0
+  ],
+  "glow": true
+ },
+ "phone": {
+  "path": "res://assets/sprites/props/phone.png",
+  "frame": [
+   24,
+   20
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   12,
+   14
+  ],
+  "anchor": [
+   0,
+   -25
+  ],
+  "glow": false
+ },
+ "filing_cabinet": {
+  "path": "res://assets/sprites/props/filing_cabinet.png",
+  "frame": [
+   24,
+   72
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   12,
+   56
+  ],
+  "anchor": [
+   0,
+   -6
+  ],
+  "glow": false
+ },
+ "shelf": {
+  "path": "res://assets/sprites/props/shelf.png",
+  "frame": [
+   68,
+   80
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   34,
+   70
+  ],
+  "anchor": [
+   16,
+   -10
+  ],
+  "glow": false
+ },
+ "med_cabinet": {
+  "path": "res://assets/sprites/props/med_cabinet.png",
+  "frame": [
+   36,
+   72
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   18,
+   66
+  ],
+  "anchor": [
+   0,
+   -10
+  ],
+  "glow": true
+ },
+ "counter": {
+  "path": "res://assets/sprites/props/counter.png",
+  "frame": [
+   68,
+   52
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   34,
+   40
+  ],
+  "anchor": [
+   16,
+   -6
+  ],
+  "glow": false
+ },
+ "op_table": {
+  "path": "res://assets/sprites/props/op_table.png",
+  "frame": [
+   32,
+   96
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   62
+  ],
+  "anchor": [
+   0,
+   -16
+  ],
+  "glow": false
+ },
+ "op_lamp": {
+  "path": "res://assets/sprites/props/op_lamp.png",
+  "frame": [
+   48,
+   88
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   16,
+   76
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": true
+ },
+ "morgue": {
+  "path": "res://assets/sprites/props/morgue.png",
+  "frame": [
+   68,
+   84
+  ],
+  "hframes": 3,
+  "vframes": 1,
+  "origin": [
+   34,
+   58
+  ],
+  "anchor": [
+   16,
+   -8
+  ],
+  "glow": false
+ },
+ "elec_panel": {
+  "path": "res://assets/sprites/props/elec_panel.png",
+  "frame": [
+   44,
+   64
+  ],
+  "hframes": 4,
+  "vframes": 1,
+  "origin": [
+   24,
+   58
+  ],
+  "anchor": [
+   0,
+   -10
+  ],
+  "glow": false
+ },
+ "generator": {
+  "path": "res://assets/sprites/props/generator.png",
+  "frame": [
+   76,
+   72
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   38,
+   50
+  ],
+  "anchor": [
+   16,
+   -16
+  ],
+  "glow": true
+ },
+ "boiler": {
+  "path": "res://assets/sprites/props/boiler.png",
+  "frame": [
+   32,
+   88
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   76
+  ],
+  "anchor": [
+   0,
+   -6
+  ],
+  "glow": false
+ },
+ "crates": {
+  "path": "res://assets/sprites/props/crates.png",
+  "frame": [
+   32,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   38
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "tape_recorder": {
+  "path": "res://assets/sprites/props/tape_recorder.png",
+  "frame": [
+   32,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   40
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": true
+ },
+ "wall_lamp": {
+  "path": "res://assets/sprites/props/wall_lamp.png",
+  "frame": [
+   20,
+   10
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   10,
+   4
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": true
+ },
+ "laundry_cart": {
+  "path": "res://assets/sprites/props/laundry_cart.png",
+  "frame": [
+   32,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   38
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "mop_bucket": {
+  "path": "res://assets/sprites/props/mop_bucket.png",
+  "frame": [
+   24,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   40
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
  }
 }

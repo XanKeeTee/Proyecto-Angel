@@ -1,13 +1,18 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_u71gw"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_u6kme"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/valvula_reparada.png" id="1_qjx7e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/valvula_reparada_inspect.png" id="2_imfv3"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_gta2i"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_i4g01"]
 
 [resource]
-script = ExtResource("1_u71gw")
+script = ExtResource("3_gta2i")
 id = &"valvula_reparada"
 display_name = "Válvula reparada"
 description = "La válvula de presión, con el asiento atornillado. Debería aguantar."
 category = 5
+icon = ExtResource("1_qjx7e")
+inspect_sheet = ExtResource("2_imfv3")
+inspect_views = 8
 size = Vector2i(2, 2)
 key_item = true

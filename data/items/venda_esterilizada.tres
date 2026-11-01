@@ -1,22 +1,27 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_30yag"]
-[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_73w8i"]
-[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_67m3h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_esterilizada.png" id="1_67m3h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_esterilizada_inspect.png" id="2_1odk1"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_trm6d"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_m7apr"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_a6c63"]
 
-[sub_resource type="Resource" id="Resource_1odk1"]
-script = ExtResource("3_67m3h")
+[sub_resource type="Resource" id="Resource_j6k7w"]
+script = ExtResource("5_a6c63")
 body = 18
 stops_bleeding = true
 message = "Escuece como fuego. Después, por fin, algo de alivio."
 
 [resource]
-script = ExtResource("1_30yag")
+script = ExtResource("3_trm6d")
 id = &"venda_esterilizada"
 display_name = "Venda esterilizada"
 description = "Venda empapada en desinfectante. Escuece solo de mirarla."
 category = 2
+icon = ExtResource("1_67m3h")
+inspect_sheet = ExtResource("2_1odk1")
+inspect_views = 8
 max_stack = 4
 usable = true
-use_effects = Array[ExtResource("2_73w8i")]([SubResource("Resource_1odk1")])
+use_effects = Array[ExtResource("4_m7apr")]([SubResource("Resource_j6k7w")])
 use_verb = "Vendar"
