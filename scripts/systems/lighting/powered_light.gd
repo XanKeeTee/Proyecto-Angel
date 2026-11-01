@@ -72,3 +72,7 @@ func _set_lit(lit: bool) -> void:
 	energy = _base_energy
 	if fixture != null:
 		fixture.frame = 0 if lit else 1
+		var glow: Sprite2D = fixture.get_node_or_null(^"Glow") as Sprite2D
+		if glow != null:
+			glow.frame = fixture.frame
+			glow.visible = lit

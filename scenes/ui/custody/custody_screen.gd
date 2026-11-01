@@ -477,6 +477,8 @@ func _build_dossier_page() -> void:
 	_doc_body.add_theme_color_override("default_color", Color("2a2620"))
 	_doc_body.add_theme_font_size_override("normal_font_size", 10)
 	_doc_body.add_theme_font_override("bold_font", UiStyle.mono())
+	_doc_body.add_theme_font_size_override("bold_font_size", 10)
+	_doc_body.add_theme_font_size_override("italics_font_size", 10)
 	col.add_child(_doc_body)
 	_doc_stamp = UiStyle.label("", 14, Color(0.6, 0.1, 0.1, 0.75), UiStyle.mono())
 	_doc_stamp.rotation = -0.18
