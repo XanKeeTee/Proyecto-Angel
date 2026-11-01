@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_7608v"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_3e0l4"]
+
+[resource]
+script = ExtResource("1_7608v")
+id = &"llave_botiquin"
+display_name = "Llave pequeña"
+description = "Una llave diminuta y fría. La encontraste en una cama que todavía crujía."
+category = 1
+key_item = true

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_fh0le"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_i7nov"]
+
+[resource]
+script = ExtResource("1_fh0le")
+id = &"jeringa"
+display_name = "Jeringa"
+description = "Jeringa estéril, sin usar. Sola no sirve de nada."
+category = 2
+max_stack = 3

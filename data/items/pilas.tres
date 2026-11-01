@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_g1bnh"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_bqqy7"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/recharge_effect.gd" id="3_ll1iv"]
+
+[sub_resource type="Resource" id="Resource_t8giq"]
+script = ExtResource("3_ll1iv")
+amount = 45.0
+message = "Cambias las pilas. La luz vuelve a ser blanca."
+
+[resource]
+script = ExtResource("1_g1bnh")
+id = &"pilas"
+display_name = "Pilas"
+description = "Pilas alcalinas. Una de ellas tiene la fecha de caducidad rascada."
+category = 4
+max_stack = 4
+usable = true
+use_effects = Array[ExtResource("2_bqqy7")]([SubResource("Resource_t8giq")])
+use_verb = "Cargar la linterna"

@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_nr4fp"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_c1tgy"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_4lhp5"]
+
+[sub_resource type="Resource" id="Resource_2ysom"]
+script = ExtResource("3_4lhp5")
+body = 4
+stops_bleeding = true
+requires_bleeding = true
+message = "Aprietas la venda contra los puntos. La sangre se detiene."
+contaminated_message = "La sangre se detiene, pero la venda huele mal. Un calor febril te sube por la espalda."
+
+[resource]
+script = ExtResource("1_nr4fp")
+id = &"venda_sucia"
+display_name = "Venda usada"
+description = "Una venda sacada de la papelera. Tiene manchas que no son tuyas.
+Se podría limpiar con algo."
+category = 2
+max_stack = 3
+contaminated = true
+usable = true
+use_effects = Array[ExtResource("2_c1tgy")]([SubResource("Resource_2ysom")])
+use_verb = "Vendar"

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_qa215"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_jq4ed"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_p4a0v"]
+
+[sub_resource type="Resource" id="Resource_svftk"]
+script = ExtResource("3_p4a0v")
+body = 4
+stops_bleeding = true
+requires_bleeding = true
+message = "Aprietas la venda contra los puntos. La sangre se detiene."
+
+[resource]
+script = ExtResource("1_qa215")
+id = &"venda"
+display_name = "Venda"
+description = "Venda de gasa en su envoltorio. El papel está húmedo, pero el sello aguanta."
+category = 2
+max_stack = 4
+usable = true
+use_effects = Array[ExtResource("2_jq4ed")]([SubResource("Resource_svftk")])
+use_verb = "Vendar"

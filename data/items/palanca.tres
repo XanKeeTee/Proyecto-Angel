@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_14idf"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_vrbm1"]
+
+[resource]
+script = ExtResource("1_14idf")
+id = &"palanca"
+display_name = "Palanca"
+description = "Una palanca de hierro, pesada. Tiene pelo pegado en un extremo."
+category = 0
+size = Vector2i(1, 3)
+max_durability = 6

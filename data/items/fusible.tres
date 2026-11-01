@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_tenei"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_lmg35"]
+
+[resource]
+script = ExtResource("1_tenei")
+id = &"fusible"
+display_name = "Fusible de alta tensión"
+description = "Cartucho cerámico con contactos de latón. Lleva escrito: «CUADRO GENERAL — SÓTANO»."
+category = 5
+size = Vector2i(1, 2)
+key_item = true

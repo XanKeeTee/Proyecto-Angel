@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_h2k0p"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_betgb"]
+
+[resource]
+script = ExtResource("1_h2k0p")
+id = &"desinfectante"
+display_name = "Desinfectante"
+description = "Frasco de clorhexidina medio vacío. Da para unas pocas curas.
+Solo sirve combinado con otra cosa."
+category = 2
+max_durability = 3

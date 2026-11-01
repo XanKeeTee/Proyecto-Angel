@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_f4uo4"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_m4ry7"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_lf5ej"]
+
+[sub_resource type="Resource" id="Resource_mmlgu"]
+script = ExtResource("3_lf5ej")
+mind = 35
+message = "El frío te sube por el brazo. Los ruidos se apagan un poco."
+
+[resource]
+script = ExtResource("1_f4uo4")
+id = &"sedante"
+display_name = "Sedante preparado"
+description = "Una dosis lista para inyectar. Calma la mente; no hace que duermas."
+category = 2
+max_stack = 3
+usable = true
+use_effects = Array[ExtResource("2_m4ry7")]([SubResource("Resource_mmlgu")])
+use_verb = "Inyectar"

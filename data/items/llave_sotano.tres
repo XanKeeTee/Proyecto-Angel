@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_yxe4l"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_xcp4q"]
+
+[resource]
+script = ExtResource("1_yxe4l")
+id = &"llave_sotano"
+display_name = "Llave del sótano"
+description = "Llave de hierro con un cordel. Huele a gasóleo."
+category = 1
+key_item = true

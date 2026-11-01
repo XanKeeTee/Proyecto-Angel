@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="1_rwusn"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="2_mtx3f"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="3_d4u2k"]
+
+[sub_resource type="Resource" id="Resource_ogum0"]
+script = ExtResource("3_d4u2k")
+body = 12
+message = "Los tragas en seco. El dolor se aleja un poco."
+
+[resource]
+script = ExtResource("1_rwusn")
+id = &"analgesicos"
+display_name = "Analgésicos"
+description = "Comprimidos sueltos en un bote sin etiqueta. Alguien escribió a mano: «para el dolor de los vigilantes»."
+category = 2
+max_stack = 6
+usable = true
+use_effects = Array[ExtResource("2_mtx3f")]([SubResource("Resource_ogum0")])
+use_verb = "Tomar"
