@@ -29,7 +29,7 @@ _Pendiente: qué se personaliza (nombre, aspecto, trasfondo, atributos) y qué e
 
 Detalle en [sistemas/combate.md](sistemas/combate.md) y [sistemas/cuerpo-y-heridas.md](sistemas/cuerpo-y-heridas.md).
 
-**Aprobado:** recursos **Cuerpo + Mente**; heridas **mixtas**; turnos **por rondas** resueltas por velocidad; grupo de **hasta 3**; **muerte permanente** para todos; huida **en grupo o individual**; el Cuerpo **solo se recupera curándose**; los traumas se definen **según el lore**.
+**Aprobado:** recursos **Cuerpo + Mente**; heridas **mixtas**; turnos **por rondas** resueltas por velocidad; grupo de **hasta 3**; **muerte permanente** para todos y **fin de partida si muere el protagonista**; huida **en grupo o individual**; el Cuerpo **solo se recupera curándose**; los traumas se definen **según el lore**.
 
 ### 5.1 Selección de partes del cuerpo
 `[PROPUESTA]` Al atacar se elige enemigo y parte. Cabeza: difícil de acertar, mucho daño. Torso: fácil, daño normal. Extremidades: poco daño, pero inutilizan ataques.

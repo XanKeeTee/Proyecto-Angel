@@ -11,7 +11,7 @@
 | Heridas | **Mixtas**: la mayoría se curan con recursos escasos; las amputaciones son permanentes salvo prótesis o rituales con coste |
 | Turnos | **Por rondas**: se eligen las acciones de todo el grupo y se resuelven por velocidad |
 | Grupo | **Hasta 3** personajes en combate |
-| Muerte | **Permanente para todos**, protagonista incluido |
+| Muerte | **Permanente para todos**, protagonista incluido. **Si muere el protagonista, fin de partida** |
 | Huida | Se puede huir **en grupo** o **solo ese personaje** |
 | Cuerpo | **No se recupera solo**: solo curándose, dentro o fuera del combate |
 
@@ -150,8 +150,10 @@ Algunos enemigos tienen Mente (humanos) y pueden entrar en pánico; otros no (`t
 - **Caído** (Cuerpo 0): no actúa. Sigue en el campo.
 - Un personaje **Caído** que recibe otro ataque físico **muere** para siempre. Los enemigos con el rasgo `remata` eligen a propósito a los caídos; el telegrafiado lo muestra (`REMATA → [personaje]`).
 - Al terminar el combate, los Caídos vuelven con **Cuerpo 1** y una herida grave en el torso. No recuperan más Cuerpo solos (ver Curación).
-- **Muerte del protagonista** → fin de partida. `[PROPUESTA]`
-- **Derrota**: todo el grupo Caído, en Quiebre o muerto → fin de partida (salvo combates narrativos marcados como `derrota_continua`).
+- **Muerte del protagonista** → **fin de partida** (aprobado). La partida depende solo de que el protagonista siga vivo.
+- **Derrota en combate**: todos los que siguen en el combate están Caídos, en Quiebre o muertos. Lo que pasa después depende de dónde esté el protagonista:
+  - **El protagonista está en el combate** → fin de partida (salvo combates narrativos marcados como `derrota_continua`).
+  - **El protagonista huyó solo** → la partida **sigue** con él. Los que se quedaron en el combate **mueren**. `[PROPUESTA]`
 
 ## Curación
 
@@ -183,6 +185,9 @@ prob_huida_solo% = clamp(50 + 3 × (AGI_personaje − AGI_media_enemigos), 10, 9
 
 - Si sale bien, ese personaje sale del combate; el resto sigue luchando.
 - Si el resto gana o huye después, el que huyó vuelve al grupo al terminar. `[PROPUESTA]`
+- Si el resto pierde (aprobado):
+  - quien huyó **no es el protagonista** → el protagonista se quedó en el combate y muere: **fin de partida**;
+  - quien huyó **es el protagonista** → la partida sigue con él solo.
 - Los aliados que se quedan pierden **10 de Mente** al verle marcharse (5 si VOL ≥ 12). `[PROPUESTA]`
 - Imposible con las dos piernas Rotas o Amputadas.
 
@@ -232,14 +237,14 @@ Ver la simulación en [cuerpo-y-heridas.md § Balance](cuerpo-y-heridas.md#balan
 
 ## Preguntas abiertas
 
-1. Si muere el protagonista, ¿fin de partida, o la historia puede seguir con otro personaje? Propuesta: fin de partida.
-2. Si alguien huye solo y el resto del grupo muere, ¿qué pasa con él? ¿Sigue la partida con un superviviente?
-3. ¿Las habilidades cuestan Cuerpo/Mente/objetos, o añadimos un tercer recurso? Propuesta: sin tercer recurso.
-4. ¿Se ve la integridad exacta de las partes enemigas o solo su estado (Sana / Herida / Rota)? Propuesta: solo el estado.
-5. ¿El orden de iniciativa de la ronda se muestra antes de confirmar órdenes?
+1. ¿Las habilidades cuestan Cuerpo/Mente/objetos, o añadimos un tercer recurso? Propuesta: sin tercer recurso.
+2. ¿Se ve la integridad exacta de las partes enemigas o solo su estado (Sana / Herida / Rota)? Propuesta: solo el estado.
+3. ¿El orden de iniciativa de la ronda se muestra antes de confirmar órdenes?
 
 ### Resueltas
 
 - Muerte permanente → **sí, para todos**.
+- Muerte del protagonista → **fin de partida**.
+- Huida individual y derrota del resto → **fin de partida si el que huyó no es el protagonista**; si lo es, la partida sigue.
 - Huida → **en grupo o individual**, a elección.
 - Recuperación de Cuerpo → **solo curándose**, dentro o fuera del combate.
