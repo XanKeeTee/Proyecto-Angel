@@ -5,6 +5,8 @@ extends RefCounted
 
 var failures: PackedStringArray = []
 var current: String = ""
+## Nodo del ejecutor: sirve para añadir escenas al árbol en pruebas de integración.
+var host: Node
 
 
 func check(condition: bool, message: String) -> void:

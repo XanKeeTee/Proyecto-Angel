@@ -1,17 +1,17 @@
-extends SceneTree
+extends Node
 ## Ejecuta todas las pruebas de tests/unit y tests/integration sin ventana.
-## Uso: "$GODOT_BIN" --headless --path . -s tests/run_tests.gd
+## Uso: "$GODOT_BIN" --headless --path . res://tests/run_tests.tscn
 ## Sale con código 0 si todo pasa y 1 si algo falla.
 
 const DIRS: Array[String] = ["res://tests/unit", "res://tests/integration"]
 
 
-func _initialize() -> void:
+func _ready() -> void:
 	_run()
 
 
 func _run() -> void:
-	await process_frame
+	await get_tree().process_frame
 	var total: int = 0
 	var failed: PackedStringArray = []
 	for dir: String in DIRS:
@@ -20,6 +20,7 @@ func _run() -> void:
 				continue
 			var script: GDScript = load(dir.path_join(file))
 			var case: TestCase = script.new()
+			case.host = self
 			for method: Dictionary in script.get_script_method_list():
 				var name: String = method["name"]
 				if not name.begins_with("test_"):
@@ -39,4 +40,4 @@ func _run() -> void:
 	for f: String in failed:
 		print("  - ", f)
 	print("%d pruebas, %d fallos" % [total, failed.size()])
-	quit(0 if failed.is_empty() else 1)
+	get_tree().quit(0 if failed.is_empty() else 1)
