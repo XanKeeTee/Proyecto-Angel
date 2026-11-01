@@ -39,7 +39,7 @@ Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn`
   |---|---|
   | `--skip-intro` | Empieza con control, sin la secuencia de despertar |
   | `--flashlight` | Empieza con la linterna |
-  | `--at=X,Y` / `--face=up\|down\|left\|right` | Casilla y dirección iniciales. En el pasillo da la linterna y abre la puerta |
+  | `--at=X,Y` / `--face=up\|down\|left\|right\|up_left\|…` | Casilla y dirección iniciales. En el pasillo da la linterna y abre la puerta |
   | `--ending` | Lanza el final en la puerta doble |
   | `--auto-advance=S` | Los textos avanzan solos (pruebas sin manos) |
   | `--screenshot=RUTA` y `--screenshot-delay=S` | Guarda una captura y cierra (sin control del jugador) |
@@ -56,7 +56,11 @@ Escena principal del proyecto: `res://scenes/world/hospital/hospital_intro.tscn`
 | `tools/art/` | Generador del arte provisional (`build_all.py`) y puntos de apoyo (`sprite_meta.json`) |
 
 Notas:
-- **Paso**: un tile bloquea si su dato personalizado `solid` es verdadero. Los objetos bloquean con `Interactable.blocks` y su `footprint`.
+- **Movimiento libre**: el protagonista es un `CharacterBody2D` (modo flotante) con un círculo de 6 px en los pies; el nodo está en los pies. Colisiona con la capa 1:
+  - tiles con `solid = true`: tienen polígono de colisión en la capa de física del tileset;
+  - muebles con `Interactable.blocks`: un `StaticBody2D` llamado `Body` con la huella de su `footprint`.
+- **Eventos por casilla**: `Player.cell_entered` se emite al cambiar de casilla (puertas, huellas). Examinar emite `interact_requested` con las casillas que tiene delante.
+- **Píxel nítido**: `rendering/2d/snap/*` está activado para que el movimiento suave no haga temblar el pixel art. La cámara sigue con suavizado.
 - **Sombras**: solo las tapas de muro (y una franja de la puerta cerrada) tienen oclusor, así la cara de la pared se ilumina y la luz no atraviesa muros.
 - **Mapas de normales**: cada sprite y el tileset usan un `CanvasTexture` (`*_canvas.tres`) con el PNG y su `*_n.png`. Las luces llevan `height` alto (70–110) para que iluminen superficies que miran a cámara; con altura baja todo queda negro.
 - **Capas de luz** (`light_mask`):
@@ -69,7 +73,7 @@ Notas:
 
   El resto de luces iluminan las tres capas. Las sombras se configuran con `shadow_item_cull_mask = 1`.
 - **Sombras de muebles**: cada mueble tiene un `LightOccluder2D` llamado `Shadow` con su huella en el suelo.
-- **Animación del protagonista**: `player.gd` elige la columna según el estado (reposo, paso, con o sin linterna). El paso avanza con los píxeles recorridos. El origen de la linterna por dirección (`flashlight_offsets`) sale de `sprite_meta.json` (`lens`).
+- **Animación del protagonista**: `player.gd` elige la columna según el estado (reposo, paso, con o sin linterna). El paso avanza con los píxeles recorridos de verdad (también al deslizarse contra una pared). La fila sale del ángulo: `round((ángulo - 90°) / 45°) mod 8`. El origen de la linterna por dirección (`flashlight_offsets`) sale de `sprite_meta.json` (`lens`).
 - **Brillos**: lo que emite luz tiene un hijo `Glow` con `CanvasItemMaterial` sin sombreado.
 - **Puertas entre zonas**: `WARPS` en `hospital_intro.gd` (casilla pisada → destino y dirección), con fundido.
 - `--screenshot` abre una ventana; para comprobar sin ventana usa `--headless` con `--quit-after`.

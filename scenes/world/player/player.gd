@@ -1,56 +1,58 @@
 class_name Player
-extends Node2D
-## Personaje en el mapa: movimiento por casillas (estilo RPG Maker) con animación realista.
-## - El ciclo de paso avanza con la distancia recorrida (los pies no patinan).
-## - En reposo respira. Un toque corto en otra dirección solo gira.
-## - Si lleva la linterna, la sujeta delante con la mano derecha: la luz sale de la mano,
-##   sigue los giros con un poco de retraso y se balancea al andar.
-## La escena decide qué casillas se pueden pisar con `walkable_check`.
+extends CharacterBody2D
+## Protagonista en el mapa: movimiento libre en cualquier ángulo (analógico con mando),
+## con aceleración y frenada suaves, colisión con paredes y muebles, y sprite en 8 orientaciones.
+## - El ciclo de paso avanza con la distancia recorrida de verdad (los pies no patinan,
+##   tampoco al deslizarse contra una pared).
+## - En reposo respira.
+## - Si lleva la linterna, la sujeta con la mano derecha: la luz sale de la mano y apunta
+##   hacia donde camina, con un poco de inercia y balanceo.
+## El nodo está en los PIES del personaje.
 
-signal interact_requested(cell: Vector2i)
-signal step_finished(cell: Vector2i)
+## Pide examinar lo que hay delante: casillas candidatas, de la más cercana a la más lejana.
+signal interact_requested(cells: Array[Vector2i])
+## Ha entrado en una casilla nueva.
+signal cell_entered(cell: Vector2i)
 
 const TILE_SIZE: int = 32
-## Segundos por casilla. Lento a propósito: recién operado.
-const STEP_TIME: float = 0.4
-## Un ciclo completo de paso (8 fotogramas) cubre dos casillas.
+## Velocidad máxima en píxeles por segundo. Lento a propósito: recién operado.
+const MAX_SPEED: float = 78.0
+const ACCELERATION: float = 520.0
+const FRICTION: float = 700.0
+## Un ciclo completo de paso (8 fotogramas) cubre esta distancia.
 const STRIDE_PIXELS: float = 64.0
 const IDLE_FPS: float = 1.6
-## Mantener la dirección este tiempo antes de andar; un toque más corto solo gira.
-const TURN_DELAY: float = 0.1
-## Hoja del protagonista: 24 columnas por dirección (ver tools/art/sprite_meta.json).
+## Por debajo de esta velocidad se considera parado (animación de reposo).
+const WALK_THRESHOLD: float = 12.0
+## Hoja del protagonista: 24 columnas y 8 filas (ver tools/art/sprite_meta.json).
 const COLUMNS: int = 24
+const DIRECTIONS: int = 8
 const ANIM_IDLE: Vector2i = Vector2i(0, 4)
 const ANIM_WALK: Vector2i = Vector2i(4, 8)
 const ANIM_IDLE_FLASH: Vector2i = Vector2i(12, 4)
 const ANIM_WALK_FLASH: Vector2i = Vector2i(16, 8)
-const ROW_BY_FACING: Dictionary[Vector2i, int] = {
-	Vector2i.DOWN: 0,
-	Vector2i.LEFT: 1,
-	Vector2i.RIGHT: 2,
-	Vector2i.UP: 3,
-}
 const BOUNCE_DISTANCE: float = 76.0
+## Distancias a las que se mira al examinar.
+const REACH: Array[float] = [18.0, 30.0]
 
-## Origen de la luz (la mano) por dirección: abajo, izquierda, derecha, arriba.
-@export var flashlight_offsets: Array[Vector2] = [Vector2(-8, 18), Vector2(-20, 4), Vector2(20, 6), Vector2(8, -6)]
+## Origen de la luz (la mano) por fila de orientación: abajo, abajo-izq., izq., arriba-izq.,
+## arriba, arriba-der., der., abajo-der.
+@export var flashlight_offsets: Array[Vector2] = []
 ## Rapidez con que el haz sigue al giro (más alto = menos inercia).
-@export var light_turn_speed: float = 11.0
+@export var light_turn_speed: float = 9.0
 ## Balanceo del haz al andar, en radianes.
 @export var light_sway: float = 0.045
 
-var cell: Vector2i = Vector2i.ZERO
-var facing: Vector2i = Vector2i.DOWN
 var input_enabled: bool = false
-## Recibe una celda y devuelve si se puede pisar.
-var walkable_check: Callable = func(_target: Vector2i) -> bool: return true
+## Ángulo hacia el que mira (radianes, 0 = derecha, PI/2 = abajo).
+var facing_angle: float = PI / 2.0
+## Casilla en la que están los pies.
+var cell: Vector2i:
+	get:
+		return Vector2i(floori(position.x / TILE_SIZE), floori(position.y / TILE_SIZE))
 
-var _moving: bool = false
-var _step_dir: Vector2i = Vector2i.ZERO
-var _step_left: float = 0.0
+var _last_cell: Vector2i = Vector2i(-999, -999)
 var _walk_distance: float = 0.0
-var _kept_walking: bool = false
-var _hold_time: float = 0.0
 var _idle_time: float = 0.0
 var _holding_flashlight: bool = false
 var _light_angle: float = PI / 2.0
@@ -67,68 +69,56 @@ var _bounce_energy: float = 0.0
 func _ready() -> void:
 	_flashlight_energy = _flashlight.energy
 	_bounce_energy = _bounce.energy
-	_flashlight.enabled = false
-	_bounce.enabled = false
-	_light_angle = Vector2(facing).angle()
+	_set_light_enabled(false)
+	_light_angle = facing_angle
+	_last_cell = cell
 	_update_frame()
 
 
 func _physics_process(delta: float) -> void:
-	if _moving:
-		_advance_step(delta)
-		return
-	if not input_enabled:
-		_kept_walking = false
-		return
-	if Input.is_action_just_pressed("ui_accept"):
-		interact_requested.emit(cell + facing)
-		return
-	var direction: Vector2i = _read_direction()
-	if direction == Vector2i.ZERO:
-		_hold_time = 0.0
-		_kept_walking = false
-		return
-	if direction != facing and not _kept_walking:
-		face(direction)
-		_hold_time = 0.0
-		return
-	_hold_time += delta
-	if _hold_time < TURN_DELAY and not _kept_walking:
-		return
-	face(direction)
-	if walkable_check.call(cell + direction):
-		_start_step(direction)
+	var wish: Vector2 = Vector2.ZERO
+	if input_enabled:
+		if Input.is_action_just_pressed("ui_accept"):
+			interact_requested.emit(_probe_cells())
+		wish = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	if wish != Vector2.ZERO:
+		velocity = velocity.move_toward(wish * MAX_SPEED, ACCELERATION * delta)
+		facing_angle = wish.angle()
 	else:
-		_kept_walking = false
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+	var before: Vector2 = position
+	move_and_slide()
+	_walk_distance += position.distance_to(before)
+	if cell != _last_cell:
+		_last_cell = cell
+		cell_entered.emit(cell)
 
 
 func _process(delta: float) -> void:
-	if not _moving and not _kept_walking:
+	if not _is_walking():
 		_idle_time += delta
 	_update_frame()
 	_update_light(delta)
 
 
-## Coloca al personaje en una celda sin animación.
+## Coloca al personaje en el centro de una celda, parado.
 func place(target: Vector2i, direction: Vector2i) -> void:
-	cell = target
-	_moving = false
-	_kept_walking = false
 	position = Vector2(target * TILE_SIZE) + Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0)
+	velocity = Vector2.ZERO
+	_last_cell = target
 	face(direction)
-	_light_angle = Vector2(direction).angle()
+	_light_angle = facing_angle
 	_camera.reset_smoothing()
 
 
+## Gira hacia una dirección (vector de casilla, admite diagonales).
 func face(direction: Vector2i) -> void:
-	facing = direction
+	facing_angle = Vector2(direction).angle()
 
 
-func set_camera_limits(bounds: Rect2i) -> void:
-	_camera.limit_left = bounds.position.x
-	_camera.limit_top = bounds.position.y
-	_camera.limit_right = bounds.end.x
-	_camera.limit_bottom = bounds.end.y
+## Detiene al personaje en seco (para textos y eventos).
+func stop() -> void:
+	velocity = Vector2.ZERO
 
 
 func has_flashlight_on() -> bool:
@@ -158,73 +148,55 @@ func flicker_flashlight(duration: float) -> void:
 	_set_light_enabled(false)
 
 
-func _start_step(direction: Vector2i) -> void:
-	_moving = true
-	_step_dir = direction
-	_step_left = TILE_SIZE
-	cell += direction
+func _probe_cells() -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var dir: Vector2 = Vector2.from_angle(facing_angle)
+	for reach: float in REACH:
+		var probe: Vector2 = position + dir * reach
+		var c: Vector2i = Vector2i(floori(probe.x / TILE_SIZE), floori(probe.y / TILE_SIZE))
+		if c != cell and not result.has(c):
+			result.append(c)
+	# En diagonal, prueba también las dos casillas rectas vecinas.
+	var step: Vector2i = Vector2i(roundi(dir.x), roundi(dir.y))
+	if step.x != 0 and step.y != 0:
+		for c: Vector2i in [cell + Vector2i(step.x, 0), cell + Vector2i(0, step.y)]:
+			if not result.has(c):
+				result.append(c)
+	return result
 
 
-func _advance_step(delta: float) -> void:
-	var amount: float = minf(_step_left, TILE_SIZE * delta / STEP_TIME)
-	position += Vector2(_step_dir) * amount
-	_step_left -= amount
-	_walk_distance += amount
-	if _step_left > 0.0:
-		return
-	_moving = false
-	position = Vector2(cell * TILE_SIZE) + Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0)
-	# Si se sigue pulsando, el paso siguiente encadena sin cortar la animación.
-	_kept_walking = input_enabled and _read_direction() != Vector2i.ZERO
-	if not _kept_walking:
-		_settle_walk()
-	step_finished.emit(cell)
+func _is_walking() -> bool:
+	return velocity.length() > WALK_THRESHOLD
 
 
-## Al parar, deja el ciclo en el punto de pies juntos más cercano para el siguiente arranque.
-func _settle_walk() -> void:
-	var half: float = STRIDE_PIXELS / 2.0
-	_walk_distance = roundf(_walk_distance / half) * half
-	_idle_time = 0.0
-
-
-func _read_direction() -> Vector2i:
-	if Input.is_action_pressed("ui_up"):
-		return Vector2i.UP
-	if Input.is_action_pressed("ui_down"):
-		return Vector2i.DOWN
-	if Input.is_action_pressed("ui_left"):
-		return Vector2i.LEFT
-	if Input.is_action_pressed("ui_right"):
-		return Vector2i.RIGHT
-	return Vector2i.ZERO
+func _row() -> int:
+	var index: int = roundi((rad_to_deg(facing_angle) - 90.0) / 45.0)
+	return posmod(index, DIRECTIONS)
 
 
 func _update_frame() -> void:
-	var walking: bool = _moving or _kept_walking
 	var anim: Vector2i
 	var index: int
-	if walking:
+	if _is_walking():
 		anim = ANIM_WALK_FLASH if _holding_flashlight else ANIM_WALK
 		index = int(fposmod(_walk_distance, STRIDE_PIXELS) / STRIDE_PIXELS * anim.y) % anim.y
 	else:
 		anim = ANIM_IDLE_FLASH if _holding_flashlight else ANIM_IDLE
 		index = int(_idle_time * IDLE_FPS) % anim.y
-	_sprite.frame = ROW_BY_FACING[facing] * COLUMNS + anim.x + index
+	_sprite.frame = _row() * COLUMNS + anim.x + index
 	_glow.frame = _sprite.frame
 	_glow.visible = _flashlight.enabled
 
 
 func _update_light(delta: float) -> void:
-	var row: int = ROW_BY_FACING[facing]
-	var target: float = Vector2(facing).angle()
-	_light_angle = lerp_angle(_light_angle, target, 1.0 - exp(-light_turn_speed * delta))
-	var sway: float = 0.0
-	if _moving or _kept_walking:
+	_light_angle = lerp_angle(_light_angle, facing_angle, 1.0 - exp(-light_turn_speed * delta))
+	var sway: float
+	if _is_walking():
 		sway = sin(_walk_distance / STRIDE_PIXELS * TAU * 2.0) * light_sway
 	else:
 		sway = sin(_idle_time * TAU * IDLE_FPS / 4.0) * light_sway * 0.25
 	_flashlight.rotation = _light_angle + sway
+	var row: int = _row()
 	var hand: Vector2 = flashlight_offsets[row] if row < flashlight_offsets.size() else Vector2.ZERO
 	_flashlight.position = _flashlight.position.lerp(hand, 1.0 - exp(-14.0 * delta))
 	# Pequeñas variaciones de una bombilla vieja.

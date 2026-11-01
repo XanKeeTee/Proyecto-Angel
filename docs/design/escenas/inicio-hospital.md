@@ -102,12 +102,12 @@ Ninguna es canon. Son ganchos que el equipo puede aprovechar o quitar:
 
 | Mecánica | Detalle | Dónde vive |
 |---|---|---|
-| Movimiento por casillas | 4 direcciones, 1 casilla en 0,4 s (lento a propósito). Sin correr. Un toque corto en otra dirección solo gira | `player.gd` (`STEP_TIME`, `TURN_DELAY`) |
+| Movimiento libre | En cualquier ángulo (analógico con mando), con aceleración y frenada suaves, ~2,4 casillas/s (lento a propósito). Sin correr. Choca y se desliza por paredes y muebles. Sprite en 8 orientaciones | `player.gd` (`MAX_SPEED`, `ACCELERATION`, `FRICTION`) |
 | Animación | Paso de 8 fotogramas sincronizado con la distancia (los pies no patinan), respiración en reposo, versión con linterna | `player.gd`, hoja de 24 columnas |
-| Examinar | Intro sobre la casilla de enfrente | `interactable.gd` |
+| Examinar | Intro mira lo que hay delante en el ángulo en que estás (también en diagonal) | `player.gd` (`REACH`), `interactable.gd` |
 | Oscuridad | Ambiente casi negro (`CanvasModulate`); solo se ve lo iluminado | Nodo `Darkness` |
 | Luz propia | Radio de unas 2 casillas, tenue | `Player/Aura` |
-| Linterna | Sale de la mano derecha. Punto caliente estrecho y halo exterior débil, unas 7 casillas de alcance. Sigue los giros con algo de inercia, se balancea al andar y parpadea un poco | `Player/Flashlight` |
+| Linterna | Apunta hacia donde caminas. Sale de la mano derecha. Punto caliente estrecho y halo exterior débil, unas 7 casillas de alcance. Sigue los giros con algo de inercia, se balancea al andar y parpadea un poco | `Player/Flashlight` |
 | Luz rebotada | Lo que ilumina la linterna devuelve un poco de luz cálida al entorno | `Player/Bounce` |
 | Polvo | Motas en suspensión que solo se ven dentro de la luz | `Player/Dust` |
 | Sombras | Paredes y muebles proyectan sombras suaves sobre el suelo | tileset + `Shadow` en cada mueble |

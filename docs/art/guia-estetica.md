@@ -51,7 +51,7 @@ Reglas:
 Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su interfaz: proporciones humanas reales, cuerpos frágiles, paleta apagada, suciedad y heridas visibles. Nada de cabezones chibi.
 
 - Fotograma de **48×68 px**. La figura mide unos **58 px**, con la cabeza a ~1/7 de la altura. Los pies apoyan en la parte baja de la casilla.
-- Hoja de **24 columnas por dirección** (filas: abajo, izquierda, derecha, arriba):
+- Hoja de **24 columnas por orientación** y **8 filas** (abajo, abajo-izq., izq., arriba-izq., arriba, arriba-der., der., abajo-der.):
 
   | Columnas | Animación | Fotogramas |
   |---|---|---|

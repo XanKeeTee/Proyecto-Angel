@@ -7,7 +7,7 @@ extends Node2D
 ##   --skip-intro         empieza con el control, sin la secuencia de despertar
 ##   --flashlight         empieza con la linterna encendida
 ##   --at=X,Y             casilla inicial (implica --skip-intro)
-##   --face=up|down|left|right
+##   --face=up|down|left|right|up_left|up_right|down_left|down_right
 ##   --ending             lanza el final nada más empezar
 ##   --screenshot=RUTA    guarda una captura y cierra
 ##   --screenshot-delay=S segundos antes de la captura (1,5 por defecto)
@@ -88,9 +88,8 @@ func _ready() -> void:
 	_monitor_base_energy = _monitor_light.energy
 	_emergency_base_energy = _emergency_light.energy
 	# Sin límites de cámara: fuera del mapa es negro y el personaje queda siempre centrado.
-	_player.walkable_check = _is_walkable
 	_player.interact_requested.connect(_on_interact_requested)
-	_player.step_finished.connect(_on_step_finished)
+	_player.cell_entered.connect(_on_cell_entered)
 
 	if _debug.has("screenshot"):
 		_take_screenshot_later(_debug["screenshot"], _debug.get("screenshot-delay", "1.5").to_float())
@@ -155,6 +154,8 @@ func _start_without_intro() -> void:
 		start = Vector2i(parts[0].to_int(), parts[1].to_int())
 	var facing_by_name: Dictionary[String, Vector2i] = {
 		"up": Vector2i.UP, "down": Vector2i.DOWN, "left": Vector2i.LEFT, "right": Vector2i.RIGHT,
+		"up_left": Vector2i(-1, -1), "up_right": Vector2i(1, -1),
+		"down_left": Vector2i(-1, 1), "down_right": Vector2i(1, 1),
 	}
 	var default_face: String = "up" if _debug.has("ending") else "down"
 	_player.place(start, facing_by_name.get(_debug.get("face", default_face), Vector2i.DOWN))
@@ -171,16 +172,12 @@ func _start_without_intro() -> void:
 
 # --- interacción ---------------------------------------------------------------
 
-func _is_walkable(cell: Vector2i) -> bool:
-	var data: TileData = _map.get_cell_tile_data(cell)
-	if data == null or data.get_custom_data("solid"):
-		return false
-	var interactable: Interactable = _interactables.get(cell)
-	return interactable == null or not interactable.blocks
-
-
-func _on_interact_requested(cell: Vector2i) -> void:
-	var interactable: Interactable = _interactables.get(cell)
+func _on_interact_requested(cells: Array[Vector2i]) -> void:
+	var interactable: Interactable = null
+	for cell: Vector2i in cells:
+		interactable = _interactables.get(cell)
+		if interactable != null:
+			break
 	if interactable == null:
 		return
 	_lock()
@@ -197,7 +194,7 @@ func _on_interact_requested(cell: Vector2i) -> void:
 	_unlock()
 
 
-func _on_step_finished(cell: Vector2i) -> void:
+func _on_cell_entered(cell: Vector2i) -> void:
 	if WARPS.has(cell):
 		await _warp(WARPS[cell][0], WARPS[cell][1])
 		return
@@ -294,6 +291,7 @@ func _run_ending(doors: Interactable) -> void:
 
 func _lock() -> void:
 	_player.input_enabled = false
+	_player.stop()
 
 
 ## Devuelve el control un fotograma después, para que el Intro que cerró

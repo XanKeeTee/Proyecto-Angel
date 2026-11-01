@@ -57,7 +57,9 @@ def sheet(name: str, rel: str, frames: list, w: int, h: int, origin: tuple[int, 
 
 # Columnas de la hoja del protagonista (por fila de dirección).
 ANIMS = {"idle": (0, 4), "walk": (4, 8), "idle_flash": (12, 4), "walk_flash": (16, 8)}
-YAWS = (0.0, -math.pi / 2, math.pi / 2, math.pi)  # abajo, izquierda, derecha, arriba
+# 8 orientaciones, en el orden del ángulo en pantalla: abajo, abajo-izq., izq., arriba-izq.,
+# arriba, arriba-der., der., abajo-der. (fila = round((ángulo - 90°) / 45°) mod 8).
+YAWS = (0.0, -math.pi / 4, -math.pi / 2, -3 * math.pi / 4, math.pi, 3 * math.pi / 4, math.pi / 2, math.pi / 4)
 
 
 def _pose_for(anim: str, i: int):
@@ -83,7 +85,7 @@ def build_protagonist() -> None:
         lens.append({"screen": [round(p[0], 1), round(-(view.a * p[1] - view.b * p[2]), 1)],
                      "floor": [round(p[0], 1), round(view.b * p[2], 1)]})
     sheet("protagonist", "assets/sprites/characters/protagonist.png", frames, human.FRAME_W, human.FRAME_H,
-          human.ORIGIN, rows=4, glow=True)
+          human.ORIGIN, rows=len(YAWS), glow=True)
     META["protagonist"]["anims"] = {k: list(v) for k, v in ANIMS.items()}
     META["protagonist"]["lens"] = lens
 
