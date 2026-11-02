@@ -1,0 +1,198 @@
+[gd_resource type="Resource" script_class="ThoughtSet" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/thoughts/thought_set.gd" id="1_xnvlr"]
+[ext_resource type="Script" path="res://scripts/systems/thoughts/thought.gd" id="2_f2xcx"]
+
+[sub_resource type="Resource" id="Resource_lldxg"]
+script = ExtResource("2_f2xcx")
+text = "Saben que estás despierto. Tienes que salir.
+Las huellas mojadas del pasillo van hacia el muro oeste, junto a la 07. Según el plano, ahí termina el edificio."
+requires_flags = Array[StringName]([&"pasillo_imposible"])
+
+[sub_resource type="Resource" id="Resource_lcwj2"]
+script = ExtResource("2_f2xcx")
+text = "La válvula está puesta. Solo falta tirar de la palanca de arranque del generador."
+requires_flags = Array[StringName]([&"valvula_puesta", &"fusible_puesto"])
+forbids_flags = Array[StringName]([&"power_on"])
+
+[sub_resource type="Resource" id="Resource_qxreg"]
+script = ExtResource("2_f2xcx")
+text = "La válvula ya encaja. Hay que enroscarla en el generador, en la sala de calderas."
+forbids_flags = Array[StringName]([&"valvula_puesta"])
+requires_items = Array[StringName]([&"valvula_reparada"])
+
+[sub_resource type="Resource" id="Resource_las66"]
+script = ExtResource("2_f2xcx")
+text = "La válvula tiene el asiento suelto: así no va a encajar. Con el destornillador podrías apretarlo.
+En la Custodia se pueden probar cosas juntas."
+forbids_flags = Array[StringName]([&"valvula_puesta"])
+requires_items = Array[StringName]([&"valvula_averiada", &"destornillador"])
+
+[sub_resource type="Resource" id="Resource_oocaa"]
+script = ExtResource("2_f2xcx")
+text = "La válvula tiene el asiento suelto. Haría falta un destornillador para apretarlo.
+En un quirófano siempre queda instrumental tirado."
+forbids_flags = Array[StringName]([&"valvula_puesta"])
+requires_items = Array[StringName]([&"valvula_averiada"])
+
+[sub_resource type="Resource" id="Resource_ub11y"]
+script = ExtResource("2_f2xcx")
+text = "El cuadro ya está listo, pero el generador no arranca sin su válvula de presión.
+Si hay recambios en algún sitio, será en el taller de mantenimiento."
+requires_flags = Array[StringName]([&"fusible_puesto"])
+forbids_flags = Array[StringName]([&"valvula_puesta"])
+
+[sub_resource type="Resource" id="Resource_drv65"]
+script = ExtResource("2_f2xcx")
+text = "Las bornas aguantan. Falta colocar el fusible F1 en su hueco del cuadro."
+requires_flags = Array[StringName]([&"panel_reparado"])
+forbids_flags = Array[StringName]([&"fusible_puesto"])
+requires_items = Array[StringName]([&"fusible"])
+
+[sub_resource type="Resource" id="Resource_4x7ti"]
+script = ExtResource("2_f2xcx")
+text = "Al cuadro le falta el fusible F1. La nota decía que hay repuestos en el archivo de la planta 3, en la caja de mantenimiento."
+requires_flags = Array[StringName]([&"panel_reparado"])
+forbids_flags = Array[StringName]([&"fusible_puesto"])
+
+[sub_resource type="Resource" id="Resource_d1l8h"]
+script = ExtResource("2_f2xcx")
+text = "Las bornas del cuadro están sueltas. Con el destornillador puedes apretarlas."
+requires_flags = Array[StringName]([&"panel_abierto"])
+forbids_flags = Array[StringName]([&"panel_reparado"])
+requires_items = Array[StringName]([&"destornillador"])
+
+[sub_resource type="Resource" id="Resource_s368d"]
+script = ExtResource("2_f2xcx")
+text = "Las bornas del cuadro están sueltas y no tienes con qué apretarlas.
+Un destornillador… En un quirófano siempre queda instrumental tirado."
+requires_flags = Array[StringName]([&"panel_abierto"])
+forbids_flags = Array[StringName]([&"panel_reparado"])
+
+[sub_resource type="Resource" id="Resource_nc7g0"]
+script = ExtResource("2_f2xcx")
+text = "El generador ya tiene su válvula, pero al cuadro general no le llega nada. El cuadro está en la sala eléctrica."
+requires_flags = Array[StringName]([&"valvula_puesta"])
+forbids_flags = Array[StringName]([&"fusible_puesto"])
+
+[sub_resource type="Resource" id="Resource_ohm38"]
+script = ExtResource("2_f2xcx")
+text = "El generador no arranca: le falta la válvula de presión. Y antes habrá que mirar el cuadro eléctrico general."
+requires_flags = Array[StringName]([&"generador_sin_valvula"])
+forbids_flags = Array[StringName]([&"panel_abierto"])
+
+[sub_resource type="Resource" id="Resource_ns84v"]
+script = ExtResource("2_f2xcx")
+text = "El sótano. Si el hospital tiene un generador de emergencia, estará aquí abajo, con un cuadro eléctrico que lo alimente."
+requires_flags = Array[StringName]([&"event:puntos_abiertos"])
+forbids_flags = Array[StringName]([&"panel_abierto"])
+
+[sub_resource type="Resource" id="Resource_7yx4s"]
+script = ExtResource("2_f2xcx")
+text = "La escalera de servicio está abierta. Baja al sótano: sin corriente no hay salida."
+requires_flags = Array[StringName]([&"escalera_abierta"])
+forbids_flags = Array[StringName]([&"event:puntos_abiertos"])
+
+[sub_resource type="Resource" id="Resource_a6j4d"]
+script = ExtResource("2_f2xcx")
+text = "Una llave de hierro con un cordel. Es de la escalera de servicio, la que baja al sótano."
+forbids_flags = Array[StringName]([&"escalera_abierta"])
+requires_items = Array[StringName]([&"llave_sotano"])
+
+[sub_resource type="Resource" id="Resource_722yp"]
+script = ExtResource("2_f2xcx")
+text = "Ya tienes el fusible. Para bajar al sótano hace falta la llave de la escalera de servicio.
+El escritorio del archivo tenía cajones."
+requires_flags = Array[StringName]([&"fusible_cogido"])
+forbids_flags = Array[StringName]([&"escalera_abierta"])
+forbids_items = Array[StringName]([&"llave_sotano"])
+
+[sub_resource type="Resource" id="Resource_uum64"]
+script = ExtResource("2_f2xcx")
+text = "El archivo médico. Tu expediente tiene que estar aquí.
+Y si mantenimiento guardaba algo en esta planta, también."
+requires_flags = Array[StringName]([&"archivo_abierto"])
+forbids_flags = Array[StringName]([&"fusible_cogido"])
+forbids_items = Array[StringName]([&"llave_sotano"])
+
+[sub_resource type="Resource" id="Resource_43s8l"]
+script = ExtResource("2_f2xcx")
+text = "Una llave larga de latón. La del archivo médico, en el lado norte del pasillo, pasada la enfermería."
+forbids_flags = Array[StringName]([&"archivo_abierto"])
+requires_items = Array[StringName]([&"llave_archivo"])
+
+[sub_resource type="Resource" id="Resource_ov6f8"]
+script = ExtResource("2_f2xcx")
+text = "La llave pequeña de la cama de la 11. Es de un armario de cristal… El de medicación de la enfermería."
+forbids_flags = Array[StringName]([&"llave_archivo_cogida"])
+requires_items = Array[StringName]([&"llave_botiquin"])
+
+[sub_resource type="Resource" id="Resource_lo0ik"]
+script = ExtResource("2_f2xcx")
+text = "En la enfermería hay una llave colgada dentro de un armario de cristal. Su cerradura es pequeña.
+Algo ha crujido en la habitación 11."
+requires_flags = Array[StringName]([&"botiquin_cerrado", &"oyo_crujido"])
+forbids_flags = Array[StringName]([&"llave_botiquin_cogida"])
+
+[sub_resource type="Resource" id="Resource_626li"]
+script = ExtResource("2_f2xcx")
+text = "Algo ha crujido en la habitación 11. Una cama. Esa habitación debería estar vacía."
+requires_flags = Array[StringName]([&"oyo_crujido"])
+forbids_flags = Array[StringName]([&"llave_botiquin_cogida"])
+
+[sub_resource type="Resource" id="Resource_rxs8r"]
+script = ExtResource("2_f2xcx")
+text = "El archivo está cerrado con llave. La pegatina de la puerta decía que la llave está en la enfermería."
+requires_flags = Array[StringName]([&"archivo_cerrado"])
+forbids_flags = Array[StringName]([&"llave_archivo_cogida"])
+
+[sub_resource type="Resource" id="Resource_5xu1n"]
+script = ExtResource("2_f2xcx")
+text = "La escalera de servicio baja al sótano, pero está cerrada con llave. Solo mantenimiento."
+requires_flags = Array[StringName]([&"escalera_cerrada"])
+forbids_flags = Array[StringName]([&"escalera_abierta"])
+forbids_items = Array[StringName]([&"llave_sotano"])
+
+[sub_resource type="Resource" id="Resource_61ako"]
+script = ExtResource("2_f2xcx")
+text = "Una palanca de hierro. La puerta atascada del quirófano tendría que ceder con esto."
+forbids_flags = Array[StringName]([&"quirofano_abierto"])
+requires_items = Array[StringName]([&"palanca"])
+
+[sub_resource type="Resource" id="Resource_s748u"]
+script = ExtResource("2_f2xcx")
+text = "La puerta del quirófano está atascada por dentro. Con algo largo y fuerte, como una palanca, podrías forzarla.
+En el almacén de limpieza guardan de todo."
+requires_flags = Array[StringName]([&"quirofano_atascado"])
+forbids_flags = Array[StringName]([&"quirofano_abierto"])
+
+[sub_resource type="Resource" id="Resource_jatit"]
+script = ExtResource("2_f2xcx")
+text = "La salida está encadenada y el ascensor no tiene corriente. Si volviera la luz…
+El generador de un hospital suele estar en el sótano."
+requires_flags = Array[StringName]([&"salida_cerrada"])
+forbids_flags = Array[StringName]([&"escalera_abierta"])
+
+[sub_resource type="Resource" id="Resource_5qiiu"]
+script = ExtResource("2_f2xcx")
+text = "El ascensor no tiene corriente. Si volviera la luz…
+El generador de un hospital suele estar en el sótano."
+requires_flags = Array[StringName]([&"ascensor_sin_corriente"])
+forbids_flags = Array[StringName]([&"escalera_abierta"])
+
+[sub_resource type="Resource" id="Resource_cua7l"]
+script = ExtResource("2_f2xcx")
+text = "Tienes que averiguar dónde estás y cómo salir.
+El pasillo, las otras habitaciones… El plano de evacuación estará junto a recepción."
+requires_flags = Array[StringName]([&"linterna_cogida"])
+
+[sub_resource type="Resource" id="Resource_pusto"]
+script = ExtResource("2_f2xcx")
+text = "Está demasiado oscuro. En la mesita, junto a la cama, quizá haya algo."
+forbids_flags = Array[StringName]([&"linterna_cogida"])
+
+[resource]
+script = ExtResource("1_xnvlr")
+thoughts = Array[ExtResource("2_f2xcx")]([SubResource("Resource_lldxg"), SubResource("Resource_lcwj2"), SubResource("Resource_qxreg"), SubResource("Resource_las66"), SubResource("Resource_oocaa"), SubResource("Resource_ub11y"), SubResource("Resource_drv65"), SubResource("Resource_4x7ti"), SubResource("Resource_d1l8h"), SubResource("Resource_s368d"), SubResource("Resource_nc7g0"), SubResource("Resource_ohm38"), SubResource("Resource_ns84v"), SubResource("Resource_7yx4s"), SubResource("Resource_a6j4d"), SubResource("Resource_722yp"), SubResource("Resource_uum64"), SubResource("Resource_43s8l"), SubResource("Resource_ov6f8"), SubResource("Resource_lo0ik"), SubResource("Resource_626li"), SubResource("Resource_rxs8r"), SubResource("Resource_5xu1n"), SubResource("Resource_61ako"), SubResource("Resource_s748u"), SubResource("Resource_jatit"), SubResource("Resource_5qiiu"), SubResource("Resource_cua7l"), SubResource("Resource_pusto")])
+fallback = "No sabes muy bien qué hacer. Quizá mirar con más calma lo que ya has visto."
+bleeding_text = "Los puntos de la espalda se han abierto. Tienes que vendarte antes de que sea peor."
