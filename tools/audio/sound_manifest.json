@@ -2297,7 +2297,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Habitación de hospital vacía de noche: aire quieto y un murmullo lejano del edificio. Sin pitidos, voces ni pasos. Casi no debe oírse.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 701976
   },
   {
    "name": "amb_tone_corridor",
@@ -2381,7 +2382,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Pasillo largo de hospital vacío: aire con algo de cola y un murmullo de ventilación o maquinaria al fondo. Sin anuncios, voces, carros ni pasos.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 383486
   },
   {
    "name": "amb_tone_tiled",
@@ -2471,7 +2473,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Baño alicatado vacío: tono brillante y reflectante, quizá un hilo de agua muy lejos. Sin cisterna, secamanos ni ducha.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 382901
   },
   {
    "name": "amb_tone_or",
@@ -2561,7 +2564,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Quirófano o sala clínica vacía: aire frío y limpio con un zumbido técnico muy tenue. Sin pitidos de monitor, voces ni instrumental.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 85086
   },
   {
    "name": "amb_tone_hall",
@@ -2740,7 +2744,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Archivo de papel: sala apagada y seca (madera, papel), casi silencio con un murmullo grave. Sin teclados, impresoras ni páginas.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 635727
   },
   {
    "name": "amb_tone_stairwell",
@@ -2829,7 +2834,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Hueco de escalera de hormigón: aire que sube y baja, un silbido grave muy suave y mucha cola. Sin pasos ni puertas.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 405590
   },
   {
    "name": "amb_tone_basement",
@@ -2918,7 +2924,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Sótano de hormigón grande: retumbo grave y constante de maquinaria lejana, aire cerrado. Sin coches, motores cerca ni goteos (los goteos van aparte).",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 683491
   },
   {
    "name": "amb_tone_morgue",
@@ -3094,7 +3101,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Con corriente: el edificio vivo, un zumbido grave y lejano de red eléctrica y máquinas (filtrado). Muy bajo; que se note cuando se va la luz.",
-   "af": "highpass=f=35,lowpass=f=1800"
+   "af": "highpass=f=35,lowpass=f=1800",
+   "pick": 661435
   },
   {
    "name": "amb_wind_building",
@@ -3184,7 +3192,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Viento fuera del edificio oído desde dentro: presión sorda que sube y baja, sin silbidos agudos ni lluvia. Sin corriente se oye más (nada lo tapa).",
-   "af": "highpass=f=40,lowpass=f=2500"
+   "af": "highpass=f=40,lowpass=f=2500",
+   "pick": 386451
   },
   {
    "name": "amb_pa_hum",
@@ -3273,7 +3282,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Los altavoces de megafonía del techo encendidos sin nadie al micro: siseo y zumbido de 50 Hz mínimos. En el límite de lo audible.",
-   "af": "highpass=f=45,lowpass=f=6000"
+   "af": "highpass=f=45,lowpass=f=6000",
+   "pick": 522383
   },
   {
    "name": "amb_clock_tick",
@@ -3316,7 +3326,8 @@
    "max_len": 12,
    "crossfade": 0.05,
    "ideal": 30,
-   "note": "Reloj de pared analógico: tic-tac seco y regular, sin campanadas. Bucle exacto (sin un fundido que borre un tic)."
+   "note": "Reloj de pared analógico: tic-tac seco y regular, sin campanadas. Bucle exacto (sin un fundido que borre un tic).",
+   "pick": 405423
   },
   {
    "name": "amb_wind_window_loop",
@@ -3360,7 +3371,8 @@
    "max_len": 20,
    "crossfade": 2.5,
    "ideal": 60,
-   "note": "Silbido de viento por la rendija de una ventana rota, constante y suave (las ráfagas van aparte)."
+   "note": "Silbido de viento por la rendija de una ventana rota, constante y suave (las ráfagas van aparte).",
+   "pick": 69512
   },
   {
    "name": "amb_lamp_transformer",
@@ -3408,7 +3420,8 @@
    "crossfade": 1.2,
    "ideal": 25,
    "af": "highpass=f=60",
-   "note": "Transformador de la lámpara del quirófano con corriente: zumbido de 100 Hz con armónicos, constante."
+   "note": "Transformador de la lámpara del quirófano con corriente: zumbido de 100 Hz con armónicos, constante.",
+   "pick": 733736
   },
   {
    "name": "amb_elevator_shaft",
@@ -3451,7 +3464,8 @@
    "crossfade": 2.5,
    "ideal": 60,
    "af": "highpass=f=35",
-   "note": "Aire que corre por el hueco vacío del ascensor: soplido hueco y grave, algún roce metálico lejano."
+   "note": "Aire que corre por el hueco vacío del ascensor: soplido hueco y grave, algún roce metálico lejano.",
+   "pick": 646874
   },
   {
    "name": "amb_pump_loop",
@@ -3497,7 +3511,8 @@
    "max_len": 16,
    "crossfade": 1.5,
    "ideal": 40,
-   "note": "Bomba de agua del sótano en marcha (con corriente): motor eléctrico grave y el agua dentro, constante."
+   "note": "Bomba de agua del sótano en marcha (con corriente): motor eléctrico grave y el agua dentro, constante.",
+   "pick": 342414
   },
   {
    "name": "amb_drip_puddle_loop",
@@ -3542,7 +3557,8 @@
    "max_len": 18,
    "crossfade": 0.6,
    "ideal": 40,
-   "note": "Gotas que caen de una tubería a un charco en suelo de hormigón, espaciadas e irregulares, con eco."
+   "note": "Gotas que caen de una tubería a un charco en suelo de hormigón, espaciadas e irregulares, con eco.",
+   "pick": 770033
   },
   {
    "name": "amb_concrete_groan",
@@ -3700,7 +3716,8 @@
    "fade_in": 0.2,
    "fade_out": 0.6,
    "af": "lowpass=f=5000",
-   "note": "Una puerta que se mueve sola con la corriente, lejos: chirrido lento de bisagra, sin golpe."
+   "note": "Una puerta que se mueve sola con la corriente, lejos: chirrido lento de bisagra, sin golpe.",
+   "pick": 432562
   },
   {
    "name": "amb_steps_distant",
@@ -3827,7 +3844,8 @@
    ],
    "max_len": 1.8,
    "fade_out": 0.3,
-   "note": "Un chasquido seco de yeso o madera de la estructura (cambio de temperatura). Corto."
+   "note": "Un chasquido seco de yeso o madera de la estructura (cambio de temperatura). Corto.",
+   "pick": 241601
   },
   {
    "name": "amb_vent_rattle",
@@ -3904,7 +3922,8 @@
    ],
    "max_len": 1.8,
    "fade_out": 0.4,
-   "note": "Un conducto de chapa que chasquea al dilatarse: «bong» metálico, hueco y corto, dentro del techo."
+   "note": "Un conducto de chapa que chasquea al dilatarse: «bong» metálico, hueco y corto, dentro del techo.",
+   "pick": 686186
   },
   {
    "name": "amb_ballast_tick",
@@ -3942,7 +3961,8 @@
    ],
    "max_len": 1.5,
    "fade_out": 0.2,
-   "note": "Un tubo fluorescente que hace tic o chisporrotea un instante (cebador). Con corriente."
+   "note": "Un tubo fluorescente que hace tic o chisporrotea un instante (cebador). Con corriente.",
+   "pick": 642197
   },
   {
    "name": "amb_window_rattle",
@@ -3982,7 +4002,8 @@
    ],
    "max_len": 3.0,
    "fade_out": 0.5,
-   "note": "El cristal flojo de una ventana que tiembla en su marco con una ráfaga. Sin romperse."
+   "note": "El cristal flojo de una ventana que tiembla en su marco con una ráfaga. Sin romperse.",
+   "pick": 455758
   },
   {
    "name": "amb_trolley_far",
@@ -4067,7 +4088,8 @@
    ],
    "max_len": 1.6,
    "fade_out": 0.3,
-   "note": "Frascos de cristal de un estante que tintinean un instante (vibración). Sin brindis ni roturas."
+   "note": "Frascos de cristal de un estante que tintinean un instante (vibración). Sin brindis ni roturas.",
+   "pick": 254818
   },
   {
    "name": "amb_relay_click",
@@ -4105,7 +4127,8 @@
     "glitch-music"
    ],
    "max_len": 0.8,
-   "note": "Un relé o contactor del cuadro eléctrico que salta: clac metálico seco. Con corriente."
+   "note": "Un relé o contactor del cuadro eléctrico que salta: clac metálico seco. Con corriente.",
+   "pick": 384698
   },
   {
    "name": "amb_pipe_tick",
@@ -4182,7 +4205,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.5,
-   "note": "Una cadena colgada (polipasto del taller) que se balancea y tintinea un poco, sin golpes fuertes."
+   "note": "Una cadena colgada (polipasto del taller) que se balancea y tintinea un poco, sin golpes fuertes.",
+   "pick": 84526
   },
   {
    "name": "amb_morgue_door_creak",
@@ -4219,7 +4243,8 @@
    ],
    "max_len": 2.8,
    "fade_out": 0.5,
-   "note": "La puerta metálica de una cámara de la morgue que cede un poco y cruje sola."
+   "note": "La puerta metálica de una cámara de la morgue que cede un poco y cruje sola.",
+   "pick": 351407
   },
   {
    "name": "amb_pa_crackle",
@@ -4259,7 +4284,8 @@
    ],
    "max_len": 1.2,
    "fade_out": 0.2,
-   "note": "Un chasquido de estática de los altavoces del techo (con corriente). Muy corto."
+   "note": "Un chasquido de estática de los altavoces del techo (con corriente). Muy corto.",
+   "pick": 427870
   },
   {
    "name": "amb_rats_wall",
@@ -4343,7 +4369,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.5,
-   "note": "Una paloma que aletea de golpe en el alféizar o en el hueco de la escalera. Sin arrullos ni ciudad."
+   "note": "Una paloma que aletea de golpe en el alféizar o en el hueco de la escalera. Sin arrullos ni ciudad.",
+   "pick": 528250
   },
   {
    "name": "amb_generator_cough",
@@ -4384,7 +4411,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.5,
-   "note": "El generador que tose o falla un instante y sigue en marcha. Con corriente, en el sótano."
+   "note": "El generador que tose o falla un instante y sigue en marcha. Con corriente, en el sótano.",
+   "pick": 655466
   },
   {
    "name": "amb_debris_fall",
@@ -4422,7 +4450,8 @@
    ],
    "max_len": 2.2,
    "fade_out": 0.4,
-   "note": "Trocitos de yeso que se desprenden del techo y caen al suelo, poca cosa."
+   "note": "Trocitos de yeso que se desprenden del techo y caen al suelo, poca cosa.",
+   "pick": 89391
   },
   {
    "name": "entity_breath",
@@ -4943,7 +4972,8 @@
     "whoosh-designed"
    ],
    "max_len": 0.5,
-   "note": "Tubo contra hueso: golpe seco con crujido corto."
+   "note": "Tubo contra hueso: golpe seco con crujido corto.",
+   "pick": 624163
   },
   {
    "name": "combat_bone_break",
@@ -4979,7 +5009,8 @@
     "voice"
    ],
    "max_len": 0.8,
-   "note": "Hueso que se parte: chasquido grave tipo apio o madera húmeda, sin voz."
+   "note": "Hueso que se parte: chasquido grave tipo apio o madera húmeda, sin voz.",
+   "pick": 134025
   },
   {
    "name": "combat_amputation",
@@ -5017,7 +5048,8 @@
     "swoosh"
    ],
    "max_len": 1.5,
-   "note": "Desgarro de carne y tendón con chapoteo; sin espada ni silbido."
+   "note": "Desgarro de carne y tendón con chapoteo; sin espada ni silbido.",
+   "pick": 30928
   },
   {
    "name": "combat_scalpel_slash",
@@ -5054,7 +5086,8 @@
     "katana"
    ],
    "max_len": 0.6,
-   "note": "Tajo fino y rápido sobre carne o tela con tintineo metálico."
+   "note": "Tajo fino y rápido sobre carne o tela con tintineo metálico.",
+   "pick": 35213
   },
   {
    "name": "combat_saw",
@@ -5124,7 +5157,8 @@
     "whoosh-designed"
    ],
    "max_len": 0.6,
-   "note": "Aguja que entra, clic del émbolo y líquido."
+   "note": "Aguja que entra, clic del émbolo y líquido.",
+   "pick": 784311
   },
   {
    "name": "combat_swing_miss",
@@ -5156,7 +5190,8 @@
     "magic"
    ],
    "max_len": 0.45,
-   "note": "Barra pesada que corta el aire, grave y corta."
+   "note": "Barra pesada que corta el aire, grave y corta.",
+   "pick": 422495
   },
   {
    "name": "enfermero_breath",
@@ -5296,7 +5331,8 @@
     "female"
    ],
    "max_len": 2.5,
-   "note": "Estertor y caída de un cuerpo pesado al suelo."
+   "note": "Estertor y caída de un cuerpo pesado al suelo.",
+   "pick": 504626
   },
   {
    "name": "enfermero_drag_steps",
@@ -5422,7 +5458,8 @@
    "format": "ogg",
    "af": "highpass=f=30",
    "quality": 5,
-   "note": "Drone industrial grave con un pulso lento de máquina, sin melodía; suena durante el combate."
+   "note": "Drone industrial grave con un pulso lento de máquina, sin melodía; suena durante el combate.",
+   "pick": 126323
   },
   {
    "name": "status_heartbeat",
