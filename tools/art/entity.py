@@ -4,16 +4,19 @@ Uso (desde la raíz del repo):
     python -I tools/art/entity.py
 
 Genera en assets/sprites/horror/:
-- entity.png: hoja de 8 fotogramas de 64×112 (humo que se mueve en bucle). Silueta humanoide
-  alta y encorvada, brazos demasiado largos, de cintura para abajo se deshace en humo.
-  Casi negra con un borde violeta tramado; la máscara pálida va apagada. Pies en (32, 104).
-- entity_glow.png: misma hoja, solo la máscara y dos puntos en las cuencas (se dibuja
-  aditiva y sin luz, para que se intuya en la oscuridad).
+- entity.png: hoja de 8 fotogramas de 72×136. NO es una imagen para mirar: es un **mapa de datos**
+  que lee `shaders/entity_shade.gdshader`:
+    A = densidad de la sombra (1 en el núcleo; un halo tenue alrededor, que solo deforma el fondo),
+    G = hilos de humo que suben de los bordes (se pintan apenas más claros que el negro),
+    R = los dos puntos pálidos de los ojos (el shader los enciende a ratos).
+  Silueta: muy alta (≈ 2,2 veces el protagonista) y deforme: cuello largo y torcido, cabeza
+  alargada y caída hacia un lado, un hombro más alto, el brazo izquierdo tan largo que roza el
+  suelo, el derecho doblado hacia fuera, piernas finas que se deshacen en humo. Pies en (36, 130).
+  El fotograma 5 es un tirón brusco de la cabeza.
 - face_flash.png: 160×160, la máscara de cerca, agrietada y con las cuencas vacías.
-  Se ve uno o dos fotogramas dentro de un fallo de cinta.
+  Se ve uno o dos fotogramas dentro de un fallo de cinta (susto FACE_FLASH, no la entidad).
 
-Colores de la guía estética: contorno #0E0A12, azul noche/violeta #1E1B3A #3A2E5C,
-blanco hueso #BFB6A3 #E8E1D3. El humo es tramado (Bayer 4×4), nunca degradado limpio.
+Colores de la guía estética (face_flash): contorno #0E0A12, blanco hueso #BFB6A3 #E8E1D3.
 """
 
 from __future__ import annotations
@@ -31,21 +34,18 @@ from pxrender import BAYER4, fbm, vnoise  # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "assets/sprites/horror"
 
-FRAME_W = 64
-FRAME_H = 112
+FRAME_W = 72
+FRAME_H = 136
 FRAMES = 8
 # Píxel de los pies dentro del fotograma (el nodo se coloca ahí).
-ORIGIN = (32, 104)
+ORIGIN = (36, 130)
+# Fotograma con el tirón de cabeza.
+TWITCH_FRAME = 5
 
 INK = (14, 10, 18)
-NIGHT = (24, 20, 40)
-VIOLET = (42, 34, 70)
-HAZE = (58, 46, 92)
 BONE = (191, 182, 163)
 BONE_LIGHT = (232, 225, 211)
 BONE_DARK = (120, 112, 100)
-# Brillo de la máscara en la hoja base (la entidad se dibuja sin luz: tiene que quedar apagada).
-MASK_DIM = 0.32
 
 
 def _dither(x: int, y: int) -> float:
@@ -64,8 +64,11 @@ def _capsule(px: float, py: float, ax: float, ay: float, bx: float, by: float, r
     return math.hypot(pax - bax * h, pay - bay * h) - r
 
 
-def _ellipse(px: float, py: float, cx: float, cy: float, rx: float, ry: float) -> float:
-    return (math.hypot((px - cx) / rx, (py - cy) / ry) - 1.0) * min(rx, ry)
+def _ellipse(px: float, py: float, cx: float, cy: float, rx: float, ry: float, tilt: float = 0.0) -> float:
+    dx, dy = px - cx, py - cy
+    u = dx * math.cos(tilt) + dy * math.sin(tilt)
+    v = -dx * math.sin(tilt) + dy * math.cos(tilt)
+    return (math.hypot(u / rx, v / ry) - 1.0) * min(rx, ry)
 
 
 def _loop_noise(x: float, y: float, t: float, seed: int, octaves: int = 3) -> float:
@@ -75,107 +78,100 @@ def _loop_noise(x: float, y: float, t: float, seed: int, octaves: int = 3) -> fl
     return a * (1 - t) + b * t
 
 
-def body_sdf(x: float, y: float, sway: float) -> float:
-    """Distancia (px) a la silueta. x hacia la derecha, y hacia abajo, origen en los pies."""
-    lean = sway * (-y / 80.0)  # la parte alta se mece más
-    x -= lean
-    head = _ellipse(x, y, 1.5, -71.0, 6.0, 7.8)
-    neck = _capsule(x, y, 0.5, -64.0, 0.0, -58.0, 2.6)
-    shoulders = _capsule(x, y, -11.0, -56.0, 11.5, -57.5, 3.6)
-    chest = _capsule(x, y, 0.0, -56.0, 0.0, -36.0, 7.2)
-    waist = _capsule(x, y, 0.0, -38.0, 0.0, -6.0, 6.2 + max(0.0, (-y - 6.0) * -0.0) + (1.0 - (-y) / 40.0) * 3.0)
-    # Brazos demasiado largos, colgando y un poco abiertos; dedos largos.
-    arm_l = min(_capsule(x, y, -11.5, -56.0, -15.0, -36.0, 2.4), _capsule(x, y, -15.0, -36.0, -16.5, -20.0, 2.0))
-    arm_r = min(_capsule(x, y, 12.0, -57.0, 15.0, -37.0, 2.4), _capsule(x, y, 15.0, -37.0, 17.5, -21.0, 2.0))
-    fingers = min(
-        _capsule(x, y, -16.5, -20.0, -17.5, -12.0, 0.9), _capsule(x, y, -16.0, -20.0, -15.0, -12.5, 0.8),
-        _capsule(x, y, 17.5, -21.0, 18.5, -13.0, 0.9), _capsule(x, y, 17.0, -21.0, 16.0, -13.5, 0.8),
-    )
-    d = _smin(head, neck, 2.0)
-    d = _smin(d, shoulders, 3.0)
-    d = _smin(d, chest, 4.0)
-    d = _smin(d, waist, 4.0)
-    d = _smin(d, min(arm_l, arm_r), 2.5)
-    d = min(d, fingers)
+def _head(t: float, twitch: bool) -> tuple[float, float, float]:
+    """Centro y giro de la cabeza: caída hacia la derecha, con un vaivén lento (o un tirón)."""
+    sway = math.sin(t * math.tau)
+    if twitch:
+        return 10.5, -106.0, 0.95
+    return 6.5 + sway * 0.8, -109.0 + abs(sway) * 0.6, 0.55 + sway * 0.06
+
+
+def body_sdf(x: float, y: float, t: float, twitch: bool) -> float:
+    """Distancia (px) a la silueta. x a la derecha, y hacia abajo, origen en los pies."""
+    heave = math.sin(t * math.tau) * 0.8  # respira: el tronco sube y baja un poco
+    y_body = y + heave * max(0.0, (-y - 40.0) / 80.0)
+    hx, hy, tilt = _head(t, twitch)
+    head = _ellipse(x, y, hx, hy, 4.6, 8.4, tilt)
+    jaw = _capsule(x, y, hx - 1.0, hy + 4.0, hx + 1.5, hy + 9.5, 1.6)  # mandíbula caída
+    neck = _capsule(x, y_body, 0.5, -91.0, hx - 2.5, hy + 4.0, 2.0)
+    # Hombros torcidos: el izquierdo caído, el derecho alto y adelantado.
+    shoulders = _capsule(x, y_body, -12.0, -86.0, 10.0, -92.0, 3.2)
+    chest = _capsule(x, y_body, -0.5, -87.0, -1.5, -64.0, 5.0)
+    ribs = _capsule(x, y_body, -1.5, -66.0, 0.0, -46.0, 3.0)  # cintura consumida
+    hips = _capsule(x, y_body, -3.0, -44.0, 3.0, -43.5, 2.6)
+    # Brazo izquierdo: largo hasta casi el suelo, dedos como ramas.
+    arm_l = min(_capsule(x, y_body, -12.0, -86.0, -16.0, -60.0, 2.1),
+                _capsule(x, y_body, -16.0, -60.0, -19.0, -28.0, 1.7))
+    fingers_l = min(_capsule(x, y, -19.0, -28.0, -21.5, -13.0, 0.75), _capsule(x, y, -19.0, -28.0, -18.0, -12.0, 0.7),
+                    _capsule(x, y, -19.0, -28.0, -15.5, -15.0, 0.65))
+    # Brazo derecho: codo hacia fuera, antebrazo que vuelve hacia el cuerpo.
+    arm_r = min(_capsule(x, y_body, 10.0, -92.0, 18.5, -73.0, 2.1),
+                _capsule(x, y_body, 18.5, -73.0, 13.0, -48.0, 1.7))
+    fingers_r = min(_capsule(x, y, 13.0, -48.0, 15.5, -37.0, 0.7), _capsule(x, y, 13.0, -48.0, 11.0, -36.5, 0.65),
+                    _capsule(x, y, 13.0, -48.0, 13.5, -35.0, 0.6))
+    # Piernas finas y demasiado largas; la derecha un poco por delante.
+    leg_l = _capsule(x, y, -3.5, -44.0, -5.0, -4.0, 2.3)
+    leg_r = _capsule(x, y, 3.5, -44.0, 5.5, -6.0, 2.1)
+    d = _smin(head, jaw, 1.5)
+    d = _smin(d, neck, 2.0)
+    d = _smin(d, shoulders, 2.5)
+    d = _smin(d, chest, 3.0)
+    d = _smin(d, ribs, 3.0)
+    d = _smin(d, hips, 2.5)
+    d = _smin(d, min(arm_l, arm_r), 2.0)
+    d = _smin(d, min(leg_l, leg_r), 2.0)
+    d = min(d, fingers_l, fingers_r)
     return d
 
 
-def mask_value(x: float, y: float, sway: float, glow: bool) -> tuple[tuple[int, int, int], float] | None:
-    """Máscara pálida sobre la cabeza: color y opacidad, o None si el píxel no es de la máscara."""
-    lean = sway * (71.0 / 80.0)
-    mx, my = 1.5 + lean + 0.4, -71.5
-    d = _ellipse(x, y, mx, my, 4.6, 6.0)
-    if d > 0:
-        return None
-    # Cuencas vacías: dos óvalos oscuros; la izquierda algo más grande.
-    for ex, ey, rx, ry in ((-1.9, -1.2, 1.25, 1.6), (2.0, -1.0, 1.1, 1.4)):
-        if _ellipse(x, y, mx + ex, my + ey, rx, ry) < 0:
-            if glow and abs(x - (mx + ex)) < 0.6 and abs(y - (my + ey + 0.3)) < 0.6:
-                return (BONE_LIGHT, 0.55)  # un punto mínimo en el fondo de la cuenca
-            return (INK, 1.0) if not glow else None
-    # Grieta vertical que baja desde la frente.
-    crack_x = mx + 0.6 + math.sin((y - my) * 1.3) * 0.6
-    if abs(x - crack_x) < 0.5 and y < my + 3.5:
-        return (BONE_DARK, 1.0) if not glow else None
-    shade = 0.55 + 0.45 * max(0.0, -d / 2.5)
-    if glow:
-        return (BONE, 0.16 + 0.16 * shade)
-    # En la hoja base la máscara va muy apagada: la claridad la pone la capa de brillo.
-    color = tuple(int((BONE_DARK[i] + (BONE[i] - BONE_DARK[i]) * shade) * MASK_DIM) for i in range(3))
-    return (color, 1.0)
+def eye_value(x: float, y: float, t: float, twitch: bool) -> float:
+    """Los dos puntos de los ojos (uno algo más bajo que el otro), en la cara caída."""
+    hx, hy, tilt = _head(t, twitch)
+    c, s = math.cos(tilt), math.sin(tilt)
+    best = 0.0
+    for ex, ey in ((-1.6, -2.0), (1.8, -1.2)):
+        px, py = hx + ex * c - ey * s, hy + ex * s + ey * c
+        dist = math.hypot(x - px, y - py)
+        best = max(best, 1.0 if dist < 0.75 else (0.35 if dist < 1.3 else 0.0))
+    return best
 
 
-def render_frame(t: float, glow: bool) -> Image.Image:
+def render_frame(index: int) -> Image.Image:
     img = Image.new("RGBA", (FRAME_W, FRAME_H), (0, 0, 0, 0))
-    sway = math.sin(t * math.tau) * 1.6
+    t = index / FRAMES
+    twitch = index == TWITCH_FRAME
     ox, oy = ORIGIN
     for py in range(FRAME_H):
         for px in range(FRAME_W):
             x, y = px + 0.5 - ox, py + 0.5 - oy
-            m = mask_value(x, y, sway, glow)
-            if m is not None:
-                (r, g, b), a = m
-                if a > _dither(px, py) * 0.3:
-                    img.putpixel((px, py), (r, g, b, int(255 * a)))
-                continue
-            if glow:
-                continue
-            # Humo: el borde se deshace con ruido; más cuanto más abajo.
-            low = max(0.0, min(1.0, (y + 34.0) / 34.0))  # 0 en la cintura, 1 en el suelo
-            n = _loop_noise(x * 0.16, y * 0.11 + t * 1.5, t, 41)
-            n2 = _loop_noise(x * 0.4, y * 0.3 + t * 3.0, t, 97, 2)
-            d = body_sdf(x + (n - 0.5) * (2.0 + low * 9.0), y, sway) + (n2 - 0.5) * 3.0
-            d += low * low * 7.0 * (0.4 + n)  # se adelgaza y se rompe al bajar
-            # Hilos de humo que suben desde hombros y cabeza.
+            # Humo: el borde se deshace con ruido, más cuanto más abajo.
+            low = max(0.0, min(1.0, (y + 40.0) / 40.0))  # 0 en la cadera, 1 en el suelo
+            n = _loop_noise(x * 0.14, y * 0.09 + t * 1.5, t, 41)
+            n2 = _loop_noise(x * 0.38, y * 0.28 + t * 3.0, t, 97, 2)
+            d = body_sdf(x + (n - 0.5) * (2.0 + low * 10.0), y, t, twitch) + (n2 - 0.5) * 2.6
+            d += low * low * 9.0 * (0.35 + n)  # las piernas se adelgazan y se rompen en humo
+            # Densidad: 1 dentro; cae en el borde; un halo muy tenue alrededor (solo deforma el fondo).
+            if d < -1.5:
+                density = 1.0
+            elif d < 2.0:
+                density = 0.15 + 0.85 * (2.0 - d) / 3.5
+            elif d < 9.0:
+                density = 0.15 * (9.0 - d) / 7.0
+            else:
+                density = 0.0
+            density *= 1.0 - low * 0.35
+            # Hilos de humo que suben de cabeza, hombros y brazos.
             wisp = 0.0
-            if y < -50:
-                wn = _loop_noise(x * 0.25, y * 0.06 + t * 2.0, t, 151)
-                stream = abs(math.sin(x * 0.42 + wn * 5.0))
-                wisp = max(0.0, 1.0 - stream * 3.0) * max(0.0, 1.0 - (-50 - y) / 34.0) * (1.0 if abs(x) < 22 else 0.0)
-            if d < -2.5:
-                level = 1.0
-            elif d < 1.5:
-                level = (1.5 - d) / 4.0
-            else:
-                level = 0.0
-            level = max(level, wisp * 0.45)
-            if level <= 0.0:
+            if 0.0 < d < 8.0 and y < -50.0:
+                wn = _loop_noise(x * 0.22, y * 0.05 + t * 2.0, t, 151)
+                stream = abs(math.sin(x * 0.45 + wn * 7.0 + math.sin(y * 0.21 + t * math.tau) * 1.4))
+                wisp = max(0.0, 1.0 - stream * 3.2) * max(0.0, 1.0 - d / 8.0) * (0.3 + wn)
+                wisp = min(1.0, wisp)
+                density = max(density, wisp * 0.12)
+            eye = eye_value(x, y, t, twitch) if d < 0.0 else 0.0
+            if density <= 0.004 and wisp <= 0.0:
                 continue
-            if level < 1.0 and level < _dither(px, py) * 0.9 + 0.05:
-                continue
-            # Núcleo casi negro; borde violeta tramado; la neblina de los hilos, más clara.
-            edge = max(0.0, min(1.0, (d + 2.5) / 4.0))
-            if wisp > 0.0 and d > 1.0:
-                color, alpha = HAZE, 0.55
-            elif edge > 0.6 + 0.3 * _dither(px, py):
-                color, alpha = VIOLET, 0.9
-            elif edge > 0.25 + 0.3 * _dither(px, py):
-                color, alpha = NIGHT, 1.0
-            else:
-                color, alpha = INK, 1.0
-            # Abajo, el humo se vuelve transparente.
-            alpha *= 1.0 - low * 0.55
-            img.putpixel((px, py), (*color, int(255 * alpha)))
+            img.putpixel((px, py), (int(255 * eye), int(255 * wisp), 0, int(round(255 * min(1.0, density)))))
     return img
 
 
@@ -233,15 +229,11 @@ def face_flash(size: int = 160) -> Image.Image:
 def build() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     sheet = Image.new("RGBA", (FRAME_W * FRAMES, FRAME_H), (0, 0, 0, 0))
-    glow = Image.new("RGBA", (FRAME_W * FRAMES, FRAME_H), (0, 0, 0, 0))
     for i in range(FRAMES):
-        t = i / FRAMES
-        sheet.alpha_composite(render_frame(t, False), (i * FRAME_W, 0))
-        glow.alpha_composite(render_frame(t, True), (i * FRAME_W, 0))
+        sheet.paste(render_frame(i), (i * FRAME_W, 0))
     sheet.save(OUT / "entity.png")
-    glow.save(OUT / "entity_glow.png")
     face_flash().save(OUT / "face_flash.png")
-    for name in ("entity.png", "entity_glow.png", "face_flash.png"):
+    for name in ("entity.png", "face_flash.png"):
         print("  ", (OUT / name).relative_to(ROOT).as_posix())
 
 

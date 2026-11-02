@@ -1,10 +1,10 @@
 class_name PassingShadow
 extends Node2D
-## Una sombra que cruza deprisa a lo lejos (susto PASSING_SHADOW). Usa la misma silueta que la
-## entidad, más oscura y sin máscara. Aparece tramada, cruza de `from` a `to` y se borra sola.
+## Una sombra que cruza deprisa a lo lejos (susto PASSING_SHADOW). Usa la misma silueta y el
+## mismo shader que la entidad, sin ojos: se condensa, cruza de `from` a `to` y se borra sola.
 
 const SHEET: Texture2D = preload("res://assets/sprites/horror/entity.png")
-const SHADER: Shader = preload("res://shaders/entity_dissolve.gdshader")
+const SHADER: Shader = preload("res://shaders/entity_shade.gdshader")
 const FRAMES: int = 8
 
 
@@ -21,6 +21,9 @@ func _run(from: Vector2, to: Vector2, seconds: float) -> void:
 	var material: ShaderMaterial = ShaderMaterial.new()
 	material.shader = SHADER
 	material.set_shader_parameter(&"fade", 0.0)
+	material.set_shader_parameter(&"haze", 1.0)
+	material.set_shader_parameter(&"presence", 0.85)
+	material.set_shader_parameter(&"eyes", 0.0)
 	material.set_shader_parameter(&"waver_px", 2.5)
 	var body: Sprite2D = Sprite2D.new()
 	body.texture = SHEET

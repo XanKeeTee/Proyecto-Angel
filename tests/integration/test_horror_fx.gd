@@ -173,3 +173,55 @@ func test_la_entidad_aparece_detras_en_el_camino_recorrido() -> void:
 	check(GameState.character.vitals.mind < mind_before, "alcanzarlo cuesta algo de Mente")
 	check(GameState.character.vitals.body > 0, "nunca hace daño")
 	await _teardown()
+
+
+func test_la_entidad_casi_no_se_ve_y_se_nota_de_reojo() -> void:
+	await _setup()
+	var stalker: Stalker = director.stalker
+	# Aquí se prueba la figura sola: el director no la mueve ni le dice cuánto la miran.
+	director.set_process(false)
+	check(stalker.get_node_or_null(^"Glow") == null, "sin máscara brillante")
+	var body: Sprite2D = stalker.get_node(^"Body") as Sprite2D
+	check(body.texture.get_height() >= 130, "más alta que antes (fotograma de %d px)" % body.texture.get_height())
+	var shader: Shader = (body.material as ShaderMaterial).shader
+	check(shader.code.contains("hint_screen_texture"), "deforma el fondo de detrás")
+	# Aparición: primero solo tiembla el aire; la sombra llega después.
+	var behind: Vector2 = world.player.position + Vector2(-100, 0)
+	stalker.appear(behind, [world.player.position], 30.0)
+	await _frames(3)
+	check(stalker.shader_value(&"haze") > 0.0, "al aparecer, primero el temblor del fondo")
+	check(is_zero_approx(stalker.shader_value(&"fade")), "y aún nada de sombra")
+	await host.get_tree().create_timer(Stalker.APPEAR_TIME + 0.1).timeout
+	check(is_equal_approx(stalker.shader_value(&"fade"), 1.0), "luego se condensa entera")
+	# De reojo / a la espalda: negra. De frente: casi nada.
+	check(director.gaze_at(behind) < 0.05, "a la espalda no la mira")
+	check(director.gaze_at(world.player.position + Vector2(100, 0)) > 0.95, "de frente, sí")
+	stalker.set_gaze(0.0)
+	await host.get_tree().create_timer(0.5).timeout
+	var side: float = stalker.shader_value(&"presence")
+	check(side > 0.9, "de reojo se ve la sombra entera (%.2f)" % side)
+	stalker.set_gaze(1.0)
+	await host.get_tree().create_timer(0.6).timeout
+	var front: float = stalker.shader_value(&"presence")
+	check(front < 0.3, "de frente casi desaparece (%.2f)" % front)
+	check(is_zero_approx(stalker.shader_value(&"eyes")), "y de frente no se le ven los ojos")
+	# Los ojos: tenues y solo a ratos.
+	stalker.set_gaze(0.0)
+	var max_eyes: float = 0.0
+	var dark_time: int = 0
+	for i: int in 300:
+		await host.get_tree().process_frame
+		var v: float = stalker.shader_value(&"eyes")
+		max_eyes = maxf(max_eyes, v)
+		if v < 0.01:
+			dark_time += 1
+	check(max_eyes <= Stalker.EYES_MAX + 0.001, "los ojos nunca brillan del todo")
+	check(dark_time > 100, "la mayor parte del tiempo, apagados")
+	# La luz la deshace: se estira hacia arriba.
+	stalker.dissolve()
+	await host.get_tree().create_timer(Stalker.DISSOLVE_TIME * 0.7).timeout
+	check(body.scale.y > 1.05 and body.scale.x < 1.0, "al deshacerse se estira hacia arriba")
+	await host.get_tree().create_timer(Stalker.DISSOLVE_TIME).timeout
+	check(not stalker.is_active(), "y se va")
+	check(body.scale == Vector2.ONE, "queda lista para la próxima vez")
+	await _teardown()
