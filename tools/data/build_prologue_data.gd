@@ -150,6 +150,9 @@ func _build_loot() -> LootPlan:
 		_scatter("bata_medico", 1, 0.5, ["mostrador_control", "mostrador_recepcion_2", "encimera_enfermeria"]),
 		_scatter("chaqueta_celador", 1, 0.55, ["carro_lavanderia_2", "carro_lavanderia_1", "banco_taller", "estanteria_lavanderia"]),
 		_scatter("pantalon_celador", 1, 0.45, ["carro_lavanderia_1", "carro_lavanderia_2", "estanteria_lavanderia"]),
+		# Armas improvisadas [PROPUESTA]: raras, sin combate en el prólogo.
+		_scatter("bisturi", 1, 0.75, ["encimera_quirofano", "encimera_enfermeria", "mostrador_control"]),
+		_scatter("tubo_metal", 1, 0.8, ["banco_taller", "estanteria_electrica", "estanteria_lavanderia"]),
 		_scatter("botas_goma", 1, 0.55, ["banco_taller", "estanteria_electrica", "carro_lavanderia_2"]),
 	]
 	var plan: LootPlan = LootPlan.new()

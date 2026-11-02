@@ -55,7 +55,8 @@ func test_descartar_deja_el_objeto_en_el_suelo_y_se_guarda() -> void:
 	check_eq(again.size(), 1, "tras cargar sigue en el suelo")
 	if not again.is_empty():
 		var d: DroppedItem = again[0]
-		check(w2._target(d.cells()) == d, "se puede interactuar con él")
+		w2.player.place(d.base_cell() + Vector2i(0, 1), Vector2i.UP)
+		check(w2.pick_target() == d, "se puede interactuar con él")
 		var result: InteractionResult = d.perform(Interactable.ACT_TAKE, GameState.character)
 		check(result.lines.is_empty() or not result.lines[0].begins_with("No te cabe"), "se recoge")
 		var back: ItemStack = GameState.character.custody.find_first(&"desinfectante")

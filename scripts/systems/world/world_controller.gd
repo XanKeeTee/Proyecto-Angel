@@ -327,6 +327,9 @@ func _candidates() -> Array[Interactable]:
 	for dy: int in range(-2, 3):
 		for dx: int in range(-2, 3):
 			for node: Variant in _interactables.get(here + Vector2i(dx, dy), []):
+				# Un objeto soltado y recogido se libera: puede quedar en el índice un instante.
+				if not is_instance_valid(node):
+					continue
 				var it: Interactable = node as Interactable
 				if it != null and not result.has(it):
 					result.append(it)
