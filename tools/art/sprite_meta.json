@@ -5,7 +5,7 @@
    32,
    32
   ],
-  "hframes": 5,
+  "hframes": 30,
   "vframes": 1,
   "origin": [
    16,
@@ -21,7 +21,32 @@
    "papers",
    "glass",
    "drops",
-   "drag"
+   "drag",
+   "crack",
+   "crack_b",
+   "tile_broken",
+   "grime",
+   "mold",
+   "puddle",
+   "tracks",
+   "rust",
+   "oil",
+   "dust",
+   "pills",
+   "cables",
+   "gauze",
+   "syringe",
+   "tape",
+   "screws",
+   "hair",
+   "butts",
+   "drain",
+   "wallbase",
+   "corner",
+   "smear",
+   "bandage",
+   "leaflets",
+   "contact"
   ]
  },
  "protagonist": {
@@ -1508,14 +1533,14 @@
  "iv_stand": {
   "path": "res://assets/sprites/props/iv_stand.png",
   "frame": [
-   24,
-   84
+   28,
+   88
   ],
   "hframes": 1,
   "vframes": 1,
   "origin": [
-   12,
-   78
+   14,
+   80
   ],
   "anchor": [
    0,
@@ -1544,14 +1569,14 @@
  "locker": {
   "path": "res://assets/sprites/props/locker.png",
   "frame": [
-   32,
-   90
+   44,
+   92
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
-   16,
-   76
+   22,
+   72
   ],
   "anchor": [
    0,
@@ -1580,14 +1605,14 @@
  "wheelchair": {
   "path": "res://assets/sprites/props/wheelchair.png",
   "frame": [
-   48,
-   56
+   52,
+   60
   ],
   "hframes": 1,
   "vframes": 1,
   "origin": [
-   24,
-   40
+   26,
+   42
   ],
   "anchor": [
    0,
@@ -1598,14 +1623,14 @@
  "trash_bin": {
   "path": "res://assets/sprites/props/trash_bin.png",
   "frame": [
-   20,
-   36
+   28,
+   44
   ],
-  "hframes": 1,
+  "hframes": 2,
   "vframes": 1,
   "origin": [
-   10,
-   28
+   14,
+   32
   ],
   "anchor": [
    0,
@@ -1652,14 +1677,14 @@
  "chair": {
   "path": "res://assets/sprites/props/chair.png",
   "frame": [
-   28,
-   48
+   32,
+   52
   ],
   "hframes": 2,
   "vframes": 1,
   "origin": [
-   14,
-   38
+   16,
+   40
   ],
   "anchor": [
    0,
@@ -1688,14 +1713,14 @@
  "nightstand": {
   "path": "res://assets/sprites/props/nightstand.png",
   "frame": [
-   24,
-   40
+   28,
+   48
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
-   12,
-   30
+   14,
+   36
   ],
   "anchor": [
    0,
@@ -1706,13 +1731,13 @@
  "desk": {
   "path": "res://assets/sprites/props/desk.png",
   "frame": [
-   68,
+   72,
    64
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
-   34,
+   36,
    44
   ],
   "anchor": [
@@ -1760,13 +1785,13 @@
  "filing_cabinet": {
   "path": "res://assets/sprites/props/filing_cabinet.png",
   "frame": [
-   24,
+   28,
    72
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
-   12,
+   14,
    56
   ],
   "anchor": [
@@ -1778,13 +1803,13 @@
  "shelf": {
   "path": "res://assets/sprites/props/shelf.png",
   "frame": [
-   68,
-   80
+   72,
+   84
   ],
-  "hframes": 2,
+  "hframes": 4,
   "vframes": 1,
   "origin": [
-   34,
+   36,
    70
   ],
   "anchor": [
@@ -1799,7 +1824,7 @@
    36,
    72
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
    18,
@@ -1809,19 +1834,19 @@
    0,
    -10
   ],
-  "glow": true
+  "glow": false
  },
  "counter": {
   "path": "res://assets/sprites/props/counter.png",
   "frame": [
-   68,
-   52
+   72,
+   60
   ],
-  "hframes": 2,
+  "hframes": 3,
   "vframes": 1,
   "origin": [
-   34,
-   40
+   36,
+   43
   ],
   "anchor": [
    16,
@@ -1869,13 +1894,13 @@
   "path": "res://assets/sprites/props/morgue.png",
   "frame": [
    68,
-   84
+   92
   ],
   "hframes": 3,
   "vframes": 1,
   "origin": [
    34,
-   58
+   66
   ],
   "anchor": [
    16,
@@ -1887,13 +1912,13 @@
   "path": "res://assets/sprites/props/elec_panel.png",
   "frame": [
    44,
-   64
+   108
   ],
   "hframes": 4,
   "vframes": 1,
   "origin": [
    24,
-   58
+   100
   ],
   "anchor": [
    0,
@@ -1905,13 +1930,13 @@
   "path": "res://assets/sprites/props/generator.png",
   "frame": [
    76,
-   72
+   76
   ],
   "hframes": 2,
   "vframes": 1,
   "origin": [
    38,
-   50
+   56
   ],
   "anchor": [
    16,
@@ -1922,14 +1947,14 @@
  "boiler": {
   "path": "res://assets/sprites/props/boiler.png",
   "frame": [
-   32,
-   88
+   40,
+   92
   ],
   "hframes": 1,
   "vframes": 1,
   "origin": [
-   16,
-   76
+   18,
+   80
   ],
   "anchor": [
    0,
@@ -1959,13 +1984,13 @@
   "path": "res://assets/sprites/props/tape_recorder.png",
   "frame": [
    32,
-   48
+   52
   ],
   "hframes": 1,
   "vframes": 1,
   "origin": [
    16,
-   40
+   36
   ],
   "anchor": [
    0,
@@ -1994,10 +2019,10 @@
  "laundry_cart": {
   "path": "res://assets/sprites/props/laundry_cart.png",
   "frame": [
-   32,
-   48
+   40,
+   54
   ],
-  "hframes": 1,
+  "hframes": 2,
   "vframes": 1,
   "origin": [
    16,
@@ -2020,6 +2045,795 @@
   "origin": [
    12,
    40
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "decals_big": {
+  "path": "res://assets/sprites/decals/decals_big.png",
+  "frame": [
+   64,
+   64
+  ],
+  "hframes": 9,
+  "vframes": 1,
+  "origin": [
+   32,
+   32
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false,
+  "names": [
+   "puddle_big",
+   "damp_big",
+   "blood_big",
+   "oil_big",
+   "grime_big",
+   "mold_big",
+   "scorch",
+   "rust_big",
+   "sheet"
+  ]
+ },
+ "decals_wall": {
+  "path": "res://assets/sprites/decals/decals_wall.png",
+  "frame": [
+   32,
+   96
+  ],
+  "hframes": 20,
+  "vframes": 1,
+  "origin": [
+   16,
+   48
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": true,
+  "names": [
+   "damp",
+   "mold_top",
+   "peel",
+   "crack_w",
+   "socket",
+   "switch",
+   "pipe_v",
+   "pipes_v2",
+   "conduit",
+   "junction",
+   "poster",
+   "cobweb",
+   "grime_low",
+   "scrapes",
+   "hand_low",
+   "oxygen",
+   "call",
+   "exit",
+   "drip_rust",
+   "pipe_h"
+  ]
+ },
+ "workbench": {
+  "path": "res://assets/sprites/props/workbench.png",
+  "frame": [
+   72,
+   64
+  ],
+  "hframes": 3,
+  "vframes": 1,
+  "origin": [
+   36,
+   44
+  ],
+  "anchor": [
+   16,
+   0
+  ],
+  "glow": false
+ },
+ "wheelchair_up": {
+  "path": "res://assets/sprites/props/wheelchair_up.png",
+  "frame": [
+   40,
+   64
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   20,
+   44
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "screen": {
+  "path": "res://assets/sprites/props/screen.png",
+  "frame": [
+   64,
+   84
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   32,
+   64
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "o2_tank": {
+  "path": "res://assets/sprites/props/o2_tank.png",
+  "frame": [
+   24,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   54
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "cart_med": {
+  "path": "res://assets/sprites/props/cart_med.png",
+  "frame": [
+   36,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   50
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "cart_instr": {
+  "path": "res://assets/sprites/props/cart_instr.png",
+  "frame": [
+   32,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   38
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "gurney_tipped": {
+  "path": "res://assets/sprites/props/gurney_tipped.png",
+  "frame": [
+   76,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   38,
+   40
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "iv_fallen": {
+  "path": "res://assets/sprites/props/iv_fallen.png",
+  "frame": [
+   64,
+   40
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   32,
+   24
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "boxes": {
+  "path": "res://assets/sprites/props/boxes.png",
+  "frame": [
+   48,
+   56
+  ],
+  "hframes": 3,
+  "vframes": 1,
+  "origin": [
+   22,
+   42
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "drum": {
+  "path": "res://assets/sprites/props/drum.png",
+  "frame": [
+   40,
+   56
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   20,
+   42
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "pallet": {
+  "path": "res://assets/sprites/props/pallet.png",
+  "frame": [
+   40,
+   44
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   30
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "washer": {
+  "path": "res://assets/sprites/props/washer.png",
+  "frame": [
+   40,
+   72
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   56
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "dryer": {
+  "path": "res://assets/sprites/props/dryer.png",
+  "frame": [
+   36,
+   80
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   18,
+   64
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "linen_pile": {
+  "path": "res://assets/sprites/props/linen_pile.png",
+  "frame": [
+   40,
+   32
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   20
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "basket": {
+  "path": "res://assets/sprites/props/basket.png",
+  "frame": [
+   24,
+   28
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   18
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "cold_door": {
+  "path": "res://assets/sprites/props/cold_door.png",
+  "frame": [
+   56,
+   80
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   28,
+   76
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "autopsy_table": {
+  "path": "res://assets/sprites/props/autopsy_table.png",
+  "frame": [
+   32,
+   104
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   64
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "body_bags": {
+  "path": "res://assets/sprites/props/body_bags.png",
+  "frame": [
+   28,
+   32
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   14,
+   22
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "tank_h": {
+  "path": "res://assets/sprites/props/tank_h.png",
+  "frame": [
+   72,
+   60
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   36,
+   44
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "pegboard": {
+  "path": "res://assets/sprites/props/pegboard.png",
+  "frame": [
+   52,
+   72
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   26,
+   68
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "office_chair": {
+  "path": "res://assets/sprites/props/office_chair.png",
+  "frame": [
+   36,
+   48
+  ],
+  "hframes": 2,
+  "vframes": 1,
+  "origin": [
+   18,
+   36
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "bench": {
+  "path": "res://assets/sprites/props/bench.png",
+  "frame": [
+   64,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   32,
+   38
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "plant": {
+  "path": "res://assets/sprites/props/plant.png",
+  "frame": [
+   28,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   14,
+   40
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "lightbox": {
+  "path": "res://assets/sprites/props/lightbox.png",
+  "frame": [
+   36,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   18,
+   60
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "clock": {
+  "path": "res://assets/sprites/props/clock.png",
+  "frame": [
+   16,
+   72
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   8,
+   68
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "extinguisher": {
+  "path": "res://assets/sprites/props/extinguisher.png",
+  "frame": [
+   16,
+   52
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   8,
+   48
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "toolbox": {
+  "path": "res://assets/sprites/props/toolbox.png",
+  "frame": [
+   44,
+   24
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   14
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "ladder": {
+  "path": "res://assets/sprites/props/ladder.png",
+  "frame": [
+   24,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   54
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "bags": {
+  "path": "res://assets/sprites/props/bags.png",
+  "frame": [
+   32,
+   36
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   24
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "water_cooler": {
+  "path": "res://assets/sprites/props/water_cooler.png",
+  "frame": [
+   28,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   54
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "anesthesia": {
+  "path": "res://assets/sprites/props/anesthesia.png",
+  "frame": [
+   40,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   52
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "cable_reel": {
+  "path": "res://assets/sprites/props/cable_reel.png",
+  "frame": [
+   52,
+   44
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   30
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "transformer": {
+  "path": "res://assets/sprites/props/transformer.png",
+  "frame": [
+   40,
+   84
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   72
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "toilet": {
+  "path": "res://assets/sprites/props/toilet.png",
+  "frame": [
+   24,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   52
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "bathtub": {
+  "path": "res://assets/sprites/props/bathtub.png",
+  "frame": [
+   68,
+   48
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   34,
+   34
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "scale": {
+  "path": "res://assets/sprites/props/scale.png",
+  "frame": [
+   24,
+   80
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   12,
+   70
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "gas_bottles": {
+  "path": "res://assets/sprites/props/gas_bottles.png",
+  "frame": [
+   32,
+   64
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   16,
+   54
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "bed_frame": {
+  "path": "res://assets/sprites/props/bed_frame.png",
+  "frame": [
+   40,
+   112
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   20,
+   74
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "files_pile": {
+  "path": "res://assets/sprites/props/files_pile.png",
+  "frame": [
+   36,
+   28
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   18,
+   16
+  ],
+  "anchor": [
+   0,
+   0
+  ],
+  "glow": false
+ },
+ "iv_bags_box": {
+  "path": "res://assets/sprites/props/iv_bags_box.png",
+  "frame": [
+   40,
+   32
+  ],
+  "hframes": 1,
+  "vframes": 1,
+  "origin": [
+   18,
+   20
   ],
   "anchor": [
    0,

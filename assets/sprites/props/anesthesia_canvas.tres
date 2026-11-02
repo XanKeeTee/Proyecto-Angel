@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/anesthesia.png" id="1_o5b1t"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/anesthesia_n.png" id="2_vptun"]
+
+[resource]
+diffuse_texture = ExtResource("1_o5b1t")
+normal_texture = ExtResource("2_vptun")
+texture_filter = 1

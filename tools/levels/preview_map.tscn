@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tools/levels/preview_map.gd" id="1"]
+
+[node name="PreviewMap" type="Node"]
+script = ExtResource("1")
