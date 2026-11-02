@@ -20,6 +20,11 @@ from typing import Callable, Optional
 
 from PIL import Image
 
+try:  # numpy acelera mucho el trazado de rayos (opcional: sin él se usa Python puro)
+    import numpy as np
+except ImportError:  # pragma: no cover
+    np = None
+
 Vec = tuple[float, float, float]
 
 
@@ -112,22 +117,38 @@ def _hash3(x: int, y: int, z: int, seed: int) -> float:
 
 def vnoise(p: Vec, seed: int = 0) -> float:
     """Ruido de valor 3D suave en [0, 1]."""
-    xi, yi, zi = math.floor(p[0]), math.floor(p[1]), math.floor(p[2])
-    fx, fy, fz = p[0] - xi, p[1] - yi, p[2] - zi
+    return _vnoise(p[0], p[1], p[2], seed)
+
+
+def _vnoise(x: float, y: float, z: float, seed: int) -> float:
+    # Igual que _hash3 en las 8 esquinas, desenrollado (es lo que más tiempo se lleva al renderizar).
+    xi, yi, zi = math.floor(x), math.floor(y), math.floor(z)
+    fx, fy, fz = x - xi, y - yi, z - zi
     fx, fy, fz = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy), fz * fz * (3 - 2 * fz)
-    total = 0.0
-    for dx in (0, 1):
-        for dy in (0, 1):
-            for dz in (0, 1):
-                w = (fx if dx else 1 - fx) * (fy if dy else 1 - fy) * (fz if dz else 1 - fz)
-                total += w * _hash3(xi + dx, yi + dy, zi + dz, seed)
-    return total
+    hx0 = xi * 374761393
+    hx1 = hx0 + 374761393
+    hy0 = yi * 668265263
+    hy1 = hy0 + 668265263
+    hz0 = zi * 2147483647 + seed * 144269504
+    hz1 = hz0 + 2147483647
+
+    def h(v: int) -> float:
+        v &= 0xFFFFFFFF
+        v = ((v ^ (v >> 13)) * 1274126177) & 0xFFFFFFFF
+        return ((v ^ (v >> 16)) & 0xFFFF) / 65535.0
+
+    gx, gy, gz = 1 - fx, 1 - fy, 1 - fz
+    return (gz * (gy * (gx * h(hx0 + hy0 + hz0) + fx * h(hx1 + hy0 + hz0))
+                  + fy * (gx * h(hx0 + hy1 + hz0) + fx * h(hx1 + hy1 + hz0)))
+            + fz * (gy * (gx * h(hx0 + hy0 + hz1) + fx * h(hx1 + hy0 + hz1))
+                    + fy * (gx * h(hx0 + hy1 + hz1) + fx * h(hx1 + hy1 + hz1))))
 
 
 def fbm(p: Vec, seed: int = 0, octaves: int = 3) -> float:
     total, amp, freq, norm_sum = 0.0, 1.0, 1.0, 0.0
+    x, y, z = p
     for i in range(octaves):
-        total += amp * vnoise(mul(p, freq), seed + i * 17)
+        total += amp * _vnoise(x * freq, y * freq, z * freq, seed + i * 17)
         norm_sum += amp
         amp *= 0.5
         freq *= 2.03
@@ -196,6 +217,22 @@ class Ellipsoid(Prim):
         nl = (pl[0] / self.radii[0], pl[1] / self.radii[1], pl[2] / self.radii[2])
         return Hit(t, norm(to_world(self.basis, nl)))
 
+    def intersect_np(self, o, d: Vec):
+        """Versión vectorizada: `o` es un array (N, 3) de orígenes; devuelve (t, normales)."""
+        m = np.array(self.basis).T  # columnas = ejes locales
+        r = np.array(self.radii)
+        ol = ((o - np.array(self.center)) @ m) / r
+        dl = (np.array(d) @ m) / r
+        a = float(dl @ dl)
+        b = ol @ dl
+        c = np.einsum("ij,ij->i", ol, ol) - 1.0
+        h = b * b - a * c
+        ok = h >= 0
+        t = (-b - np.sqrt(np.where(ok, h, 0.0))) / a
+        ok &= t >= 0
+        nl = (ol + dl * t[:, None]) / r
+        return np.where(ok, t, np.inf), _normalize(nl @ m.T)
+
 
 def sphere(c: Vec, r: float, material: MaterialFn, **kw) -> Ellipsoid:
     return Ellipsoid(material=material, center=c, radii=(r, r, r), **kw)
@@ -252,6 +289,44 @@ class Capsule(Prim):
         pa = sub(p, self.a)
         hh = max(0.0, min(1.0, dot(pa, ba) / baba))
         return Hit(t, norm(sub(pa, mul(ba, hh))))
+
+    def intersect_np(self, o, d: Vec):
+        A, B, D = np.array(self.a), np.array(self.b), np.array(d)
+        ba = B - A
+        oa = o - A
+        baba = float(ba @ ba)
+        bard = float(ba @ D)
+        baoa = oa @ ba
+        rdoa = oa @ D
+        oaoa = np.einsum("ij,ij->i", oa, oa)
+        a = baba - bard * bard
+        t_body = np.full(len(o), np.inf)
+        if abs(a) > 1e-9:
+            b = baba * rdoa - baoa * bard
+            c = baba * oaoa - baoa * baoa - self.r * self.r * baba
+            h = b * b - a * c
+            ok = h >= 0
+            tt = (-b - np.sqrt(np.where(ok, h, 0.0))) / a
+            y = baoa + tt * bard
+            ok &= (y > 0) & (y < baba)
+            t_body = np.where(ok, tt, np.inf)
+        t_cap = np.full(len(o), np.inf)
+        for cap in (A, B):
+            oc = o - cap
+            bb = oc @ D
+            cc = np.einsum("ij,ij->i", oc, oc) - self.r * self.r
+            h = bb * bb - cc
+            ok = h > 0
+            tt = -bb - np.sqrt(np.where(ok, h, 0.0))
+            ok &= tt > 0
+            t_cap = np.where(ok, np.minimum(t_cap, tt), t_cap)
+        # Las tapas solo cuentan donde el cuerpo no ha dado (como en la versión escalar).
+        t = np.where(np.isfinite(t_body), t_body, t_cap)
+        t = np.where(t >= 0, t, np.inf)
+        p = o + np.outer(np.where(np.isfinite(t), t, 0.0), D)
+        pa = p - A
+        hh = np.clip((pa @ ba) / baba, 0.0, 1.0)
+        return t, _normalize(pa - np.outer(hh, ba))
 
 
 def capsule(a: Vec, b: Vec, r: float, material: MaterialFn, **kw) -> Capsule:
@@ -311,6 +386,40 @@ class Cylinder(Prim):
             return Hit(t, mul(axis, -1.0 if y < 0 else 1.0))
         return None
 
+    def intersect_np(self, o, d: Vec):
+        A, B, D = np.array(self.a), np.array(self.b), np.array(d)
+        n = len(o)
+        ba = B - A
+        oc = o - A
+        baba = float(ba @ ba)
+        bard = float(ba @ D)
+        baoc = oc @ ba
+        k2 = baba - bard * bard
+        k1 = baba * (oc @ D) - baoc * bard
+        k0 = baba * np.einsum("ij,ij->i", oc, oc) - baoc * baoc - self.r * self.r * baba
+        axis = ba / math.sqrt(baba)
+        if abs(k2) < 1e-9:
+            # Rayo paralelo al eje: solo puede dar en una tapa.
+            t = ((0.0 - baoc) / bard) if bard > 0 else ((baba - baoc) / bard)
+            ok = (k0 <= 0) & (t > 0)
+            nrm = np.tile(axis * (-1.0 if bard > 0 else 1.0), (n, 1))
+            return np.where(ok, t, np.inf), nrm
+        h = k1 * k1 - k2 * k0
+        ok = h >= 0
+        h = np.sqrt(np.where(ok, h, 0.0))
+        t = (-k1 - h) / k2
+        y = baoc + t * bard
+        side = ok & (y > 0) & (y < baba) & (t > 0)
+        nrm = _normalize(oc + np.outer(t, D) - np.outer(y / baba, ba))
+        result = np.where(side, t, np.inf)
+        if abs(bard) >= 1e-9:
+            tc = (np.where(y < 0, 0.0, baba) - baoc) / bard
+            cap = ok & ~side & (tc > 0) & (np.abs(k1 + k2 * tc) < h)
+            result = np.where(cap, tc, result)
+            cap_n = np.outer(np.where(y < 0, -1.0, 1.0), axis)
+            nrm = np.where(cap[:, None], cap_n, nrm)
+        return result, nrm
+
 
 def cylinder(a: Vec, b: Vec, r: float, material: MaterialFn, **kw) -> Cylinder:
     return Cylinder(material=material, a=a, b=b, r=r, **kw)
@@ -350,6 +459,34 @@ class Box(Prim):
         nl = [0.0, 0.0, 0.0]
         nl[axis_hit] = sign_hit
         return Hit(tmin, to_world(self.basis, (nl[0], nl[1], nl[2])))
+
+    def intersect_np(self, o, d: Vec):
+        m = np.array(self.basis).T
+        ol = (o - np.array(self.center)) @ m
+        dl = np.array(d) @ m
+        n = len(o)
+        tmin = np.full(n, -1e9)
+        tmax = np.full(n, 1e9)
+        axis_hit = np.zeros(n, dtype=int)
+        sign_hit = np.ones(n)
+        ok = np.ones(n, dtype=bool)
+        for i in range(3):
+            if abs(dl[i]) < 1e-9:
+                ok &= np.abs(ol[:, i]) <= self.half[i]
+                continue
+            t1 = (-self.half[i] - ol[:, i]) / dl[i]
+            t2 = (self.half[i] - ol[:, i]) / dl[i]
+            s = 1.0 if dl[i] < 0 else -1.0  # dl es igual en todos los rayos: el orden de t1 y t2 también
+            lo, hi = (t1, t2) if s < 0 else (t2, t1)
+            better = lo > tmin
+            tmin = np.where(better, lo, tmin)
+            axis_hit = np.where(better, i, axis_hit)
+            sign_hit = np.where(better, s, sign_hit)
+            tmax = np.minimum(tmax, hi)
+        ok &= (tmin <= tmax) & (tmin >= 0)
+        nl = np.zeros((n, 3))
+        nl[np.arange(n), axis_hit] = sign_hit
+        return np.where(ok, tmin, np.inf), nl @ m.T
 
 
 def box(c: Vec, half: Vec, material: MaterialFn, basis: Mat3 = IDENTITY, **kw) -> Box:
@@ -436,12 +573,75 @@ def render(prims: list[Prim], width: int, height: int, origin: tuple[float, floa
     # Al girar el modelo con yaw, giramos la cámara al revés.
     d_local = rot_y(d_world, -yaw)
     W, H = width * ss, height * ss
+    ox, oy = origin
+    if np is not None:
+        best_t, best_i, best_n, best_p = _trace_np(prims, W, H, ss, ox, oy, view, d_world, d_local)
+    else:
+        best_t, best_i, best_n, best_p = _trace_py(prims, W, H, ss, ox, oy, view, d_world, d_local)
+    return _shade(prims, best_t, best_i, best_n, best_p, width, height, view, light, half, up_s, view_dir)
+
+
+def _normalize(v):
+    length_ = np.sqrt(np.einsum("ij,ij->i", v, v))
+    return v / np.where(length_ > 0, length_, 1.0)[:, None]
+
+
+def _prim_rect(prim: Prim, W: int, H: int, ss: int, ox: float, oy: float, view: View) -> tuple[int, int, int, int]:
+    cw = rot_y(prim.center, view.yaw)
+    su = cw[0]
+    sv = view.a * cw[1] - view.b * cw[2]
+    rad = prim.bound * max(1.0, math.hypot(view.a, view.b))
+    x0 = max(0, int((ox + su - rad) * ss))
+    x1 = min(W - 1, int((ox + su + rad) * ss) + 1)
+    y0 = max(0, int((oy - sv - rad) * ss))
+    y1 = min(H - 1, int((oy - sv + rad) * ss) + 1)
+    return x0, x1, y0, y1
+
+
+def _trace_np(prims: list[Prim], W: int, H: int, ss: int, ox: float, oy: float, view: View, d_world: Vec,
+              d_local: Vec) -> tuple[list, list, list, list]:
+    """Trazado vectorizado: todos los rayos del rectángulo de cada primitiva a la vez."""
+    best_t = np.full(W * H, 1e9)
+    best_i = np.full(W * H, -1, dtype=np.int64)
+    best_n = np.zeros((W * H, 3))
+    best_p = np.zeros((W * H, 3))
+    c, s = math.cos(-view.yaw), math.sin(-view.yaw)
+    dw = np.array(d_world)
+    for index, prim in enumerate(prims):
+        x0, x1, y0, y1 = _prim_rect(prim, W, H, ss, ox, oy, view)
+        if x1 < x0 or y1 < y0:
+            continue
+        sx, sy = np.meshgrid(np.arange(x0, x1 + 1), np.arange(y0, y1 + 1))
+        sx, sy = sx.ravel(), sy.ravel()
+        u = (sx + 0.5) / ss - ox
+        v = oy - (sy + 0.5) / ss
+        ow = np.stack([u, v / view.a, np.zeros_like(u)], axis=1) - dw * 300.0
+        o_local = np.stack([ow[:, 0] * c + ow[:, 2] * s, ow[:, 1], -ow[:, 0] * s + ow[:, 2] * c], axis=1)
+        t, n = prim.intersect_np(o_local, d_local)
+        k = sy * W + sx
+        mask = t < best_t[k]
+        if not mask.any():
+            continue
+        k, t, n, o_local = k[mask], t[mask], n[mask], o_local[mask]
+        p = o_local + np.outer(t, d_local)
+        if prim.cut is not None:
+            keep = np.fromiter((not prim.cut(tuple(q)) for q in p.tolist()), dtype=bool, count=len(p))
+            k, t, n, p = k[keep], t[keep], n[keep], p[keep]
+        best_t[k] = t
+        best_i[k] = index
+        best_n[k] = n
+        best_p[k] = p
+    return (best_t.tolist(), best_i.tolist(), [tuple(v) for v in best_n.tolist()],
+            [tuple(v) for v in best_p.tolist()])
+
+
+def _trace_py(prims: list[Prim], W: int, H: int, ss: int, ox: float, oy: float, view: View, d_world: Vec,
+              d_local: Vec) -> tuple[list, list, list, list]:
+    yaw = view.yaw
     best_t = [1e9] * (W * H)
     best_i = [-1] * (W * H)
     best_n: list[Optional[Vec]] = [None] * (W * H)
     best_p: list[Optional[Vec]] = [None] * (W * H)
-    ox, oy = origin
-
     for index, prim in enumerate(prims):
         cw = rot_y(prim.center, yaw)
         su = cw[0]
@@ -470,7 +670,15 @@ def render(prims: list[Prim], width: int, height: int, origin: tuple[float, floa
                 best_i[k] = index
                 best_n[k] = hit.normal
                 best_p[k] = p
+    return best_t, best_i, best_n, best_p
 
+
+def _shade(prims: list[Prim], best_t: list, best_i: list, best_n: list, best_p: list, width: int, height: int,
+           view: View, light: Vec, half: Vec, up_s: Vec, view_dir: Vec) -> RenderResult:
+    """Materiales, reducción a rampas con tramado, línea de contacto y contorno."""
+    ss = view.ss
+    W = width * ss
+    yaw = view.yaw
     color = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     normal_img = Image.new("RGBA", (width, height), (128, 128, 255, 0))
     # Información por píxel final: (rampa, luminancia, normal en pantalla, profundidad)
