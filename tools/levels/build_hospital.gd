@@ -41,6 +41,7 @@ const X_VENT: Vector2i = Vector2i(5, 5)
 const X_WINDOW: Vector2i = Vector2i(6, 5)
 const X_SMEAR: Vector2i = Vector2i(7, 5)
 const X_SPEAKER: Vector2i = Vector2i(6, 10)
+const DRESSING: GDScript = preload("res://tools/levels/hospital_dressing.gd")
 
 var layout: Dictionary
 var meta: Dictionary
@@ -1177,7 +1178,7 @@ func _basement() -> void:
 		"frame": 0, "examine": "Piezas y herramientas rotas.",
 		"search": "En la balda de abajo, la válvula de presión del generador. Desmontada: el asiento está suelto.",
 		"loot": [["valvula_averiada", 1]], "empty": "Herramientas rotas."})
-	obj({"id": "banco_taller", "name": "Banco de trabajo", "sprite": "desk", "cell": [27, 54], "fp": WIDE, "kind": "container",
+	obj({"id": "banco_taller", "name": "Banco de trabajo", "sprite": "workbench", "cell": [27, 54], "fp": WIDE, "kind": "container",
 		"openable": true, "examine": "Un banco de trabajo.", "search": "Una libreta con las tapas manchadas de grasa, unas pilas y unas botas de goma con barro seco.",
 		"loot": ["doc:diario_celador", ["pilas", 1], ["botas_goma", 1]], "empty": "Tornillos sueltos.", "shadow": [-14, -12, 60, 24]})
 	obj({"id": "cubo_taller", "name": "Cubo", "sprite": "mop_bucket", "cell": [33, 56], "examine": "Agua negra."})
@@ -1267,12 +1268,39 @@ func _build_lights() -> void:
 		_add(lights, red)
 		var sprite: Sprite2D = _sprite("emergency_light")
 		sprite.name = "Sprite"
-		sprite.position = Vector2(0, -20)
+		# Atornillada en el tramo alto del muro (encima de las puertas), no a media pared.
+		sprite.position = Vector2(0, -78)
 		_add(red, sprite)
 		for child: Node in sprite.get_children():
 			child.owner = scene_root
 	# El emergencia oeste (junto a la 07) empieza apagada: se enciende cuando cambia el edificio.
 	(lights.get_node("Emergency_4_15") as Node).add_to_group(&"emergency_west", true)
+	# Señales de salida: verde tenue con batería propia (la calcomanía está en hospital_dressing.gd).
+	for cell: Vector2i in [Vector2i(66, 11), Vector2i(67, 1), Vector2i(70, 18), Vector2i(3, 41)]:
+		_ambient("ExitSign_%d_%d" % [cell.x, cell.y], _center(cell) + Vector2(0, -32), Color("5fb87a"), 0.55, 0.45)
+	# Luz fría de noche por las ventanas (azul noche): apenas dibuja el suelo bajo el cristal.
+	for cell: Vector2i in [Vector2i(5, 3), Vector2i(54, 13)]:
+		_ambient("Window_%d_%d" % [cell.x, cell.y], _center(cell) + Vector2(0, 30), Color("3a4a7c"), 0.7, 0.8)
+	# Piloto rojo de las grabadoras: un punto de luz que se ve desde lejos.
+	for cell: Vector2i in [Vector2i(30, 27), Vector2i(16, 38)]:
+		_ambient("Recorder_%d_%d" % [cell.x, cell.y], _center(cell) + Vector2(4, -14), Color("c0392b"), 0.6, 0.18)
+
+
+## Luz ambiental pequeña que no depende de la corriente (no rompe la oscuridad general).
+func _ambient(name: String, pos: Vector2, color: Color, energy: float, scale: float) -> void:
+	var l: PointLight2D = PointLight2D.new()
+	l.name = name
+	l.texture = load("res://assets/sprites/lights/light_round.png")
+	l.texture_scale = scale
+	l.energy = energy
+	l.height = 60.0
+	l.color = color
+	l.shadow_enabled = scale > 0.3
+	l.shadow_filter = Light2D.SHADOW_FILTER_PCF5
+	l.range_item_cull_mask = LAYER_ALL
+	l.shadow_item_cull_mask = LAYER_WORLD
+	l.position = pos
+	_add(lights, l)
 
 
 func _build_decals() -> void:
@@ -1310,6 +1338,8 @@ func _build_decals() -> void:
 		fp.visible = false
 		fp.add_to_group(&"west_prints", true)
 		_add(decals, fp)
+	# Decorado no interactivo: desgaste de suelos y paredes, muebles y máquinas (ver hospital_dressing.gd).
+	DRESSING.new().build(self)
 
 
 # --- el pasillo imposible -------------------------------------------------------------------------------------

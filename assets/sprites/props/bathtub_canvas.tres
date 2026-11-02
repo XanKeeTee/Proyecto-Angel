@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/bathtub.png" id="1_1n1sp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/bathtub_n.png" id="2_a0gpo"]
+
+[resource]
+diffuse_texture = ExtResource("1_1n1sp")
+normal_texture = ExtResource("2_a0gpo")
+texture_filter = 1

@@ -78,6 +78,9 @@ python -I tools/art/tiles_doors.py
 ```
 
 1. `build_all.py` genera el arte (tiles, personaje, objetos, iconos), los sonidos y las imágenes de documentos.
+   - Por pasos: `python -I tools/art/build_all.py props tiles decals` rehace solo esos pasos y conserva el resto de
+     `sprite_meta.json` (pasos: `tiles`, `decals`, `lights`, `protagonist`, `props`, `items`, `sounds`, `docs`).
+     Los objetos del mapa tardan unos 2 min en un núcleo. `--preview=RUTA` guarda además una hoja de revisión.
    - Por partes: `python -I tools/art/character.py [capa ...]` rehace el cuerpo y las prendas (unos 4 min, usa todos los núcleos); `python -I tools/art/items.py [id ...]` rehace iconos y vistas del inspector.
    - `build_wear` crea los objetos de ropa (`data/items/`) y la textura con normales de cada prenda puesta.
    - `tiles_doors.py` genera el marco y la hoja de las puertas (`assets/tilesets/door_frame.png`) y el suelo de los pasos (`hospital_doors.png`).
@@ -91,6 +94,31 @@ Aparte (no los llama `build_all.py`):
 - `python -I tools/art/title_bg.py`: la ilustración del título (`assets/sprites/title/`, ~30 s).
 
 Sonidos que faltan y qué buscar en Freesound: [sonidos.md](sonidos.md).
+
+**Vista de revisión del mapa** (sin oscuridad ni luces, o con `--lit` como en el juego con corriente):
+
+```bash
+xvfb-run -a "$GODOT_BIN" --path . --rendering-driver opengl3 res://tools/levels/preview_map.tscn -- \
+  --region=0,0,74,30 --out=/tmp/planta3.png        # sótano: --region=0,30,37,30
+```
+
+### Arte del mapa y decorado
+
+| Archivo | Qué genera |
+|---|---|
+| `tools/art/tiles.py`, `tiles_extra.py` | Atlas del hospital (suelos, paredes, puertas). Las variantes del atlas son sobrias: el desgaste fuerte va en calcomanías |
+| `tools/art/decals.py` | Calcomanías: `decals` (suelo 32×32), `decals_big` (64×64) y `decals_wall` (columna de pared 32×96, con brillo para las señales de salida) |
+| `tools/art/props.py`, `props2.py`, `props3.py` | Objetos del mapa. `props3.py` tiene los muebles con cajones rehechos (fotogramas cerrado / abierto con cosas / abierto vacío) y el decorado (`DRESSING`) |
+| `tools/art/materials.py` | Rampas y materiales con desgaste (esmalte con desconchones y óxido, acero, cristal, tela…) |
+| `tools/art/shadow.py` | Sombra de contacto horneada en cada sprite: oclusión del suelo bajo patas y bases, o sombra arrojada sobre el muro para lo que cuelga de la pared |
+| `tools/levels/hospital_dressing.gd` | Coloca el decorado: sombras al pie de paredes y rincones, desgaste según el suelo, calcomanías de pared solo sobre tramos lisos, muebles y máquinas con colisión y oclusor, sombra bajo los objetos sueltos (`item:`) y el fotograma de vacío de los contenedores |
+
+- El decorado son nodos `Node2D` del grupo `dressing` dentro de `World` (se ordenan con el jugador). Los que ocupan sitio
+  guardan sus casillas en el meta `cells` y llevan un `StaticBody2D`. Si una pieza cae sobre un objeto interactuable,
+  una puerta o su paso, se omite con un aviso; `tests/integration/test_dressing.gd` comprueba que todo sigue siendo alcanzable.
+- `Interactable.frame_empty` (fotograma de vacío) solo se ve con el contenedor abierto; cerrado vuelve a `frame_closed`.
+- Para añadir decorado: modelo en `props3.py` + entrada en `DRESSING` → `build_all.py props` → entrada en
+  `hospital_dressing.gd::_props()` → `build_hospital`.
 
 ### Notas
 

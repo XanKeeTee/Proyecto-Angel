@@ -162,11 +162,17 @@ def floor_tile(variant: int) -> Canvas:
         for _ in range(14):
             c.set(rng.randint(3, 28), rng.randint(3, 28), "grout", 0.3, 0.8)
     elif variant == 2:
-        pts = [(rng.uniform(4, 8), rng.uniform(4, 10))]
-        for _ in range(4):
-            pts.append((pts[-1][0] + rng.uniform(3, 7), pts[-1][1] + rng.uniform(2, 6)))
-        c.line(pts, "grout", 0.1, -1.5)
-        c.line([(pts[2][0], pts[2][1]), (pts[2][0] - 4, pts[2][1] + 6)], "grout", 0.2, -1.2)
+        pts = [(rng.uniform(2, 6), rng.uniform(18, 24))]
+        for _ in range(6):
+            pts.append((pts[-1][0] + rng.uniform(2.5, 4.5), pts[-1][1] + rng.uniform(-2.5, 1.0)))
+        c.line(pts, "grout", 0.12, -1.2)
+        for x, y in pts[2:5]:
+            c.set(int(x) + 1, int(y) + 1, "grout", 0.35, -0.5)
+        # Juntas más sucias alrededor.
+        for y in range(T):
+            for x in range(T):
+                if c.mat[y][x] == "grout" and pfbm(x, y, 23, base=6) > 0.5:
+                    c.lum[y][x] *= 0.6
     elif variant == 3:
         for i in range(20):
             t = i / 19
@@ -192,8 +198,14 @@ def floor_tile(variant: int) -> Canvas:
         for _ in range(5):
             c.blob(rng.uniform(19, 29), rng.uniform(4, 13), 1.4, 1.0, "floor", 0.45, rng.randint(0, 999), 0.2)
     elif variant == 7:
-        c.blob(15, 16, 9, 7, "stain", 0.2, 701, None, rough=0.6)
-        c.blob(17, 15, 5, 4, "blood_dry", 0.25, 702, None, rough=0.6)
+        for y in range(T):
+            for x in range(T):
+                d = math.hypot((x + 0.5 - 15) / 10, (y + 0.5 - 17) / 8) + (pnoise(x, y, 3, 701, T, T) - 0.5) * 0.6
+                if d < 1.0 and c.mat[y][x] == "floor":
+                    c.lum[y][x] *= 0.62 + 0.25 * d
+                elif abs(d - 1.0) < 0.08 and c.mat[y][x] == "floor":
+                    c.mat[y][x] = "stain"
+                    c.lum[y][x] = 0.18
     return c
 
 
@@ -271,9 +283,9 @@ def wall_column(variant: int) -> Canvas:
         cx, cy = rng.uniform(9, 23), rng.uniform(12, 30)
         for y in range(T + 9):
             for x in range(T):
-                d = math.hypot((x - cx) / 7, (y - cy) / 5) + (pnoise(x, y, 3, 45, 0, 0) - 0.5) * 0.9
+                d = math.hypot((x - cx) / 4.5, (y - cy) / 3.4) + (pnoise(x, y, 3, 45, 0, 0) - 0.5) * 0.9
                 if d < 1.0 and _edge_fade(x) > 0.5 and y < RAIL_Y[0]:
-                    c.set(x, y, "plaster", 0.4 + 0.3 * pnoise(x, y, 2, 46, 0, 0), -0.6)
+                    c.set(x, y, "plaster", 0.25 + 0.2 * pnoise(x, y, 2, 46, 0, 0), -0.6)
                 elif d < 1.15 and _edge_fade(x) > 0.5 and y < RAIL_Y[0]:
                     c.set(x, y, "paint", 0.75, 1.2)
     elif variant == 2:  # moho junto al techo

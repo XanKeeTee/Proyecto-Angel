@@ -1,7 +1,9 @@
 """Genera todo el arte PROVISIONAL del hospital: personaje, objetos, tiles y calcomanías.
 
 Uso (desde la raíz del repo):
-    python -I tools/art/build_all.py
+    python -I tools/art/build_all.py                       # todo
+    python -I tools/art/build_all.py props tiles decals    # solo esos pasos (ver STEPS)
+    python -I tools/art/build_all.py props --preview=/tmp/hoja.png   # y una hoja de revisión
 
 Cada imagen va con su mapa de normales (`*_n.png`) para las luces 2D de Godot y,
 si emite luz, con una capa `*_glow.png` que se dibuja sin sombra.
@@ -13,7 +15,6 @@ from __future__ import annotations
 
 import json
 import math
-import random
 import sys
 from pathlib import Path
 
@@ -116,68 +117,91 @@ def build_lights() -> None:
         print("  ", path.relative_to(ROOT).as_posix(), f"{img.width}x{img.height}")
 
 
+def _r(prims: list, w: int, h: int, origin: tuple[int, int], view: View | None = None, kind: str = "ground"):
+    """Render con sombra de contacto horneada (ver shadow.py)."""
+    import shadow
+    return shadow.render_shadowed(prims, w, h, origin, view or props.MAP_VIEW, kind)
+
+
 def build_props() -> None:
-    v = props.MAP_VIEW
+    import props3
     # Camilla: 0 correas abrochadas, 1 tumbado, 2 sentado, 3 revuelta, 4 destrozada, 5 cadáver tapado, 6 sábana sin nadie.
     sheet("stretcher", "assets/sprites/props/stretcher.png",
-          props.render_sheet(props.stretcher_frames() + props2.stretcher_extra(), 40, 112, (20, 74), v), 40, 112, (20, 74),
+          [_r(f, 40, 112, (20, 74)) for f in props.stretcher_frames() + props2.stretcher_extra()], 40, 112, (20, 74),
           anchor=(0, -16))
-    sheet("iv_stand", "assets/sprites/props/iv_stand.png", [render(props.iv_stand(), 24, 84, (12, 78), v)], 24, 84, (12, 78))
-    sheet("monitor", "assets/sprites/props/monitor.png", [render(props.monitor(), 32, 72, (16, 64), v)], 32, 72, (16, 64),
+    sheet("iv_stand", "assets/sprites/props/iv_stand.png", [_r(props.iv_stand(), 28, 88, (14, 80))], 28, 88, (14, 80))
+    sheet("monitor", "assets/sprites/props/monitor.png", [_r(props.monitor(), 32, 72, (16, 64))], 32, 72, (16, 64),
           glow=True)
-    sheet("locker", "assets/sprites/props/locker.png",
-          [render(props.locker(o), 32, 90, (16, 76), v) for o in (False, True)], 32, 90, (16, 76), anchor=(0, -8))
-    sheet("tray", "assets/sprites/props/tray.png", [render(props.tray(), 32, 56, (16, 44), v)], 32, 56, (16, 44))
-    sheet("wheelchair", "assets/sprites/props/wheelchair.png", [render(props.wheelchair(), 48, 56, (24, 40), v)], 48, 56, (24, 40))
-    sheet("trash_bin", "assets/sprites/props/trash_bin.png", [render(props.trash_bin(), 20, 36, (10, 28), v)], 20, 36, (10, 28))
-    sheet("sink", "assets/sprites/props/sink.png", [render(props.sink(), 28, 48, (14, 38), v)], 28, 48, (14, 38), anchor=(0, -10))
-    sheet("curtain", "assets/sprites/props/curtain.png", [render(props.curtain(), 68, 80, (34, 70), v)], 68, 80, (34, 70),
+    sheet("locker", "assets/sprites/props/locker.png", [_r(props3.locker(i), 44, 92, (22, 72)) for i in range(3)],
+          44, 92, (22, 72), anchor=(0, -8))
+    sheet("tray", "assets/sprites/props/tray.png", [_r(props.tray(), 32, 56, (16, 44))], 32, 56, (16, 44))
+    sheet("wheelchair", "assets/sprites/props/wheelchair.png", [_r(props.wheelchair(), 52, 60, (26, 42))], 52, 60, (26, 42))
+    sheet("trash_bin", "assets/sprites/props/trash_bin.png", [_r(props3.trash_bin(i), 28, 44, (14, 32)) for i in range(2)],
+          28, 44, (14, 32))
+    sheet("sink", "assets/sprites/props/sink.png", [_r(props.sink(), 28, 48, (14, 38), kind="wall")], 28, 48, (14, 38),
+          anchor=(0, -10))
+    sheet("curtain", "assets/sprites/props/curtain.png", [_r(props.curtain(), 68, 80, (34, 70))], 68, 80, (34, 70),
           anchor=(16, 0))
-    sheet("chair", "assets/sprites/props/chair.png", [render(props.chair(f), 28, 48, (14, 38), v) for f in (False, True)],
-          28, 48, (14, 38))
+    sheet("chair", "assets/sprites/props/chair.png", [_r(props.chair(f), 32, 52, (16, 40)) for f in (False, True)],
+          32, 52, (16, 40))
     sheet("emergency_light", "assets/sprites/props/emergency_light.png",
-          [render(props.emergency_light(on), 16, 12, (8, 6), props.WALL_VIEW) for on in (True, False)], 16, 12, (8, 6),
+          [_r(props.emergency_light(on), 16, 12, (8, 6), props.WALL_VIEW, "wall") for on in (True, False)], 16, 12, (8, 6),
           glow=True)
 
 
 def build_props2() -> None:
-    v = props.MAP_VIEW
+    import props3
     w = props.WALL_VIEW
 
-    def frames(fns: list, fw: int, fh: int, origin: tuple[int, int], view: View = v) -> list:
-        return [render(fn(), fw, fh, origin, view) for fn in fns]
+    def n(fn, count: int) -> list:
+        return [lambda i=i: fn(i) for i in range(count)]
+
+    def frames(fns: list, fw: int, fh: int, origin: tuple[int, int], view: View | None = None, kind: str = "ground") -> list:
+        return [_r(fn(), fw, fh, origin, view, kind) for fn in fns]
 
     two = lambda f: [lambda: f(False), lambda: f(True)]  # noqa: E731
-    sheet("nightstand", "assets/sprites/props/nightstand.png", frames(two(props2.nightstand), 24, 40, (12, 30)), 24, 40, (12, 30),
-          anchor=(0, -4))
-    sheet("desk", "assets/sprites/props/desk.png", frames(two(props2.desk), 68, 64, (34, 44)), 68, 64, (34, 44), anchor=(16, 0))
-    sheet("computer", "assets/sprites/props/computer.png", frames(two(props2.computer), 24, 56, (12, 52)), 24, 56, (12, 52),
-          anchor=(1, 0), glow=True)
-    sheet("phone", "assets/sprites/props/phone.png", frames(two(props2.phone), 24, 20, (12, 14)), 24, 20, (12, 14), anchor=(0, -25))
-    sheet("filing_cabinet", "assets/sprites/props/filing_cabinet.png", frames(two(props2.filing_cabinet), 24, 72, (12, 56)),
-          24, 72, (12, 56), anchor=(0, -6))
-    sheet("shelf", "assets/sprites/props/shelf.png", frames(two(props2.shelf), 68, 80, (34, 70)), 68, 80, (34, 70), anchor=(16, -10))
-    sheet("med_cabinet", "assets/sprites/props/med_cabinet.png", frames(two(props2.med_cabinet), 36, 72, (18, 66)), 36, 72, (18, 66),
-          anchor=(0, -10), glow=True)
-    sheet("counter", "assets/sprites/props/counter.png", frames(two(props2.counter), 68, 52, (34, 40)), 68, 52, (34, 40),
+    sheet("nightstand", "assets/sprites/props/nightstand.png", frames(n(props3.nightstand, 3), 28, 48, (14, 36)), 28, 48,
+          (14, 36), anchor=(0, -4))
+    sheet("desk", "assets/sprites/props/desk.png", frames(n(props3.desk, 3), 72, 64, (36, 44)), 72, 64, (36, 44), anchor=(16, 0))
+    sheet("workbench", "assets/sprites/props/workbench.png", frames(n(props3.workbench, 3), 72, 64, (36, 44)), 72, 64, (36, 44),
+          anchor=(16, 0))
+    sheet("computer", "assets/sprites/props/computer.png", frames(two(props2.computer), 24, 56, (12, 52), kind="none"), 24, 56,
+          (12, 52), anchor=(1, 0), glow=True)
+    sheet("phone", "assets/sprites/props/phone.png", frames(two(props2.phone), 24, 20, (12, 14), kind="none"), 24, 20, (12, 14),
+          anchor=(0, -25))
+    sheet("filing_cabinet", "assets/sprites/props/filing_cabinet.png", frames(n(props3.filing_cabinet, 3), 28, 72, (14, 56)),
+          28, 72, (14, 56), anchor=(0, -6))
+    sheet("shelf", "assets/sprites/props/shelf.png", frames(n(props3.shelf, 4), 72, 84, (36, 70)), 72, 84, (36, 70),
+          anchor=(16, -10))
+    sheet("med_cabinet", "assets/sprites/props/med_cabinet.png", frames(n(props3.med_cabinet, 3), 36, 72, (18, 66), kind="wall"),
+          36, 72, (18, 66), anchor=(0, -10))
+    sheet("counter", "assets/sprites/props/counter.png", frames(n(props3.counter, 3), 72, 60, (36, 43)), 72, 60, (36, 43),
           anchor=(16, -6))
     sheet("op_table", "assets/sprites/props/op_table.png", frames([props2.op_table], 32, 96, (16, 62)), 32, 96, (16, 62),
           anchor=(0, -16))
     sheet("op_lamp", "assets/sprites/props/op_lamp.png", frames(two(props2.op_lamp), 48, 88, (16, 76)), 48, 88, (16, 76), glow=True)
-    sheet("morgue", "assets/sprites/props/morgue.png", frames([lambda: props2.morgue(0), lambda: props2.morgue(1), lambda: props2.morgue(2)],
-          68, 84, (34, 58)), 68, 84, (34, 58), anchor=(16, -8))
-    sheet("elec_panel", "assets/sprites/props/elec_panel.png", frames([lambda i=i: props2.elec_panel(i) for i in range(4)], 44, 64, (24, 58)),
-          44, 64, (24, 58), anchor=(0, -10))
-    sheet("generator", "assets/sprites/props/generator.png", frames(two(props2.generator), 76, 72, (38, 50)), 76, 72, (38, 50),
+    sheet("morgue", "assets/sprites/props/morgue.png", frames(n(props3.morgue, 3), 68, 92, (34, 66)), 68, 92, (34, 66),
+          anchor=(16, -8))
+    sheet("elec_panel", "assets/sprites/props/elec_panel.png", frames(n(props3.elec_panel, 4), 44, 108, (24, 100), kind="wall"),
+          44, 108, (24, 100), anchor=(0, -10))
+    sheet("generator", "assets/sprites/props/generator.png", frames(two(props3.generator), 76, 76, (38, 56)), 76, 76, (38, 56),
           anchor=(16, -16), glow=True)
-    sheet("boiler", "assets/sprites/props/boiler.png", frames([props2.boiler], 32, 88, (16, 76)), 32, 88, (16, 76), anchor=(0, -6))
-    sheet("crates", "assets/sprites/props/crates.png", frames([props2.crates], 32, 48, (16, 38)), 32, 48, (16, 38))
-    sheet("tape_recorder", "assets/sprites/props/tape_recorder.png", frames([props2.tape_recorder], 32, 48, (16, 40)), 32, 48, (16, 40),
-          glow=True)
-    sheet("wall_lamp", "assets/sprites/props/wall_lamp.png", frames(two(props2.wall_lamp)[::-1], 20, 10, (10, 4), w), 20, 10, (10, 4),
-          glow=True)
-    sheet("laundry_cart", "assets/sprites/props/laundry_cart.png", frames([props2.laundry_cart], 32, 48, (16, 38)), 32, 48, (16, 38))
+    sheet("boiler", "assets/sprites/props/boiler.png", frames([props3.boiler], 40, 92, (18, 80)), 40, 92, (18, 80), anchor=(0, -6))
+    sheet("crates", "assets/sprites/props/crates.png", frames([props3.crates], 32, 48, (16, 38)), 32, 48, (16, 38))
+    sheet("tape_recorder", "assets/sprites/props/tape_recorder.png", frames([props3.tape_recorder], 32, 52, (16, 36)), 32, 52,
+          (16, 36), glow=True)
+    sheet("wall_lamp", "assets/sprites/props/wall_lamp.png", frames(two(props2.wall_lamp)[::-1], 20, 10, (10, 4), w, "wall"),
+          20, 10, (10, 4), glow=True)
+    sheet("laundry_cart", "assets/sprites/props/laundry_cart.png", frames(n(props3.laundry_cart, 2), 40, 54, (16, 38)), 40, 54,
+          (16, 38))
     sheet("mop_bucket", "assets/sprites/props/mop_bucket.png", frames([props2.mop_bucket], 24, 48, (12, 40)), 24, 48, (12, 40))
+
+
+def build_props3() -> None:
+    """Decorado no interactivo (props3.DRESSING), con sombra de contacto."""
+    import props3
+    for key, (fns, fw, fh, origin, kind) in props3.DRESSING.items():
+        sheet(key, f"assets/sprites/props/{key}.png", [_r(fn(), fw, fh, origin, None, kind) for fn in fns], fw, fh, origin)
 
 
 def build_items() -> None:
@@ -191,55 +215,13 @@ def build_tiles() -> None:
 
 
 def build_decals() -> None:
-    """Calcomanías de suelo de 32x32: huellas, papeles, cristales, gotas, arrastre."""
-    names = ["footprints", "papers", "glass", "drops", "drag"]
-    color = Image.new("RGBA", (32 * len(names), 32), (0, 0, 0, 0))
-    normal = Image.new("RGBA", (32 * len(names), 32), (128, 128, 255, 0))
-    rng = random.Random(77)
-    for i, name in enumerate(names):
-        c = tiles.Canvas(32, 32, fill="none")
-        if name == "footprints":
-            for fx, fy, flip in ((10, 9, -1), (22, 22, 1)):
-                c.blob(fx, fy + 1, 1.8, 3.6, "water", 0.12, 1000 + fx, -0.2, rough=0.15)
-                c.blob(fx + flip * 0.3, fy - 3.2, 1.6, 1.2, "water", 0.12, 1100 + fx, -0.2, rough=0.1)
-                for t in range(5):
-                    c.set(int(fx - 2 + t), int(fy - 5.5 + abs(t - 1.5) * 0.4), "water", 0.15, -0.2)
-                c.set(fx, fy, "water", 0.85)
-        elif name == "papers":
-            for _ in range(3):
-                cx, cy = rng.uniform(8, 24), rng.uniform(8, 24)
-                ang = rng.uniform(0, math.pi)
-                for y in range(32):
-                    for x in range(32):
-                        dx, dy = x - cx, y - cy
-                        u = dx * math.cos(ang) + dy * math.sin(ang)
-                        w = -dx * math.sin(ang) + dy * math.cos(ang)
-                        if abs(u) < 4 and abs(w) < 5.5:
-                            line = int(w + 10) % 2 == 0 and abs(u) < 3
-                            c.set(x, y, "paper", 0.3 if line else 0.6 + 0.2 * tiles._hash2(x, y, 3), 0.4)
-            c.blob(17, 18, 2.5, 1.8, "blood_dry", 0.4, 1201, 0.5)
-        elif name == "glass":
-            for _ in range(9):
-                x, y = rng.randint(5, 27), rng.randint(5, 27)
-                c.line([(x, y), (x + rng.choice((-2, 2)), y + rng.choice((-1, 1)))], "glass", 0.7, 0.5)
-                c.set(x, y, "glass", 1.0, 0.8)
-        elif name == "drops":
-            for _ in range(7):
-                c.blob(rng.uniform(4, 28), rng.uniform(4, 28), rng.uniform(0.7, 1.5), rng.uniform(0.7, 1.4),
-                       "blood_dry", 0.4, rng.randint(0, 9999), 0.3, rough=0.2)
-        elif name == "drag":
-            for x in range(32):
-                y0 = 16 + math.sin(x * 0.25) * 1.5
-                width = 3.0 + 1.2 * tiles.pnoise(x, 0, 4, 1301, 32, 0)
-                for y in range(32):
-                    if abs(y - y0) < width and tiles.pnoise(x, y, 2, 1302, 32, 0) > 0.3:
-                        c.set(x, y, "blood_dry", 0.25 + 0.25 * tiles._hash2(x, y, 1303), 0.2)
-        img, nrm = c.to_images()
-        color.alpha_composite(img, (i * 32, 0))
-        normal.paste(nrm, (i * 32, 0), nrm)
-    save_pair("assets/sprites/decals/decals.png", color, normal)
-    META["decals"] = {"path": "res://assets/sprites/decals/decals.png", "frame": [32, 32], "hframes": len(names),
-                      "vframes": 1, "origin": [16, 16], "anchor": [0, 0], "glow": False, "names": names}
+    """Calcomanías de suelo (32 y 64 px) y de pared (32x96): ver decals.py."""
+    import decals
+    for key, (color, normal, glow, names, w, h) in decals.build().items():
+        rel = f"assets/sprites/decals/{key}.png"
+        save_pair(rel, color, normal, glow)
+        META[key] = {"path": "res://" + rel, "frame": [w, h], "hframes": len(names), "vframes": 1,
+                     "origin": [w // 2, h // 2], "anchor": [0, 0], "glow": glow is not None, "names": names}
 
 
 def preview() -> None:
@@ -255,23 +237,38 @@ def preview() -> None:
     for img in items:
         canvas.alpha_composite(img.convert("RGBA"), (x, height - img.height))
         x += img.width + 6
-    out = Path(sys.argv[1]) if len(sys.argv) > 1 else None
+    out = next((Path(a[10:]) for a in sys.argv[1:] if a.startswith("--preview=")), None)
     if out:
         canvas.resize((canvas.width * 2, canvas.height * 2), Image.NEAREST).save(out)
 
 
+STEPS = {
+    "tiles": lambda: build_tiles(),
+    "decals": lambda: build_decals(),
+    "lights": lambda: build_lights(),
+    "protagonist": lambda: build_protagonist(),
+    "props": lambda: (build_props(), build_props2(), build_props3()),
+    "items": lambda: build_items(),
+    "sounds": lambda: sounds.build(),
+    "docs": lambda: doc_images.build(),
+}
+
+
 def main() -> None:
-    print("Generando arte provisional del hospital:")
-    build_tiles()
-    build_decals()
-    build_lights()
-    build_protagonist()
-    build_props()
-    build_props2()
-    build_items()
-    sounds.build()
-    doc_images.build()
-    (ROOT / "tools/art/sprite_meta.json").write_text(json.dumps(META, indent=1), encoding="utf-8")
+    """Sin argumentos genera todo. Con nombres de pasos (p. ej. `props tiles decals`) genera solo
+    esos y conserva el resto de `sprite_meta.json`: así no se regeneran sonidos ni personaje sin querer."""
+    wanted = [a for a in sys.argv[1:] if not a.startswith("--")]
+    unknown = [a for a in wanted if a not in STEPS]
+    if unknown:
+        sys.exit(f"Pasos desconocidos: {unknown}. Disponibles: {', '.join(STEPS)}")
+    meta_path = ROOT / "tools/art/sprite_meta.json"
+    if wanted and meta_path.exists():
+        META.update(json.loads(meta_path.read_text(encoding="utf-8")))
+    print("Generando arte provisional del hospital:", ", ".join(wanted) if wanted else "todo")
+    for name, step in STEPS.items():
+        if not wanted or name in wanted:
+            step()
+    meta_path.write_text(json.dumps(META, indent=1), encoding="utf-8")
     preview()
 
 

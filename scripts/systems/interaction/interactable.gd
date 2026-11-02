@@ -556,7 +556,8 @@ func _apply_visuals() -> void:
 	if _sprite == null:
 		return
 	var frame: int = frame_open if (openable and is_open) else frame_closed
-	if frame_empty >= 0 and searched and is_empty():
+	# Lo que se abre solo enseña su interior vacío mientras está abierto.
+	if frame_empty >= 0 and searched and is_empty() and (not openable or is_open):
 		frame = frame_empty
 	if frame >= 0 and frame < _sprite.hframes * _sprite.vframes:
 		_sprite.frame = frame

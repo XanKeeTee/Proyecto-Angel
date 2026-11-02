@@ -31,6 +31,14 @@ Nada de esto es canon hasta que lo aprueben las dos personas del equipo. Está e
 
 - **Ropa del prólogo**: descripciones en `tools/levels/build_wear.gd`. Detalles que sugieren cosas sin cerrarlas: «09» bordado en la bata, la placa arrancada del celador, la etiqueta «CAMA 12» del pijama, un nombre escrito y tachado dentro del gorro de lana.
 
+- **Decorado del mapa** (solo visual, sin texto): no añade hechos nuevos, pero algunos detalles apuntan a cosas.
+  - Morgue: una pila de bolsas para cadáveres dobladas y sin usar, junto a la puerta de una cámara frigorífica
+    (encaja con el inventario: no ha muerto nadie en planta).
+  - Hab. 09: el tubo de oxígeno arrancado de la toma de la pared; gasas y una jeringa en el suelo.
+  - Hab. 10: hojas del cuaderno desperdigadas hasta la puerta y una silla volcada (alguien quería salir).
+  - Hab. 11: polvo de meses y un biombo plegado; Hab. 12: rodadas donde estaba la otra cama.
+  - Relojes de pared parados, todos a la misma hora (3:40). Si el equipo quiere que la hora signifique algo, se decide aquí.
+
 ## `[PROPUESTA]` Pistas y pensamientos del prólogo
 
 Textos nuevos para que los puzles se entiendan sin salir del mundo. No añaden canon: son carteles, etiquetas y lo que el protagonista piensa. Están en `tools/levels/build_hospital.gd` (`OBJECT_TWEAKS`, `DOOR_TWEAKS`) y en `tools/data/build_prologue_data.gd` (pensamientos).

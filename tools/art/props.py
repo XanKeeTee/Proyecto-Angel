@@ -8,7 +8,7 @@ import random
 import human
 from pxrender import (
     View, Vec, add, basis_rot, box, capsule, cylinder, ellipsoid, fbm, limb, mul, norm, ramp,
-    render, rot_y, sphere, transform, RenderResult,
+    render, sphere, transform, RenderResult,
 )
 
 ramp("rust", [(28, 16, 12), (48, 28, 18), (72, 42, 26), (98, 60, 36), (122, 82, 50)])
@@ -62,23 +62,6 @@ def make_sheet(stain_at: Vec | None = None, stain_r: float = 0.0, folds: float =
             return ("stain", bright, n2)
         return ("sheet", bright, n2)
     return sheet
-
-
-def locker_mat(p: Vec, n: Vec) -> tuple:
-    x, y, z = p
-    dent = fbm(mul(p, 0.35), 51) - 0.5
-    n2 = norm(add(n, (dent * 0.5, dent * 0.3, 0.0)))
-    if n[2] > 0.8:  # frente
-        if abs(x) < 0.45 and y > 14:
-            return ("void", 1.0, n2)  # junta entre puertas
-        for vy in (52.0, 49.5, 47.0):  # rejillas
-            if abs(y - vy) < 0.5 and 2.5 < abs(x) < 10.5:
-                return ("void", 1.0, n2)
-        if abs(y - 13.5) < 0.5:
-            return ("void", 1.0, n2)
-    if fbm(mul((x, y * 0.4, z), 0.45), 52) > 0.71 or (y < 5 and fbm(mul(p, 0.6), 53) > 0.5):
-        return ("rust", 0.9 + 0.2 * fbm(mul(p, 1.1), 54), n2)
-    return ("locker", 0.95 + 0.1 * dent, n2)
 
 
 # --- camilla ---------------------------------------------------------------------
@@ -220,19 +203,6 @@ def monitor() -> list:
 
 # --- taquilla --------------------------------------------------------------------
 
-def locker(open_drawer: bool) -> list:
-    prims = [box((0.0, 31.0, 0.0), (13.0, 31.0, 6.0), locker_mat)]
-    for x in (-2.2, 2.2):
-        prims.append(box((x, 34.0, 6.3), (0.4, 2.2, 0.4), metal_worn))
-    prims.append(box((0.0, 58.0, 6.15), (3.5, 1.4, 0.2), mat("gauze", 1.0)))  # etiqueta
-    if open_drawer:
-        prims.append(box((0.0, 7.0, 9.5), (12.0, 6.0, 4.0), locker_mat))
-        prims.append(box((0.0, 13.05, 9.5), (11.0, 0.05, 3.2), mat("void")))
-        prims.append(box((0.0, 7.0, 13.6), (0.0 + 3.0, 0.5, 0.4), metal_worn))
-    else:
-        prims.append(box((0.0, 7.0, 6.3), (3.0, 0.5, 0.4), metal_worn))
-    return prims
-
 
 # --- bandeja de instrumental ------------------------------------------------------
 
@@ -292,17 +262,6 @@ def gauze_mat(p: Vec, n: Vec) -> tuple:
     if fbm(mul(p, 0.5), 71) > 0.55:
         return ("blood_dry", 1.1)
     return ("gauze", 0.95 + 0.15 * fbm(mul(p, 1.2), 72))
-
-
-def trash_bin() -> list:
-    prims = [cylinder((0.0, 0.0, 0.0), (0.0, 15.0, 0.0), 6.5, metal_worn)]
-    prims.append(cylinder((0.0, 14.6, 0.0), (0.0, 15.4, 0.0), 6.9, metal_worn))
-    rng = random.Random(3)
-    for _ in range(6):
-        c = (rng.uniform(-4, 4), rng.uniform(15.5, 18.0), rng.uniform(-4, 4))
-        prims.append(ellipsoid(c, (rng.uniform(1.8, 3.0), rng.uniform(1.2, 2.0), rng.uniform(1.8, 3.0)), gauze_mat))
-    prims.append(ellipsoid((6.5, 12.0, 2.0), (1.2, 3.5, 1.8), gauze_mat))
-    return prims
 
 
 # --- lavabo ----------------------------------------------------------------------

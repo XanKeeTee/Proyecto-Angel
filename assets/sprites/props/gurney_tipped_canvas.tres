@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/gurney_tipped.png" id="1_6a4qj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/gurney_tipped_n.png" id="2_lesf3"]
+
+[resource]
+diffuse_texture = ExtResource("1_6a4qj")
+normal_texture = ExtResource("2_lesf3")
+texture_filter = 1

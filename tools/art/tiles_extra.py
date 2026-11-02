@@ -32,8 +32,11 @@ def concrete_floor(variant: int) -> Canvas:
         for x in range(T):
             n = pfbm(x, y, 61, base=10)
             c.set(x, y, "concrete_floor", 0.45 + 0.3 * (n - 0.5) + 0.06 * (_hash2(x, y, 62) - 0.5), 0.0)
-    if variant == 1:
-        c.blob(15, 17, 9, 6, "oil", 0.4, 611, -0.1, rough=0.6)
+    if variant == 1:  # cerco de humedad tenue (los charcos grandes son calcomanías)
+        for y in range(T):
+            for x in range(T):
+                if pfbm(x, y, 611, base=8) > 0.58:
+                    c.lum[y][x] *= 0.72
     elif variant == 2:
         c.line([(2, 8), (9, 12), (14, 11), (22, 19), (30, 22)], "oil", 0.2, -1.2)
     elif variant == 3:
@@ -50,11 +53,15 @@ def or_floor(variant: int) -> Canvas:
             grout = x % 8 == 0 or y % 8 == 0
             n = pfbm(x, y, 71, base=6)
             c.set(x, y, "grout" if grout else "or_tile", 0.5 if grout else 0.55 + 0.25 * (n - 0.5), -0.6 if grout else 0.2)
-    if variant == 1:
+    if variant == 1:  # juntas negras y una gota seca
         rng = random.Random(72)
-        c.blob(17, 14, 6, 4, "blood_dry", 0.4, 721, 0.2, rough=0.5)
-        for _ in range(8):
-            c.set(int(rng.uniform(4, 28)), int(rng.uniform(4, 28)), "blood_dry", 0.35)
+        for y in range(T):
+            for x in range(T):
+                if c.mat[y][x] == "grout":
+                    c.lum[y][x] = 0.15
+                elif pfbm(x, y, 722, base=8) > 0.6:
+                    c.lum[y][x] *= 0.8
+        c.set(int(rng.uniform(6, 26)), int(rng.uniform(6, 26)), "blood_dry", 0.35)
     return c
 
 
@@ -92,9 +99,9 @@ def concrete_column(variant: int) -> Canvas:
             shade = 0.3 + 0.25 * (y / 96)
             c.set(x, y, "grout" if joint else "concrete_wall", 0.3 if joint else shade + 0.25 * (n - 0.5), -0.6 if joint else 0.2)
     for x in range(T):
-        if pnoise(x, 0, 3, 103 + variant, T, 0) > 0.6:
-            for y in range(int(20 + 40 * pnoise(x, 1, 3, 104, T, 0))):
-                c.set(x, y, "oil", 0.3)
+        if pnoise(x, 0, 3, 103 + variant, T, 0) > 0.7 and _hash2(x, variant, 105) > 0.4:
+            for y in range(int(8 + 26 * pnoise(x, 1, 3, 104, T, 0))):
+                c.lum[y][x] *= 0.55
     for y in range(88, 96):
         for x in range(T):
             c.lum[y][x] *= 0.6
