@@ -539,10 +539,11 @@ func on_cell_entered(_cell: Vector2i) -> void:
 ## Cambio de planta (escaleras): sigue andando hacia el hueco mientras funde a negro, con pasos.
 func _warp(target: Vector2i, facing: Vector2i, door: Door) -> void:
 	_warping = true
+	var heading: Vector2 = player.velocity if player.velocity.length() > 1.0 else door.position - player.position
 	lock()
-	var ahead: Vector2 = (door.position - player.position).normalized() * WARP_WALK
+	var ahead: Vector2 = heading.normalized() * WARP_WALK
 	var walk: Tween = create_tween()
-	walk.tween_property(player, "position", player.position + ahead, WARP_FADE_OUT)
+	walk.tween_property(player, "position", player.position + ahead, WARP_FADE_OUT * 0.8)
 	Sfx.at(self, "%s_%d" % [player.step_sound, 1], player.position, player.step_volume_db)
 	await _fade_to(1.0, WARP_FADE_OUT)
 	player.place(target, facing)
