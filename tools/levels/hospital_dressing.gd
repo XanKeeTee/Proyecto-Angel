@@ -297,7 +297,7 @@ func _story_decals() -> void:
 	# Señales de salida (con su capa de brillo) y tomas de oxígeno en la cabecera de las camas.
 	for e: Array in [["exit", 66, 11], ["exit", 67, 1], ["exit", 70, 18], ["exit", 3, 41],
 			["oxygen", 2, 1], ["oxygen", 10, 1], ["oxygen", 18, 1], ["oxygen", 26, 1], ["oxygen", 2, 18], ["oxygen", 10, 18],
-			["call", 3, 18], ["call", 11, 1], ["switch", 5, 18], ["switch", 13, 18], ["switch", 37, 1], ["switch", 50, 1],
+			["oxygen", 3, 18], ["call", 11, 1], ["switch", 5, 18], ["switch", 13, 18], ["switch", 37, 1], ["switch", 50, 1],
 			["cobweb", 25, 1], ["cobweb", 1, 31], ["cobweb", 26, 48], ["poster", 31, 18], ["poster", 56, 18],
 			["poster", 41, 11], ["hand_low", 21, 1], ["scrapes", 23, 11], ["scrapes", 47, 11], ["hand_low", 9, 31],
 			["pipe_h", 13, 48], ["pipe_h", 14, 48], ["pipe_h", 20, 48], ["pipe_h", 21, 48], ["pipe_h", 22, 48]]:

@@ -29,7 +29,7 @@ import random
 import human
 import props2  # noqa: F401  (rampas cardboard, bottle, amber, bakelite…)
 from materials import cardboard, fabric, flat, glass, noisy, painted, steel, wood
-from props import make_sheet, mat, metal_worn
+from props import make_sheet, metal_worn
 from pxrender import Vec, add, basis_rot, box, capsule, cylinder, ellipsoid, limb, sphere, transform
 
 ENAMEL = painted("enamel", 11)

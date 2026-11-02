@@ -103,6 +103,11 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 - Los objetos se ven en vista oblicua: la tapa se ve desde arriba y el frente de cara, como en RPG Maker, pero con volumen real y desgaste (óxido, abolladuras, manchas).
 - Suciedad que se acumula donde se acumularía de verdad: juntas, rincones, la parte baja de las paredes y el bajo de las telas.
 - Lo que emite luz (pantallas, pilotos) lleva una capa `*_glow.png` que se dibuja sin sombra.
+- **Nada flota**: todo objeto apoyado lleva sombra de contacto (horneada en el sprite) y lo que cuelga de la pared,
+  una sombra arrojada de 1-2 px sobre el muro. Los objetos sueltos del suelo llevan una sombra suave debajo.
+- **Cada sala cuenta algo** con su decorado (abandono precipitado, algo que pasó), sin explicarlo: papeles hasta la
+  puerta, un biombo caído, tuberías que gotean. El decorado no se puede usar, pero tiene volumen, colisión y sombra.
+- Pies de pared y rincones más oscuros; el sótano con tuberías y cables vistos.
 
 ### Arte provisional generado
 

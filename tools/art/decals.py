@@ -27,7 +27,7 @@ from PIL import Image
 import tiles
 import materials  # noqa: F401  (rampas compartidas: cable, tape, pill, hair…)
 from pxrender import ramp
-from tiles import BASE_Y, RAIL_Y, TILES_Y, Canvas, _hash2, pnoise
+from tiles import RAIL_Y, TILES_Y, Canvas, _hash2, pnoise
 
 ramp("dust", [(40, 38, 34), (56, 52, 46), (72, 68, 60), (88, 84, 74)])
 ramp("grime", [(8, 8, 8), (14, 13, 12), (22, 20, 18), (30, 28, 25)])
@@ -297,7 +297,7 @@ def big_decal(name: str) -> Canvas:
                 if c.mat[y][x] == "water" and pnoise(x, y, 6, 3003, 0, 0) > 0.72:
                     c.lum[y][x] = 0.45
     elif name == "damp_big":
-        for ring, lum in ((26, 0.2), (21, 0.35), (15, 0.25)):
+        for ring, lum in ((26, 0.12), (21, 0.2), (15, 0.14)):
             for y in range(64):
                 for x in range(64):
                     d = math.hypot(x + 0.5 - 32, (y + 0.5 - 32) * 1.2) + (pnoise(x, y, 6, 3101, 0, 0) - 0.5) * 9
