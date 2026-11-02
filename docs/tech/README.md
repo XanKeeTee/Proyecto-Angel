@@ -91,6 +91,7 @@ El generador del hospital y el de datos del prólogo se ejecutan como escena (no
 
 Aparte (no los llama `build_all.py`):
 - `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
+- `python -I tools/art/enemy_enfermero.py`: el enfermero transfigurado, combate por capas y sprite del mapa (`assets/sprites/enemies/enfermero/`). Ver [enemigos.md](enemigos.md).
 
 Sonido y música de Freesound (`python3 -I tools/audio/freesound.py check|fetch`): [sonidos.md](sonidos.md). `sounds.py` solo crea los WAV provisionales que falten.
 
