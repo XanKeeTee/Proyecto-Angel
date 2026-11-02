@@ -561,7 +561,9 @@ func _warp(target: Vector2i, facing: Vector2i, door: Door) -> void:
 
 
 func _on_item_received(item: ItemDef, amount: int) -> void:
-	hud.notice("Custodia: " + item.display_name + (" ×%d" % amount if amount > 1 else ""))
+	# «Has cogido linterna», «Has cogido pilas ×4».
+	var item_name: String = item.display_name.left(1).to_lower() + item.display_name.substr(1)
+	hud.notice("Has cogido " + item_name + (" ×%d" % amount if amount > 1 else "") + ".")
 	hud.poke()
 	_refresh_glints()
 
