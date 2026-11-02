@@ -51,10 +51,10 @@ OUT_DIR = "assets/sprites/enemies/enfermero"
 
 # --- combate: fotograma, capas y animaciones ----------------------------------------------
 
-FRAME_W, FRAME_H = 256, 300
-ORIGIN = (124, 282)                     # píxel de los pies
+FRAME_W, FRAME_H = 272, 312
+ORIGIN = (122, 284)                     # píxel de los pies
 PITCH = 0.16                            # cámara algo picada (rad)
-YAW = 0.3                               # girado: el brazo instrumental se adelanta
+YAW = 0.42                               # girado: el brazo instrumental se adelanta
 
 PARTS = ["head", "arm_l", "arm_r", "leg_l", "leg_r"]
 STUMPS = ["stump_" + p for p in PARTS]
@@ -83,6 +83,15 @@ def anim_starts() -> dict[str, int]:
 
 
 TOTAL_FRAMES = sum(v[0] for v in ANIMS.values())
+# Rejilla de la hoja: GRID_COLUMNS columnas, en orden de lectura por filas (Godot no carga texturas
+# de más de 16384 px por lado; así cada hoja queda por debajo de 4096).
+GRID_COLUMNS = 8
+GRID_ROWS = -(-TOTAL_FRAMES // GRID_COLUMNS)
+
+
+def cell(index: int) -> tuple[int, int]:
+    """Esquina superior izquierda del fotograma `index` en la hoja."""
+    return (index % GRID_COLUMNS) * FRAME_W, (index // GRID_COLUMNS) * FRAME_H
 
 # --- mapa ----------------------------------------------------------------------------------
 
@@ -119,13 +128,22 @@ def _seeded(P: np.ndarray, seeds: np.ndarray) -> np.ndarray:
 
 @material("skin")
 def skin_mat(P, N, seeds, ii, prims):
+    """Piel de cadáver gris azulada: moteado lívido, cetrino, cardenales (violeta con halo
+    amarillento), venas en relieve, poros y arrugas finas, mugre abajo."""
     Q = _seeded(P, seeds)
     n = len(P)
     mott = fbm(Q * 0.07, 1, 3)
     alb = mix(SKIN, SKIN_LIVID, smoothstep(0.5, 0.72, mott))
     alb = mix(alb, SKIN_PALE, smoothstep(0.52, 0.75, fbm(Q * 0.11, 2, 2)) * 0.6)
-    alb = mix(alb, SKIN_DARK, smoothstep(0.55, 0.8, fbm(Q * 0.21, 3, 2)) * 0.5)
-    alb = mix(alb, SKIN_SALLOW, smoothstep(0.5, 0.75, fbm(Q * 0.05, 4, 2)) * 0.5)
+    alb = mix(alb, SKIN_DARK, smoothstep(0.55, 0.8, fbm(Q * 0.21, 3, 2)) * 0.6)
+    alb = mix(alb, SKIN_SALLOW, smoothstep(0.5, 0.75, fbm(Q * 0.05, 4, 2)) * 0.55)
+    # Manchas finas (capilares rotos, pecas de suciedad).
+    alb = alb * (0.86 + 0.28 * fbm(Q * 0.9, 15, 2))[:, None]
+    # Cardenales.
+    br = fbm(Q * 0.06 + 11.0, 16, 3)
+    alb = mix(alb, rgb(112, 112, 70), smoothstep(0.6, 0.66, br) * 0.45)
+    alb = mix(alb, rgb(70, 40, 74), smoothstep(0.66, 0.72, br) * 0.8)
+    alb = mix(alb, rgb(52, 22, 44), smoothstep(0.72, 0.78, br) * 0.7)
     warp = np.stack([fbm(Q * 0.05, 7, 2), fbm(Q * 0.05, 8, 2), fbm(Q * 0.05, 9, 2)], axis=1) * 9.0
 
     def veins(X):
@@ -133,17 +151,32 @@ def skin_mat(P, N, seeds, ii, prims):
         return smoothstep(0.9, 0.975, r) * smoothstep(0.35, 0.55, fbm(X * 0.04, 6, 2))
 
     def height(X):
-        return 0.9 * veins(X) + 0.35 * fbm(X * 0.8, 12, 2)
+        return 1.0 * veins(X) + 0.3 * fbm(X * 0.8, 12, 2) + 0.22 * vnoise(X * 2.4, 17)
 
     v = veins(Q)
-    alb = mix(alb, VEIN, v * 0.85)
-    # Suciedad y sangre seca en la parte baja (pies, espinillas) y en las manos.
-    low = smoothstep(26.0, 4.0, P[:, 1]) * (0.5 + 0.5 * fbm(Q * 0.2, 13, 2))
-    alb = mix(alb, GRIME, low * 0.85)
-    dirt = smoothstep(0.62, 0.7, fbm(Q * 0.13, 14, 3)) * 0.6
+    alb = mix(alb, VEIN, v * 0.9)
+    low = smoothstep(30.0, 4.0, P[:, 1]) * (0.5 + 0.5 * fbm(Q * 0.2, 13, 2))
+    alb = mix(alb, GRIME, low * 0.9)
+    dirt = smoothstep(0.6, 0.68, fbm(Q * 0.13, 14, 3)) * 0.7
     alb = mix(alb, BLOOD_OLD, dirt * pdata(ii, prims, "dirty", 0.35))
-    nn = bump(N, grad_of(height, Q), 0.9)
-    return surface(n, alb, nn, spec=0.14, gloss=12.0, wrap=0.3)
+    nn = bump(N, grad_of(height, Q), 1.0)
+    return surface(n, alb, nn, spec=0.18, gloss=14.0, wrap=0.25)
+
+
+@material("swollen")
+def swollen_mat(P, N, seeds, ii, prims):
+    """Carne hinchada e inflamada alrededor de la porcelana: rojo violáceo tenso y húmedo."""
+    Q = _seeded(P, seeds)
+    n = len(P)
+    alb = mix(rgb(118, 54, 66), rgb(70, 30, 48), fbm(Q * 0.6, 18, 2))
+    alb = mix(alb, BLOOD_WET, smoothstep(0.6, 0.7, fbm(Q * 0.9, 19, 2)) * 0.8)
+    return surface(n, alb, N, spec=1.0, gloss=40.0, wrap=0.35)
+
+
+@material("button")
+def button_mat(P, N, seeds, ii, prims):
+    n = len(P)
+    return surface(n, mix(rgb(176, 170, 150), rgb(90, 70, 60), fbm(P * 0.8, 20, 2) * 0.6), N, spec=0.9, gloss=40.0)
 
 
 @material("skin_head")
@@ -161,6 +194,12 @@ def skin_head_mat(P, N, seeds, ii, prims):
         # Lágrimas de sangre bajo la porcelana.
         streak = np.exp(-((x - ex - 0.6 * np.sin(y * 0.5)) / 0.9) ** 2) * (y < EYE_Y - 2) * (y > EYE_Y - 9.5 - 3 * fbm(P * 0.3, 41, 1))
         alb = mix(alb, BLOOD_DRY, np.clip(streak, 0, 1) * (z > HEAD_C[2] + 4) * 0.95)
+    # Cuero cabelludo rapado a trasquilones: barba de pelo oscuro, calvas y costras.
+    rel0 = P - np.array(HEAD_C)
+    scalp = smoothstep(0.0, 3.0, rel0[:, 1] + 1.5 - np.clip(rel0[:, 2] - 4.0, 0, 9) * 0.8)
+    stub = (vnoise(P * 2.2, 42) > 0.55) * smoothstep(0.35, 0.5, fbm(P * 0.12, 43, 2))
+    alb = mix(alb, rgb(26, 24, 28), scalp * stub * 0.75)
+    alb = mix(alb, rgb(70, 28, 30), scalp * smoothstep(0.74, 0.8, fbm(P * 0.25, 44, 2)) * 0.9)
     # Cicatriz coronal con grapas.
     rel = P - np.array(HEAD_C)
     line = rel[:, 2] + 0.25 * rel[:, 0] + 2.0
@@ -208,13 +247,20 @@ def cloth_mat(P, N, seeds, ii, prims):
         N[sliced, 1] *= 0.2
         N = normalize(N)
 
+    trouser = pdata(ii, prims, "trouser", 0.0)
+    drape = pdata(ii, prims, "drape", 0.0)
+
     def height(X):
         w = fbm(X * 0.05, 21, 2) * 6.0
         folds = np.sin(X[:, 0] * 0.45 + X[:, 2] * 0.3 + w) * 0.6 + np.sin(X[:, 1] * 0.12 + X[:, 0] * 0.2 + w * 0.7) * 0.4
         creases = smoothstep(0.86, 0.96, ridge(X * np.array([0.08, 0.04, 0.08]), 22, 2))
-        return folds * 0.9 - creases * 1.2 + 0.05 * vnoise(X * 1.5, 23)
+        # Pantalón: la tela se amontona en la rodilla y sobre el tobillo (pliegues horizontales).
+        bunch = np.sin(X[:, 1] * 0.75 + w * 1.4) * (smoothstep(12.0, 3.0, np.abs(X[:, 1] - 62.0)) + smoothstep(46.0, 30.0, X[:, 1]))
+        # Casaca: caída vertical desde el pecho y tirantez diagonal en la cintura.
+        hang = np.sin(X[:, 0] * 0.7 + w) * smoothstep(150.0, 115.0, X[:, 1]) + np.sin((X[:, 0] + X[:, 1]) * 0.35 + w) * 0.5
+        return (folds * 0.9 - creases * 1.2 + 0.05 * vnoise(X * 1.5, 23) + trouser * bunch * 1.3 + drape * hang * 0.8)
 
-    alb = np.broadcast_to(CLOTH, (n, 3)).copy()
+    alb = mix(np.broadcast_to(CLOTH, (n, 3)), rgb(170, 178, 180), pdata(ii, prims, "trouser", 0.0))
     # Trama: muy fina, como variación de brillo.
     weave = (np.sin(P[:, 0] * 2.6) * np.sin(P[:, 1] * 2.6)) * 0.025
     alb = alb * (1 + weave[:, None])
@@ -237,13 +283,34 @@ def cloth_mat(P, N, seeds, ii, prims):
     blob = smoothstep(0.7, 0.74, fbm(Q * 0.1, 31, 3))
     blood = np.clip(soak * 0.95 + (drip * 0.9 + spatter * 0.8 + blob * 0.85) * blood_amt, 0.0, 1.0)
     alb = mix(alb, mix(BLOOD_DRY, BLOOD_OLD, fbm(Q * 0.3, 28, 2)), blood * 0.9)
+    # Otros fluidos: bilis oscura verdosa, óxido y una mancha casi negra.
+    alb = mix(alb, rgb(84, 82, 52), smoothstep(0.75, 0.78, fbm(Q * 0.08 + 5.0, 32, 3)) * 0.55)
+    alb = mix(alb, rgb(30, 22, 22), smoothstep(0.76, 0.8, fbm(Q * 0.11 + 9.0, 33, 2)) * 0.85)
+    # Mugre que se acumula abajo (bajo de la casaca y perneras).
+    low = smoothstep(60.0, 20.0, P[:, 1]) * trouser + smoothstep(120.0, 104.0, P[:, 1]) * drape
+    alb = mix(alb, rgb(70, 60, 48), np.clip(low, 0, 1) * (0.45 + 0.4 * fbm(Q * 0.2, 34, 2)))
+    # Costuras laterales (pespunte), bolsillo del pecho y pespunte del bajo.
+    seam = pdata(ii, prims, "seam", 0.0) > 0
+    side_seam = seam & (np.abs(N[:, 0]) > 0.985)
+    alb = mix(alb, rgb(96, 88, 76), side_seam * 0.8)
+    alb = np.where((side_seam & (np.mod(P[:, 1], 2.4) < 0.7))[:, None], rgb(70, 64, 56), alb)
+    pocket = pdata(ii, prims, "pocket", 0.0) > 0
+    px, py = P[:, 0] - 12.5, P[:, 1] - 154.0
+    inside = (np.abs(px) < 6.0) & (np.abs(py) < 7.5) & (P[:, 2] > 4.0)
+    edge = inside & ((np.abs(px) > 5.2) | (py > 6.6) | (py < -6.6))
+    alb = mix(alb, rgb(90, 82, 70), (pocket & edge) * 0.85)
+    alb = mix(alb, rgb(150, 140, 120), (pocket & inside & (py > 5.0) & ~edge) * 0.5)  # boca del bolsillo, sombra
+    hem_y = pdata(ii, prims, "hem", -999.0)
+    alb = mix(alb, rgb(86, 76, 64), (np.abs(P[:, 1] - hem_y - 5.5) < 0.5) * (np.mod(P[:, 0] + P[:, 2], 2.2) < 1.2) * 0.8)
     # Bajo sucio (y gris donde roza).
     hem = pdata(ii, prims, "hem", -999.0)
     alb = mix(alb, rgb(96, 84, 70), smoothstep(hem + 9, hem, P[:, 1]) * 0.65)
     # Borde de los desgarros: hilos sueltos, más oscuro.
     alb = mix(alb, rgb(60, 30, 28), smoothstep(-0.12, 0.0, field_) * (tear >= 0) * 0.8)
-    nn = bump(N, grad_of(height, Q, 0.5), 0.55 * fold_f[:, None])
-    return surface(n, alb, nn, spec=0.05, gloss=8.0, wrap=0.2)
+    nn = bump(N, grad_of(height, Q, 0.5), 0.6 * fold_f[:, None])
+    # Donde la sangre empapa, la tela se pega y brilla húmeda.
+    wet = np.clip(blood * 1.2 - 0.2, 0, 1)
+    return surface(n, alb, nn, spec=0.05 + 0.6 * wet, gloss=8.0 + 30.0 * wet, wrap=0.2)
 
 
 @material("mask_cloth")
@@ -696,39 +763,7 @@ def build_rest(params: dict) -> dict[str, list]:
     B["root"] += _T(ellipsoid(V(0, 119.5, -0.5), V(17.6, 13.6, 12.6), None), "body", "cloth", 2, None, blood=0.3, fold=0.8)
     # Faldón de la casaca (cae sobre la cadera, con el bajo deshilachado).
     for side, n in ((1.0, "l"), (-1.0, "r")):
-        leg = f"leg_{n}"
-        hip = V(side * 13, 116, 0)
-        thigh_mid = V(side * 14, 90, 2)
-        knee = V(side * 14, 62, 2)
-        B[f"thigh_{n}"] += _T(limb([hip, thigh_mid, knee], [8.2, 6.6, 5.2], None, 3), leg, "skin", 10 + side)
-        # Pantalón (con la rodilla derecha rota).
-        B[f"thigh_{n}"] += _T(limb([vadd(hip, V(0, 2, 0)), thigh_mid, knee], [9.8, 8.4, 7.3], None, 3), leg, "cloth",
-                              12 + side, tear_cut(5 if side > 0 else 6), blood=0.45, hem=24.0, tear_id=5 if side > 0 else 6)
-        B[f"thigh_{n}"] += _T(sphere(V(side * 14, 62.5, 2.6), 7.3, None), leg, "cloth", 14 + side,
-                              tear_cut(5 if side > 0 else 6), blood=0.45, tear_id=5 if side > 0 else 6)
-        B[f"shin_{n}"] += _T(sphere(V(side * 14, 62, 2.5), 5.4, None), leg, "skin", 15 + side)
-        B[f"shin_{n}"] += _T(ellipsoid(V(side * 14, 62.5, 6.8), V(3.4, 4.0, 2.0), None), leg, "skin", 16 + side)
-        shin_mid = V(side * 14, 38, 1)
-        ankle = V(side * 14, 9, -1)
-        B[f"shin_{n}"] += _T(limb([knee, shin_mid, ankle], [4.8, 4.0, 2.6], None, 3), leg, "skin", 17 + side, dirty=0.6)
-        B[f"shin_{n}"] += _T(ellipsoid(V(side * 14, 46, -2.2), V(4.3, 11, 4.3), None), leg, "skin", 18 + side)
-        B[f"shin_{n}"] += _T(capsule(V(side * 14, 57, 5.0), V(side * 14, 15, 2.6), 1.5, None), leg, "skin", 19 + side)
-        # Pernera desde la rodilla.
-        B[f"shin_{n}"] += _T(limb([knee, shin_mid, V(side * 14, 20, 0)], [7.2, 6.4, 5.6], None, 3), leg, "cloth", 20 + side,
-                             tear_cut(5 if side > 0 else 6), blood=0.6, hem=24.0, tear_id=5 if side > 0 else 6, fold=1.3)
-        for mx in (2.6, -2.6):
-            B[f"shin_{n}"] += _T(sphere(V(side * 14 + mx, 9.5, -0.5), 2.0, None), leg, "skin", 21 + side, dirty=0.8)
-        # Pie descalzo, largo, con los dedos y las uñas.
-        foot = f"foot_{n}"
-        B[foot] += _T(ellipsoid(V(side * 14, 4.2, -2.6), V(3.4, 4.2, 4.0), None), leg, "skin", 22 + side, dirty=0.9)
-        B[foot] += _T(ellipsoid(V(side * 14.6, 3.2, 5.5), V(4.8, 3.0, 8.5), None), leg, "skin", 23 + side, dirty=0.9)
-        toes = [(-3.3, 1.45, 18.6), (-1.2, 1.1, 17.8), (0.8, 1.0, 17.0), (2.6, 0.95, 16.0), (4.2, 0.85, 14.8)]
-        for tx, tr, tz in toes:
-            x = side * 14.6 + side * tx
-            a = V(x, 2.2, 12.0)
-            b = V(x + side * tx * 0.1, 1.2, tz)
-            B[foot] += _T(capsule(a, b, tr, None), leg, "skin", 24 + side, dirty=0.9)
-            B[foot] += _T(ellipsoid(vadd(b, V(0, 0.55, 0.3)), V(tr * 0.8, 0.4, tr * 0.7), None), leg, "nail", 25)
+        _leg_anatomy(B, side, n)
 
     # --- tronco ---------------------------------------------------------------------------
     B["lumbar"] += _T(ellipsoid(V(0, 138, -1.5), V(13.2, 13, 8.6 + 0.5 * breath), None), "body", "skin", 30)
@@ -825,7 +860,8 @@ def build_rest(params: dict) -> dict[str, list]:
         bone = "root" if y0 < 128 else "lumbar" if y0 < 148 else "chest"
         ry = max(2.0, min(8.0, 190.0 - y0, y0 - 96.0))
         B[bone] += _T(ellipsoid(V(0, y0, cz), V(rx, ry, rz), None), "body", "cloth", 80, tear_cut(9), blood=0.8,
-                      hem=106.0, tear_id=9, slice=1.0)
+                      hem=106.0, tear_id=9, slice=1.0, seam=1.0, pocket=1.0, drape=1.0)
+    _tunic_details(B)
     # Tarjeta de identificación prendida del bolsillo.
     bz = _ellipsoid_surface_z(V(0, 158, 1.2), V(21.2, 8.0, 15.2), ((1, 0, 0), (0, 1, 0), (0, 0, 1)), BADGE_C[0], BADGE_C[1])
     B["chest"] += _T(box(V(BADGE_C[0] + 1.0, BADGE_C[1], bz + 0.2), V(4.3, 3.1, 0.35), None,
@@ -835,9 +871,13 @@ def build_rest(params: dict) -> dict[str, list]:
 
     # --- cuello y cabeza --------------------------------------------------------------------
     neck_pts = [V(0, 180, 4), V(0, 189, 13), V(0, 197, 25)]
-    B["neck"] += _T(limb(neck_pts, [6.8, 6.0, 5.6], None, 2), "body", "skin", 90)
+    B["neck"] += _T(limb(neck_pts, [6.2, 5.3, 5.0], None, 2), "body", "skin", 90)
     for side in (1.0, -1.0):
-        B["neck"] += _T(capsule(V(side * 7.5, 202, 22), V(side * 2.2, 182.5, 12.5), 2.0, None), "body", "skin", 91)
+        # Esternocleidomastoideo tenso y cuerdas del platisma.
+        B["neck"] += _T(limb([V(side * 7.8, 202, 21), V(side * 5.6, 192, 16.5), V(side * 2.2, 182.5, 12.8)], [2.3, 2.1, 1.6],
+                             None, 2), "body", "skin", 91)
+        B["neck"] += _T(capsule(V(side * 4.0, 196, 21.5), V(side * 9.0, 183, 9.0), 1.0, None), "body", "skin", 93)
+        B["neck"] += _T(capsule(V(side * 6.5, 190, 6.0), V(side * 15.0, 186, 2.0), 2.4, None), "body", "skin", 94)
     B["neck"] += _T(ellipsoid(V(0, 191, 18.6), V(2.0, 2.6, 2.0), None), "body", "skin", 92)
 
     hc = HEAD_C
@@ -865,6 +905,7 @@ def build_rest(params: dict) -> dict[str, list]:
         B["head"] += _T(cylinder(vadd(hc, V(side * 10.2, 1.0, 5.8)), vadd(hc, V(side * 11.8, 1.0, 5.3)), 1.3, None), "head", "metal", 114)
         B["head"] += _T(sphere(vadd(hc, V(side * 10.2, 1.0, 5.8)), 2.2, None), "head", "wound", 115)
 
+    _head_anatomy(B)
     # Cabeza algo más grande que la de un hombre: se lee mejor la máscara.
     B["head"] = scale_about(B["head"], HEAD_SCALE, HEAD_PIVOT)
     B["jaw"] = scale_about(B["jaw"], HEAD_SCALE, HEAD_PIVOT)
@@ -875,19 +916,14 @@ def build_rest(params: dict) -> dict[str, list]:
         sh = mirror(SHOULDER, side)
         el = mirror(ELBOW, side)
         wr = mirror(WRIST, side)
-        B[f"clav_{n}"] += []
-        B[arm] += _T(ellipsoid(vadd(sh, V(side * 1.5, -3, 0)), V(6.8, 9.5, 7.2), None), arm, "skin", 120 + side)
-        B[arm] += _T(limb([sh, vlerp(sh, el, 0.5), el], [5.2, 4.6, 3.9], None, 3), arm, "skin", 121 + side)
-        B[arm] += _T(ellipsoid(vadd(vlerp(sh, el, 0.55), V(0, 0, 3.6)), V(3.3, 10, 3.0), None), arm, "skin", 122 + side)
-        B[arm] += _T(ellipsoid(vadd(vlerp(sh, el, 0.5), V(side * 0.6, 0, -3.3)), V(3.6, 11.5, 3.4), None), arm, "skin", 123 + side)
-        B[f"fore_{n}"] += _T(sphere(el, 4.3, None), arm, "skin", 124 + side)
-        B[f"fore_{n}"] += _T(sphere(vadd(el, V(0, 0.5, -3.5)), 2.6, None), arm, "skin", 125 + side)
+        _arm_anatomy(B, side, n, sh, el, wr)
         if side > 0:
             # Manga corta rota.
             B[arm] += _T(limb([vadd(sh, V(0, 1.5, 0)), vlerp(sh, el, 0.48)], [8.6, 7.2], None, 3), arm, "cloth", 126,
                          tear_cut(3), blood=0.55, tear_id=3)
-            B[f"fore_{n}"] += _T(limb([el, vlerp(el, wr, 0.5), wr], [4.1, 3.6, 2.7], None, 3), arm, "skin", 127)
-            B[f"fore_{n}"] += _T(ellipsoid(vadd(vlerp(el, wr, 0.25), V(-1.0, 0, 2.0)), V(3.4, 10, 3.0), None), arm, "skin", 128)
+            _forearm_anatomy(B, side, n, el, wr)
+            for k, (dx, ln, ang) in enumerate(((-3.0, 7.0, 0.25), (2.5, 9.0, -0.15), (5.5, 5.5, -0.35))):
+                _shred(B, arm, arm, vadd(vlerp(sh, el, 0.44), V(dx, 0.0, 6.0 - abs(dx) * 0.4)), ln, 1.6, ang, 300 + k)
             _left_hand(B)
         else:
             # Jirón de manga en el hombro derecho.
@@ -900,6 +936,189 @@ def build_rest(params: dict) -> dict[str, list]:
                 B[arm] += _T(box(p, V(1.6, 0.35, 0.4), None), arm, "metal", 130, blood=0.9)
             _right_forearm(B)
     return B
+
+
+def _shred(B, bone, layer, top, length, width, ang, seed, blood=0.9):
+    """Jirón de tela que cuelga desde `top` (girado `ang` en el plano frontal)."""
+    d = (math.sin(ang), -math.cos(ang), 0.0)
+    c = vadd(top, vmul(d, length * 0.5))
+    basis = basis_from_y(d, (0.0, 0.0, 1.0))
+    B[bone] += _T(ellipsoid(c, V(width, length * 0.5, 0.5), None, basis=basis), layer, "cloth", seed, None, blood=blood,
+                  fold=0.4, hem=top[1] - length + 3)
+
+
+def _leg_anatomy(B, s, n):
+    """Pierna enjuta: rodilla huesuda (cóndilos, rótula, tuberosidad), tibia marcada, gemelos
+    consumidos, tendón de Aquiles, maléolos, pie largo con tendones y nudillos; pantalón suelto
+    con la pernera rota y jirones."""
+    leg = f"leg_{n}"
+    T, S, F = f"thigh_{n}", f"shin_{n}", f"foot_{n}"
+    x0 = s * 14.0
+    hip = V(s * 13, 116, 0)
+    knee = V(x0, 62, 2)
+    ankle = V(x0, 9, -1)
+    tear = 5 if s > 0 else 6
+    # Muslo (casi siempre bajo el pantalón).
+    B[T] += _T(limb([hip, V(s * 14, 90, 2), knee], [7.4, 5.9, 4.6], None, 3), leg, "skin", 10 + s)
+    # Rodilla.
+    for dx in (2.6, -2.6):
+        B[S] += _T(sphere(V(x0 + dx, 63.5, 1.6), 3.3, None), leg, "skin", 15 + s)
+    B[S] += _T(ellipsoid(V(x0, 62.6, 6.2), V(3.0, 3.6, 1.9), None), leg, "skin", 16 + s)
+    B[S] += _T(ellipsoid(V(x0, 56.6, 4.8), V(1.9, 2.4, 1.5), None), leg, "skin", 16 + s)
+    B[S] += _T(capsule(V(x0, 60.0, 5.6), V(x0, 56.5, 5.0), 1.2, None), leg, "skin", 16 + s)
+    # Espinilla: tibia de filo, gemelos, sóleo, Aquiles, maléolos.
+    B[S] += _T(limb([knee, V(x0, 38, 0.5), ankle], [3.9, 2.9, 2.1], None, 3), leg, "skin", 17 + s, dirty=0.6)
+    B[S] += _T(capsule(V(x0 - s * 0.7, 57, 3.9), V(x0 - s * 0.4, 13, 2.2), 1.6, None), leg, "skin", 19 + s, dirty=0.6)
+    B[S] += _T(ellipsoid(V(x0 - s * 1.8, 47, -2.6), V(2.8, 9.5, 3.3), None), leg, "skin", 18 + s, dirty=0.5)
+    B[S] += _T(ellipsoid(V(x0 + s * 1.6, 49.5, -2.2), V(2.5, 8.0, 3.0), None), leg, "skin", 18 + s, dirty=0.5)
+    B[S] += _T(ellipsoid(V(x0, 35, -1.8), V(3.1, 9.0, 2.7), None), leg, "skin", 18 + s, dirty=0.7)
+    B[S] += _T(capsule(V(x0, 27, -2.8), V(x0, 7.5, -4.3), 1.15, None), leg, "skin", 20 + s, dirty=0.8)
+    B[S] += _T(sphere(V(x0 - s * 2.5, 10.0, -0.4), 1.8, None), leg, "skin", 21 + s, dirty=0.8)
+    B[S] += _T(sphere(V(x0 + s * 2.4, 8.6, -1.2), 1.7, None), leg, "skin", 21 + s, dirty=0.8)
+    # Pie largo y huesudo.
+    B[F] += _T(ellipsoid(V(x0, 4.2, -2.6), V(3.3, 4.2, 4.0), None), leg, "skin", 22 + s, dirty=0.9)
+    B[F] += _T(ellipsoid(V(s * 14.6, 3.0, 5.5), V(4.6, 2.7, 8.5), None), leg, "skin", 23 + s, dirty=0.9)
+    toes = [(-3.3, 1.45, 18.8), (-1.2, 1.1, 18.0), (0.8, 1.0, 17.0), (2.6, 0.95, 16.0), (4.2, 0.85, 14.8)]
+    for tx, tr, tz in toes:
+        x = s * 14.6 + s * tx
+        base = V(x, 2.4, 12.0)
+        mid = V(x + s * tx * 0.05, 2.9, 12.0 + (tz - 12.0) * 0.55)
+        tip = V(x + s * tx * 0.1, 1.2, tz)
+        B[F] += _T(capsule(V(x - s * tx * 0.1, 4.6, 3.5), base, 0.6, None), leg, "skin", 26 + s, dirty=0.9)  # tendón
+        B[F] += _T(capsule(base, mid, tr, None), leg, "skin", 24 + s, dirty=0.9)
+        B[F] += _T(capsule(mid, tip, tr * 0.9, None), leg, "skin", 24 + s, dirty=0.95)
+        B[F] += _T(sphere(mid, tr * 1.12, None), leg, "skin", 27 + s, dirty=0.9)
+        B[F] += _T(ellipsoid(vadd(tip, V(0, 0.55, 0.3)), V(tr * 0.8, 0.4, tr * 0.7), None), leg, "nail", 25)
+    # Pantalón: suelto, con costuras, la pernera rota por abajo (y la rodilla derecha).
+    data = dict(blood=0.5, hem=30.0, tear_id=tear, seam=1.0, trouser=1.0)
+    B[T] += _T(limb([vadd(hip, V(0, 2, 0)), V(s * 14.6, 90, 2.4), knee], [9.6, 8.4, 7.4], None, 3), leg, "cloth", 12 + s,
+               tear_cut(tear), **data)
+    B[T] += _T(sphere(V(x0, 62.5, 2.6), 7.4, None), leg, "cloth", 14 + s, tear_cut(tear), **data)
+    B[S] += _T(limb([knee, V(x0, 42, 1.2), V(x0, 24, 0.2)], [7.3, 7.0, 6.9], None, 3), leg, "cloth", 20 + s, tear_cut(tear),
+               fold=1.2, **data)
+    # Arrugas de tela amontonada: rebordes que asoman de verdad en la silueta.
+    for k, (y, r, tilt) in enumerate(((73.0, 8.1, 0.12), (57.5, 7.9, -0.1), (46.0, 7.5, 0.08), (37.0, 7.4, -0.12))):
+        bone = T if y > 62 else S
+        basis = basis_from_y((s * tilt, 1.0, 0.15 * (k % 2)), (0.0, 0.0, 1.0))
+        B[bone] += _T(ellipsoid(V(x0, y, 1.6), V(r, 1.5, r * 0.98), None, basis=basis), leg, "cloth", 360 + k, tear_cut(tear),
+                      **data)
+    # Jirones de la pernera.
+    for k, (dx, ln, ang) in enumerate(((-4.5, 7.0, 0.1), (1.0, 10.0, -0.05), (5.0, 6.0, -0.2))):
+        hem_y = 30.0 + (6.0 if s < 0 else 0.0) + 2.0
+        _shred(B, S, leg, V(x0 + s * dx, hem_y, 6.0 - abs(dx) * 0.5), ln, 1.5, ang * s, 310 + k + int(s) * 5, blood=1.0)
+
+
+def _arm_anatomy(B, s, n, sh, el, wr):
+    """Brazo enjuto: deltoides de tres cabezas, bíceps y tríceps consumidos, codo de nudos."""
+    arm = f"arm_{n}"
+    A = arm
+    B[A] += _T(limb([sh, vlerp(sh, el, 0.5), el], [4.2, 3.3, 3.0], None, 3), arm, "skin", 121 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.1), V(s * 0.6, 0, 3.0)), V(3.9, 8.0, 3.5), None), arm, "skin", 120 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.08), V(s * 3.0, -1.5, 0.0)), V(3.6, 9.0, 4.3), None), arm, "skin", 120 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.1), V(s * 0.6, -1.0, -3.2)), V(3.7, 8.0, 3.4), None), arm, "skin", 120 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.56), V(0, 0, 2.5)), V(2.8, 9.5, 2.5), None), arm, "skin", 122 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.44), V(s * 0.3, 0, -2.6)), V(3.1, 11.0, 2.7), None), arm, "skin", 123 + s)
+    B[A] += _T(ellipsoid(vadd(vlerp(sh, el, 0.36), V(s * 2.0, 0, -1.0)), V(2.1, 7.0, 2.3), None), arm, "skin", 123 + s)
+    F = f"fore_{n}"
+    B[F] += _T(sphere(vadd(el, V(0, 0.8, -2.9)), 2.4, None), arm, "skin", 125 + s)
+    B[F] += _T(sphere(vadd(el, V(-s * 3.0, 1.0, 0.0)), 1.8, None), arm, "skin", 125 + s)
+    B[F] += _T(sphere(vadd(el, V(s * 2.7, 1.0, 0.0)), 1.6, None), arm, "skin", 125 + s)
+    B[F] += _T(sphere(el, 3.2, None), arm, "skin", 124 + s)
+
+
+def _forearm_anatomy(B, s, n, el, wr, instrument: bool = False):
+    """Antebrazo con braquiorradial, flexores, extensores, cúbito marcado y tendones."""
+    arm = f"arm_{n}"
+    F = f"fore_{n}"
+    B[F] += _T(limb([el, vlerp(el, wr, 0.5), wr], [3.5, 2.9, 2.3 if not instrument else 3.0], None, 3), arm, "skin", 127,
+               dirty=0.6)
+    B[F] += _T(ellipsoid(vadd(vlerp(el, wr, 0.22), V(s * 1.8, 0, 1.4)), V(2.6, 9.0, 2.6), None), arm, "skin", 128)
+    B[F] += _T(ellipsoid(vadd(vlerp(el, wr, 0.3), V(-s * 1.2, 0, 1.5)), V(2.6, 10.0, 2.4), None), arm, "skin", 129)
+    B[F] += _T(ellipsoid(vadd(vlerp(el, wr, 0.3), V(s * 0.6, 0, -1.8)), V(2.4, 10.0, 2.3), None), arm, "skin", 129)
+    B[F] += _T(capsule(vadd(el, V(0, -2, -2.8)), vadd(wr, V(-s * 1.0, 1, -1.6)), 1.0, None), arm, "skin", 131)
+    if instrument:
+        return
+    for dx in (-1.2, 0.0, 1.0):
+        B[F] += _T(capsule(vadd(vlerp(el, wr, 0.55), V(s * dx, 0, 2.0)), vadd(vlerp(el, wr, 0.97), V(s * dx * 0.8, 0, 2.1)),
+                           0.55, None), arm, "skin", 132)
+    B[F] += _T(sphere(vadd(wr, V(-s * 1.9, 1.2, -0.8)), 1.3, None), arm, "skin", 133)
+
+
+def _head_anatomy(B):
+    """Cráneo y cara humanos bajo las máscaras: arcos cigomáticos, ángulos de la mandíbula,
+    orejas con concha, carne hinchada que rebosa alrededor de la porcelana y puntos de
+    sutura que atraviesan el borde de la mascarilla."""
+    hc = HEAD_C
+    for s in (1.0, -1.0):
+        B["head"] += _T(ellipsoid(vadd(hc, V(s * 9.4, -4.5, 4.0)), V(2.0, 1.6, 4.2), None), "head", "skin_head", 116)
+        B["jaw"] += _T(ellipsoid(vadd(hc, V(s * 8.2, -11.5, -1.5)), V(2.6, 4.6, 4.0), None), "head", "skin_head", 117)
+        B["jaw"] += _T(capsule(vadd(hc, V(s * 8.4, -14.0, -1.0)), vadd(hc, V(s * 3.0, -17.0, 6.0)), 1.6, None), "head",
+                       "skin_head", 118)
+        # Oreja: hélice, lóbulo y concha oscura.
+        B["head"] += _T(ellipsoid(vadd(hc, V(s * 11.4, -3.0, -1.0)), V(1.4, 4.4, 3.0), None), "head", "skin_head", 119)
+        B["head"] += _T(sphere(vadd(hc, V(s * 11.4, -6.8, -0.4)), 1.3, None), "head", "skin_head", 119)
+        B["head"] += _T(ellipsoid(vadd(hc, V(s * 12.3, -3.0, -0.6)), V(0.5, 2.2, 1.3), None), "head", "socket", 119)
+        # Hueso occipital.
+        B["head"] += _T(ellipsoid(vadd(hc, V(s * 5.0, -2.0, -12.0)), V(5.0, 5.0, 3.0), None), "head", "skin_head", 120)
+    # Carne hinchada alrededor del borde inferior y de los lados de la porcelana.
+    face_c, face_r = vadd(hc, V(0, -4, 3.0)), V(9.6, 10.5, 9.8)
+    cran_c, cran_r = vadd(hc, V(0, 1.5, -3.5)), V(11.2, 13.2, 13.5)
+    ident = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    ring = []
+    for k in range(13):
+        x = -10.0 + k * (20.0 / 12)
+        y = EYE_Y - 4.5 - max(0.0, 4.5 - abs(x)) - 0.6
+        ring.append((x, y))
+    for y in (EYE_Y - 2.0, EYE_Y + 1.5, EYE_Y + 5.0):
+        ring += [(-10.4, y), (10.4, y)]
+    for k, (x, y) in enumerate(ring):
+        z = max(_ellipsoid_surface_z(face_c, face_r, ident, x, y), _ellipsoid_surface_z(cran_c, cran_r, ident, x, y))
+        r = 1.5 + 0.4 * ((k * 7) % 3) / 2
+        B["head"] += _T(ellipsoid(V(x, y, z + 0.2), V(r, r * 0.85, r * 0.9), None), "head", "swollen", 400 + k)
+    # Puntos de sutura que cruzan el borde de la mascarilla (hilo negro sobre la piel).
+    mask_c, mask_r = vadd(hc, V(0, -9.0, 4.4)), V(10.3, 10.0, 9.4)
+    jaw_c, jaw_r = vadd(hc, V(0, -10.5, 4.0)), V(8.6, 5.6, 7.6)
+    for s in (1.0, -1.0):
+        y = MASK_Y0 + 1.0
+        while y < MASK_Y1 - 0.5:
+            xa, xb = s * (MASK_HALF_W - 1.8), s * (MASK_HALF_W + 1.4)
+            za = _ellipsoid_surface_z(mask_c, mask_r, ident, xa, y) + 0.25
+            zb = max(_ellipsoid_surface_z(face_c, face_r, ident, xb, y), _ellipsoid_surface_z(jaw_c, jaw_r, ident, xb, y)) + 0.25
+            B["jaw"] += _T(capsule(V(xa, y, za), V(xb, y - 0.4, zb), 0.42, None), "head", "thread", 410)
+            y += 1.9
+    x = -7.0
+    while x <= 7.01:
+        ya, yb = MASK_Y1 - 1.6, MASK_Y1 + 1.2
+        za = _ellipsoid_surface_z(mask_c, mask_r, ident, x, ya) + 0.25
+        zb = _ellipsoid_surface_z(face_c, face_r, ident, x, yb) + 0.25
+        B["head"] += _T(capsule(V(x, ya, za), V(x + 0.3, yb, zb), 0.42, None), "head", "thread", 411)
+        x += 2.0
+
+
+def _tunic_details(B):
+    """Casaca: jirones que cuelgan del bajo, un colgajo del desgarro del pecho y botones."""
+    for k, (x, ln, ang) in enumerate(((-14.0, 8.0, 0.15), (-8.0, 12.0, 0.05), (-1.5, 6.0, -0.1), (6.0, 10.0, -0.08),
+                                      (12.5, 7.0, -0.2))):
+        rx, rz, cz = 19.8, 14.4, -0.5
+        z = cz + rz * math.sqrt(max(0.0, 1 - (x / rx) ** 2)) - 0.6
+        _shred(B, "root", "body", V(x, 108.0, z), ln, 1.8, ang, 320 + k, blood=0.9)
+    # Pliegues verticales de la casaca colgando del pecho hasta el bajo.
+    def surf(x, y):
+        _, rx, rz, cz = min(TUNIC_PROFILE_SLICES(0.0), key=lambda p: abs(p[0] - y))
+        return V(x, y, cz + rz * math.sqrt(max(0.0, 1 - (x / rx) ** 2)) - 0.7)
+    for k, x in enumerate((-13.0, -5.5, 8.5, 15.0)):
+        B["lumbar"] += _T(capsule(surf(x, 146.0), surf(x * 1.05, 128.0), 1.5, None), "body", "cloth", 350 + k, tear_cut(9),
+                          blood=0.8, tear_id=9, drape=1.0)
+        B["root"] += _T(capsule(surf(x * 1.05, 127.0), surf(x * 1.1, 108.0), 1.6, None), "body", "cloth", 355 + k, tear_cut(9),
+                        blood=0.8, tear_id=9, drape=1.0, hem=106.0)
+    # Colgajo que cuelga del borde alto del desgarro del pecho.
+    _shred(B, "chest", "body", V(-7.0, 176.0, 15.6), 11.0, 3.2, 0.25, 330, blood=1.0)
+    _shred(B, "chest", "body", V(1.0, 175.0, 16.0), 7.0, 1.6, -0.2, 331, blood=1.0)
+    for k, y in enumerate((112.0, 122.0, 132.0, 146.0)):
+        _, rx, rz, cz = min(TUNIC_PROFILE_SLICES(0.0), key=lambda p: abs(p[0] - y))
+        x = 6.0
+        z = cz + rz * math.sqrt(max(0.0, 1 - (x / rx) ** 2)) + 0.4
+        B["root" if y < 128 else "lumbar"] += _T(cylinder(V(x, y, z - 0.6), V(x, y, z + 0.3), 1.1, None), "body", "button", 340 + k)
 
 
 def scale_about(prims: list, k: float, c) -> list:
@@ -932,6 +1151,8 @@ def _left_hand(B):
     H = "hand_l"
     B[H] += _T(ellipsoid(V(30.8, 76.5, 8.5), V(3.4, 6.2, 2.6), None), L, "skin", 140, dirty=0.6)
     B[H] += _T(sphere(V(30.2, 83.5, 7.2), 2.9, None), L, "skin", 141)
+    for k in range(4):  # metacarpianos marcados en el dorso
+        B[H] += _T(capsule(V(28.6 + k * 1.3, 81.0, 7.4), V(33.4, 75.6 - k * 3.6, 9.0), 0.75, None), L, "skin", 142 + k, dirty=0.6)
     # Jeringa: eje vertical en x = 31, z = 13.
     cx, cz = 31.0, 13.0
     B[H] += _T(cylinder(V(cx, 50, cz), V(cx, 79, cz), 4.4, None), L, "glass", 142, fill_top=78.0)
@@ -946,6 +1167,8 @@ def _left_hand(B):
         pts = [V(33.6, y + 1.0, 8.6), V(35.6, y, 12.0), V(34.0, y - 0.4, 16.6), V(30.4, y - 0.8, 18.0), V(27.6, y - 1.2, 15.6)]
         for a, b in zip(pts, pts[1:]):
             B[H] += _T(capsule(a, b, r, None), L, "skin", 150 + k, dirty=0.6)
+        for q in pts[1:4]:
+            B[H] += _T(sphere(q, r * 1.18, None), L, "skin", 158 + k, dirty=0.7)  # nudillos
         B[H] += _T(ellipsoid(V(27.4, y - 1.1, 15.2), V(0.9, 1.1, 0.9), None), L, "nail", 154)
     # Pulgar sobre el émbolo.
     B[H] += _T(capsule(V(27.6, 79.0, 9.5), V(28.6, 83.6, 12.2), 1.8, None), L, "skin", 155)
@@ -964,8 +1187,7 @@ def _right_forearm(B):
     wr = mirror(WRIST, -1)
     A = "arm_r"
     F = "fore_r"
-    B[F] += _T(limb([el, vlerp(el, wr, 0.5), wr], [4.3, 3.9, 3.3], None, 3), A, "skin", 160, dirty=0.6)
-    B[F] += _T(ellipsoid(vadd(vlerp(el, wr, 0.25), V(1.0, 0, 2.0)), V(3.5, 10, 3.1), None), A, "skin", 161)
+    _forearm_anatomy(B, -1.0, "r", el, wr, instrument=True)
     # Carne abierta donde entra el metal.
     B[F] += _T(ellipsoid(vadd(vlerp(el, wr, 0.62), V(-1.0, 0, 0.5)), V(4.0, 9.0, 3.8), None), A, "wound", 162)
     for t, r in ((0.42, 5.2), (0.7, 4.8)):
@@ -1146,7 +1368,10 @@ def world_point(sk, bone: str, p) -> np.ndarray:
     return R @ np.array(p) + t
 
 
-def posed_prims(pose: Pose, layers: set[str] | None = None) -> list:
+MODEL_SCALE = 1.05  # el modelo se diseña en "unidades de reposo" y se dibuja a esta escala
+
+
+def posed_prims(pose: Pose, layers: set[str] | None = None, scale: float = MODEL_SCALE) -> list:
     sk = skeleton(pose)
     rest = build_rest({"breath": pose.breath})
     stumps = build_stumps()
@@ -1162,6 +1387,8 @@ def posed_prims(pose: Pose, layers: set[str] | None = None) -> list:
             if bone == "plunger":
                 t = t + R @ np.array([0.0, -9.0 * pose.plunger, 0.0])
             prims += er.place(ps, R, t)
+    if scale != 1.0:
+        prims = scale_about(prims, scale, (0.0, 0.0, 0.0))
     return prims
 
 
@@ -1191,12 +1418,13 @@ def base_pose() -> dict:
     """Postura de guardia: rodillas algo dobladas, brazos colgando un poco adelantados, la
     cabeza adelantada y ladeada, los bisturíes medio abiertos."""
     return {
-        "thigh_l": (-0.16, 0.0, 0.05), "thigh_r": (-0.1, 0.0, -0.08),
-        "shin_l": (0.3, 0.0, 0.0), "shin_r": (0.2, 0.0, 0.0),
-        "foot_l": (-0.12, 0.12, 0.0), "foot_r": (-0.08, -0.15, 0.0),
-        "root": (0.02, 0.0, 0.03),
-        "lumbar": (0.06, 0.0, -0.02), "chest": (0.05, 0.0, 0.0),
-        "neck": (0.0, 0.0, 0.0), "head": (-0.3, -0.12, 0.1),
+        "thigh_l": (-0.2, 0.0, 0.07), "thigh_r": (-0.2, 0.3, -0.02),
+        "shin_l": (0.34, 0.0, 0.0), "shin_r": (0.46, -0.2, 0.08),
+        "foot_l": (-0.12, 0.15, 0.0), "foot_r": (-0.2, -0.05, -0.05),
+        "root": (0.06, 0.05, 0.06),
+        "lumbar": (0.12, 0.0, -0.04), "chest": (0.2, 0.05, -0.06),
+        "clav_r": (0.0, 0.0, -0.16), "clav_l": (0.0, 0.0, 0.04),
+        "neck": (0.22, -0.12, 0.05), "head": (-0.55, -0.38, 0.22),
         "arm_l": (-0.12, 0.0, 0.05), "fore_l": (-0.32, 0.0, 0.0), "hand_l": (0.0, 0.0, 0.0),
         "arm_r": (-0.05, 0.0, -0.12), "fore_r": (-0.25, 0.0, 0.0), "hand_r": (0.0, 0.0, 0.0),
         "blade_0": (0.0, 0.0, 0.16), "blade_1": (0.0, 0.0, 0.05), "blade_2": (0.0, 0.0, -0.06), "blade_3": (0.0, 0.0, -0.2),
@@ -1219,11 +1447,11 @@ def idle(t: float) -> Pose:
     rot = base_pose()
     rot["chest"] = _add(rot["chest"], (-0.05 * breath + trem(5, 0.3), 0.0, trem(7, 1.0)))
     rot["lumbar"] = _add(rot["lumbar"], (0.02 * breath, 0.0, 0.0))
-    rot["clav_l"] = (0.0, 0.0, 0.05 * breath)
-    rot["clav_r"] = (0.0, 0.0, -0.05 * breath)
+    rot["clav_l"] = _add(rot["clav_l"], (0.0, 0.0, 0.05 * breath))
+    rot["clav_r"] = _add(rot["clav_r"], (0.0, 0.0, -0.05 * breath))
     rot["head"] = _add(rot["head"], (0.05 * math.sin(tau * t) + trem(6, 2.0), 0.08 * math.sin(tau * t + 0.5),
                                      0.12 * math.sin(tau * t) + 0.05 * math.sin(2 * tau * t) + 0.22 * tic))
-    rot["neck"] = (0.03 * math.sin(tau * t + 2), 0.0, 0.05 * tic)
+    rot["neck"] = _add(rot["neck"], (0.03 * math.sin(tau * t + 2), 0.0, 0.05 * tic))
     rot["jaw"] = (0.05 * breath, 0.0, 0.0)
     rot["arm_l"] = _add(rot["arm_l"], (0.03 * math.sin(tau * t + 1) + trem(9, 0.5), 0.0, trem(11, 0.0)))
     rot["fore_l"] = _add(rot["fore_l"], (0.04 * math.sin(tau * t), 0.0, 0.0))
@@ -1323,7 +1551,7 @@ def attack_syringe(t: float) -> Pose:
     raise_ = dict(rest)
     raise_.update({
         "root": (0.06, -0.3, 0.0), "lumbar": (0.0, -0.1, 0.05), "chest": (-0.08, -0.15, 0.08),
-        "arm_l": (-2.25, 0.0, 0.3), "fore_l": (-0.75, 0.0, 0.0), "hand_l": (1.6, 0.0, 0.0),
+        "arm_l": (-1.95, 0.0, 0.3), "fore_l": (-0.9, 0.0, 0.0), "hand_l": (1.6, 0.0, 0.0),
         "clav_l": (0.0, 0.0, 0.22),
         "head": (-0.05, 0.25, -0.1), "thigh_l": (-0.2, 0.0, 0.08), "shin_l": (0.38, 0.0, 0.0),
         "arm_r": (0.15, 0.0, -0.35), "fore_r": (-0.5, 0.0, 0.0),
@@ -1495,7 +1723,7 @@ def render_combat_frame(anim: str, i: int) -> dict[str, tuple[bytes, bytes]]:
     rs = combat_settings()
     imgs = er.render_layers(prims, rs, LAYERS)
     out = {layer: (img.color.tobytes(), img.normal.tobytes()) for layer, img in imgs.items()}
-    sh = ground_shadow(prims, rs)
+    sh = ground_shadow(prims, rs, MODEL_SCALE)
     out["shadow"] = (sh.tobytes(), None)
     return out
 
@@ -1522,7 +1750,7 @@ def anchors() -> dict:
     }
     out = {}
     for part, (bone, p) in pts.items():
-        u, v = cam.project(world_point(sk, bone, p))
+        u, v = cam.project(world_point(sk, bone, p) * MODEL_SCALE)
         out[part] = [int(round(ORIGIN[0] + u)), int(round(ORIGIN[1] - v))]
     return out
 
@@ -1541,8 +1769,8 @@ def build_combat(procs: int, only_anims: list[str] | None = None, meta_old: dict
     for layer in ORDER:
         path = out_dir / f"{layer}.png"
         npath = out_dir / f"{layer}_n.png"
-        size = (FRAME_W * TOTAL_FRAMES, FRAME_H)
-        if only_anims and path.exists():
+        size = (FRAME_W * GRID_COLUMNS, FRAME_H * GRID_ROWS)
+        if only_anims and path.exists() and Image.open(path).size == size:
             c = Image.open(path).convert("RGBA")
             nimg = Image.open(npath).convert("RGBA") if npath.exists() else Image.new("RGBA", size, (128, 128, 255, 0))
         else:
@@ -1552,7 +1780,7 @@ def build_combat(procs: int, only_anims: list[str] | None = None, meta_old: dict
     start = time.time()
     with Pool(procs) as pool:
         for n, (col, data, dt) in enumerate(pool.imap_unordered(_combat_job, jobs)):
-            at = (col * FRAME_W, 0)
+            at = cell(col)
             for layer, (cb, nb) in data.items():
                 sheets[layer][0].paste(Image.frombytes("RGBA", (FRAME_W, FRAME_H), cb), at)
                 if nb is not None:
@@ -1570,7 +1798,8 @@ def _check_edges(sheets) -> None:
     for layer, (c, _) in sheets.items():
         a = np.asarray(c)[..., 3]
         for f in range(TOTAL_FRAMES):
-            fr = a[:, f * FRAME_W:(f + 1) * FRAME_W]
+            x, y = cell(f)
+            fr = a[y:y + FRAME_H, x:x + FRAME_W]
             if fr[0].any() or fr[:, 0].any() or fr[:, -1].any() or fr[-1].any():
                 print(f"   AVISO: la capa {layer} toca el borde en el fotograma {f}")
 
@@ -1580,8 +1809,8 @@ def describe_combat() -> dict:
     return {
         "frame": [FRAME_W, FRAME_H],
         "origin": list(ORIGIN),
-        "hframes": TOTAL_FRAMES,
-        "vframes": 1,
+        "hframes": GRID_COLUMNS,
+        "vframes": GRID_ROWS,
         "layers": {layer: f"res://{OUT_DIR}/{layer}.png" for layer in ORDER},
         "normals": {layer: f"res://{OUT_DIR}/{layer}_n.png" for layer in LAYERS},
         "order": ORDER,
@@ -1623,7 +1852,7 @@ def _map_yaws() -> list[float]:
 
 def _map_prims(pose: Pose, yaw: float, drop: set[str] = frozenset()) -> list:
     pose.yaw = yaw
-    prims = [p for p in posed_prims(pose) if not p.layer.startswith("stump") or p.layer[6:] in drop]
+    prims = [p for p in posed_prims(pose, scale=1.0) if not p.layer.startswith("stump") or p.layer[6:] in drop]
     prims = [p for p in prims if p.layer not in drop]
     k = MAP_SCALE
     out = []

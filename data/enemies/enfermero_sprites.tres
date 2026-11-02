@@ -27,8 +27,8 @@
 
 [resource]
 script = ExtResource("24_fa6g5")
-frame = Vector2i(256, 300)
-origin = Vector2i(124, 282)
+frame = Vector2i(272, 312)
+origin = Vector2i(122, 284)
 layers = Dictionary[StringName, Texture2D]({
 &"arm_l": ExtResource("11_wuk6a"),
 &"arm_r": ExtResource("12_f1n0k"),
@@ -67,10 +67,10 @@ anims = Dictionary[StringName, Array]({
 &"windup": [12, 8, 12.0, 0]
 })
 anchors = Dictionary[StringName, Vector2]({
-&"arm_l": Vector2(160, 165),
-&"arm_r": Vector2(89, 178),
-&"body": Vector2(127, 128),
-&"head": Vector2(131, 85),
-&"leg_l": Vector2(145, 217),
-&"leg_r": Vector2(111, 220)
+&"arm_l": Vector2(157, 164),
+&"arm_r": Vector2(78, 173),
+&"body": Vector2(130, 128),
+&"head": Vector2(144, 95),
+&"leg_l": Vector2(147, 217),
+&"leg_r": Vector2(120, 221)
 })

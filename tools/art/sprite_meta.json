@@ -31602,15 +31602,15 @@
  },
  "enemy_enfermero": {
   "frame": [
-   256,
-   300
+   272,
+   312
   ],
   "origin": [
-   124,
-   282
+   122,
+   284
   ],
-  "hframes": 68,
-  "vframes": 1,
+  "hframes": 8,
+  "vframes": 9,
   "layers": {
    "shadow": "res://assets/sprites/enemies/enfermero/shadow.png",
    "leg_l": "res://assets/sprites/enemies/enfermero/leg_l.png",
@@ -31698,28 +31698,28 @@
   },
   "anchors": {
    "head": [
-    131,
-    85
+    144,
+    95
    ],
    "body": [
-    127,
+    130,
     128
    ],
    "arm_l": [
-    160,
-    165
+    157,
+    164
    ],
    "arm_r": [
-    89,
-    178
+    78,
+    173
    ],
    "leg_l": [
-    145,
+    147,
     217
    ],
    "leg_r": [
-    111,
-    220
+    120,
+    221
    ]
   },
   "stumps": {

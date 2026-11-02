@@ -286,15 +286,15 @@ def surface(n_count: int, albedo, normal, spec=0.0, gloss=20.0, wrap=0.0, emit=N
 @dataclass
 class Lighting:
     key_dir: tuple = (-0.74, 0.58, 0.34)      # luz lateral fría (de la izquierda de la pantalla, algo alta)
-    key_col: tuple = (1.25, 1.4, 1.7)
+    key_col: tuple = (1.55, 1.72, 2.05)
     rim_dir: tuple = (0.85, 0.3, -0.45)       # contraluz granate (detrás, a la derecha)
     rim_col: tuple = (1.1, 0.16, 0.14)
     rim_power: float = 1.8
     fill_dir: tuple = (0.5, -0.3, 0.6)        # rebote del suelo, muy tenue y violeta
     fill_col: tuple = (0.035, 0.025, 0.06)
-    ambient: tuple = (0.018, 0.016, 0.032)
-    shadow_strength: float = 0.82
-    ao_strength: float = 0.55
+    ambient: tuple = (0.012, 0.011, 0.022)
+    shadow_strength: float = 0.94
+    ao_strength: float = 0.8
     exposure: float = 1.0
 
 

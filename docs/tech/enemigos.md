@@ -23,6 +23,18 @@ Depuración: `ENEMY_DEBUG=mat` (un color plano por material), `ENEMY_DEBUG=albed
   rígidos (`BONES`: pelvis, lumbar, tórax, cuello, cabeza, mandíbula, clavículas, brazos, antebrazos, manos, muslos,
   espinillas, pies, cuatro bisturíes y el émbolo de la jeringa). Cada postura (`Pose`) da una rotación local por hueso;
   la cinemática directa coloca cada pieza y un paso final apoya el punto más bajo en el suelo.
+- **Anatomía**: deltoides de tres cabezas, bíceps y tríceps consumidos, codos de nudos (olécranon y epicóndilos),
+  antebrazos con braquiorradial, flexores, extensores, cúbito y tendones; manos con metacarpianos y nudillos;
+  rodillas huesudas (cóndilos, rótula, tuberosidad), tibia de filo, gemelos, Aquiles y maléolos; pies con tendones;
+  cuello con esternocleidomastoideo y cuerdas tensas; costillas, esternón, clavículas y vientre hundido por los
+  desgarros. Postura encorvada y asimétrica: hombro derecho caído, pierna derecha torcida hacia dentro, cabeza
+  adelantada y ladeada.
+- **Cabeza**: cráneo con orejas (concha), arcos cigomáticos y ángulos de la mandíbula; cuero cabelludo a
+  trasquilones con costras y grapas; carne hinchada que rebosa alrededor de la porcelana; puntos de sutura de hilo
+  que cruzan el borde de la mascarilla.
+- **Uniforme**: costuras laterales con pespunte, bolsillo del pecho, botones, pespunte del bajo, pliegues de caída
+  y rebordes de tela amontonada en rodillas y tobillos, jirones colgando (bajo, mangas, perneras, colgajo del
+  pecho), sangre que empapa y brilla húmeda, bilis, manchas casi negras y mugre acumulada abajo.
 - **Texturas en reposo**: los materiales se evalúan en las coordenadas del modelo en reposo, así que la sangre, las
   venas, la trama de la tela y las grietas de la porcelana se mueven con la carne en vez de «nadar».
 - **Materiales vectorizados** (numpy): piel gris azulada con moteado lívido, venas (ruido de crestas) en relieve,
@@ -41,12 +53,16 @@ Depuración: `ENEMY_DEBUG=mat` (un color plano por material), `ENEMY_DEBUG=albed
 
 ## Combate (`enemy_enfermero`)
 
-Una hoja por capa, una sola fila: los 68 fotogramas de todas las animaciones seguidos. Fotograma de **256×300**,
-pies en **(124, 282)**. Cada capa tiene su mapa de normales `_n.png` (salvo `shadow`).
+Una hoja por capa en rejilla de **8 columnas × 9 filas** (2176×2808; Godot no carga texturas de más de 16384 px
+por lado), con los 68 fotogramas en orden de lectura por filas: el índice de `anims` es el `frame` de un `Sprite2D`
+con `hframes`/`vframes`. Fotograma de **272×312**, pies en **(122, 284)**; en reposo mide ~210 px (cabe sobre los pies
+del combate, `ENEMY_FEET.y = 238`). El modelo se dibuja a `MODEL_SCALE` = 1,05. Cada capa tiene su mapa de normales
+`_n.png` (salvo `shadow`). Tras regenerar: importar y `"$GODOT_BIN" --headless --path . -s tools/data/build_enemies.gd`
+(hornea `data/enemies/enfermero_sprites.tres`). `tests/unit/test_enemy_sprites.gd` comprueba tamaños y rejilla.
 
 | Clave | Contenido |
 |---|---|
-| `frame`, `origin`, `hframes` | tamaño del fotograma, píxel de los pies, nº de columnas |
+| `frame`, `origin`, `hframes`, `vframes` | tamaño del fotograma, píxel de los pies, columnas y filas de la rejilla |
 | `layers` / `normals` | ruta de cada capa / de sus normales |
 | `order` | de atrás adelante: `shadow`, `leg_l`, `leg_r`, `body`, `stump_*`, `head`, `arm_l`, `arm_r` |
 | `anims` | `[inicio, nº, fps, bucle]` |
