@@ -14,7 +14,9 @@ Al intentar salir, el hospital le ofrece un **pasillo que no aparece en los plan
 
 ## Mapa
 
-Una sola escena. El sótano está en la misma escena y se llega por la escalera de servicio, con un fundido breve y sin pantalla de carga.
+Una sola escena. El sótano está en la misma escena y se llega por la escalera de servicio, con un fundido breve y sin pantalla de carga (el protagonista sigue andando hacia la escalera mientras funde y se oyen sus pasos).
+
+Las **puertas se cruzan andando**, sin fundido: abiertas dejan un hueco en el muro por el que se pasa por debajo del dintel; cerradas bloquean el paso y la luz. La linterna no atraviesa paredes ni puertas cerradas, pero sí ilumina la cara del muro que tiene delante y lo que hay al otro lado de una puerta abierta.
 
 **Planta 3**
 - **Pasillo del ala de pacientes**, de oeste a este.
@@ -63,24 +65,50 @@ La distribución está en `tools/levels/hospital_layout.json`. La escena se gene
 | 10 | Calderas · generador | Instalar la válvula y arrancar | **Vuelve la luz** y suena la megafonía |
 | 11 | Pasillo, extremo oeste | El muro se ha abierto | **Pasillo imposible**, que lleva al final |
 
-Las puertas con llave guardan la llave puesta, que deja de ocupar sitio. Las combinaciones no se explican: se descubren probando o leyendo (nota del cuadro, manual del generador).
+Las puertas con llave guardan la llave puesta, que deja de ocupar sitio. Las combinaciones no se explican en un tutorial: se descubren probando, leyendo (nota del cuadro, manual del generador) o pensando (T).
 
-## Recursos opcionales
+## Pistas `[PROPUESTA]`
 
-- **Pilas**:
-  - Hab. 07 (2);
-  - Hab. 10 (1);
-  - baños (1);
-  - recepción (2);
-  - sala eléctrica (1);
-  - lavandería (2);
-  - morgue (1);
-  - taller (1).
-- **Vendas**: una venda usada en la papelera de la 09 (contaminada); vendas limpias en la Hab. 12, la enfermería y la lavandería; venda esterilizada en la enfermería y el quirófano.
-- **Medicación**: analgésicos (Hab. 08, baños, control); jeringas y ampollas (Hab. 10, enfermería), que combinadas dan **sedante**.
-- **Desinfectante** (almacén, enfermería). Limpia vendas usadas y esteriliza vendas.
+Cada paso del camino principal tiene pistas dentro del mundo, para que nadie se quede atascado sin saber por qué:
 
-La batería gasta un 100 % en unos 9 minutos encendida, y hay pilas para unos 40 minutos más si se buscan.
+| # | Qué falta | Pista |
+|---|---|---|
+| 1 | Linterna | La mesita de la 09 destella. Pensamiento: «En la mesita, junto a la cama, quizá haya algo». |
+| 2 | Palanca | Al intentar abrir el quirófano: «Con algo largo y fuerte metido en la ranura, quizá cediera». Desde entonces el armario del almacén destella y, al examinarlo, «se ve algo largo de hierro apoyado en el fondo». Con la palanca encima, la puerta del quirófano destella. |
+| 3 | Destornillador | La bandeja del quirófano destella. Si llegas al cuadro sin él: «En un quirófano siempre queda instrumental tirado». |
+| 4 | Llave pequeña | El crujido de la 11; desde entonces su cama destella. |
+| 5 | Llave del archivo | El armario de la enfermería deja ver la llave colgada; con la llave pequeña, destella. La puerta del archivo tiene una pegatina: «Llave: enfermería». |
+| 6 | Fusible y llave del sótano | Estantería, escritorio y archivador de la VIGILIA destellan. La placa de la escalera dice «SÓTANO · Solo mantenimiento»; la caja del archivo pone «MANTENIMIENTO». |
+| 7 | Válvula | El generador, al examinarlo: «le falta una pieza». La estantería del taller tiene la etiqueta «GRUPO ELECTRÓGENO · RECAMBIOS» y destella. |
+| 8 | Reparar la válvula | Al probarla en el generador: «el asiento está suelto». Pensamiento: «En la Custodia se pueden probar cosas juntas». |
+| 9-10 | Cuadro y generador | El cuadro destella hasta abrirlo y después cada vez que llevas lo que le falta (destornillador, fusible); el generador destella hasta arrancar. |
+
+**Destellos**: una chispa pequeña, de medio segundo cada pocos segundos y solo de cerca, sobre los objetos clave mientras les queda algo, y sobre cualquier cosa (puerta, cuadro, generador) cuando llevas lo que le falta. **Contorno**: el objeto enfocado tiene un contorno tenue.
+
+**Pensamientos (T)**: un resumen de lo que el protagonista sabe que tiene que hacer, según las banderas y lo que lleva. Cuando cambia, aparece «Algo nuevo en lo que pensar · T». Si sangra, primero recuerda que tiene que vendarse. Datos: `data/thoughts/prologo.tres` (de `tools/data/build_prologue_data.gd`).
+
+## Botín
+
+El contenido «suelto» de los muebles se reparte **al azar al empezar partida nueva**, con una semilla que se guarda con la partida (al cargar sale lo mismo). Lo del camino principal no cambia: linterna y 2 pilas de la mesita de la 09, palanca, destornillador, llaves, fusible, válvula, documentos, la venda usada de la papelera de la 09 y la venda esterilizada del armario de la enfermería.
+
+Datos: `data/loot/prologo.tres` (de `tools/data/build_prologue_data.gd`).
+
+- **Repartos garantizados**: el total del mapa está fijo y solo cambia dónde aparece cada cosa (cada ejemplar en un mueble distinto, elegido entre unos candidatos plausibles):
+  - pilas: 3 en la planta 3 y 2 en el sótano;
+  - vendas: 1 arriba y 1 abajo (los puntos se abren al bajar), y 1 esterilizada (quirófano o enfermería);
+  - analgésicos ×2, una jeringa y una ampolla (un sedante), un desinfectante.
+- **Tablas por tipo de mueble** (cajón, taquilla, papelera, material de cura, medicación, trastero del sótano, debajo de una cama): casi siempre vacías (del 50 % al 88 %), con una tirada de algo menor. Pueden añadir alguna pila, venda o analgésico más.
+- **Ropa** (rara y repartida): cada prenda sale como mucho una vez y no siempre (del 45 % al 70 %); ninguna en la habitación 09 y la mitad, en el sótano. Unas 4 de 8 por partida (antes salían las 9 y la primera, bajo tu propia cama).
+
+**Balance de luz**: la batería gasta un 100 % en 9 minutos y cada pila da un 45 % (unos 4 minutos). Empiezas con un 35 % y 2 pilas (unos 11 minutos). Con los repartos garantizados hay luz para unos 31 minutos, y con lo que pueda salir de las tablas, unos 35-40. El camino principal, sabiendo qué hacer, dura unos 15; explorándolo todo con la linterna encendida casi siempre, la luz llega justa. Antes había 17 pilas (unos 72 minutos de luz).
+
+| Antes | Ahora (por partida) |
+|---|---|
+| 15 pilas sueltas, siempre en el mismo sitio | 5 garantizadas + ~1 de las tablas, en sitios distintos |
+| 5 vendas limpias + 2 esterilizadas | 2 + ~1 de las tablas, y 1 esterilizada (más la fija del armario) |
+| 9 prendas, la primera bajo tu cama | ~4 prendas, ninguna en la 09 |
+
+La medicación sigue igual de escasa: analgésicos (2 garantizados + tablas); jeringas y ampollas, que combinadas dan **sedante**. El **desinfectante** limpia vendas usadas y esteriliza vendas.
 
 ## Ropa
 
@@ -88,16 +116,17 @@ Desde la pestaña **PERSONAJE** de la Custodia se ve al protagonista con lo que 
 
 Empieza con la bata de paciente, descalzo. Prendas del prólogo `[PROPUESTA]`:
 
-| Prenda | Ranura | Dónde | Efecto |
+| Prenda | Ranura | Dónde puede salir (probabilidad) | Efecto |
 |---|---|---|---|
 | Bata de paciente | Cuerpo | Puesta al empezar | Se balancea mucho |
-| Zapatillas | Pies | Hab. 09, bajo la cama | Pasos casi mudos |
-| Gorro de lana | Cabeza | Hab. 07, taquilla | — |
-| Pantalón de pijama | Piernas | Hab. 12, mesita | — |
-| Gorro quirúrgico | Cabeza | Quirófano, encimera | Tapa la cicatriz |
-| Bata de médico | Cuerpo | Control, mostrador | Se balancea mucho |
-| Chaqueta y pantalón de celador | Cuerpo / Piernas | Lavandería, carro 2 | — |
-| Botas de goma | Pies | Taller, banco | Pasos fuertes |
+| Zapatillas | Pies | Debajo de una cama de la 07, 10 o 12, una taquilla o la camilla del pasillo (70 %) | Pasos casi mudos |
+| Gorro de lana | Cabeza | Taquillas de las habitaciones, mesita de la 11 (45 %) | — |
+| Pantalón de pijama | Piernas | Hab. 12, carros de la lavandería (45 %) | — |
+| Gorro quirúrgico | Cabeza | Encimeras del quirófano y la enfermería, control (55 %) | Tapa la cicatriz |
+| Bata de médico | Cuerpo | Control, recepción, enfermería (50 %) | Se balancea mucho |
+| Chaqueta de celador | Cuerpo | Lavandería, taller (55 %) | — |
+| Pantalón de celador | Piernas | Lavandería (45 %) | — |
+| Botas de goma | Pies | Taller, sala eléctrica, lavandería (55 %) | Pasos fuertes |
 
 Por ahora el efecto es visual y de sonido; no cambian estadísticas.
 
@@ -145,7 +174,7 @@ El pasillo nuevo repite puertas con el número 09. Al fondo hay una puerta abier
 
 ## Duración
 
-El camino principal, sabiendo qué hacer, dura unos 15 minutos. Explorando, leyendo los 21 documentos, registrando los ~110 objetos y gestionando la batería, el objetivo es de **30–45 minutos**.
+El camino principal, sabiendo qué hacer, dura unos 15 minutos. Explorando, leyendo los 21 documentos, registrando los ~110 objetos y gestionando la batería, el objetivo es de **30–45 minutos** (la luz garantizada da para unos 31; ver «Botín»).
 
 **Sin medir**: nadie lo ha jugado entero todavía.
 
@@ -166,8 +195,9 @@ Se guardan en `user://settings.cfg`, aparte de la partida.
 |---|---|---|
 | Moverse | WASD / flechas | Stick izquierdo / cruceta |
 | Apuntar (mirar y alumbrar) | Ratón | Stick derecho |
-| Acción principal (abrir, coger, leer…) | E / Intro / Espacio | A |
+| Acción (abrir, coger, leer…; si hay varias, se elige) | E / Intro / Espacio | A |
 | Examinar | R | X |
+| Pensar (qué tengo que hacer) | T | LB |
 | Linterna | F | Y |
 | Sistema de Custodia | Tab / I | Select |
 | Bolsillos | 1–5 | — |

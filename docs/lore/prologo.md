@@ -31,6 +31,22 @@ Nada de esto es canon hasta que lo aprueben las dos personas del equipo. Está e
 
 - **Ropa del prólogo**: descripciones en `tools/levels/build_wear.gd`. Detalles que sugieren cosas sin cerrarlas: «09» bordado en la bata, la placa arrancada del celador, la etiqueta «CAMA 12» del pijama, un nombre escrito y tachado dentro del gorro de lana.
 
+## `[PROPUESTA]` Pistas y pensamientos del prólogo
+
+Textos nuevos para que los puzles se entiendan sin salir del mundo. No añaden canon: son carteles, etiquetas y lo que el protagonista piensa. Están en `tools/levels/build_hospital.gd` (`OBJECT_TWEAKS`, `DOOR_TWEAKS`) y en `tools/data/build_prologue_data.gd` (pensamientos).
+
+- **Carteles y etiquetas**:
+  - puerta del archivo: pegatina «ARCHIVO MÉDICO · Llave: enfermería»;
+  - puerta de la escalera: placa «ESCALERA DE SERVICIO · SÓTANO · Solo mantenimiento»;
+  - estantería del taller: etiqueta «GRUPO ELECTRÓGENO · RECAMBIOS»;
+  - puerta de la 10: «Alguien ha rayado el número de la placa con algo de metal».
+- **Examinar**:
+  - puerta del quirófano (atascada): «Con algo largo y fuerte metido en la ranura, quizá cediera»;
+  - armario del almacén: «Por la rendija se ve algo largo de hierro apoyado en el fondo»;
+  - generador: «En el lateral, un hueco con rosca: le falta una pieza».
+- **Pensamientos** (tecla T), en segunda persona como el resto de textos del protagonista. Resumen lo que ya sabe; no revelan nada que no haya visto u oído, salvo dos suposiciones de sentido común: «El generador de un hospital suele estar en el sótano» y «En un quirófano siempre queda instrumental tirado». El último pensamiento, tras la megafonía, señala las huellas mojadas hacia el muro oeste.
+- **Registrar**: los textos de los muebles con botín aleatorio ya no nombran objetos («Rebuscas entre ropa de otra persona», «Revuelves la ropa del carro»…), porque lo que hay cambia de una partida a otra.
+
 ## Revisar con `lore-keeper`
 
 - Que «el edificio se encarga» no choque con lo que el equipo quiera hacer con el hospital después.
