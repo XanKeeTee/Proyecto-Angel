@@ -51,16 +51,20 @@ Reglas:
 Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su interfaz: proporciones humanas reales, cuerpos frágiles, paleta apagada, suciedad y heridas visibles. Nada de cabezones chibi.
 
 - Fotograma de **48×68 px**. La figura mide unos **58 px**, con la cabeza a ~1/7 de la altura. Los pies apoyan en la parte baja de la casilla.
-- Hoja de **64 columnas por orientación** y **8 filas** (abajo, abajo-izq., izq., arriba-izq., arriba, arriba-der., der., abajo-der.):
+- **16 orientaciones** (cada 22,5°) para andar y 8 para las acciones; detalle técnico en [docs/tech/personaje.md](../tech/personaje.md):
 
-  | Columnas | Animación | Fotogramas |
-  |---|---|---|
-  | 0–7 | Reposo (respira) | 8 |
-  | 8–19 | Gesto: se lleva la mano a la herida y mira al suelo | 12 |
-  | 20–31 | Paso | 12 (un ciclo = 2 casillas) |
-  | 32–39 | Reposo con linterna | 8 |
-  | 40–51 | Gesto con linterna: mira a un lado y a otro | 12 |
-  | 52–63 | Paso con linterna | 12 |
+  | Animación | Fotogramas |
+  |---|---|
+  | Reposo (respira) | 8 |
+  | Gesto: se lleva la mano a la herida y mira al suelo (con linterna: mira a un lado y a otro) | 12 |
+  | Paso | 12 (un ciclo = 2 casillas) |
+  | Paso de espaldas: más corto, apoya primero la punta, tronco algo atrás, brazos separados | 12 |
+  | Paso lateral (izquierda y derecha): la cadera gira hacia donde va, la cabeza mira al frente | 12 + 12 |
+  | Giro en el sitio: arrastra los pies | 8 |
+  | Acciones: alcanzar abajo, a media altura y arriba, recoger del suelo (hinca la rodilla derecha), llave, válvula, palanca, forzar | 10 cada una |
+  | Levantarse de la camilla (solo al empezar) | 56 |
+
+  Todas existen con y sin linterna.
 
 - **Movimiento secundario del paso**:
   - la cadera gira con la pierna que avanza y los hombros giran al contrario;
@@ -71,7 +75,7 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
   - el bajo de la bata se balancea.
 - **Ropa por capas**: cuerpo con ropa interior y una hoja por prenda, del mismo tamaño. Las prendas largas se balancean en el juego (el bajo, no la cintura).
 - **En el juego**:
-  - mira hacia el puntero y puede andar de espaldas (paso al revés, más lento);
+  - mira hacia el puntero y puede andar de espaldas o de lado, cada uno con su paso;
   - los giros pasan por las orientaciones intermedias;
   - tras unos segundos quieto, el personaje hace uno de sus gestos;
   - la luz de la linterna sale de la lente en cada fotograma.

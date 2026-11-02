@@ -40,15 +40,30 @@ enum EquipSlot { NONE, HEAD, BODY, LEGS, FEET }
 @export_group("Ropa")
 ## Ranura del personaje en la que se pone (NONE = no se puede poner).
 @export var equip_slot: EquipSlot = EquipSlot.NONE
-## Hoja de sprites de la prenda puesta (mismo formato que la del protagonista, con normales).
-@export var wear_sheet: Texture2D
+## Hoja de la prenda puesta (CanvasTexture con normales, mismo formato que la del protagonista).
+## Es una ruta y no una textura para que la hoja solo se cargue en memoria mientras se lleva
+## puesta. Las demás hojas de la prenda (con linterna, acciones, levantarse) están al lado,
+## con el sufijo de cada hoja (ver Player.wear_sheet_path).
+@export_file("*.tres") var wear_path: String = ""
 ## Cuánto se balancea con la física (0 = rígida, 1 = bata larga).
 @export_range(0.0, 1.5) var cloth_sway: float = 0.0
+## Alturas (píxeles sobre los pies) donde la tela empieza a moverse y donde está el bajo, que
+## se mueve del todo.
+@export var cloth_waist: float = 32.0
+@export var cloth_hem: float = 14.0
 ## Calzado: sonido de pisada (prefijo de los sonidos _1 a _4) y su volumen. Vacío = descalzo.
 @export var step_sound: String = ""
 @export var step_volume_db: float = -10.0
 
 const ICON_CELL: int = 30
+
+## Hoja de la prenda puesta (de andar, sin linterna). Se carga al pedirla; mientras alguien la
+## use, Godot devuelve la misma textura. null si no es ropa.
+var wear_sheet: Texture2D:
+	get:
+		if wear_path == "" or not ResourceLoader.exists(wear_path):
+			return null
+		return load(wear_path)
 
 
 func footprint(rotated: bool) -> Vector2i:

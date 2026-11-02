@@ -71,8 +71,8 @@ python -I tools/art/build_all.py
 ```
 
 1. `build_all.py` genera el arte (tiles, personaje, objetos, iconos), los sonidos y las imágenes de documentos.
-   - Por partes: `python -I tools/art/character.py [capa ...]` rehace el cuerpo y las prendas (unos 4 min, usa todos los núcleos); `python -I tools/art/items.py [id ...]` rehace iconos y vistas del inspector.
-   - `build_wear` crea los objetos de ropa (`data/items/`) y la textura con normales de cada prenda puesta.
+   - Por partes: `python -I tools/art/character.py [--sheets move,getup] [capa ...]` rehace el cuerpo y las prendas (todo: ~40 min con 3 núcleos; ver [personaje.md](personaje.md)); `python -I tools/art/items.py [id ...]` rehace iconos y vistas del inspector.
+   - `build_wear` crea los objetos de ropa (`data/items/`) y la textura con normales de cada hoja de cada prenda puesta.
 2. `--import` hace que Godot importe todo eso.
 3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
@@ -95,10 +95,10 @@ El generador del hospital se ejecuta como escena (no con `-s`) porque necesita l
   | 2 | Protagonista | No (la lleva él) | No |
   | 4 | Muebles | Sí | No |
 
-- **Animación del protagonista**: 64 columnas × 8 orientaciones (ver la guía estética). El paso avanza con la distancia recorrida de verdad; los giros pasan por las orientaciones intermedias; tras un rato quieto, un gesto. La luz de la linterna sale de la lente: `Player.lens_frames` guarda su posición en cada fotograma. El origen de la linterna por orientación sale de `sprite_meta.json` (`lens`).
-- **Apuntar**: el jugador mira hacia el ratón (o el stick derecho) desde la altura del pecho; si no hay ninguno, hacia donde camina. De lado va al 85 % y de espaldas al 62 %, con el paso al revés. `Player.forced_aim` fija la dirección para pruebas y escenas guionizadas. `AimReticle` dibuja el punto de mira y oculta el cursor del sistema solo mientras se explora.
-- **Ropa por capas**: el cuerpo (`protagonist.png`, con ropa interior) y una hoja por prenda (`characters/wear/<id>.png`), todas con el mismo formato de 64×8 fotogramas. Cada prenda se renderiza con el cuerpo como "tapa" invisible, así que solo pinta lo que queda por delante. En el jugador son 4 `Sprite2D` hijos (`Feet`, `Legs`, `Body`, `Head`) que copian el fotograma del cuerpo.
-- **Física de la tela**: un muelle amortiguado en `Player._update_cloth` (se queda atrás al andar, sigue de largo al frenar, ondea con el paso y sale despedido al girar). El shader `shaders/cloth_sway.gdshader` desplaza los píxeles de la prenda según su altura (nada en la cintura, todo en el bajo) y lee las normales en el mismo sitio. `ItemDef.cloth_sway` dice cuánto se mueve cada prenda.
+- **Animación del protagonista**: 16 orientaciones y varias hojas (andar, con linterna, acciones, levantarse) que se cargan solo cuando se usan; todo en [personaje.md](personaje.md). El paso avanza con la distancia recorrida de verdad; los giros pasan por las orientaciones intermedias; tras un rato quieto, un gesto. La luz de la linterna sale de la lente: cada hoja guarda su posición en cada fotograma (`sheets.<hoja>.lens`).
+- **Apuntar**: el jugador mira hacia el ratón (o el stick derecho) desde la altura del pecho; si no hay ninguno, hacia donde camina. De lado va al 80 % (paso lateral) y de espaldas al 60 % (paso de espaldas propio). `Player.forced_aim` fija la dirección para pruebas y escenas guionizadas. `AimReticle` dibuja el punto de mira y oculta el cursor del sistema solo mientras se explora.
+- **Ropa por capas**: el cuerpo (`protagonist*.png`, con ropa interior) y las hojas de cada prenda (`characters/wear/<id>*.png`), con la misma distribución. Cada prenda se renderiza con el cuerpo como "tapa" invisible, así que solo pinta lo que queda por delante. En el jugador son 4 `Sprite2D` hijos (`Feet`, `Legs`, `Body`, `Head`) que copian el fotograma del cuerpo. `ItemDef.wear_path` es la ruta de la hoja (se carga al ponérsela).
+- **Física de la tela**: un muelle amortiguado en `Player._update_cloth` (se queda atrás al andar, sigue de largo al frenar, ondea con el paso y sale despedido al girar). El shader `shaders/cloth_sway.gdshader` desplaza los píxeles de la prenda según su altura (nada en la cintura, todo en el bajo) y lee las normales en el mismo sitio. `ItemDef.cloth_sway` dice cuánto se mueve cada prenda y `cloth_waist`/`cloth_hem`, dónde empieza y dónde acaba la tela.
 - **Iconos**: miden `casillas × 30 − 4` px y el modelo se encuadra solo. `pxrender` admite un cuarto valor en los materiales: brillo especular.
 - **Mandos**: algunos (visto con un DualSense) mandan valores falsos en los primeros fotogramas; por eso el control llega 0,5 s después en el arranque de depuración.
 
