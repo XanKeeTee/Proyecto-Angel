@@ -10,6 +10,13 @@ signal logged(text: String)
 ## Texto corto de impacto en mayúsculas ("AMPUTACIÓN.").
 signal impact(text: String)
 signal finished(outcome: Outcome, summary: String)
+## Empieza a ejecutarse una acción (para animar al que actúa).
+signal action_started(action: CombatAction)
+## Resultado de un golpe, para la presentación. Claves: attacker, target, part_id, hit, chance,
+## part_damage, body_damage, critical, guarded, broke, amputated, damage_type, mind_damage, status.
+signal struck(info: Dictionary)
+## Un estado se aplica o se termina.
+signal status_changed(combatant: Combatant)
 
 enum Outcome { ONGOING, VICTORY, PARTY_FLED, PROTAGONIST_ESCAPED, GAME_OVER }
 
@@ -20,6 +27,11 @@ const BROKEN_TORSO_COST: int = 3
 const BREATHE_BASE: int = 10
 const AMPUTATION_THRESHOLD: float = 0.25
 const MAX_AMPUTATION_RESIST: int = 40
+## Sangrado que añade una amputación (sin pasar de MAX_BLEED). `[PROPUESTA]`
+const AMPUTATION_BLEED: int = 2
+## Zafarse: base y puntos por cada punto de FUE de diferencia con quien sujeta.
+const BREAK_FREE_BASE: int = 45
+const BREAK_FREE_PER_STRENGTH: int = 5
 
 var party: Array[Combatant] = []
 var enemies: Array[Combatant] = []
@@ -30,6 +42,14 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 ## Intención de cada enemigo esta ronda. Se guarda aquí, y no en el combatiente,
 ## para no crear ciclos de referencias (fugas de memoria).
 var intents: Dictionary[Combatant, CombatAction] = {}
+## Se puede huir de este combate (los combates `sin_huida` lo ponen a false).
+var can_flee: bool = true
+## Uso de objetos del inventario real: `func(actor: Combatant, item: Variant) -> String` (texto del
+## registro; "" = no se ha podido). Si no se asigna, se usan las vendas de prototipo (`bandages`).
+var item_user: Callable
+## Agarres: víctima → quien la sujeta, y la parte con la que sujeta.
+var _grab_holder: Dictionary[Combatant, Combatant] = {}
+var _grab_part: Dictionary[Combatant, StringName] = {}
 
 var _queue: Array[CombatAction] = []
 var _resolving: bool = false
@@ -134,8 +154,38 @@ func intent_text(enemy: Combatant) -> String:
 	return "%s → %s" % [what, who]
 
 
+## Aviso legible de lo que prepara un enemigo («Levanta el brazo de bisturíes»), o "" si no se ve.
+func intent_telegraph(enemy: Combatant) -> String:
+	var action: CombatAction = intents.get(enemy)
+	if action == null or not enemy.is_active() or not party_can_read_intents() or action.attack == null:
+		return ""
+	if action.attack.visibility == CombatTypes.Visibility.HIDE_WHAT:
+		return ""
+	return action.attack.telegraph
+
+
 func preview_hit_chance(attacker: Combatant, target: Combatant, part_id: StringName) -> int:
 	return CombatRules.hit_chance(attacker, target, attacker.current_weapon().accuracy, target.parts[part_id].def)
+
+
+## Daño estimado (sin crítico) del arma actual sobre una parte: {"part": Vector2i(mín, máx),
+## "body": Vector2i(mín, máx)} con el que pasa al Cuerpo.
+func preview_damage(attacker: Combatant, target: Combatant, part_id: StringName) -> Dictionary:
+	var weapon: WeaponDef = attacker.current_weapon()
+	return CombatRules.damage_range(weapon.power, attacker.def.strength, target.def.armor, weapon.damage_type,
+			target.parts[part_id].def)
+
+
+## Probabilidad de zafarse de un agarre.
+func break_free_chance(member: Combatant) -> int:
+	var holder: Combatant = _grab_holder.get(member)
+	var other: int = holder.def.strength if holder != null else member.def.strength
+	return clampi(BREAK_FREE_BASE + BREAK_FREE_PER_STRENGTH * (member.def.strength - other), 15, 90)
+
+
+## Quién sujeta a `member` (o null).
+func grabbed_by(member: Combatant) -> Combatant:
+	return _grab_holder.get(member)
 
 
 func flee_chance_solo(member: Combatant) -> int:
@@ -157,12 +207,18 @@ func _execute(action: CombatAction) -> void:
 	if actor.is_panicking() and rng.randf() < 0.25:
 		logged.emit("%s se queda paralizado por el pánico." % actor.display_name())
 		return
+	for id: StringName in actor.statuses:
+		var status: CombatStatusDef = actor.status_defs[id]
+		if status.skip_chance > 0.0 and rng.randf() < status.skip_chance:
+			logged.emit("%s no consigue moverse (%s)." % [actor.display_name(), status.display_name.to_lower()])
+			return
 	if actor.part_state(CombatTypes.TORSO) == CombatTypes.PartState.BROKEN:
 		logged.emit("Moverse le cuesta a %s (−%d Cuerpo)." % [actor.display_name(), BROKEN_TORSO_COST])
 		_lose_body(actor, BROKEN_TORSO_COST, false)
 		if not actor.is_active():
 			return
 
+	action_started.emit(action)
 	match action.type:
 		CombatTypes.ActionType.ATTACK:
 			var weapon: WeaponDef = actor.current_weapon()
@@ -175,7 +231,14 @@ func _execute(action: CombatAction) -> void:
 			actor.change_mind(gained)
 			logged.emit("%s respira hondo (+%d Mente)." % [actor.display_name(), gained])
 		CombatTypes.ActionType.ITEM:
-			_use_bandage(actor, action.target)
+			if item_user.is_valid() and action.item != null:
+				var text: String = item_user.call(actor, action.item)
+				logged.emit(text if text != "" else "%s no consigue usarlo." % actor.display_name())
+				status_changed.emit(actor)
+			else:
+				_use_bandage(actor, action.target)
+		CombatTypes.ActionType.BREAK_FREE:
+			_break_free(actor)
 		CombatTypes.ActionType.FLEE_SOLO:
 			_flee_solo(actor)
 		CombatTypes.ActionType.FLEE_ALL:
@@ -188,32 +251,122 @@ func _enemy_attack(action: CombatAction) -> void:
 	if attack.required_part != &"" and actor.part_disabled(attack.required_part):
 		logged.emit("%s ya no puede usar %s." % [actor.display_name(), attack.display_name.to_upper()])
 		return
+	if attack.requires_target_status != &"" and (action.target == null or not action.target.has_status(attack.requires_target_status)):
+		logged.emit("%s busca a quien sujetaba, pero ya no lo tiene: %s se pierde." % [actor.display_name(),
+				attack.display_name.to_upper()])
+		return
 	if attack.damage_type == CombatTypes.DamageType.HORROR:
 		var target: Combatant = _redirect_target(actor, action.target)
 		if target == null:
 			return
-		var amount: int = maxi(0, attack.mind_damage - floori(target.def.willpower / 2.0))
+		var amount: int = _mind_after_will(target, attack.mind_damage)
 		logged.emit("%s usa %s → %s: −%d Mente." % [actor.display_name(), attack.display_name.to_upper(),
 				target.display_name(), amount])
 		_change_mind(target, -amount)
+		if attack.inflicts_status != null and rng.randf() < attack.status_chance:
+			_apply_status(target, attack.inflicts_status, actor, attack.required_part)
+		struck.emit({"attacker": actor, "target": target, "part_id": &"", "hit": true, "chance": 100,
+				"part_damage": 0, "body_damage": 0, "critical": false, "guarded": false, "broke": false,
+				"amputated": false, "damage_type": attack.damage_type, "mind_damage": amount, "status": &""})
 		return
-	_strike(actor, action.target, action.part_id, attack.display_name.to_upper(), attack.power,
-			attack.accuracy, attack.damage_type, 0)
+	var info: Dictionary = _strike(actor, action.target, action.part_id, attack.display_name.to_upper(), attack.power,
+			attack.accuracy, attack.damage_type, 0, false)
+	if not info.get("hit", false):
+		struck.emit(info)
+		return
+	var target: Combatant = info["target"]
+	if attack.mind_damage > 0 and not target.dead and target.def.has_mind:
+		var amount: int = _mind_after_will(target, attack.mind_damage)
+		if amount > 0:
+			info["mind_damage"] = amount
+			logged.emit("%s: −%d Mente." % [target.display_name(), amount])
+			_change_mind(target, -amount)
+	if attack.inflicts_status != null and target.is_active() and rng.randf() < attack.status_chance:
+		_apply_status(target, attack.inflicts_status, actor, attack.required_part)
+		info["status"] = attack.inflicts_status.id
+	struck.emit(info)
 
 
+func _mind_after_will(target: Combatant, amount: int) -> int:
+	return maxi(0, amount - floori(target.def.willpower / 2.0))
+
+
+func _apply_status(target: Combatant, status: CombatStatusDef, source: Combatant, source_part: StringName) -> void:
+	var fresh: bool = target.add_status(status)
+	if status.breakable and source != null:
+		_grab_holder[target] = source
+		_grab_part[target] = source_part
+	if fresh and status.apply_text != "":
+		logged.emit(_named(status.apply_text, target))
+	status_changed.emit(target)
+
+
+func _end_status(target: Combatant, id: StringName) -> void:
+	if not target.has_status(id):
+		return
+	var status: CombatStatusDef = target.status_defs[id]
+	target.remove_status(id)
+	if status.breakable:
+		_grab_holder.erase(target)
+		_grab_part.erase(target)
+	if status.end_text != "" and target.is_present():
+		logged.emit(_named(status.end_text, target))
+	status_changed.emit(target)
+
+
+## Suelta a quien sujeta un enemigo que ya no puede sujetar (muerto, Caído o sin la parte con
+## la que sujetaba).
+func _release_grabs() -> void:
+	for victim: Combatant in _grab_holder.keys():
+		var holder: Combatant = _grab_holder[victim]
+		var part: StringName = _grab_part.get(victim, &"")
+		if holder.is_active() and not (part != &"" and holder.part_disabled(part)) and victim.is_present():
+			continue
+		var status: CombatStatusDef = victim.breakable_status()
+		if status != null:
+			_end_status(victim, status.id)
+		else:
+			_grab_holder.erase(victim)
+			_grab_part.erase(victim)
+
+
+func _break_free(actor: Combatant) -> void:
+	var status: CombatStatusDef = actor.breakable_status()
+	if status == null:
+		logged.emit("%s ya está libre." % actor.display_name())
+		return
+	var chance: int = break_free_chance(actor)
+	if rng.randi_range(1, 100) > chance:
+		logged.emit("%s forcejea, pero no consigue soltarse (%d%%)." % [actor.display_name(), chance])
+		return
+	logged.emit("%s se zafa." % actor.display_name())
+	_end_status(actor, status.id)
+
+
+## Golpe físico. Devuelve la información del golpe (ver la señal `struck`). Si `emit_info`, emite
+## `struck` aquí; los ataques enemigos la emiten ellos tras añadir Mente y estados.
 func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack_name: String,
-		power: int, accuracy: int, damage_type: CombatTypes.DamageType, crit_mod: int) -> void:
+		power: int, accuracy: int, damage_type: CombatTypes.DamageType, crit_mod: int, emit_info: bool = true) -> Dictionary:
+	var info: Dictionary = {"attacker": attacker, "target": target, "part_id": part_id, "hit": false, "chance": 0,
+		"part_damage": 0, "body_damage": 0, "critical": false, "guarded": false, "broke": false, "amputated": false,
+		"damage_type": damage_type, "mind_damage": 0, "status": &""}
 	target = _redirect_target(attacker, target)
 	if target == null:
 		logged.emit("%s no encuentra a quién atacar." % attacker.display_name())
-		return
+		return info
 	part_id = _redirect_part(target, part_id)
+	info["target"] = target
+	info["part_id"] = part_id
 	var part: BodyPartState = target.parts[part_id]
 	var where: String = "%s de %s" % [part.def.display_name.to_upper(), target.display_name()]
 	var chance: int = CombatRules.hit_chance(attacker, target, accuracy, part.def)
+	info["chance"] = chance
 	if rng.randi_range(1, 100) > chance:
 		logged.emit("%s: %s → %s. Falla (%d%%)." % [attacker.display_name(), attack_name, where, chance])
-		return
+		if emit_info:
+			struck.emit(info)
+		return info
+	info["hit"] = true
 
 	var base: float = CombatRules.roll_damage(power, attacker.def.strength, rng)
 	var critical: bool = rng.randi_range(1, 100) <= CombatRules.crit_chance(attacker.def.dexterity, crit_mod)
@@ -239,7 +392,11 @@ func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack
 	logged.emit("%s: %s → %s. −%d Cuerpo.%s" % [attacker.display_name(), attack_name, where, body_damage, tags])
 
 	var amputated: bool = false
-	if damage_type == CombatTypes.DamageType.CUT and part.def.amputable and not guarded and not part.is_amputated():
+	var cuts: bool = damage_type == CombatTypes.DamageType.CUT and part.def.amputable
+	# [PROPUESTA] Partes que se arrancan a golpes: solo si ya estaban Rotas.
+	var tears: bool = damage_type == CombatTypes.DamageType.BLUNT and part.def.severable_by_blunt \
+			and previous_state == CombatTypes.PartState.BROKEN
+	if (cuts or tears) and not guarded and not part.is_amputated():
 		var threshold: float = part.max_integrity * AMPUTATION_THRESHOLD
 		var should_amputate: bool = false
 		if previous_state == CombatTypes.PartState.BROKEN:
@@ -260,10 +417,23 @@ func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack
 	if not amputated and part.state != previous_state:
 		logged.emit("%s: %s." % [where, CombatTypes.PART_STATE_NAMES[part.state]])
 		if part.state == CombatTypes.PartState.BROKEN:
+			info["broke"] = true
 			impact.emit("FRACTURA.")
+			if part.def.broken_text != "":
+				logged.emit(_named(part.def.broken_text, target))
+			if target.is_enemy:
+				target.pending_reaction = true
+	info["amputated"] = amputated
+	info["critical"] = critical
+	info["guarded"] = guarded
+	info["part_damage"] = part_damage
+	info["body_damage"] = body_damage
 
 	if target.dead:
-		return
+		_release_grabs()
+		if emit_info:
+			struck.emit(info)
+		return info
 
 	if part_id == CombatTypes.HEAD and part.state == CombatTypes.PartState.BROKEN \
 			and previous_state != CombatTypes.PartState.BROKEN:
@@ -282,6 +452,14 @@ func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack
 		logged.emit("%s empieza a sangrar." % target.display_name())
 
 	_lose_body(target, body_damage, was_fallen)
+	_release_grabs()
+	if emit_info:
+		struck.emit(info)
+	return info
+
+
+func _named(text: String, combatant: Combatant) -> String:
+	return text % combatant.display_name() if text.contains("%s") else text
 
 
 func _use_bandage(actor: Combatant, target: Combatant) -> void:
@@ -304,6 +482,9 @@ func _use_bandage(actor: Combatant, target: Combatant) -> void:
 
 
 func _flee_solo(actor: Combatant) -> void:
+	if not can_flee:
+		logged.emit("No hay escapatoria.")
+		return
 	if not actor.can_flee():
 		logged.emit("%s no puede huir: no puede andar." % actor.display_name())
 		return
@@ -318,6 +499,9 @@ func _flee_solo(actor: Combatant) -> void:
 
 
 func _flee_all() -> void:
+	if not can_flee:
+		logged.emit("No hay escapatoria.")
+		return
 	var chance: int = flee_chance_all()
 	if rng.randi_range(1, 100) > chance:
 		logged.emit("El grupo intenta huir y no lo consigue (%d%%)." % chance)
@@ -367,13 +551,19 @@ func _kill(target: Combatant) -> void:
 
 func _amputate(target: Combatant, part: BodyPartState) -> void:
 	part.amputate()
+	logged.emit("%s pierde %s." % [target.display_name(), part.def.display_name.to_upper()])
+	if part.def.amputated_text != "":
+		logged.emit(_named(part.def.amputated_text, target))
 	if part.def.vital:
-		logged.emit("%s pierde %s." % [target.display_name(), part.def.display_name.to_upper()])
 		impact.emit("DECAPITACIÓN." if part.def.id == CombatTypes.HEAD else "MUTILACIÓN.")
 		_kill(target)
 		return
-	logged.emit("%s pierde %s." % [target.display_name(), part.def.display_name.to_upper()])
 	impact.emit("AMPUTACIÓN.")
+	if target.is_enemy:
+		target.pending_reaction = true
+	if target.bleeding < MAX_BLEED:
+		target.bleeding = mini(MAX_BLEED, target.bleeding + AMPUTATION_BLEED)
+		logged.emit("%s sangra a borbotones." % target.display_name())
 	_change_mind(target, -20)
 	_witness(target, 10, 5)
 
@@ -405,6 +595,13 @@ func _change_mind(target: Combatant, delta: int) -> void:
 # --- Fin de ronda y de combate ---------------------------------------------------
 
 func _end_round() -> void:
+	for combatant: Combatant in _everyone():
+		if combatant.is_enemy:
+			EnemyAI.tick_cooldowns(combatant)
+		for id: StringName in combatant.statuses.keys():
+			combatant.statuses[id] = combatant.statuses[id] - 1
+			if combatant.statuses[id] <= 0:
+				_end_status(combatant, id)
 	for combatant: Combatant in _everyone():
 		if combatant.dead or combatant.fled or combatant.bleeding <= 0:
 			continue
@@ -450,6 +647,8 @@ func _check_outcome() -> void:
 
 func _finish(result: Outcome, title: String) -> void:
 	outcome = result
+	_grab_holder.clear()
+	_grab_part.clear()
 	_queue.clear()
 	intents.clear()
 	logged.emit(title)

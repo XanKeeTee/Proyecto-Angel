@@ -28,3 +28,15 @@ extends Resource
 @export var attacks: Array[EnemyAttackDef] = []
 ## Prefiere rematar a los Caídos.
 @export var finisher: bool = false
+## Descripción corta para la interfaz y el registro al empezar el combate.
+@export_multiline var intro_text: String = ""
+
+@export_group("Presentación")
+## Hojas por capas (contrato con el arte: docs/design/sistemas/combate.md § Vista del enemigo).
+@export var sprites: EnemySpriteDef
+## Clave de tools/art/sprite_meta.json para leer las capas en desarrollo si `sprites` falta.
+@export var sprite_key: String = ""
+## Sonidos (nombres de `Sfx`): respiración o gruñido de espera, dolor y muerte.
+@export var sound_idle: String = ""
+@export var sound_hurt: String = ""
+@export var sound_death: String = ""

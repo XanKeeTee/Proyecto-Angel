@@ -14,6 +14,10 @@ var mind: int = 70
 var bleeding: bool = false
 ## Suelo de Cuerpo mientras no haya peligros mortales (el prólogo no mata al jugador).
 var body_floor: int = 20
+## Heridas de las partes del cuerpo que quedan tras un combate: id de parte → estado
+## (CombatTypes.PartState: 1 Herida, 2 Rota, 3 Amputada). Las sanas no se guardan.
+## Las traslada CombatBridge entre el mapa y el combate (docs/design/sistemas/combate.md).
+var wounds: Dictionary[StringName, int] = {}
 
 var _bleed_timer: float = 0.0
 
@@ -54,7 +58,10 @@ func mind_ratio() -> float:
 
 
 func to_dict() -> Dictionary:
-	return {"body": body, "mind": mind, "bleeding": bleeding}
+	var w: Dictionary = {}
+	for id: StringName in wounds:
+		w[String(id)] = wounds[id]
+	return {"body": body, "mind": mind, "bleeding": bleeding, "wounds": w}
 
 
 static func from_dict(data: Dictionary) -> Vitals:
@@ -62,4 +69,7 @@ static func from_dict(data: Dictionary) -> Vitals:
 	v.body = int(data.get("body", v.body))
 	v.mind = int(data.get("mind", v.mind))
 	v.bleeding = bool(data.get("bleeding", false))
+	var w: Dictionary = data.get("wounds", {})
+	for id: Variant in w:
+		v.wounds[StringName(id)] = int(w[id])
 	return v

@@ -5,7 +5,7 @@ extends RefCounted
 
 enum DamageType { CUT, BLUNT, PIERCE, HORROR }
 enum PartState { HEALTHY, WOUNDED, BROKEN, AMPUTATED }
-enum ActionType { ATTACK, GUARD, BREATHE, ITEM, FLEE_SOLO, FLEE_ALL, ENEMY_ATTACK }
+enum ActionType { ATTACK, GUARD, BREATHE, ITEM, FLEE_SOLO, FLEE_ALL, ENEMY_ATTACK, BREAK_FREE }
 ## Qué parte del telegrafiado ve el jugador.
 enum Visibility { FULL, HIDE_WHAT, HIDE_WHO }
 
@@ -18,5 +18,7 @@ const LEG_R: StringName = &"leg_r"
 ## Comodines para EnemyAttackDef.target_part.
 const ANY_ARM: StringName = &"any_arm"
 const ANY_LEG: StringName = &"any_leg"
+## Orden canónico de las partes humanoides (de arriba abajo).
+const HUMANOID_PARTS: Array[StringName] = [HEAD, TORSO, ARM_L, ARM_R, LEG_L, LEG_R]
 
 const PART_STATE_NAMES: Array[String] = ["Sana", "Herida", "Rota", "Amputada"]

@@ -15,8 +15,22 @@ static func hit_chance(attacker: Combatant, target: Combatant, accuracy: int, pa
 		- 2.0 * target.effective_agility()
 		+ part_def.hit_mod
 		+ attacker.accuracy_modifier()
+		+ target.incoming_hit_modifier()
 	)
 	return clampi(roundi(chance), MIN_HIT, MAX_HIT)
+
+
+## Daño sin crítico (azar 0,9–1,1) a la parte y al Cuerpo: {"part": Vector2i, "body": Vector2i}.
+static func damage_range(power: int, strength: int, armor: int, damage_type: CombatTypes.DamageType,
+		part_def: BodyPartDef) -> Dictionary:
+	if damage_type == CombatTypes.DamageType.PIERCE:
+		armor = floori(armor / 2.0)
+	var low: int = maxi(1, roundi(power * (1.0 + strength / 20.0) * 0.9) - armor)
+	var high: int = maxi(1, roundi(power * (1.0 + strength / 20.0) * 1.1) - armor)
+	return {
+		"part": Vector2i(low, high),
+		"body": Vector2i(roundi(low * part_def.body_mult), roundi(high * part_def.body_mult)),
+	}
 
 
 static func roll_initiative(action: CombatAction, rng: RandomNumberGenerator) -> int:

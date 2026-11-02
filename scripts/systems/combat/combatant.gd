@@ -17,6 +17,13 @@ var dead: bool = false
 var mind_broken: bool = false
 var fled: bool = false
 var guarded_part: StringName = &""
+## Estados temporales: id → rondas que quedan (y su definición en `status_defs`).
+var statuses: Dictionary[StringName, int] = {}
+var status_defs: Dictionary[StringName, CombatStatusDef] = {}
+## Rondas que faltan para poder repetir cada ataque (solo enemigos).
+var cooldowns: Dictionary[EnemyAttackDef, int] = {}
+## Ha perdido (roto o amputado) una parte esta ronda: la IA puede reaccionar.
+var pending_reaction: bool = false
 
 
 func _init(p_def: CombatantDef, p_is_enemy: bool) -> void:
@@ -94,7 +101,16 @@ func effective_agility() -> float:
 				disabled_legs += 1
 	if disabled_legs >= 2:
 		return 0.0
+	for id: StringName in statuses:
+		agility *= status_defs[id].agility_mult
 	return agility
+
+
+## Las dos piernas Rotas o Amputadas: se arrastra.
+func is_crawling() -> bool:
+	if not has_part(CombatTypes.LEG_L) or not has_part(CombatTypes.LEG_R):
+		return false
+	return part_disabled(CombatTypes.LEG_L) and part_disabled(CombatTypes.LEG_R)
 
 
 ## Penalizadores de acierto por heridas y Mente.
@@ -112,7 +128,42 @@ func accuracy_modifier() -> int:
 				modifier -= 25
 	if def.has_mind and not mind_broken and mind * 2 < def.mind_max:
 		modifier -= 10
+	for id: StringName in statuses:
+		modifier += status_defs[id].accuracy_mod
 	return modifier
+
+
+## Lo que suman sus estados al acierto de quien le ataca.
+func incoming_hit_modifier() -> int:
+	var modifier: int = 0
+	for id: StringName in statuses:
+		modifier += status_defs[id].incoming_hit_mod
+	return modifier
+
+
+func has_status(id: StringName) -> bool:
+	return statuses.has(id)
+
+
+## Aplica (o renueva) un estado. Devuelve true si es nuevo.
+func add_status(status: CombatStatusDef) -> bool:
+	var fresh: bool = not statuses.has(status.id)
+	statuses[status.id] = maxi(statuses.get(status.id, 0), status.rounds)
+	status_defs[status.id] = status
+	return fresh
+
+
+func remove_status(id: StringName) -> void:
+	statuses.erase(id)
+	status_defs.erase(id)
+
+
+## Estado que se puede romper con Zafarse (el primero), o null.
+func breakable_status() -> CombatStatusDef:
+	for id: StringName in statuses:
+		if status_defs[id].breakable:
+			return status_defs[id]
+	return null
 
 
 func can_use_items() -> bool:
@@ -120,7 +171,12 @@ func can_use_items() -> bool:
 
 
 func can_flee() -> bool:
-	return effective_agility() > 0.0
+	if effective_agility() <= 0.0:
+		return false
+	for id: StringName in statuses:
+		if status_defs[id].blocks_flee:
+			return false
+	return true
 
 
 func can_read_intents() -> bool:
@@ -152,6 +208,10 @@ func status_text() -> String:
 	if mind_broken:
 		return "QUIEBRE"
 	var tags: PackedStringArray = []
+	for id: StringName in statuses:
+		tags.append(status_defs[id].display_name)
+	if is_crawling():
+		tags.append("Se arrastra")
 	if stunned > 0:
 		tags.append("Aturdimiento")
 	if bleeding > 0:
