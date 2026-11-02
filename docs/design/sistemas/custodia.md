@@ -19,7 +19,7 @@ Textos: PT Serif para menús y descripciones, Courier Prime para datos y documen
 
 ## A. Bandeja de custodia
 
-- **Cuadrícula de 5×4** (20 casillas) de **40 px** (`ItemDef.ICON_CELL`). Indicador de ocupación sobre los bolsillos (`bandeja 07/20`), en rojo al llenarse.
+- **Cuadrícula de 5×4** (20 casillas) de **36 px** (`ItemDef.ICON_CELL`). Indicador de ocupación sobre los bolsillos (`bandeja 07/20`), en rojo al llenarse.
 - **Tamaño**: cada objeto ocupa casillas según su tamaño (`ItemDef.size`). Se puede **girar** si no es cuadrado.
 
   | Objeto | Tamaño |
@@ -157,7 +157,7 @@ Sonidos de uso (provisional entre paréntesis): `use_battery_insert` (battery), 
 | Propiedad | Para qué |
 |---|---|
 | `display_name`, `description` | Nombre y texto al seleccionarlo |
-| `icon`, `inspect_sheet` | Icono de la bandeja (`casillas × 40 − 4` px) y vistas del inspector |
+| `icon`, `inspect_sheet` | Icono de la bandeja (`casillas × 36 − 4` px) y vistas del inspector |
 | `size` | Casillas que ocupa |
 | `max_stack` | Cantidad máxima por montón |
 | `max_durability` | Usos antes de romperse (herramientas) |

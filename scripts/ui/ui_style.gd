@@ -35,17 +35,17 @@ const FONT_MONO: String = "res://assets/fonts/courier_prime/CourierPrime-Regular
 const FONT_HAND: String = "res://assets/fonts/patrick_hand/PatrickHand-Regular.ttf"
 
 ## Tamaños de `ui()` y `ui_bold()`.
-const SIZE_SMALL: int = 12
-const SIZE_TEXT: int = 13
-const SIZE_LARGE: int = 16
+const SIZE_SMALL: int = 11
+const SIZE_TEXT: int = 12
+const SIZE_LARGE: int = 14
 ## Tamaño de `pixel()`: 20 px es su rejilla nativa (cada píxel de la letra son 2 de pantalla).
 const SIZE_TITLE: int = 20
 ## Tamaños de `mono()`.
-const MONO_SMALL: int = 11
-const MONO_TEXT: int = 12
+const MONO_SMALL: int = 10
+const MONO_TEXT: int = 11
 const MONO_LARGE: int = 24
 ## Tamaño de `hand()`.
-const HAND_TEXT: int = 16
+const HAND_TEXT: int = 15
 
 static var _ui: Font
 static var _ui_bold: Font
@@ -103,18 +103,18 @@ static func fit_size(font: Font, size: int) -> int:
 	if font == pixel():
 		return SIZE_TITLE if size <= 28 else 40
 	if font == mono():
-		if size <= 11:
+		if size <= 10:
 			return MONO_SMALL
-		if size <= 14:
+		if size <= 13:
 			return MONO_TEXT
-		return 16 if size <= 20 else MONO_LARGE
+		return 14 if size <= 20 else MONO_LARGE
 	if font == hand():
 		return maxi(size, HAND_TEXT - 2)
-	if size <= 12:
+	if size <= 11:
 		return SIZE_SMALL
-	if size <= 14:
+	if size <= 13:
 		return SIZE_TEXT
-	if size <= 18:
+	if size <= 17:
 		return SIZE_LARGE
 	return SIZE_TITLE if size <= 22 else size
 

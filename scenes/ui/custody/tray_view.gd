@@ -509,11 +509,11 @@ func _draw_floor() -> void:
 		x += step
 	draw_rect(r, Color(base, 0.9 if active else 0.5), false, 1.0)
 	var title: String = "SUELO"
-	var hint: String = "arrastra aquí para descartar  ·  Supr"
+	var hint: String = "arrastra aquí para tirarlo"
 	if bad:
-		hint = "objeto clave: no se puede descartar"
+		hint = "objeto clave: no se tira"
 	elif hover:
-		hint = "suelta para dejarlo en el suelo"
+		hint = "suelta para dejarlo"
 	draw_string(UiStyle.ui(), r.position + Vector2(8, 14), title, HORIZONTAL_ALIGNMENT_LEFT, -1, UiStyle.SIZE_SMALL,
 		Color(base.lightened(0.3), 1.0 if active else 0.7))
 	draw_string(UiStyle.mono(), r.position + Vector2(8, 28), hint, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 12,

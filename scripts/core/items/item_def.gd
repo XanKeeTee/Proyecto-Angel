@@ -12,7 +12,7 @@ enum SoundMaterial {
 }
 
 ## Casilla de la bandeja en píxeles. Los iconos miden `size * ICON_CELL - 4`.
-const ICON_CELL: int = 40
+const ICON_CELL: int = 36
 ## Nombre de cada material en los nombres de los sonidos (`inv_<material>_<acción>`).
 const SOUND_MATERIAL_NAMES: Array[String] = [
 	"", "metal_heavy", "metal_small", "keys", "cloth", "paper", "plastic", "glass", "pills", "battery", "tool",

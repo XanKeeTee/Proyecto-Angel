@@ -98,10 +98,11 @@ func flash_pocket(index: int) -> void:
 func notice(text: String) -> void:
 	if text.strip_edges() == "" or text == "·":
 		return
-	var l: Label = UiStyle.label(text, UiStyle.SIZE_TEXT, UiStyle.BONE)
+	# Arriba a la derecha, pequeño: no tapa la escena.
+	var l: Label = UiStyle.label(text, UiStyle.SIZE_SMALL, UiStyle.BONE_DIM)
 	UiStyle.add_shadow(l)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.custom_minimum_size = Vector2(640, 0)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	l.size_flags_horizontal = Control.SIZE_SHRINK_END
 	l.modulate.a = 0.0
 	_notices.add_child(l)
 	var tween: Tween = create_tween()
@@ -184,6 +185,10 @@ func _build() -> void:
 	add_child(_bleed)
 
 	_notices = VBoxContainer.new()
-	_notices.position = Vector2(0, 14)
+	_notices.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_notices.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_notices.offset_right = -8
+	_notices.offset_top = 6
+	_notices.alignment = BoxContainer.ALIGNMENT_BEGIN
 	_notices.add_theme_constant_override("separation", 2)
 	add_child(_notices)

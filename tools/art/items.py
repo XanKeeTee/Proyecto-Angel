@@ -1,7 +1,7 @@
 """Objetos de la custodia: icono para la bandeja y 8 vistas para el inspector.
 
 - El icono mide lo mismo que las casillas que ocupa el objeto en la bandeja
-  (`casillas x 40 - 4` píxeles, ver ItemDef.ICON_CELL), y el modelo se encuadra solo para llenarlo.
+  (`casillas x 36 - 4` píxeles, ver ItemDef.ICON_CELL), y el modelo se encuadra solo para llenarlo.
 - Los modelos tienen detalle a escala real: moleteado, roscas, etiquetas con líneas
   de texto, graduaciones, tornillería, dientes de llave… y brillo especular en metal,
   cristal y plástico.
@@ -54,7 +54,7 @@ ramp("strip_blood", [(30, 8, 10), (52, 14, 16), (78, 22, 24), (104, 36, 34)])
 ramp("handle_wood", [(26, 14, 8), (44, 26, 14), (66, 42, 24), (90, 60, 36), (116, 82, 50), (140, 104, 66)])
 ramp("pipe_rust", [(26, 14, 10), (46, 26, 16), (70, 40, 24), (96, 58, 34), (124, 80, 46)])
 
-CELL = 40  # casilla de la bandeja (ItemDef.ICON_CELL y scenes/ui/custody/tray_view.gd)
+CELL = 36  # casilla de la bandeja (ItemDef.ICON_CELL y scenes/ui/custody/tray_view.gd)
 ICON_VIEW = View(b=0.85, ambient=0.42, light=(-0.45, 0.8, 0.5), dither=0.4, ss=4)
 INSPECT_VIEW = View(b=0.6, ambient=0.4, light=(-0.45, 0.8, 0.5), dither=0.35, ss=3)
 INSPECT_SIZE = 112
