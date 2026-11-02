@@ -79,6 +79,8 @@ Las puertas con llave guardan la llave puesta, que deja de ocupar sitio. Las com
 - **Vendas**: una venda usada en la papelera de la 09 (contaminada); vendas limpias en la Hab. 12, la enfermería y la lavandería; venda esterilizada en la enfermería y el quirófano.
 - **Medicación**: analgésicos (Hab. 08, baños, control); jeringas y ampollas (Hab. 10, enfermería), que combinadas dan **sedante**.
 - **Desinfectante** (almacén, enfermería). Limpia vendas usadas y esteriliza vendas.
+- `[PROPUESTA]` **Tela**: rasgando ropa que no se lleva puesta (las batas dan 3 tiras). Con ella se fabrican vendas improvisadas (sucias hasta desinfectarlas), torniquetes y el mango envuelto del tubo. Ver [custodia](../sistemas/custodia.md).
+- `[PROPUESTA]` **Armas improvisadas** (el prólogo no tiene combate; se pueden empuñar desde PERSONAJE › MANO): la palanca ya sirve; un **bisturí** en el quirófano y un **tubo de hierro** en el taller o la sala de calderas. Sin colocar todavía en el mapa.
 
 La batería gasta un 100 % en unos 9 minutos encendida, y hay pilas para unos 40 minutos más si se buscan.
 

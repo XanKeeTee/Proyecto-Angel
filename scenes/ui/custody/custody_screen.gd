@@ -584,7 +584,7 @@ func _show_document(id: StringName) -> void:
 
 
 ## Depuración para capturas (una vez): --custody-tab=craft|combine|dossier|character|hand,
-## --custody-drag=id_objeto (lo deja agarrado con el ratón) y --custody-menu=id_objeto (menú contextual).
+## --custody-drag=id (lo deja agarrado con el ratón), --custody-menu=id (menú contextual) y --custody-wield=id.
 func _apply_debug_args() -> void:
 	if has_meta(&"debug_done"):
 		return
@@ -605,6 +605,11 @@ func _apply_debug_args() -> void:
 					"hand":
 						_set_tab(Tab.CHARACTER)
 						_select_slot(HAND_SLOT)
+			"custody-wield":
+				var weapon: ItemStack = character.custody.find_first(StringName(pair[1]))
+				if weapon != null:
+					character.wield(weapon)
+					_refresh()
 			"custody-drag":
 				var stack: ItemStack = character.custody.find_first(StringName(pair[1]))
 				if stack != null:
@@ -1294,7 +1299,7 @@ func _build_outfit_page() -> void:
 	_wardrobe_title = UiStyle.label("ROPA EN LA CUSTODIA", UiStyle.SIZE_SMALL, UiStyle.ASH)
 	right.add_child(_wardrobe_title)
 	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(222, 110)
+	scroll.custom_minimum_size = Vector2(222, 86)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	right.add_child(scroll)
 	_wardrobe = VBoxContainer.new()

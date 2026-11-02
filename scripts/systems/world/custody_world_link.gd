@@ -87,6 +87,13 @@ func _restore() -> void:
 		var stack: ItemStack = ItemStack.from_dict(e.get("stack", {}))
 		if stack != null:
 			_spawn(String(e["uid"]), stack, Vector2(float(e.get("x", 0.0)), float(e.get("y", 0.0))))
+	# Depuración (capturas): --drop=id,id deja esos objetos en el suelo junto al jugador.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--drop="):
+			for id: String in arg.trim_prefix("--drop=").split(","):
+				var def: ItemDef = Registry.item(StringName(id))
+				if def != null and world.player != null:
+					drop(ItemStack.create(def, 1), world.player.position + Vector2(20 + randf_range(-4, 4), 6))
 
 
 func _spawn(uid: String, stack: ItemStack, pos: Vector2) -> DroppedItem:
