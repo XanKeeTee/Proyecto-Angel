@@ -13,6 +13,8 @@ const SLOTS: int = 3
 ## Argumentos que no llevan al hospital.
 const TITLE_ARGS: PackedStringArray = ["screenshot", "screenshot-delay", "title-panel"]
 ## Créditos. Aquí irá también la atribución de cada sonido de Freesound (autor, título, licencia).
+## Atribuciones de sonido (texto llano, lo genera tools/audio/freesound.py).
+const SOUND_CREDITS: String = "res://assets/audio/credits.txt"
 const CREDITS: PackedStringArray = [
 	"LA NOVENA VIGILIA — PRÓLOGO",
 	"Guion, diseño, código y arte: el equipo de Proyecto-Angel.",
@@ -171,7 +173,7 @@ func _build_panels() -> void:
 	_load_panel.closed.connect(_on_panel_closed)
 	_credits_panel = TitlePanel.new("CRÉDITOS")
 	add_child(_credits_panel)
-	for line: String in CREDITS:
+	for line: String in _credit_lines():
 		var heading: bool = line == line.to_upper() and line != ""
 		var l: Label = UiStyle.label(line, 10 if heading else 9, UiStyle.BONE if heading else UiStyle.BONE_DIM,
 			null if heading else UiStyle.mono())
@@ -179,6 +181,19 @@ func _build_panels() -> void:
 		l.custom_minimum_size = Vector2(326, 0)
 		_credits_panel.body.add_child(l)
 	_credits_panel.closed.connect(_on_panel_closed)
+
+
+## Créditos con las atribuciones de sonido que escribe tools/audio/freesound.py (si existen).
+func _credit_lines() -> PackedStringArray:
+	var lines: PackedStringArray = []
+	var sound_credits: String = FileAccess.get_file_as_string(SOUND_CREDITS) if FileAccess.file_exists(SOUND_CREDITS) else ""
+	for line: String in CREDITS:
+		if line.begins_with("Efectos de Freesound") and sound_credits.strip_edges() != "":
+			lines.append("Efectos y música de Freesound.org:")
+			lines.append_array(sound_credits.strip_edges().split("\n"))
+		else:
+			lines.append(line)
+	return lines
 
 
 func _add_item(text: String, action: Callable) -> Button:

@@ -88,3 +88,10 @@ Para añadir uno: una entrada nueva en el `.tres` (o en el inspector) y su búsq
 `build_manifest.py` ordena las entradas por grupos: mundo (luz, máquinas, puertas, muebles), jugador (pisadas, levantarse, escaleras), paisaje sonoro (`amb_*`), terror (`entity_*`, `scare_*`), estado e interfaz (`status_*`, `ui_*`, título), música (`music_menu_*`), usar/fabricar objetos (`use_*`, `craft_*`, `cloth_tear`) y custodia (`inv_<material>_<acción>` para los 12 materiales y 6 acciones, más `inv_<acción>` genéricos). Lo que hay que buscar para cada uno está en su `note`, `query` y `alt`.
 
 Reservados (en el manifiesto, aún sin uso en el código): `breaker` (palanca del cuadro), `unlock` (llave), `monitor_beep` (monitor de la 09) y `stairs_concrete` (escaleras).
+
+## Créditos en el juego
+
+`fetch` y `credits` escriben también `assets/audio/credits.txt` (una línea por grabación: título, autor y
+licencia), que la pantalla de créditos del título muestra en lugar de «atribuciones pendientes». Las
+licencias CC BY obligan a citarlas. Al exportar el juego, añade `*.txt` a los filtros de archivos que no
+son recursos del preset de exportación para que el archivo viaje con el juego.

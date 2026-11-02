@@ -51,6 +51,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "tools/audio/sound_manifest.json"
 CREDITS = ROOT / "tools/audio/credits.json"
 CREDITS_DOC = ROOT / "docs/art/creditos-sonido.md"
+CREDITS_GAME = ROOT / "assets/audio/credits.txt"
 OUT_DIRS = {"sfx": ROOT / "assets/audio/sfx", "music": ROOT / "assets/audio/music"}
 CACHE = ROOT / "tools/audio/.cache"
 API = "https://freesound.org/apiv2"
@@ -388,6 +389,16 @@ def write_credits_doc(credits: dict) -> None:
         c = credits[name]
         lines.append(f"| `{name}` | [{c['title']}]({c['url']}) | {c['author']} | {license_name(c['license'])} |")
     CREDITS_DOC.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # Lo mismo, en texto llano, para la pantalla de créditos del juego (la lee title_screen.gd).
+    seen: set = set()
+    game: list[str] = []
+    for name in sorted(credits, key=lambda n: credits[n]["author"].lower()):
+        c = credits[name]
+        if c["id"] in seen:
+            continue
+        seen.add(c["id"])
+        game.append(f"«{c['title']}» — {c['author']} ({license_name(c['license'])})")
+    CREDITS_GAME.write_text("\n".join(game) + "\n", encoding="utf-8")
 
 
 def selected(m: dict, prefixes: list[str]) -> list[dict]:

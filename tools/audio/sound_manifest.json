@@ -1409,6 +1409,42 @@
    "note": "Respiración de esfuerzo entre dientes (al levantarse de la camilla)."
   },
   {
+   "name": "breath_run_male",
+   "query": "man out of breath panting",
+   "alt": [
+    "male heavy breathing after running",
+    "exhausted panting man"
+   ],
+   "duration": [
+    1.5,
+    8
+   ],
+   "want": [
+    "breathing",
+    "panting",
+    "male",
+    "exhausted"
+   ],
+   "level": -23,
+   "avoid": [
+    "female",
+    "woman",
+    "dog",
+    "cough",
+    "sex",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "fade_out": 0.5,
+   "note": "Jadeo de un hombre herido que se queda sin aliento tras correr un poco; se va calmando."
+  },
+  {
    "name": "cloth_rustle",
    "query": "bed sheet rustle",
    "alt": [

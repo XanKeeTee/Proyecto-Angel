@@ -88,7 +88,7 @@ func start_new() -> void:
 	glitch(0.3, 0.35)
 	await message.show_lines(PackedStringArray(["Llevas una pulsera de plástico en la muñeca."]))
 	GameState.give_document(Registry.document(&"pulsera_09"))
-	hud.notice("WASD / flechas: moverse   ·   E: usar   ·   R: examinar   ·   Tab: custodia")
+	hud.notice("WASD / flechas: moverse   ·   Shift: correr   ·   E: usar   ·   R: examinar   ·   Tab: custodia")
 	unlock()
 	var out: Tween = create_tween()
 	out.tween_property(wake, "energy", 0.0, 10.0).set_ease(Tween.EASE_IN)
