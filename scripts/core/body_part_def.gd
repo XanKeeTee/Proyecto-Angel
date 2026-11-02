@@ -13,3 +13,12 @@ extends Resource
 ## Si se amputa, el combatiente muere.
 @export var vital: bool = false
 @export var amputable: bool = false
+## `[PROPUESTA]` Se puede arrancar a golpes: un golpe contundente fuerte sobre la parte ya Rota la
+## amputa (carne fundida con metal, tejido muerto…). Solo para enemigos concretos.
+@export var severable_by_blunt: bool = false
+
+@export_group("Textos")
+## Se muestra cuando la parte queda inútil (Rota) en combate. `%s` = nombre del combatiente.
+@export_multiline var broken_text: String = ""
+## Se muestra cuando se amputa. `%s` = nombre del combatiente.
+@export_multiline var amputated_text: String = ""

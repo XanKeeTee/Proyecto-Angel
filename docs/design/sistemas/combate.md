@@ -1,7 +1,9 @@
 # Sistema de combate
 
 > Estado: `[PROPUESTA]` salvo las decisiones marcadas como **aprobadas**.
-> Relacionado: [cuerpo-y-heridas.md](cuerpo-y-heridas.md) · estados (pendiente) · enemigos (pendiente) · equipamiento (pendiente)
+> Relacionado: [cuerpo-y-heridas.md](cuerpo-y-heridas.md) · [el enfermero](../enemigos/enfermero.md) (primer enemigo) · equipamiento (pendiente)
+>
+> Código: reglas en `scripts/systems/combat/` (`Battle`, `Combatant`, `EnemyAI`, `CombatRules`, `CombatBridge`, `EncounterDirector`), datos en `scripts/core/*def.gd` y `data/{enemies,party,body_parts,weapons,statuses}/`, pantalla en `scenes/battle/`.
 
 ## Decisiones aprobadas
 
@@ -68,7 +70,10 @@ iniciativa = AGI × 2 + aleatorio_entero(0, AGI) + mod_accion + mods_estados
 | **Guardia** | Elegir una **parte propia** o a un **aliado** que cubrir (ver Guardia) |
 | **Objeto** | Usar un objeto consumible (vendas, calmantes…) |
 | **Respirar** | Recupera `10 + VOL` de Mente. Ocupa la acción |
+| **Zafarse** | Solo si le **sujetan** (estado Agarrado). Ver Estados `[PROPUESTA]` |
 | **Huir** | Intento de huida de todo el grupo (ver Huida) |
+
+En el juego, **Objeto** usa lo que lleva el personaje en la Custodia que cura (vendas, analgésicos, sedante…) con sus efectos de siempre (`CombatBridge.use_item`). El prototipo sin mapa usa vendas genéricas.
 
 Si un personaje no puede usar su arma (ver brazos en cuerpo-y-heridas), siempre le queda **Forcejear**: ataque débil sin arma (poder 4, contundente) con la parte que le quede.
 
@@ -113,6 +118,12 @@ Se tira solo si el ataque acierta. Crítico: daño × 1.5 y la herida resultante
 | **Contundente** | Rompe (fractura) pero **nunca amputa**; 25 % de **Aturdir** si golpea la cabeza |
 | **Perforante** | Ignora la mitad de la armadura; 40 % de **Sangrado** |
 | **Horror** | Daña la **Mente**, no el Cuerpo |
+
+Un ataque físico enemigo puede restar también Mente si acierta (`EnemyAttackDef.mind_damage`, reducido en VOL/2). `[PROPUESTA]`
+
+**Amputación que sangra** `[PROPUESTA]`: perder un miembro (no vital) añade 2 acumulaciones de **Sangrado** (máx. 3).
+
+**Partes que se arrancan a golpes** `[PROPUESTA]`: una parte marcada `severable_by_blunt` (carne fundida con metal, tejido muerto) se amputa con daño contundente si ya estaba **Rota** y el golpe hace ≥ 25 % de su integridad (con la misma tirada de Resistencia). Solo la tiene el brazo de instrumental del enfermero.
 
 ## Guardia
 
@@ -198,6 +209,21 @@ Aprobado:
 - Huir falla en combates marcados `sin_huida`.
 - Si la tirada falla, se pierde la acción.
 
+## Estados `[PROPUESTA]`
+
+Temporales, como datos (`CombatStatusDef`, en `data/statuses/`). Duran unas rondas contando la ronda en que se aplican y se descuentan al final de cada ronda. Los aplica un ataque que acierta (`inflicts_status`, con su probabilidad).
+
+| Campo | Qué hace |
+|---|---|
+| `agility_mult` | Multiplica la AGI efectiva (iniciativa, evasión, huida) |
+| `accuracy_mod` | Suma al acierto de quien lo sufre |
+| `incoming_hit_mod` | Suma al acierto de quien le ataca |
+| `skip_chance` | Probabilidad de perder la acción |
+| `blocks_flee` | No puede huir |
+| `breakable` | Se rompe con **Zafarse**: `45 + 5 × (FUE propia − FUE de quien sujeta)` %, entre 15 y 90. También se suelta si a quien sujeta se le rompe la parte con la que sujeta, cae o muere |
+
+Estados actuales: **Agarrado** y **Sedación** (ver [el enfermero](../enemigos/enfermero.md#estados)). Se ven en la ficha del personaje y en el registro.
+
 ## Intenciones ocultas
 
 Para variar la lectura, un enemigo puede ocultar parte del telegrafiado:
@@ -217,12 +243,40 @@ Si al resolverse una acción su objetivo ya no es válido:
 ## Enemigos (resumen; detalle en `enemigos.md`, pendiente)
 
 - Cada ataque enemigo puede requerir una **parte** (`parte_requerida`). Si esa parte está Rota o Amputada, el ataque **deja de estar disponible**. Mutilar al enemigo cambia lo que puede hacer.
+- Cada ataque tiene además (`EnemyAttackDef`, `[PROPUESTA]`): un **aviso legible** (`telegraph`, «Levanta el brazo de bisturíes…») que se ve con la intención; un **peso** para la elección al azar; una **recarga** en rondas; si necesita que el objetivo sufra un **estado** (serrar a quien está agarrado: lo elige casi siempre y va a por él); si necesita estar **de pie** o solo se usa **arrastrándose** (las dos piernas inútiles); y si es una **reacción** (se elige con prioridad la ronda siguiente a perder una parte).
 - Patrones: secuencia fija, condicional (por Cuerpo, por partes perdidas, por número de aliados) o mezcla. Un patrón debe poder aprenderse en 2–3 rondas.
 - Hasta **4 enemigos** a la vez en pantalla.
 - Los enemigos **mueren** al llegar a Cuerpo 0 (no pasan por Caído). `[PROPUESTA]`
 - Comportamiento base (prototipo) `[PROPUESTA]`:
   - 50 % de las veces van a por el aliado con menos Cuerpo;
   - 65 % de las veces vuelven a golpear una parte ya Herida o Rota ("huelen la sangre"), lo que hace útil la Guardia.
+
+## Presentación `[PROPUESTA]`
+
+A la manera de *Fear & Hunger* (`scenes/battle/battle_scene.gd`, vista 640×360):
+
+- **Fondo**: el lugar donde ocurre (captura oscurecida del mapa justo antes del combate) con un cono de luz sobre el enemigo; sin captura, un pasillo genérico.
+- **Arriba**: el enemigo **grande en el centro** (pies a 238 px; ~230 px de alto). A la izquierda, su nombre, cómo está («Entero», «Herido», «Malherido», «Agonizando»; no se ve su Cuerpo exacto), sus estados y el estado de cada parte. A la derecha, el **aviso**: «PREPARA · TAJO · → BRAZO DER.» y el texto del gesto.
+- **Abajo** (desde 246 px): órdenes a la izquierda, la **ficha** de cada personaje en el centro (retrato con la ropa puesta, Cuerpo, Mente, estados, silueta con las heridas, lista de heridas y arma) y el **registro** a la derecha.
+- **Apuntar**: al elegir parte, una **retícula** late sobre la parte en el propio sprite y una ficha dice su acierto, el daño estimado al Cuerpo (`Battle.preview_damage`), su estado y qué se consigue («Si se rompe: sin tajo», «Se puede arrancar», «Puede aturdir»). Con el ratón se apunta y se hace clic sobre el sprite.
+- **Al resolver**: el enemigo hace su animación de preparación al anunciar y la de ataque al golpear; los golpes producen destello, sacudida de pantalla, salpicaduras de sangre que quedan en el suelo, números flotantes («−16», «FALLO», «CRÍTICO»), el rótulo de impacto («FRACTURA.», «AMPUTACIÓN.») y aberración del filtro VHS. Los golpes al protagonista enrojecen la pantalla y su ficha.
+- **Vista del enemigo** (`EnemyView`): lee las hojas **por capas** del arte (contrato J ↔ K: `tools/art/sprite_meta.json` → `enemy_<nombre>`, horneado en `EnemySpriteDef` por `tools/data/build_enemies.gd`; en desarrollo lo lee del JSON). Oculta la capa de cada parte amputada y enseña su muñón (`stump_<parte>`), oscurece las Rotas y reproduce `idle`, `windup`, `attack`, `hit`, `stagger` y `death`. Sin hojas dibuja un **marcador provisional** por partes con las mismas animaciones y mutilaciones. La misma vista, escalada, es la figura del enemigo en el mapa y su cadáver.
+
+## Del mapa al combate `[PROPUESTA]`
+
+`CombatBridge` traslada el estado del protagonista (sencillo a propósito):
+
+| En el mapa (`Vitals`) | En el combate (`Combatant`) | Al volver |
+|---|---|---|
+| Cuerpo (0–100) | Cuerpo (máx. 100) | El que quede (mínimo 1) |
+| Mente (0–100) | Mente (máx. 100) | La que quede |
+| Sangrado sí/no | 1 acumulación si sangra | Sangra si le queda alguna |
+| `wounds`: parte → Herida / Rota / Amputada | Herida = 50 % de integridad; Rota = 0; Amputada | Se guarda el estado de cada parte que no esté Sana |
+| Arma empuñada (`CharacterState.wielded()`) | Arma del combate (sin ninguna: Forcejear) | — |
+
+Fuera del combate, por ahora las heridas por parte solo se guardan (no ralentizan ni impiden nada en el mapa). El enemigo también se guarda (`GameState.objects["enemy:<id>"]`: Cuerpo, sangrado y cada parte) para que, si se huye, vuelva igual de herido.
+
+Los encuentros del mapa son datos (`EncounterDef`) y los lleva `EncounterDirector` (una línea en el guion del mapa). Ver [el enfermero § En el mapa](../enemigos/enfermero.md#en-el-mapa).
 
 ## Recursos de datos (para implementación)
 
@@ -233,7 +287,10 @@ Si al resolverse una acción su objetivo ya no es válido:
 | `WeaponDef` | poder, precision, tipo_daño, manos (1/2), mod_critico, habilidades |
 | `ArmorDef` | armadura por parte |
 | `EnemyDef` | stats, partes (`Array[BodyPartDef]`), ataques, patrón, rasgos (`remata`, …) |
-| `EnemyAttackDef` | tipo, poder, parte_objetivo, parte_requerida, visibilidad del telegrafiado |
+| `EnemyAttackDef` | tipo, poder, parte_objetivo, parte_requerida, visibilidad del telegrafiado, aviso, peso, recarga, estado que aplica, condiciones (de pie, arrastrándose, estado del objetivo, reacción), animación y sonidos |
+| `CombatStatusDef` | rondas, multiplicador de AGI, acierto propio y ajeno, perder la acción, impide huir, se rompe con Zafarse |
+| `EnemySpriteDef` | rejilla, origen, capa por parte, muñones, orden, animaciones y anclas de cada parte |
+| `EncounterDef` | enemigo, protagonista base, objeto y bandera que lo disparan, zonas, textos, música |
 
 Todos en `scripts/core/`; instancias `.tres` en `data/`.
 

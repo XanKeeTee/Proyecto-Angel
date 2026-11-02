@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_n4n2u"]
+
+[resource]
+script = ExtResource("1_n4n2u")
+id = &"arm_l"
+display_name = "Brazo de la jeringa"
+hit_mod = -10
+body_mult = 0.6
+amputable = true
+broken_text = "Los dedos rotos ya no aprietan: la jeringa cuelga de la mano."
+amputated_text = "La mano de la jeringa cae al suelo y sigue apretando el émbolo."

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_adyew"]
+
+[resource]
+script = ExtResource("1_adyew")
+id = &"agarre"
+display_name = "Agarrado"
+agility_mult = 0.5
+incoming_hit_mod = 20
+blocks_flee = true
+breakable = true
+apply_text = "Una mano gris se cierra sobre %s. No suelta."
+end_text = "%s se suelta de la mano."

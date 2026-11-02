@@ -11,3 +11,5 @@ var attack: EnemyAttackDef
 ## El enemigo va a por un Caído.
 var finishing: bool = false
 var initiative: int = 0
+## Objeto que se usa (ITEM con `Battle.item_user`); en el juego, un ItemStack de la custodia.
+var item: Variant

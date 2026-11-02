@@ -32,7 +32,9 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scripts/core/input_actions.gd` | Acciones de teclado y mando |
 | `scripts/systems/inventory/` | `Custody` (lista de objetos por categorías sin límite, atajos 1-5, expediente, descartar, recetas descubiertas; lee partidas antiguas con bandeja), `Crafting` (fabricar y rasgar) e `ItemSounds` (sonidos de los objetos por material) |
 | `scripts/systems/world/` | `WorldController`, `CustodyWorldLink` (objetos descartados al suelo, arma en la mano y sonidos de uso) y `DroppedItem` (objeto suelto recogible) |
-| `scripts/systems/survival/` | `Vitals`: Cuerpo, Mente y sangrado |
+| `scripts/systems/survival/` | `Vitals`: Cuerpo, Mente, sangrado y heridas por parte (`wounds`, las deja el combate) |
+| `scripts/systems/combat/` | Combate por rondas sin nodos: `Battle` (reglas y resolución), `Combatant`, `BodyPartState`, `EnemyAI`, `CombatRules`; `CombatBridge` (mapa ↔ combate), `EncounterDef` + `EncounterDirector` (encuentros en el mapa: una línea en el guion del mapa) y `EnemySpriteDef` (hojas por capas). Ver [combate.md](../design/sistemas/combate.md) |
+| `scenes/battle/` | Pantalla de combate (`BattleScene`), vista del enemigo (`EnemyView`), ficha del grupo (`PartyCard`), retícula (`PartReticle`), sangre (`BloodFx`) y pantalla de muerte (`DeathScreen`). Se abre sola (`battle_scene.tscn`) o desde el mapa |
 | `scripts/systems/interaction/` | `Interactable`, `Door` (puertas que se cruzan andando), `LootEntry`, `ItemUse`, `InteractionPicker` (qué objeto se enfoca), `FocusOutline` y `Glint` (contorno y destello) |
 | `scripts/systems/loot/` | Botín aleatorio: `LootPlan` (muebles y repartos), `LootTable`, `LootScatter`, `LootRoller` (tirada determinista con semilla) |
 | `scripts/systems/thoughts/` | `Thought` y `ThoughtSet`: lo que el protagonista sabe que tiene que hacer (tecla T) |
@@ -67,6 +69,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 - los objetos descartados en el suelo (`objects["dropped_items"]`: escena, posición y estado del montón);
 - el estado de cada objeto del mundo (por `object_id`);
 - las banderas de eventos;
+- el estado de los enemigos de los encuentros (`objects["enemy:<id>"]`: vivo, huido o muerto, su Cuerpo y sus partes, y dónde quedó el cuerpo);
 - la semilla del botín aleatorio (en el estado de objetos, clave `loot`): al cargar se vuelve a tirar con ella y sale lo mismo. Las partidas anteriores al botín aleatorio guardan `-1` y conservan el contenido original.
 
 Al cargar, cada `Interactable` lee su estado en `_ready`. Se guarda en las grabadoras de cinta del hospital.

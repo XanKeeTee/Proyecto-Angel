@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_8ld81"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_ij1tl"]
+[ext_resource type="Resource" path="res://data/body_parts/head.tres" id="3_mw1lc"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_ihb56"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_a845e"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_k7hl3"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_dydk1"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_fmtar"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_4ld6a"]
+
+[resource]
+script = ExtResource("9_4ld6a")
+display_name = "PACIENTE 09"
+is_protagonist = true
+willpower = 9
+parts = Array[ExtResource("2_ij1tl")]([ExtResource("3_mw1lc"), ExtResource("4_ihb56"), ExtResource("5_a845e"), ExtResource("6_k7hl3"), ExtResource("7_dydk1"), ExtResource("8_fmtar")])

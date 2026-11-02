@@ -936,6 +936,13 @@ func _room_hab12() -> void:
 		"sounds": {"open": "locker_open", "close": "door_close"}, "shadow": [-13, -14, 26, 12]})
 	obj({"id": "cortina_12", "name": "Cortina", "sprite": "curtain", "cell": [12, 25], "fp": WIDE,
 		"examine": "Detrás de la cortina no hay nada. Solo el sitio donde habría otra cama.", "shadow": [-12, -2, 42, 4]})
+	# [PROPUESTA] El tubo de hierro: hallazgo fijo y temprano. Al cogerlo se empuña (si la mano está
+	# vacía) y, al salir al pasillo, aparece el enfermero (EncounterDirector, data/enemies/encuentro_enfermero.tres).
+	var pipe: Interactable = obj({"id": "tubo_hab12", "name": "Tubo de hierro", "sprite": "item:tubo_metal",
+		"cell": [13, 23], "fp": [[-1, 0], [0, 0], [1, 0]], "kind": "pickup", "glint": true,
+		"examine": "Un tramo de tubería de hierro arrancado de la toma de la pared. La rosca del extremo está doblada, como si alguien hubiera tirado de él con las manos.",
+		"search": "Lo sopesas. Pesa lo justo para hacer daño.", "loot": [["tubo_metal", 1]], "empty": ""})
+	(pipe.get_node("Sprite2D") as Sprite2D).rotation_degrees = 90.0
 
 
 func _room_almacen() -> void:

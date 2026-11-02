@@ -12,10 +12,7 @@ static var _struggle: EnemyAttackDef
 
 
 static func choose_intent(enemy: Combatant, party: Array[Combatant], rng: RandomNumberGenerator) -> CombatAction:
-	var available: Array[EnemyAttackDef] = []
-	for attack: EnemyAttackDef in enemy.def.attacks:
-		if attack.required_part == &"" or not enemy.part_disabled(attack.required_part):
-			available.append(attack)
+	var available: Array[EnemyAttackDef] = available_attacks(enemy, party)
 	if available.is_empty():
 		available.append(struggle_attack())
 
@@ -41,13 +38,82 @@ static func choose_intent(enemy: Combatant, party: Array[Combatant], rng: Random
 	var targets: Array[Combatant] = active if not active.is_empty() else fallen
 	if targets.is_empty():
 		return null
-	action.attack = available[rng.randi_range(0, available.size() - 1)]
-	if rng.randf() < FOCUS_WEAKEST_CHANCE:
+	action.attack = _pick_attack(enemy, available, rng)
+	enemy.pending_reaction = false
+	if action.attack.cooldown > 0:
+		enemy.cooldowns[action.attack] = action.attack.cooldown + 1
+	var status_id: StringName = action.attack.requires_target_status
+	var holders: Array[Combatant] = []
+	if status_id != &"":
+		for member: Combatant in targets:
+			if member.has_status(status_id):
+				holders.append(member)
+	if not holders.is_empty():
+		action.target = holders[rng.randi_range(0, holders.size() - 1)]
+	elif rng.randf() < FOCUS_WEAKEST_CHANCE:
 		action.target = _weakest(targets)
 	else:
 		action.target = targets[rng.randi_range(0, targets.size() - 1)]
 	action.part_id = pick_part(action.attack, action.target, rng)
 	return action
+
+
+## Ataques que el enemigo puede usar ahora: tiene la parte que piden, está de pie o arrastrándose
+## según el ataque, no está en recarga y, si piden un estado en el objetivo, alguien lo sufre.
+static func available_attacks(enemy: Combatant, party: Array[Combatant]) -> Array[EnemyAttackDef]:
+	var result: Array[EnemyAttackDef] = []
+	var crawling: bool = enemy.is_crawling()
+	for attack: EnemyAttackDef in enemy.def.attacks:
+		if attack.required_part != &"" and enemy.part_disabled(attack.required_part):
+			continue
+		if attack.required_part != &"" and not enemy.has_part(attack.required_part):
+			continue
+		if attack.requires_standing and crawling:
+			continue
+		if attack.crawl_only and not crawling:
+			continue
+		if enemy.cooldowns.get(attack, 0) > 0:
+			continue
+		if attack.reaction and not enemy.pending_reaction:
+			continue
+		if attack.requires_target_status != &"":
+			var someone: bool = false
+			for member: Combatant in party:
+				if member.is_present() and member.has_status(attack.requires_target_status):
+					someone = true
+			if not someone:
+				continue
+		result.append(attack)
+	return result
+
+
+## Reacciones primero (tras perder una parte); si no, al azar según el peso.
+static func _pick_attack(enemy: Combatant, available: Array[EnemyAttackDef], rng: RandomNumberGenerator) -> EnemyAttackDef:
+	var reactions: Array[EnemyAttackDef] = []
+	for attack: EnemyAttackDef in available:
+		if attack.reaction:
+			reactions.append(attack)
+	if enemy.pending_reaction and not reactions.is_empty():
+		return reactions[rng.randi_range(0, reactions.size() - 1)]
+	var total: float = 0.0
+	for attack: EnemyAttackDef in available:
+		total += attack.weight
+	if total <= 0.0:
+		return available[rng.randi_range(0, available.size() - 1)]
+	var roll: float = rng.randf() * total
+	for attack: EnemyAttackDef in available:
+		roll -= attack.weight
+		if roll < 0.0:
+			return attack
+	return available[available.size() - 1]
+
+
+## Fin de ronda: avanza las recargas.
+static func tick_cooldowns(enemy: Combatant) -> void:
+	for attack: EnemyAttackDef in enemy.cooldowns.keys():
+		enemy.cooldowns[attack] = enemy.cooldowns[attack] - 1
+		if enemy.cooldowns[attack] <= 0:
+			enemy.cooldowns.erase(attack)
 
 
 static func pick_part(attack: EnemyAttackDef, target: Combatant, rng: RandomNumberGenerator) -> StringName:
