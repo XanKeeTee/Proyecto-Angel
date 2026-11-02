@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="RecipeDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="1_l7vy7"]
+[ext_resource type="Resource" path="res://data/items/tela.tres" id="2_vk0nb"]
+[ext_resource type="Resource" path="res://data/items/torniquete.tres" id="3_aqioy"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="4_oyjvm"]
+
+[sub_resource type="Resource" id="Resource_nq5cn"]
+script = ExtResource("1_l7vy7")
+item = ExtResource("2_vk0nb")
+amount = 3
+
+[resource]
+script = ExtResource("4_oyjvm")
+id = &"torniquete"
+display_name = "Torniquete"
+mode = 2
+result = ExtResource("3_aqioy")
+message = "Retuerces tres tiras hasta hacer una cinta gruesa y le das un nudo de lazo."
+sound = "craft_cloth"
+ingredients = Array[ExtResource("1_l7vy7")]([SubResource("Resource_nq5cn")])

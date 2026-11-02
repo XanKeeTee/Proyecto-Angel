@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/punzon.png" id="1_qs16s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/punzon_inspect.png" id="2_gmuyn"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_lw3jl"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_ycqhf"]
+[ext_resource type="Resource" path="res://data/weapons/awl.tres" id="5_1elcu"]
+
+[resource]
+script = ExtResource("3_lw3jl")
+id = &"punzon"
+display_name = "Punzón"
+description = "Un punzón de zapatero con el mango de madera pulido por el uso."
+category = 8
+icon = ExtResource("1_qs16s")
+inspect_sheet = ExtResource("2_gmuyn")
+inspect_views = 8
+size = Vector2i(1, 2)
+use_verb = "Empuñar"
+weapon = ExtResource("5_1elcu")
+sound_material = 10

@@ -1,14 +1,17 @@
 [gd_resource type="Resource" script_class="RecipeDef" format=3]
 
-[ext_resource type="Resource" path="res://data/items/pilas.tres" id="1_ht358"]
-[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="2_vjr7g"]
-[ext_resource type="Resource" path="res://data/items/linterna.tres" id="3_bdjnu"]
+[ext_resource type="Resource" path="res://data/items/pilas.tres" id="1_vjr7g"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="2_bdjnu"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="3_8660j"]
+[ext_resource type="Resource" path="res://data/items/linterna.tres" id="4_f3eh1"]
 
 [resource]
-script = ExtResource("2_vjr7g")
-first = ExtResource("1_ht358")
-second = ExtResource("3_bdjnu")
+script = ExtResource("3_8660j")
+id = &"recargar_linterna"
+first = ExtResource("1_vjr7g")
+second = ExtResource("4_f3eh1")
 mode = 1
 consume_second = false
 charge_amount = 45.0
 message = "Cambias las pilas de la linterna. La luz vuelve a ser blanca."
+sound = "use_battery_insert"

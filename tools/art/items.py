@@ -1,7 +1,7 @@
 """Objetos de la custodia: icono para la bandeja y 8 vistas para el inspector.
 
 - El icono mide lo mismo que las casillas que ocupa el objeto en la bandeja
-  (`casillas x 30 - 4` píxeles), y el modelo se encuadra solo para llenarlo.
+  (`casillas x 40 - 4` píxeles, ver ItemDef.ICON_CELL), y el modelo se encuadra solo para llenarlo.
 - Los modelos tienen detalle a escala real: moleteado, roscas, etiquetas con líneas
   de texto, graduaciones, tornillería, dientes de llave… y brillo especular en metal,
   cristal y plástico.
@@ -46,8 +46,15 @@ ramp("gauze_hi", [(60, 56, 50), (92, 86, 76), (126, 120, 106), (158, 152, 136), 
 ramp("gauze_dirty", [(46, 38, 28), (72, 60, 44), (100, 86, 64), (128, 112, 86), (152, 136, 106)])
 ramp("tag_yellow", [(70, 54, 8), (120, 94, 16), (170, 136, 30), (210, 176, 60), (236, 210, 110)])
 ramp("cord", [(26, 22, 18), (44, 38, 30), (68, 58, 44), (94, 82, 62)])
+# Propias de los objetos de tela y de las armas improvisadas (no dependen de otros generadores).
+ramp("strip_cloth", [(44, 46, 50), (70, 72, 74), (98, 100, 98), (128, 128, 122), (158, 156, 146), (188, 184, 170),
+                     (212, 208, 192)])
+ramp("strip_stain", [(40, 32, 22), (64, 54, 36), (90, 78, 52), (116, 102, 70)])
+ramp("strip_blood", [(30, 8, 10), (52, 14, 16), (78, 22, 24), (104, 36, 34)])
+ramp("handle_wood", [(26, 14, 8), (44, 26, 14), (66, 42, 24), (90, 60, 36), (116, 82, 50), (140, 104, 66)])
+ramp("pipe_rust", [(26, 14, 10), (46, 26, 16), (70, 40, 24), (96, 58, 34), (124, 80, 46)])
 
-CELL = 30  # casilla de la bandeja (scenes/ui/custody/tray_view.gd)
+CELL = 40  # casilla de la bandeja (ItemDef.ICON_CELL y scenes/ui/custody/tray_view.gd)
 ICON_VIEW = View(b=0.85, ambient=0.42, light=(-0.45, 0.8, 0.5), dither=0.4, ss=4)
 INSPECT_VIEW = View(b=0.6, ambient=0.4, light=(-0.45, 0.8, 0.5), dither=0.35, ss=3)
 INSPECT_SIZE = 112
@@ -443,6 +450,159 @@ def key_model(tag: str, length: float = 16.0, metal: str = "brass") -> list:
     return P
 
 
+# --- tela, vendas improvisadas y torniquete ([PROPUESTA]) ---------------------------------------
+
+def cloth_mat(seed: int, stains: float = 0.66, blood: bool = False):
+    """Tela de bata: trama a cuadros finos, algo de suciedad y, si se pide, sangre seca."""
+    def f(p: Vec, n: Vec) -> tuple:
+        weave = 0.9 + 0.1 * ((int(math.floor(p[0] * 2.4)) + int(math.floor(p[2] * 2.4))) % 2)
+        if blood and fbm(mul(p, 0.5), seed + 7) > 0.68:
+            return ("strip_blood", 0.95 + 0.1 * fbm(mul(p, 1.6), seed + 8))
+        if fbm(mul(p, 0.38), seed) > stains:
+            return ("strip_stain", 0.95 + 0.1 * fbm(mul(p, 1.4), seed + 1))
+        return ("strip_cloth", weave * (0.9 + 0.14 * fbm(mul(p, 0.9), seed + 2)))
+    return f
+
+
+def cloth_strips() -> list:
+    """Tres tiras arrancadas, onduladas, con los bordes deshilachados."""
+    P = []
+    for k, (x, ang) in enumerate(((-4.6, 0.18), (0.0, -0.08), (4.4, 0.24))):
+        mat = cloth_mat(401 + k * 11)
+        for i in range(7):
+            z = -10.5 + i * 3.3
+            P.append(box((x + 0.7 * math.sin(i * 1.3 + k), 0.6 + 0.35 * math.sin(i * 2.1 + k * 1.7), z),
+                         (1.8, 0.32, 1.85), mat,
+                         basis=basis_rot(ry=ang + 0.12 * math.sin(i + k), rx=0.18 * math.cos(i * 1.7 + k))))
+        for t in range(4):  # hilos sueltos en la punta
+            x0 = x - 1.4 + t * 0.95
+            P.append(capsule((x0, 0.6, 11.0), (x0 + 0.4 * math.sin(t * 2.3 + k), 0.5, 12.6 + 0.6 * ((t + k) % 3)), 0.16,
+                             m("strip_cloth", 0.85)))
+    return P
+
+
+def improvised_bandage() -> list:
+    """Rollo de tiras de tela con un nudo, sin envoltorio."""
+    cloth = cloth_mat(431, 0.6)
+
+    def mat(p: Vec, n: Vec) -> tuple:
+        if abs(n[0]) > 0.7:  # cara del rollo: vueltas de tela en espiral
+            r = math.hypot(p[1] - 5.0, p[2])
+            if _frac(r / 0.8 + math.atan2(p[1] - 5.0, p[2]) / math.tau) < 0.3:
+                return ("strip_cloth", 0.6)
+        if _frac(p[0] / 3.4) < 0.08:  # costuras entre tiras
+            return ("strip_stain", 0.8)
+        return cloth(p, n)
+    P = [cylinder((-5.0, 5.0, 0.0), (5.0, 5.0, 0.0), 5.0, mat),
+         cylinder((-5.1, 5.0, 0.0), (5.1, 5.0, 0.0), 1.2, m("void"))]
+    for i in range(5):  # cola suelta
+        P.append(box((0.5 * math.sin(i * 1.1), 0.35, 4.5 + i * 2.0), (3.6, 0.28, 1.05), cloth,
+                     basis=basis_rot(ry=0.09 * math.sin(i * 2.0), rx=0.1 * math.cos(i * 1.7))))
+    return P
+
+
+def tourniquet() -> list:
+    """Cinta gruesa de tela retorcida, cerrada en lazo, con nudo y dos colas."""
+    mat = cloth_mat(451, 0.72)
+    P = []
+    for i in range(22):
+        a = i / 22 * math.tau
+        c = (math.cos(a) * 7.0, 1.4, math.sin(a) * 5.4)
+        P.append(ellipsoid(c, (1.5, 1.2, 1.5), mat, basis=basis_rot(ry=-a, rx=0.5 * math.sin(a * 6))))
+    P.append(ellipsoid((0.0, 2.0, 5.6), (2.4, 1.8, 2.0), mat))  # nudo, delante
+    for k, dx in enumerate((-1.6, 1.8)):  # dos colas que caen hacia delante
+        for j in range(3):
+            P.append(box((dx * (1.0 + 0.5 * j), 0.6, 7.6 + j * 1.8), (1.1, 0.3, 1.0), mat,
+                         basis=basis_rot(ry=0.35 * dx / abs(dx) + 0.1 * j)))
+    return P
+
+
+# --- armas ([PROPUESTA] las del hospital; cuchilla, barra y punzón son del prototipo de combate) ---
+
+def blade_mat(edge_x: float):
+    """Acero de hoja: mate y algo rayado, con el bisel del filo más claro (a partir de `edge_x`)."""
+    def f(p: Vec, n: Vec) -> tuple:
+        scratch = 0.06 * math.sin(p[2] * 7.0 + p[0] * 1.3)
+        if p[0] > edge_x:
+            return ("steel", 1.0 + scratch, None, 1.3)
+        return ("steel", 0.72 + scratch + 0.08 * fbm(mul(p, 1.5), 511), None, 0.7)
+    return f
+
+
+def scalpel() -> list:
+    """Bisturí de mango plano con estrías y hoja curva del n.º 22."""
+    grip = lambda p, n: ("steel", 0.85 + (0.25 if _frac(p[2] / 1.1) < 0.4 and n[1] > 0.5 else 0.0), None, 1.0)  # noqa: E731
+    P = [box((0.0, 1.0, -6.0), (1.2, 0.45, 9.0), grip),
+         box((0.0, 1.0, 3.6), (0.8, 0.4, 0.8), m("steel", 1.0, 1.2))]
+    for i in range(6):  # hoja: se ensancha y vuelve a la punta
+        t = i / 5
+        w = 0.6 + 1.3 * math.sin(t * math.pi * 0.85)
+        P.append(box((0.35 * t, 1.0, 5.2 + i * 1.6), (w, 0.12, 0.85), blade_mat(0.35 * t + w * 0.45)))
+    P.append(box((0.0, 1.0, 14.6), (0.25, 0.1, 0.6), m("steel", 1.2, 1.8)))
+    P.append(box((0.9, 1.13, 8.0), (0.5, 0.02, 1.6), m("strip_blood", 1.0)))  # mancha seca en el filo
+    return P
+
+
+def pipe(wrapped: bool) -> list:
+    """Tubo de hierro galvanizado con rosca en un extremo y óxido; envuelto con tela si se pide."""
+    def mat(p: Vec, n: Vec) -> tuple:
+        if fbm(mul(p, 0.32), 461) > 0.6:
+            return ("pipe_rust", 0.9 + 0.2 * fbm(mul(p, 1.7), 462), None, 0.1)
+        return ("castiron", 0.95 + 0.12 * fbm(mul(p, 1.2), 463), None, 0.7)
+    P = [cylinder((0.0, 2.4, -26.0), (0.0, 2.4, 24.0), 2.3, mat),
+         cylinder((0.0, 2.4, 24.0), (0.0, 2.4, 24.3), 1.6, m("void"))]
+    for i in range(6):  # rosca
+        z = 19.0 + i * 0.8
+        P.append(cylinder((0.0, 2.4, z), (0.0, 2.4, z + 0.35), 2.45, m("steel", 0.95, 0.9)))
+    P.append(cylinder((0.0, 2.4, -26.0), (0.0, 2.4, -22.4), 2.9, m("castiron", 0.85, 0.5)))  # manguito
+    if wrapped:
+        cloth = cloth_mat(471, 0.62, blood=True)
+        for i in range(10):
+            z = -21.6 + i * 1.55
+            P.append(cylinder((0.0, 2.4, z), (0.0, 2.4, z + 1.25), 2.75, cloth))
+        P.append(capsule((0.0, 4.6, -6.2), (2.4, 3.6, -3.4), 0.45, cloth))  # cabo del nudo
+    return P
+
+
+def knife() -> list:
+    """Cuchilla de cocina con mango de madera y tres remaches."""
+    wood = lambda p, n: ("handle_wood", 0.9 + 0.2 * _frac(p[2] * 0.55 + fbm(mul(p, 0.6), 481) * 2.0), None, 0.3)  # noqa: E731
+    P = [box((0.0, 1.4, -8.5), (1.6, 0.9, 6.0), wood)]
+    for z in (-12.0, -8.5, -5.0):
+        P.append(cylinder((0.0, 1.0, z), (0.0, 2.45, z), 0.55, m("brass", 1.05, 1.2)))
+    P.append(box((0.0, 1.4, -2.2), (1.8, 1.0, 0.4), m("steel", 0.9, 1.0)))  # virola
+    for i in range(8):  # hoja que se estrecha hacia la punta
+        t = i / 7
+        w = 2.1 * (1.0 - t ** 1.8) + 0.25
+        P.append(box((-0.3 * t, 1.4, -0.6 + i * 2.2), (w, 0.16, 1.15), blade_mat(-0.3 * t + w * 0.55)))
+    return P
+
+
+def iron_bar() -> list:
+    """Barra de hierro corrugado (de obra), oxidada."""
+    def mat(p: Vec, n: Vec) -> tuple:
+        rib = math.sin(p[2] * 2.6 + math.atan2(p[1] - 2.0, p[0]) * 1.0)
+        n2 = norm((n[0], n[1], n[2] + 0.4 * rib))
+        if fbm(mul(p, 0.3), 491) > 0.5:
+            return ("pipe_rust", 0.9 + 0.18 * fbm(mul(p, 1.8), 492), n2, 0.1)
+        return ("castiron", 0.95, n2, 0.6)
+    P = [cylinder((0.0, 2.0, -27.0), (0.0, 2.0, 27.0), 1.7, mat)]
+    for side in (-1.0, 1.0):  # nervios longitudinales
+        P.append(box((side * 1.7, 2.0, 0.0), (0.25, 0.3, 27.0), mat))
+    return P
+
+
+def awl() -> list:
+    """Punzón: mango de madera en forma de pera y vástago de acero afilado."""
+    wood = lambda p, n: ("handle_wood", 0.95 + 0.15 * fbm(mul(p, 0.9), 501), None, 0.5)  # noqa: E731
+    P = [ellipsoid((0.0, 3.0, -9.0), (3.0, 3.0, 6.0), wood),
+         cylinder((0.0, 3.0, -3.5), (0.0, 3.0, -2.2), 1.6, m("brass", 1.0, 1.1)),
+         cylinder((0.0, 3.0, -2.2), (0.0, 3.0, 11.0), 0.6, m("steel", 1.1, 1.5))]
+    for k in range(4):
+        P.append(cylinder((0.0, 3.0, 11.0 + k * 0.9), (0.0, 3.0, 11.9 + k * 0.9), 0.55 - k * 0.13, m("steel", 1.2, 1.6)))
+    return P
+
+
 # --- ropa ------------------------------------------------------------------------------------------
 
 def garment(gid: str):
@@ -475,6 +635,15 @@ ITEMS: dict = {
     "llave_habitacion_10": (lambda: key_model("plastic", 14.0), (1, 1), 0.5),
     "llave_archivo": (lambda: key_model("label", 18.0), (1, 1), 0.5),
     "llave_sotano": (lambda: key_model("cord", 16.0, "steel"), (1, 1), 0.5),
+    "tela": (cloth_strips, (1, 1), 0.4),
+    "venda_improvisada": (improvised_bandage, (1, 1), 0.3),
+    "torniquete": (tourniquet, (1, 1), 0.2),
+    "bisturi": (scalpel, (1, 2), 0.0),
+    "tubo_metal": (lambda: pipe(False), (1, 3), 0.0),
+    "tubo_envuelto": (lambda: pipe(True), (1, 3), 0.0),
+    "cuchilla": (knife, (1, 2), 0.0),
+    "barra_hierro": (iron_bar, (1, 3), 0.0),
+    "punzon": (awl, (1, 2), 0.0),
 }
 WEAR_CELLS = {"head": (1, 1), "body": (2, 2), "legs": (1, 2), "feet": (2, 1)}
 WEAR_YAW = {"head": 0.5, "body": 0.0, "legs": 0.25, "feet": -1.0}

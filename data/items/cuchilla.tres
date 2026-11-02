@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/cuchilla.png" id="1_iu0fe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/cuchilla_inspect.png" id="2_ucmcp"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_3k14w"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_dmth8"]
+[ext_resource type="Resource" path="res://data/weapons/knife.tres" id="5_lrxe0"]
+
+[resource]
+script = ExtResource("3_3k14w")
+id = &"cuchilla"
+display_name = "Cuchilla"
+description = "Una cuchilla de cocina con el mango de madera hinchado por la humedad."
+category = 8
+icon = ExtResource("1_iu0fe")
+inspect_sheet = ExtResource("2_ucmcp")
+inspect_views = 8
+size = Vector2i(1, 2)
+use_verb = "Empuñar"
+weapon = ExtResource("5_lrxe0")
+sound_material = 2

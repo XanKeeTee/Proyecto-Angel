@@ -18,6 +18,8 @@ var pockets: Array[ItemStack] = []
 var documents: Array[StringName] = []
 ## Documentos ya abiertos alguna vez (para marcar los nuevos).
 var documents_read: Array[StringName] = []
+## Recetas descubiertas (por id): las de fabricar al llevar un ingrediente y las combinaciones al hacerlas.
+var known_recipes: Array[StringName] = []
 
 
 func _init() -> void:
@@ -85,6 +87,20 @@ func remove(stack: ItemStack) -> void:
 	if i >= 0:
 		pockets[i] = null
 	changed.emit()
+
+
+## ¿Está este montón en la custodia (bandeja o bolsillo)?
+func contains(stack: ItemStack) -> bool:
+	return stack != null and (tray.has(stack) or pockets.has(stack))
+
+
+## Saca un montón entero para dejarlo en el suelo. Los objetos clave no se pueden descartar.
+## Devuelve true si se ha sacado.
+func discard(stack: ItemStack) -> bool:
+	if not contains(stack) or not stack.def.can_discard():
+		return false
+	remove(stack)
+	return true
 
 
 ## Añade objetos: primero completa montones, luego bolsillos vacíos no (solo bandeja).
@@ -260,10 +276,22 @@ func combine(a: ItemStack, b: ItemStack) -> String:
 			if recipe.consume_second:
 				consume(second, second.def.max_durability > 0)
 			var leftover: int = add_item(recipe.result, recipe.result_quantity)
+			learn_recipe(recipe.id)
 			if leftover > 0:
 				return recipe.message + "\n(No queda sitio en la bandeja: lo sostienes un momento y lo dejas caer.)"
+		RecipeDef.Mode.CRAFT:
+			return ""
+	learn_recipe(recipe.id)
 	changed.emit()
 	return recipe.message
+
+
+## Apunta una receta como descubierta. Devuelve true si es nueva.
+func learn_recipe(recipe_id: StringName) -> bool:
+	if recipe_id == &"" or known_recipes.has(recipe_id):
+		return false
+	known_recipes.append(recipe_id)
+	return true
 
 
 # --- expediente ---------------------------------------------------------------------------
@@ -301,6 +329,7 @@ func to_dict() -> Dictionary:
 		"tray": tray_data, "pockets": pocket_data,
 		"documents": documents.map(func(d: StringName) -> String: return String(d)),
 		"read": documents_read.map(func(d: StringName) -> String: return String(d)),
+		"recipes": known_recipes.map(func(d: StringName) -> String: return String(d)),
 	}
 
 
@@ -318,6 +347,8 @@ static func from_dict(data: Dictionary) -> Custody:
 		custody.documents.append(StringName(d))
 	for d: Variant in data.get("read", []):
 		custody.documents_read.append(StringName(d))
+	for r: Variant in data.get("recipes", []):
+		custody.known_recipes.append(StringName(r))
 	return custody
 
 

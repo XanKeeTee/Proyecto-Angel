@@ -16,3 +16,4 @@ inspect_sheet = ExtResource("2_ff4d7")
 inspect_views = 8
 size = Vector2i(1, 2)
 max_durability = 4
+sound_material = 10

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_xmjvl"]
+
+[resource]
+script = ExtResource("1_xmjvl")
+display_name = "Bisturí"
+power = 8
+accuracy = 85
+crit_mod = 10

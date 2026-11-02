@@ -8,8 +8,13 @@
 
 [sub_resource type="Resource" id="Resource_vv0bv"]
 script = ExtResource("5_eve3x")
+body = 0
 mind = 35
+stops_bleeding = false
+requires_bleeding = false
+contaminated_penalty = 6
 message = "El frío te sube por el brazo. Los ruidos se apagan un poco."
+contaminated_message = ""
 
 [resource]
 script = ExtResource("3_dhdgg")
@@ -24,3 +29,5 @@ max_stack = 3
 usable = true
 use_effects = Array[ExtResource("4_yhbih")]([SubResource("Resource_vv0bv")])
 use_verb = "Inyectar"
+sound_material = 6
+use_sound = "use_syringe_inject"

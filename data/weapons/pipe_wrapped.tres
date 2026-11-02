@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_bmsfm"]
+
+[resource]
+script = ExtResource("1_bmsfm")
+display_name = "Tubo con mango envuelto"
+power = 12
+accuracy = 78
+damage_type = 1
+crit_mod = 2

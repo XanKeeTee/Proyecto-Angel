@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tubo_metal.png" id="1_xm8af"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tubo_metal_inspect.png" id="2_p2at7"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_cyi88"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_wenl7"]
+[ext_resource type="Resource" path="res://data/weapons/pipe.tres" id="5_ylvew"]
+
+[resource]
+script = ExtResource("3_cyi88")
+id = &"tubo_metal"
+display_name = "Tubo de hierro"
+description = "Un trozo de tubería arrancado de algún sitio, con la rosca a la vista. Resbala en la mano."
+category = 8
+icon = ExtResource("1_xm8af")
+inspect_sheet = ExtResource("2_p2at7")
+inspect_views = 8
+size = Vector2i(1, 3)
+use_verb = "Empuñar"
+weapon = ExtResource("5_ylvew")
+sound_material = 1

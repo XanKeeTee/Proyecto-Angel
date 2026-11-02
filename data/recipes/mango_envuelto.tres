@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RecipeDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="1_l52c6"]
+[ext_resource type="Resource" path="res://data/items/tubo_metal.tres" id="2_ie2vb"]
+[ext_resource type="Resource" path="res://data/items/tela.tres" id="3_1pma8"]
+[ext_resource type="Resource" path="res://data/items/tubo_envuelto.tres" id="4_2ws85"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="5_dg56y"]
+
+[sub_resource type="Resource" id="Resource_ka4st"]
+script = ExtResource("1_l52c6")
+item = ExtResource("2_ie2vb")
+
+[sub_resource type="Resource" id="Resource_upd1p"]
+script = ExtResource("1_l52c6")
+item = ExtResource("3_1pma8")
+amount = 2
+
+[resource]
+script = ExtResource("5_dg56y")
+id = &"mango_envuelto"
+display_name = "Envolver el mango del tubo"
+mode = 2
+result = ExtResource("4_2ws85")
+message = "Enrollas las tiras alrededor de un extremo del tubo y las aprietas con un nudo. Ahora se agarra bien."
+sound = "craft_cloth"
+ingredients = Array[ExtResource("1_l52c6")]([SubResource("Resource_ka4st"), SubResource("Resource_upd1p")])

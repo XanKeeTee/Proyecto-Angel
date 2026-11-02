@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="WeaponDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_5r4l5"]
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_7c67f"]
 
 [resource]
-script = ExtResource("1_5r4l5")
+script = ExtResource("1_7c67f")
 display_name = "Barra"
 power = 14
 accuracy = 70

@@ -16,3 +16,4 @@ icon = ExtResource("1_okqtg")
 inspect_sheet = ExtResource("2_f2ce1")
 inspect_views = 8
 max_durability = 3
+sound_material = 6
