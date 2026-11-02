@@ -12,6 +12,7 @@ on:
     paths:
       - ".github/workflows/freesound.yml"
       - "tools/audio/ci_jobs.txt"
+      - "tools/audio/ci_queries.txt"
       - "tools/audio/build_manifest.py"
       - "tools/audio/sound_manifest.json"
   workflow_dispatch:
@@ -57,6 +58,33 @@ jobs:
           if grep -q '^\s*fetch' tools/audio/ci_jobs.txt; then
             python3 -I tools/audio/freesound.py fetch --missing
           fi
+      - name: Búsquedas libres (ci_queries.txt)
+        if: ${{ !cancelled() && hashFiles('tools/audio/ci_queries.txt') != '' }}
+        run: |
+          python3 -I - <<'PY'
+          import json, time, urllib.request, urllib.parse, os
+          key = os.environ["FREESOUND_API_KEY"]
+          fields = "id,name,username,license,duration,tags,description,avg_rating,num_ratings,num_downloads"
+          for line in open("tools/audio/ci_queries.txt", encoding="utf-8"):
+              line = line.strip()
+              if not line or line.startswith("#"):
+                  continue
+              name, q, lo, hi = line.split("|")
+              flt = f'license:("Creative Commons 0" OR "Attribution") duration:[{lo} TO {hi}]'
+              url = "https://freesound.org/apiv2/search/text/?" + urllib.parse.urlencode(
+                  {"query": q, "filter": flt, "fields": fields, "sort": "score", "page_size": 15, "token": key})
+              try:
+                  res = json.loads(urllib.request.urlopen(url, timeout=30).read()).get("results", [])
+              except Exception as ex:
+                  print(f"@@ {name} «{q}»: error {ex}"); continue
+              print(f"@@ {name} «{q}»: {len(res)}")
+              for s in res:
+                  lic = "BY" if "/by/" in s["license"] else "CC0"
+                  d = " ".join((s.get("description") or "").split())[:110]
+                  print(f"  {s['id']:>7} {s['duration']:6.1f}s {lic:3} ★{s.get('avg_rating') or 0:.1f}({s.get('num_ratings')}) "
+                        f"dl={s.get('num_downloads')} | {s['name'][:60]} | {' '.join(s.get('tags', [])[:10])} | {d}")
+              time.sleep(1.1)
+          PY
       - name: Ficha de cada sonido elegido (para revisarlos)
         if: ${{ !cancelled() }}
         run: |

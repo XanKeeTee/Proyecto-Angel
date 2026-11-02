@@ -1,0 +1,68 @@
+# Búsquedas libres para revisar candidatos en Actions: nombre|consulta|dur_mín|dur_máx
+bed_creak|bed creak|0.5|20
+bed_creak|bed springs|0.5|20
+heavy_drag|furniture drag|0.5|20
+heavy_drag|drag metal floor|0.5|20
+breath_strain_male|effort breathing|0.5|15
+breath_strain_male|grunt effort male|0.5|10
+breath_run_male|panting male|1|20
+breath_run_male|out of breath|1|20
+bare_feet_floor|barefoot|0.3|30
+amb_wind_gust|wind window|1|30
+amb_wind_gust|wind howl interior|1|30
+amb_elevator_cables|elevator shaft|1|60
+amb_elevator_cables|cable creak|0.5|30
+scare_fall|metal tray drop|0.3|10
+scare_fall|metal falling floor|0.3|10
+scare_wall_knock|knock wall|0.5|10
+scare_wall_knock|muffled knock|0.5|10
+scare_steps_above|footsteps upstairs|1|60
+scare_steps_above|footsteps ceiling|1|60
+use_battery_insert|batteries|0.3|15
+use_battery_insert|battery compartment|0.3|15
+battery|battery insert|0.3|10
+inv_metal_heavy_pick|crowbar|0.2|15
+inv_metal_heavy_pick|metal pipe handling|0.2|15
+inv_metal_heavy_drop|metal pipe drop|0.2|10
+inv_plastic_place|plastic put down|0.1|10
+inv_plastic_place|plastic box table|0.1|10
+inv_plastic_equip|plastic handling|0.1|10
+generator_start|generator start|2|30
+generator_start|diesel engine start|2|30
+whisper|whisper|0.5|10
+whisper|whispering unintelligible|0.5|15
+amb_vent_loop|air vent|8|300
+amb_vent_loop|ventilation duct|8|300
+amb_pipe_knock|pipe knock|0.3|10
+amb_pipe_knock|radiator knock|0.3|15
+amb_spark_crackle|electric spark|0.3|10
+amb_spark_crackle|electrical arc crackle|0.3|10
+scare_wheelchair|wheelchair|0.5|20
+scare_wheelchair|squeaky wheel|0.5|15
+scare_breath|exhale|0.3|5
+scare_breath|breath close|0.3|5
+title_tube_flicker|fluorescent flicker|0.3|10
+music_menu_drone|dark ambient drone|60|600
+music_menu_drone|drone horror atmosphere|60|600
+use_syringe_inject|syringe|0.2|10
+use_pills_swallow|pill bottle open|0.5|10
+inv_glass_drop|glass bottle drop floor|0.2|10
+inv_glass_drop|bottle clink|0.2|10
+inv_glass_unequip|glass bottle handling|0.2|10
+inv_battery_pick|battery handling|0.1|10
+inv_battery_pick|aa batteries|0.1|10
+inv_tool_drop|flashlight drop|0.2|10
+inv_tool_drop|screwdriver drop|0.2|10
+inv_rubber_pick|rubber gloves|0.2|15
+inv_rubber_pick|rubber boots|0.2|15
+inv_rubber_drop|boot drop|0.2|10
+inv_ceramic_pick|ceramic cup pick up|0.2|10
+inv_ceramic_drop|ceramic drop|0.2|10
+inv_ceramic_drop|mug put down|0.2|10
+inv_paper_drop|paper drop|0.2|10
+inv_paper_drop|notebook drop|0.2|10
+inv_drop|object drop floor|0.2|5
+inv_drop|item drop|0.2|5
+inv_rotate|foley handling object|0.1|5
+inv_unequip|pocket foley|0.2|5
+inv_place|object put down table|0.1|5

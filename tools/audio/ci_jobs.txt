@@ -1,2 +1,2 @@
 # Órdenes de tools/audio/freesound.py que ejecuta .github/workflows/freesound.yml (una por línea).
-fetch
+# (vacío: esta ronda solo busca candidatos)
