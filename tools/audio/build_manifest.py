@@ -480,7 +480,8 @@ def main() -> None:
     names = [x["name"] for x in entries]
     assert len(names) == len(set(names)), "nombres repetidos"
     for x in entries:
-        if old.get(x["name"], {}).get("pick"):
+        # Un `pick` fijado a mano aquí (revisado) manda sobre el elegido automáticamente.
+        if "pick" not in x and old.get(x["name"], {}).get("pick"):
             x["pick"] = old[x["name"]]["pick"]
     MANIFEST.write_text(json.dumps({"_doc": DOC, "sounds": entries}, indent=1, ensure_ascii=False) + "\n",
                         encoding="utf-8")
