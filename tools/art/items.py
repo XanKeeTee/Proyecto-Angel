@@ -1,7 +1,7 @@
 """Objetos de la custodia: icono para la bandeja y 8 vistas para el inspector.
 
-- El icono mide lo mismo que las casillas que ocupa el objeto en la bandeja
-  (`casillas x 36 - 4` píxeles, ver ItemDef.ICON_CELL), y el modelo se encuadra solo para llenarlo.
+- El icono mide `size x 36 - 4` píxeles (ItemDef.ICON_CELL; la forma del objeto: la custodia ya no
+  tiene casillas) y el modelo se encuadra solo para llenarlo. Las listas lo reducen (ItemThumbs).
 - Los modelos tienen detalle a escala real: moleteado, roscas, etiquetas con líneas
   de texto, graduaciones, tornillería, dientes de llave… y brillo especular en metal,
   cristal y plástico.
@@ -54,7 +54,7 @@ ramp("strip_blood", [(30, 8, 10), (52, 14, 16), (78, 22, 24), (104, 36, 34)])
 ramp("handle_wood", [(26, 14, 8), (44, 26, 14), (66, 42, 24), (90, 60, 36), (116, 82, 50), (140, 104, 66)])
 ramp("pipe_rust", [(26, 14, 10), (46, 26, 16), (70, 40, 24), (96, 58, 34), (124, 80, 46)])
 
-CELL = 36  # casilla de la bandeja (ItemDef.ICON_CELL y scenes/ui/custody/tray_view.gd)
+CELL = 36  # medida de referencia de los iconos (ItemDef.ICON_CELL); ya no hay casillas en la custodia
 ICON_VIEW = View(b=0.85, ambient=0.42, light=(-0.45, 0.8, 0.5), dither=0.4, ss=4)
 INSPECT_VIEW = View(b=0.6, ambient=0.4, light=(-0.45, 0.8, 0.5), dither=0.35, ss=3)
 INSPECT_SIZE = 112
@@ -653,16 +653,20 @@ for _gid, _slot in human.GARMENTS.items():
 
 def _fit(model, w: int, h: int, view: View, fill: float = 0.92) -> tuple[float, tuple[float, float]]:
     """Escala y origen para que el modelo llene `fill` del recuadro."""
+    k, (cx, cy) = _fit_center(model, w, h, view, fill)
+    return k, (w / 2 - cx * k, h / 2 - cy * k)
+
+
+def _fit_center(model, w: int, h: int, view: View, fill: float = 0.92) -> tuple[float, tuple[float, float]]:
+    """Escala para llenar `fill` del recuadro y centro del modelo en pantalla (a escala 1)."""
     probe = 240
     r = render(model(), probe, probe, (probe / 2, probe / 2), View(a=view.a, b=view.b, yaw=view.yaw, ss=1))
     bbox = r.color.getbbox()
     if bbox is None:
-        return 1.0, (w / 2, h / 2)
+        return 1.0, (0.0, 0.0)
     bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
     k = min(w * fill / bw, h * fill / bh)
-    cx = (bbox[0] + bbox[2]) / 2 - probe / 2
-    cy = (bbox[1] + bbox[3]) / 2 - probe / 2
-    return k, (w / 2 - cx * k, h / 2 - cy * k)
+    return k, ((bbox[0] + bbox[2]) / 2 - probe / 2, (bbox[1] + bbox[3]) / 2 - probe / 2)
 
 
 def _icon_view(yaw: float) -> View:
@@ -686,9 +690,12 @@ def _job(args: tuple) -> tuple:
         img = render(scale_prims(model(), k), w, h, origin, view).color
     else:
         # Mismo encuadre en las 8 vistas: el más pequeño de mirarlo de frente y de lado.
-        fits = [_fit(model, INSPECT_SIZE, INSPECT_SIZE, _inspect_view(i), 0.84) for i in (0, 2)]
+        # Centrado en vertical según la vista de frente (la ropa no está en el origen del modelo:
+        # cuelga del cuerpo, y sin esto quedaba fuera del recuadro). En horizontal gira sobre su eje.
+        fits = [_fit_center(model, INSPECT_SIZE, INSPECT_SIZE, _inspect_view(i), 0.84) for i in (0, 2)]
         k = min(f[0] for f in fits)
-        origin = (INSPECT_SIZE / 2, INSPECT_SIZE / 2 + 2)
+        cy = fits[0][1][1]
+        origin = (INSPECT_SIZE / 2, INSPECT_SIZE / 2 + 2 - cy * k)
         img = render(scale_prims(model(), k), INSPECT_SIZE, INSPECT_SIZE, origin, _inspect_view(frame)).color
     return item_id, frame, img.size, img.tobytes()
 
