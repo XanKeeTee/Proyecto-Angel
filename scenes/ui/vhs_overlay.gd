@@ -56,6 +56,11 @@ func set_param(param: StringName, value: Variant) -> void:
 	_apply()
 
 
+## Valor base de un parámetro (el que se pasó con `set_param`), o `fallback` si no se ha fijado.
+func get_param(param: StringName, fallback: Variant = null) -> Variant:
+	return _base.get(param, fallback)
+
+
 func set_enabled(enabled: bool) -> void:
 	_enabled = enabled
 	_apply()
