@@ -1,0 +1,17 @@
+# Trae los sonidos de Freesound desde GitHub Actions (las IP de la nube de Claude están bloqueadas
+# por Freesound). Solo se ejecuta en la rama feat/sonidos-freesound.
+name: freesound
+on:
+  push:
+    branches: [feat/sonidos-freesound]
+    paths: [".github/workflows/freesound.yml"]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ¿Responde Freesound?
+        run: |
+          for u in https://freesound.org/ https://freesound.org/apiv2/search/text/?query=door https://cdn.freesound.org/; do
+            curl -sS -o /dev/null -w "%{http_code} $u\n" --max-time 20 "$u" || true
+          done
