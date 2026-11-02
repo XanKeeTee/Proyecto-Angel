@@ -4875,6 +4875,556 @@
    "pick": 422873
   },
   {
+   "name": "combat_pipe_flesh",
+   "query": "body punch impact meat",
+   "alt": [
+    "hit flesh thud heavy",
+    "meat hit stick"
+   ],
+   "duration": [
+    0.15,
+    2
+   ],
+   "want": [
+    "flesh",
+    "impact",
+    "meat",
+    "body",
+    "thud"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "metal",
+    "kick"
+   ],
+   "max_len": 0.6,
+   "note": "Tubo de hierro contra carne: golpe sordo y húmedo, sin eco metálico."
+  },
+  {
+   "name": "combat_pipe_bone",
+   "query": "bone hit crack impact",
+   "alt": [
+    "hit bone thud crunch",
+    "skull hit"
+   ],
+   "duration": [
+    0.15,
+    2
+   ],
+   "want": [
+    "bone",
+    "crack",
+    "impact",
+    "hit"
+   ],
+   "level": -15,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed"
+   ],
+   "max_len": 0.5,
+   "note": "Tubo contra hueso: golpe seco con crujido corto."
+  },
+  {
+   "name": "combat_bone_break",
+   "query": "bone break snap",
+   "alt": [
+    "celery snap bone crack",
+    "bone crunch break"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "bone",
+    "break",
+    "snap",
+    "crack",
+    "crunch"
+   ],
+   "level": -14,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "voice"
+   ],
+   "max_len": 0.8,
+   "note": "Hueso que se parte: chasquido grave tipo apio o madera húmeda, sin voz."
+  },
+  {
+   "name": "combat_amputation",
+   "query": "flesh tear gore squelch",
+   "alt": [
+    "meat tearing wet",
+    "gore rip flesh"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "gore",
+    "flesh",
+    "tear",
+    "squelch",
+    "wet",
+    "rip"
+   ],
+   "level": -15,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "sword",
+    "swoosh"
+   ],
+   "max_len": 1.5,
+   "note": "Desgarro de carne y tendón con chapoteo; sin espada ni silbido."
+  },
+  {
+   "name": "combat_scalpel_slash",
+   "query": "knife slash flesh",
+   "alt": [
+    "blade cut cloth flesh",
+    "knife stab slice"
+   ],
+   "duration": [
+    0.15,
+    2
+   ],
+   "want": [
+    "knife",
+    "slash",
+    "cut",
+    "blade",
+    "slice"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "sword",
+    "katana"
+   ],
+   "max_len": 0.6,
+   "note": "Tajo fino y rápido sobre carne o tela con tintineo metálico."
+  },
+  {
+   "name": "combat_saw",
+   "query": "hand saw bone cutting",
+   "alt": [
+    "hacksaw cutting",
+    "saw rasp short"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "saw",
+    "cutting",
+    "hacksaw",
+    "rasp"
+   ],
+   "level": -18,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "chainsaw",
+    "electric",
+    "power"
+   ],
+   "max_len": 2.0,
+   "note": "Sierra de hueso manual: 2-3 pasadas ásperas."
+  },
+  {
+   "name": "combat_syringe",
+   "query": "syringe injection",
+   "alt": [
+    "needle syringe plunger",
+    "injection medical foley"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "syringe",
+    "needle",
+    "injection"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed"
+   ],
+   "max_len": 0.6,
+   "note": "Aguja que entra, clic del émbolo y líquido."
+  },
+  {
+   "name": "combat_swing_miss",
+   "query": "heavy swing whoosh metal bar",
+   "alt": [
+    "stick swing air",
+    "swing whoosh low"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "swing",
+    "whoosh",
+    "swish"
+   ],
+   "level": -18,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "sword",
+    "laser",
+    "magic"
+   ],
+   "max_len": 0.45,
+   "note": "Barra pesada que corta el aire, grave y corta."
+  },
+  {
+   "name": "enfermero_breath",
+   "query": "wet raspy breathing mask",
+   "alt": [
+    "creature breathing slow wet",
+    "heavy breathing through cloth"
+   ],
+   "duration": [
+    1.5,
+    10
+   ],
+   "want": [
+    "breathing",
+    "breath",
+    "raspy",
+    "wet"
+   ],
+   "level": -22,
+   "avoid": [
+    "female",
+    "woman",
+    "sex",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "note": "Respiración húmeda y lenta a través de una mascarilla."
+  },
+  {
+   "name": "enfermero_growl",
+   "query": "muffled growl gutteral",
+   "alt": [
+    "monster growl low muffled",
+    "zombie groan muffled"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "growl",
+    "groan",
+    "guttural",
+    "muffled"
+   ],
+   "level": -18,
+   "avoid": [
+    "dog",
+    "lion",
+    "bear",
+    "cat",
+    "music",
+    "female",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Gruñido gutural ahogado, como con la boca cosida."
+  },
+  {
+   "name": "enfermero_scream",
+   "query": "muffled scream pain creature",
+   "alt": [
+    "distorted pain scream muffled",
+    "zombie shriek"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "scream",
+    "shriek",
+    "pain"
+   ],
+   "level": -16,
+   "avoid": [
+    "female",
+    "woman",
+    "girl",
+    "child",
+    "music",
+    "laugh",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "note": "Chillido de dolor ahogado tras tela, agudo y quebrado."
+  },
+  {
+   "name": "enfermero_death",
+   "query": "body fall floor death groan",
+   "alt": [
+    "body drop thud",
+    "corpse fall heavy"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "body",
+    "fall",
+    "thud",
+    "drop"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "female"
+   ],
+   "max_len": 2.5,
+   "note": "Estertor y caída de un cuerpo pesado al suelo."
+  },
+  {
+   "name": "enfermero_drag_steps",
+   "query": "foot dragging floor limping",
+   "alt": [
+    "dragging foot footsteps",
+    "limp footsteps drag"
+   ],
+   "duration": [
+    0.6,
+    8
+   ],
+   "want": [
+    "drag",
+    "dragging",
+    "limp",
+    "footsteps"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "chain",
+    "furniture"
+   ],
+   "max_len": 1.6,
+   "note": "Un paso y un pie arrastrado sobre linóleo."
+  },
+  {
+   "name": "combat_transition",
+   "query": "vhs tape glitch static",
+   "alt": [
+    "tape stop static burst",
+    "vcr glitch noise"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "vhs",
+    "tape",
+    "static",
+    "glitch"
+   ],
+   "level": -18,
+   "avoid": [
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Cinta VHS que salta: chirrido de cabezal y ráfaga de estática."
+  },
+  {
+   "name": "music_combat_drone",
+   "query": "industrial drone dark loop",
+   "alt": [
+    "machine drone ominous",
+    "dark industrial ambience pulse"
+   ],
+   "duration": [
+    30,
+    600
+   ],
+   "ideal": 90,
+   "want": [
+    "industrial",
+    "drone",
+    "dark",
+    "machine",
+    "ominous",
+    "loop"
+   ],
+   "avoid": [
+    "beat",
+    "drum",
+    "drums",
+    "rhythm",
+    "percussion",
+    "edm",
+    "techno",
+    "dubstep",
+    "trap",
+    "vocals",
+    "voice",
+    "singing",
+    "lyrics",
+    "pop",
+    "rock",
+    "guitar",
+    "happy",
+    "upbeat",
+    "epic",
+    "orchestral",
+    "trailer",
+    "jumpscare",
+    "scream",
+    "bass-drop",
+    "8bit",
+    "chiptune"
+   ],
+   "level": -24,
+   "loop": true,
+   "max_len": 90,
+   "crossfade": 6.0,
+   "stereo": true,
+   "out": "music",
+   "format": "ogg",
+   "af": "highpass=f=30",
+   "quality": 5,
+   "note": "Drone industrial grave con un pulso lento de máquina, sin melodía; suena durante el combate."
+  },
+  {
    "name": "status_heartbeat",
    "query": "single heartbeat",
    "alt": [

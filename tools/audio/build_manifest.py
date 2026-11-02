@@ -321,6 +321,59 @@ MUSIC = [
          note="Atmósfera de suspense (cuerdas graves, texturas), sin golpes ni sustos."),
 ]
 
+# --- combate (scenes/battle/, data/enemies/) ---------------------------------------------------------
+NO_GAME = NO_FAKE + ["game", "punch", "kung-fu", "cartoon", "whoosh-designed"]
+COMBAT = [
+    e("combat_pipe_flesh", "body punch impact meat",
+      ["hit flesh thud heavy", "meat hit stick"], [0.15, 2], ["flesh", "impact", "meat", "body", "thud"], -16,
+      max_len=0.6, avoid=NO_GAME + ["metal", "kick"], note="Tubo de hierro contra carne: golpe sordo y húmedo, sin eco metálico."),
+    e("combat_pipe_bone", "bone hit crack impact",
+      ["hit bone thud crunch", "skull hit"], [0.15, 2], ["bone", "crack", "impact", "hit"], -15,
+      max_len=0.5, avoid=NO_GAME, note="Tubo contra hueso: golpe seco con crujido corto."),
+    e("combat_bone_break", "bone break snap",
+      ["celery snap bone crack", "bone crunch break"], [0.2, 3], ["bone", "break", "snap", "crack", "crunch"], -14,
+      max_len=0.8, avoid=NO_GAME + ["voice"], note="Hueso que se parte: chasquido grave tipo apio o madera húmeda, sin voz."),
+    e("combat_amputation", "flesh tear gore squelch",
+      ["meat tearing wet", "gore rip flesh"], [0.5, 4], ["gore", "flesh", "tear", "squelch", "wet", "rip"], -15,
+      max_len=1.5, avoid=NO_GAME + ["sword", "swoosh"], note="Desgarro de carne y tendón con chapoteo; sin espada ni silbido."),
+    e("combat_scalpel_slash", "knife slash flesh",
+      ["blade cut cloth flesh", "knife stab slice"], [0.15, 2], ["knife", "slash", "cut", "blade", "slice"], -16,
+      max_len=0.6, avoid=NO_GAME + ["sword", "katana"], note="Tajo fino y rápido sobre carne o tela con tintineo metálico."),
+    e("combat_saw", "hand saw bone cutting",
+      ["hacksaw cutting", "saw rasp short"], [0.5, 6], ["saw", "cutting", "hacksaw", "rasp"], -18,
+      max_len=2.0, avoid=NO_GAME + ["chainsaw", "electric", "power"], note="Sierra de hueso manual: 2-3 pasadas ásperas."),
+    e("combat_syringe", "syringe injection",
+      ["needle syringe plunger", "injection medical foley"], [0.1, 3], ["syringe", "needle", "injection"], -20,
+      max_len=0.6, avoid=NO_GAME, note="Aguja que entra, clic del émbolo y líquido."),
+    e("combat_swing_miss", "heavy swing whoosh metal bar",
+      ["stick swing air", "swing whoosh low"], [0.1, 2], ["swing", "whoosh", "swish"], -18,
+      max_len=0.45, avoid=NO_FAKE + ["sword", "laser", "magic"], note="Barra pesada que corta el aire, grave y corta."),
+    e("enfermero_breath", "wet raspy breathing mask",
+      ["creature breathing slow wet", "heavy breathing through cloth"], [1.5, 10], ["breathing", "breath", "raspy", "wet"], -22,
+      max_len=4.0, avoid=["female", "woman", "sex", "music"], note="Respiración húmeda y lenta a través de una mascarilla."),
+    e("enfermero_growl", "muffled growl gutteral",
+      ["monster growl low muffled", "zombie groan muffled"], [0.4, 4], ["growl", "groan", "guttural", "muffled"], -18,
+      max_len=1.2, avoid=["dog", "lion", "bear", "cat", "music", "female"], note="Gruñido gutural ahogado, como con la boca cosida."),
+    e("enfermero_scream", "muffled scream pain creature",
+      ["distorted pain scream muffled", "zombie shriek"], [0.5, 4], ["scream", "shriek", "pain"], -16,
+      max_len=1.5, avoid=["female", "woman", "girl", "child", "music", "laugh"], note="Chillido de dolor ahogado tras tela, agudo y quebrado."),
+    e("enfermero_death", "body fall floor death groan",
+      ["body drop thud", "corpse fall heavy"], [0.8, 5], ["body", "fall", "thud", "drop"], -16,
+      max_len=2.5, avoid=NO_GAME + ["female"], note="Estertor y caída de un cuerpo pesado al suelo."),
+    e("enfermero_drag_steps", "foot dragging floor limping",
+      ["dragging foot footsteps", "limp footsteps drag"], [0.6, 8], ["drag", "dragging", "limp", "footsteps"], -20,
+      max_len=1.6, avoid=NO_GAME + ["chain", "furniture"], note="Un paso y un pie arrastrado sobre linóleo."),
+    e("combat_transition", "vhs tape glitch static",
+      ["tape stop static burst", "vcr glitch noise"], [0.3, 4], ["vhs", "tape", "static", "glitch"], -18,
+      max_len=1.0, avoid=["music"], note="Cinta VHS que salta: chirrido de cabezal y ráfaga de estática."),
+    dict(name="music_combat_drone", query="industrial drone dark loop",
+         alt=["machine drone ominous", "dark industrial ambience pulse"], duration=[30, 600], ideal=90,
+         want=["industrial", "drone", "dark", "machine", "ominous", "loop"],
+         avoid=MUSIC_AVOID, level=-24, loop=True, max_len=90, crossfade=6.0, stereo=True, out="music", format="ogg",
+         af="highpass=f=30", quality=5,
+         note="Drone industrial grave con un pulso lento de máquina, sin melodía; suena durante el combate."),
+]
+
 # --- paisaje sonoro del hospital (data/audio/hospital_soundscape.tres) -----------------------------
 AMBIENT = [
     e("amb_vent_loop", "ventilation air duct hum",
@@ -785,7 +838,7 @@ def main() -> None:
     old = {}
     if MANIFEST.exists():
         old = {x["name"]: x for x in json.loads(MANIFEST.read_text(encoding="utf-8"))["sounds"]}
-    entries = WORLD + PLAYER + AMBIENT + AMBIENT_ROOMS + AMBIENT_MORE + HORROR + UI + MUSIC + ITEMS + inventory()
+    entries = WORLD + PLAYER + AMBIENT + AMBIENT_ROOMS + AMBIENT_MORE + HORROR + COMBAT + UI + MUSIC + ITEMS + inventory()
     names = [x["name"] for x in entries]
     assert len(names) == len(set(names)), "nombres repetidos"
     assert set(REVIEWED_PICKS) <= set(names), "REVIEWED_PICKS con nombres que no existen"
