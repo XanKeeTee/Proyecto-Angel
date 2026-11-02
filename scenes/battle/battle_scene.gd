@@ -1155,7 +1155,7 @@ func _build_overlays() -> void:
 	add_child(_flash)
 	_noise_material = ShaderMaterial.new()
 	_noise_material.shader = NOISE_SHADER
-	_noise_material.set_shader_parameter(&"amount", 0.008)
+	_noise_material.set_shader_parameter(&"amount", 0.0)  # el grano ya lo pone el filtro de imagen
 	_noise_material.set_shader_parameter(&"streaks", 0.0)
 	var noise: ColorRect = ColorRect.new()
 	noise.material = _noise_material
