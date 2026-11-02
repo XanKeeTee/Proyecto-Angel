@@ -31599,5 +31599,189 @@
    0
   ],
   "glow": false
+ },
+ "enemy_enfermero": {
+  "frame": [
+   256,
+   300
+  ],
+  "origin": [
+   124,
+   282
+  ],
+  "hframes": 68,
+  "vframes": 1,
+  "layers": {
+   "shadow": "res://assets/sprites/enemies/enfermero/shadow.png",
+   "leg_l": "res://assets/sprites/enemies/enfermero/leg_l.png",
+   "leg_r": "res://assets/sprites/enemies/enfermero/leg_r.png",
+   "body": "res://assets/sprites/enemies/enfermero/body.png",
+   "stump_head": "res://assets/sprites/enemies/enfermero/stump_head.png",
+   "stump_arm_l": "res://assets/sprites/enemies/enfermero/stump_arm_l.png",
+   "stump_arm_r": "res://assets/sprites/enemies/enfermero/stump_arm_r.png",
+   "stump_leg_l": "res://assets/sprites/enemies/enfermero/stump_leg_l.png",
+   "stump_leg_r": "res://assets/sprites/enemies/enfermero/stump_leg_r.png",
+   "head": "res://assets/sprites/enemies/enfermero/head.png",
+   "arm_l": "res://assets/sprites/enemies/enfermero/arm_l.png",
+   "arm_r": "res://assets/sprites/enemies/enfermero/arm_r.png"
+  },
+  "normals": {
+   "leg_l": "res://assets/sprites/enemies/enfermero/leg_l_n.png",
+   "leg_r": "res://assets/sprites/enemies/enfermero/leg_r_n.png",
+   "body": "res://assets/sprites/enemies/enfermero/body_n.png",
+   "stump_head": "res://assets/sprites/enemies/enfermero/stump_head_n.png",
+   "stump_arm_l": "res://assets/sprites/enemies/enfermero/stump_arm_l_n.png",
+   "stump_arm_r": "res://assets/sprites/enemies/enfermero/stump_arm_r_n.png",
+   "stump_leg_l": "res://assets/sprites/enemies/enfermero/stump_leg_l_n.png",
+   "stump_leg_r": "res://assets/sprites/enemies/enfermero/stump_leg_r_n.png",
+   "head": "res://assets/sprites/enemies/enfermero/head_n.png",
+   "arm_l": "res://assets/sprites/enemies/enfermero/arm_l_n.png",
+   "arm_r": "res://assets/sprites/enemies/enfermero/arm_r_n.png"
+  },
+  "order": [
+   "shadow",
+   "leg_l",
+   "leg_r",
+   "body",
+   "stump_head",
+   "stump_arm_l",
+   "stump_arm_r",
+   "stump_leg_l",
+   "stump_leg_r",
+   "head",
+   "arm_l",
+   "arm_r"
+  ],
+  "anims": {
+   "idle": [
+    0,
+    12,
+    8.0,
+    true
+   ],
+   "windup": [
+    12,
+    8,
+    12.0,
+    false
+   ],
+   "attack": [
+    20,
+    8,
+    16.0,
+    false
+   ],
+   "attack_syringe": [
+    28,
+    10,
+    14.0,
+    false
+   ],
+   "hit": [
+    38,
+    6,
+    12.0,
+    false
+   ],
+   "stagger": [
+    44,
+    10,
+    10.0,
+    false
+   ],
+   "death": [
+    54,
+    14,
+    10.0,
+    false
+   ]
+  },
+  "anchors": {
+   "head": [
+    131,
+    85
+   ],
+   "body": [
+    127,
+    128
+   ],
+   "arm_l": [
+    160,
+    165
+   ],
+   "arm_r": [
+    89,
+    178
+   ],
+   "leg_l": [
+    145,
+    217
+   ],
+   "leg_r": [
+    111,
+    220
+   ]
+  },
+  "stumps": {
+   "head": "stump_head",
+   "arm_l": "stump_arm_l",
+   "arm_r": "stump_arm_r",
+   "leg_l": "stump_leg_l",
+   "leg_r": "stump_leg_r"
+  },
+  "parts": {
+   "head": "head",
+   "torso": "body",
+   "arm_l": "arm_l",
+   "arm_r": "arm_r",
+   "leg_l": "leg_l",
+   "leg_r": "leg_r"
+  }
+ },
+ "enemy_enfermero_map": {
+  "path": "res://assets/sprites/enemies/enfermero/map.png",
+  "normal": "res://assets/sprites/enemies/enfermero/map_n.png",
+  "frame": [
+   56,
+   80
+  ],
+  "origin": [
+   28,
+   74
+  ],
+  "hframes": 12,
+  "vframes": 8,
+  "directions": 8,
+  "anims": {
+   "idle": [
+    0,
+    4,
+    5.0,
+    true
+   ],
+   "walk": [
+    4,
+    8,
+    7.0,
+    true
+   ]
+  },
+  "corpse": {
+   "path": "res://assets/sprites/enemies/enfermero/corpse.png",
+   "normal": "res://assets/sprites/enemies/enfermero/corpse_n.png",
+   "frame": [
+    88,
+    56
+   ],
+   "origin": [
+    44,
+    34
+   ],
+   "hframes": 2,
+   "variants": [
+    "whole",
+    "no_arm_r"
+   ]
+  }
  }
 }

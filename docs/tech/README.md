@@ -90,7 +90,12 @@ python -I tools/art/tiles_doors.py
 El generador del hospital y el de datos del prólogo se ejecutan como escena (no con `-s`) porque necesitan los autoloads.
 
 Aparte (no los llama `build_all.py`):
+<<<<<<< HEAD
 - `python -I tools/art/entity.py`: la entidad del terror ambiental (un mapa de datos para `shaders/entity_shade.gdshader`, no una imagen) y el fotograma de cara (`assets/sprites/horror/`).
+=======
+- `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
+- `python -I tools/art/enemy_enfermero.py`: el enfermero transfigurado, combate por capas y sprite del mapa (`assets/sprites/enemies/enfermero/`). Ver [enemigos.md](enemigos.md).
+>>>>>>> 7bfd447
 
 Sonido y música de Freesound (`python3 -I tools/audio/freesound.py check|fetch`): [sonidos.md](sonidos.md). `sounds.py` solo crea los WAV provisionales que falten.
 
