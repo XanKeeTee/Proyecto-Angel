@@ -7,6 +7,7 @@ signal closed
 var _first: Control
 var _speed_button: Button
 var _fullscreen: CheckButton
+var _echo: CheckButton
 var _sliders: Dictionary[String, HSlider] = {}
 
 
@@ -62,6 +63,17 @@ func _ready() -> void:
 		Settings.fullscreen = on
 		Settings.apply())
 	grid.add_child(_fullscreen)
+	grid.add_child(Control.new())
+
+	# Eco: reverberación y ecualización según la sala (ver AudioBuses / RoomAcoustics).
+	grid.add_child(UiStyle.label("Eco de las salas", UiStyle.SIZE_TEXT, UiStyle.BONE_DIM))
+	_echo = CheckButton.new()
+	UiStyle.style_control(_echo)
+	_echo.focus_mode = Control.FOCUS_ALL
+	_echo.toggled.connect(func(on: bool) -> void:
+		Settings.echo = on
+		Settings.apply())
+	grid.add_child(_echo)
 	grid.add_child(Control.new())
 
 	var calib: HBoxContainer = HBoxContainer.new()
@@ -141,3 +153,4 @@ func _refresh() -> void:
 		label.text = "%d %%" % roundi(float(Settings.get(key)) * 100.0)
 	_speed_button.text = Settings.TEXT_SPEED_NAMES[Settings.text_speed]
 	_fullscreen.set_pressed_no_signal(Settings.fullscreen)
+	_echo.set_pressed_no_signal(Settings.echo)

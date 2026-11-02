@@ -29,6 +29,8 @@ const WALK_SPEED: float = 20.0
 const LIT_RADIUS: float = 0.42
 ## Distancia a la que se oye respirar a la entidad.
 const BREATH_DISTANCE: float = 64.0
+## Grados más allá del cono del haz a partir de los cuales la entidad se ve «de reojo» (ver gaze_at).
+const GAZE_MARGIN: float = 55.0
 const FACE_TEXTURE: Texture2D = preload("res://assets/sprites/horror/face_flash.png")
 ## Sonidos provisionales mientras no estén los definitivos (ver docs/tech/sonidos.md).
 const FALLBACK_SOUNDS: Dictionary[String, String] = {
@@ -167,6 +169,14 @@ static func beam_touches(origin: Vector2, angle: float, target: Vector2, half_an
 	if to.length() < 12.0:
 		return true
 	return absf(angle_difference(angle, to.angle())) <= deg_to_rad(half_angle_deg)
+
+
+## Cuánto mira el jugador hacia `target`: 1 dentro del cono de la linterna, 0 a partir de
+## GAZE_MARGIN grados más allá (de reojo o a la espalda). Con la entidad, de frente casi no se ve.
+func gaze_at(target: Vector2) -> float:
+	var diff: float = absf(angle_difference(_player.facing_angle, (target - _player.position).angle()))
+	var inner: float = deg_to_rad(profile.beam_half_angle)
+	return 1.0 - smoothstep(inner, inner + deg_to_rad(GAZE_MARGIN), diff)
 
 
 ## Si no hay pared entre dos puntos (comprobado por casillas del mapa).
@@ -335,7 +345,7 @@ func try_spawn_stalker() -> bool:
 	if walked < profile.stalker_spawn_distance.x * 0.8:
 		return false
 	var at: Vector2 = _trail[index]
-	if is_lit(at) or flashlight_hits(at) or flashlight_hits(at + Vector2(0, -38)):
+	if is_lit(at) or flashlight_hits(at) or flashlight_hits(at + Stalker.AIM_OFFSET):
 		return false
 	# Tiene que quedar a la espalda: fuera del cono de visión con margen.
 	var behind: float = absf(angle_difference(_player.facing_angle, (at - _player.position).angle()))
@@ -348,6 +358,7 @@ func try_spawn_stalker() -> bool:
 
 
 func _update_stalker(delta: float, walking: bool) -> void:
+	stalker.set_gaze(gaze_at(stalker.position))
 	if not stalker.is_solid():
 		return
 	if flashlight_hits(stalker.aim_point()) or flashlight_hits(stalker.position):
@@ -386,7 +397,9 @@ func _on_stalker_vanished(reason: StringName) -> void:
 
 func _update_debug_stalker(delta: float) -> void:
 	# --stalker: la entidad aparece enseguida detrás del jugador y lo sigue aunque esté quieto
-	# (para capturas). Con el haz encima se deshace como en el juego.
+	# (para capturas). Con el haz encima se deshace como en el juego. --stalker=GAZE fija cuánto
+	# la mira (0 de reojo … 1 de frente) para comparar capturas; si no, como en el juego.
+	# --stalker-eyes: con los ojos encendidos.
 	if not stalker.is_active():
 		var back: Vector2 = -Vector2.from_angle(_player.facing_angle)
 		var at: Vector2 = _player.position + back * 96.0
@@ -394,6 +407,9 @@ func _update_debug_stalker(delta: float) -> void:
 		stalker.appear(at, path, 999.0)
 		stalker.set_process(true)
 		return
+	stalker.debug_eyes = world.debug.has("stalker-eyes")
+	var forced: String = world.debug["stalker"]
+	stalker.set_gaze(forced.to_float() if forced.is_valid_float() else gaze_at(stalker.position))
 	if stalker.is_solid() and flashlight_hits(stalker.aim_point()):
 		_dissolve_stalker()
 	elif stalker.is_solid() and stalker.position.distance_to(_player.position) > 60.0:

@@ -1,7 +1,8 @@
 class_name AmbientSoundDef
 extends Resource
 ## Un sonido del paisaje sonoro de un mapa (ver `SoundscapeDef` y `Soundscape`):
-## - LOOP: un bucle suave en uno o varios puntos fijos (o junto a cada luz con corriente).
+## - LOOP: un bucle suave en uno o varios puntos fijos (o junto a cada luz con corriente), o un
+##   tono de sala que acompaña al jugador mientras esté en sus zonas (LISTENER).
 ## - ONE_SHOT: un sonido suelto que salta al azar, con enfriamiento, cerca del jugador.
 ## Depende del estado: corriente sí/no y zona (sala, planta o sótano) donde está el jugador.
 ## Los sonidos son WAV de assets/audio/sfx/ (de Freesound; ver tools/audio/sound_manifest.json).
@@ -14,6 +15,7 @@ enum Placement {
 	CELLS,          ## En las casillas de `cells`.
 	LIGHTS,         ## Junto a cada luz del edificio que necesita corriente y no está rota (solo LOOP).
 	AROUND_PLAYER,  ## Suelto: en una dirección al azar, a `distance` píxeles del jugador.
+	LISTENER,       ## Bucle sin posición: va con el jugador (tono de sala, aire del edificio).
 }
 
 @export var id: StringName = &""
@@ -34,6 +36,9 @@ enum Placement {
 @export var max_distance: float = 260.0
 @export var attenuation: float = 1.8
 @export var pitch_jitter: float = 0.05
+## Bucles: segundos del fundido al entrar o salir de su zona (< 0 = el `loop_fade` del paisaje).
+## Los tonos de sala, más largos: así el cambio de sala es un fundido cruzado.
+@export var fade: float = -1.0
 
 @export_group("Sueltos")
 ## Segundos entre dos veces [mín, máx].

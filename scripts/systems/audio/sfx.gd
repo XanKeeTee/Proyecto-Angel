@@ -2,6 +2,8 @@ class_name Sfx
 extends RefCounted
 ## Sonidos: efectos posicionales y de interfaz. Los WAV están en assets/audio/sfx/<nombre>.wav.
 ## Si falta un archivo no pasa nada (se avisa una vez por consola).
+## Los del mundo (`at`) pasan por la acústica de la sala (bus «Efectos» → «Sala») y, si suenan
+## lejos de quien escucha, por un paso bajo (ver `AudioBuses`). Los de interfaz, secos.
 
 const DIR: String = "res://assets/audio/sfx/"
 
@@ -38,8 +40,9 @@ static func at(parent: Node, sound: Variant, position: Vector2, volume_db: float
 	player.max_distance = max_distance
 	player.attenuation = 1.6
 	player.pitch_scale = 1.0 + randf_range(-pitch_jitter, pitch_jitter)
-	player.bus = &"Efectos"
+	player.bus = AudioBuses.SFX
 	parent.add_child(player)
+	player.bus = AudioBuses.bus_for_distance(AudioBuses.SFX, AudioBuses.listener_distance(player))
 	player.finished.connect(player.queue_free)
 	player.play()
 	return player
@@ -53,7 +56,7 @@ static func ui(parent: Node, sound: Variant, volume_db: float = 0.0) -> AudioStr
 	var player: AudioStreamPlayer = AudioStreamPlayer.new()
 	player.stream = s
 	player.volume_db = volume_db
-	player.bus = &"Interfaz"
+	player.bus = AudioBuses.UI
 	player.process_mode = Node.PROCESS_MODE_ALWAYS
 	parent.add_child(player)
 	player.finished.connect(player.queue_free)

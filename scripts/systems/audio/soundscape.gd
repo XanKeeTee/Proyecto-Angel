@@ -1,8 +1,13 @@
 class_name Soundscape
 extends Node2D
-## Paisaje sonoro de un mapa: bucles posicionales suaves (zumbido de fluorescentes, ventilación,
-## goteo, tuberías, nevera de la morgue, generador…) y sonidos sueltos al azar con enfriamiento
-## (crujidos, golpes de tubería, viento, un monitor lejano…), todo según `SoundscapeDef`.
+## Paisaje sonoro de un mapa, todo según `SoundscapeDef`:
+## - tonos de sala que acompañan al jugador y se funden al cambiar de sala (habitación, pasillo,
+##   alicatado, quirófano, sótano, morgue…) y el aire del edificio (zumbido con corriente, viento);
+## - bucles posicionales suaves (fluorescentes, ventilación, relojes, goteos, tuberías, nevera de la
+##   morgue, generador…);
+## - sonidos sueltos al azar con enfriamiento (crujidos, puertas y pasos lejanos, ratas, rejillas…),
+##   que suenan por el eco de la sala y, si son lejanos, más apagados (ver `AudioBuses`);
+## - la acústica (eco y ecualización) de la sala donde está el jugador (`RoomAcoustics`).
 ## Se crea con una línea desde el `_ready` del mapa:
 ##     Soundscape.attach(self, preload("res://data/audio/hospital_soundscape.tres"), %Ambience)
 ## Depende del estado (corriente, zona del jugador). Entra poco a poco la primera vez que el
@@ -25,6 +30,9 @@ var bed: AudioStreamPlayer
 var emitters: Array[AudioStreamPlayer2D] = []
 ## Reloj propio (solo avanza sin pausa).
 var clock: float = 0.0
+
+## Acústica de la sala del jugador (null si el mapa no tiene).
+var acoustics: RoomAcoustics
 
 var _horror: HorrorDirector
 var _master: float = 0.0
@@ -55,10 +63,17 @@ func _ready() -> void:
 		_horror.scare_played.connect(func(_s: ScareDef) -> void: _quiet_until = clock + def.quiet_after_scare)
 	if bed != null:
 		bed.volume_db = linear_to_db(0.0001)
+	if def.acoustics != null:
+		acoustics = RoomAcoustics.new(def.acoustics)
+		if world.player != null:
+			acoustics.update(0.0, _cell_of(world.player.position), true)
 	for sound: AmbientSoundDef in def.sounds:
 		if sound.kind != AmbientSoundDef.Kind.LOOP or sound.sounds.is_empty():
 			continue
-		if sound.placement == AmbientSoundDef.Placement.LIGHTS:
+		if sound.placement == AmbientSoundDef.Placement.LISTENER:
+			_add_emitter(sound, world.player.position if world.player != null else Vector2.ZERO, null)
+			emitters[-1].set_meta(&"follow", true)
+		elif sound.placement == AmbientSoundDef.Placement.LIGHTS:
 			for node: Node in get_tree().get_nodes_in_group(PoweredLight.GROUP):
 				var light: PoweredLight = node as PoweredLight
 				if light.needs_power and not light.broken and sound.in_regions(_cell_of(to_local(light.global_position))):
@@ -83,6 +98,8 @@ func _process(delta: float) -> void:
 	var powered: bool = GameState.has_flag(GameState.FLAG_POWER)
 	var cell: Vector2i = _cell_of(world.player.position)
 	var stalker: bool = _horror != null and _horror.stalker != null and _horror.stalker.is_active()
+	if acoustics != null:
+		acoustics.update(delta, cell)
 	_update_loops(delta, cell, powered, stalker)
 	if can_act and not stalker and _master > 0.6 and clock >= _quiet_until and clock - _last_shot >= def.min_gap:
 		_update_shots(cell, powered)
@@ -114,6 +131,12 @@ func fade_out() -> void:
 	_fading_out = true
 
 
+func _exit_tree() -> void:
+	# Fuera del mapa no hay sala: el título y lo demás suenan secos.
+	if acoustics != null:
+		RoomAcoustics.reset()
+
+
 func _add_emitter(sound: AmbientSoundDef, pos: Vector2, light: PoweredLight) -> void:
 	var e: AudioStreamPlayer2D = AudioStreamPlayer2D.new()
 	e.name = "%s_%d" % [sound.id, emitters.size()]
@@ -139,10 +162,12 @@ func _add_emitter(sound: AmbientSoundDef, pos: Vector2, light: PoweredLight) -> 
 
 
 func _update_loops(delta: float, cell: Vector2i, powered: bool, stalker: bool) -> void:
-	var step: float = delta / maxf(def.loop_fade, 0.01)
 	var duck: float = def.stalker_duck_db if stalker else 0.0
 	for e: AudioStreamPlayer2D in emitters:
 		var sound: AmbientSoundDef = e.get_meta(&"def")
+		var step: float = delta / maxf(sound.fade if sound.fade >= 0.0 else def.loop_fade, 0.01)
+		if e.has_meta(&"follow"):
+			e.position = world.player.position
 		var target: float = 1.0 if is_emitter_active(e, cell, powered) else 0.0
 		# Las luces que parpadean cortan el zumbido de golpe, como el tubo.
 		var fast: bool = e.has_meta(&"light")
@@ -195,6 +220,7 @@ func _shot_position(sound: AmbientSoundDef) -> Variant:
 				near.append(p)
 		return near[_rng.randi() % near.size()] if not near.is_empty() else null
 	var dir: Vector2 = Vector2.from_angle(_rng.randf() * TAU)
+	# AROUND_PLAYER y LISTENER (en un suelto no tiene sentido ir pegado al jugador).
 	return origin + dir * _rng.randf_range(sound.distance.x, sound.distance.y)
 
 
@@ -209,7 +235,8 @@ func _play_shot(sound: AmbientSoundDef, pos: Vector2) -> void:
 	p.attenuation = sound.attenuation
 	p.volume_db = sound.volume_db + linear_to_db(maxf(_master, 0.0001))
 	p.pitch_scale = 1.0 + _rng.randf_range(-sound.pitch_jitter, sound.pitch_jitter)
-	p.bus = Settings.BUS_AMBIENCE
+	# Los sueltos suenan en la sala (eco) y, si están lejos, más apagados.
+	p.bus = AudioBuses.bus_for_distance(AudioBuses.AMBIENCE_ROOM, pos.distance_to(world.player.position))
 	add_child(p)
 	p.finished.connect(p.queue_free)
 	p.play()

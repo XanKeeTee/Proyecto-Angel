@@ -1,15 +1,19 @@
 extends Node
 ## Opciones del juego (independientes de la partida): volumen por canal (general, ambiente,
-## música, efectos, interfaz), brillo, filtro VHS, pantalla completa y velocidad del texto.
-## Se guardan en user://settings.cfg. Los buses de audio se crean aquí si no existen.
+## música, efectos, interfaz), eco de las salas, brillo, filtro VHS, pantalla completa y velocidad
+## del texto. Se guardan en user://settings.cfg. Los buses de audio (y sus efectos) los crea
+## `AudioBuses.ensure()` al arrancar.
 
 signal changed
 
 const PATH: String = "user://settings.cfg"
-const BUS_AMBIENCE: StringName = &"Ambiente"
-const BUS_SFX: StringName = &"Efectos"
-const BUS_UI: StringName = &"Interfaz"
-const BUS_MUSIC: StringName = &"Música"
+const BUS_AMBIENCE: StringName = AudioBuses.AMBIENCE
+const BUS_SFX: StringName = AudioBuses.SFX
+const BUS_UI: StringName = AudioBuses.UI
+const BUS_MUSIC: StringName = AudioBuses.MUSIC
+## Claves que se guardan.
+const KEYS: Array[String] = ["master", "ambience", "music", "sfx", "ui", "echo", "brightness", "vhs",
+	"fullscreen", "text_speed"]
 ## Velocidad del texto: caracteres por segundo (lento, normal, rápido, instantáneo).
 const TEXT_SPEEDS: Array[float] = [25.0, 45.0, 90.0, 10000.0]
 const TEXT_SPEED_NAMES: Array[String] = ["Lento", "Normal", "Rápido", "Instantáneo"]
@@ -20,6 +24,8 @@ var ambience: float = 0.7
 var sfx: float = 0.65
 var ui: float = 0.6
 var music: float = 0.6
+## Eco: reverberación y ecualización según la sala donde está el jugador (bus «Sala»).
+var echo: bool = true
 ## Brillo: 0,6 (más oscuro) .. 1,6 (más claro). 1 = el previsto.
 var brightness: float = 1.0
 ## Intensidad del filtro VHS: 0 apagado .. 1 completo.
@@ -41,9 +47,11 @@ func text_chars_per_second() -> float:
 func apply() -> void:
 	_set_bus(&"Master", master)
 	_set_bus(BUS_AMBIENCE, ambience)
+	_set_bus(AudioBuses.AMBIENCE_ROOM, ambience)
 	_set_bus(BUS_SFX, sfx)
 	_set_bus(BUS_UI, ui)
 	_set_bus(BUS_MUSIC, music)
+	AudioBuses.set_echo_enabled(echo)
 	if not DisplayServer.get_name() == "headless":
 		var mode: DisplayServer.WindowMode = DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED
 		if DisplayServer.window_get_mode() != mode:
@@ -53,7 +61,7 @@ func apply() -> void:
 
 func save_settings() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
-	for key: String in ["master", "ambience", "music", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
+	for key: String in KEYS:
 		cfg.set_value("opciones", key, get(key))
 	cfg.save(PATH)
 
@@ -62,7 +70,7 @@ func load_settings() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
 	if cfg.load(PATH) != OK:
 		return
-	for key: String in ["master", "ambience", "music", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
+	for key: String in KEYS:
 		if cfg.has_section_key("opciones", key):
 			set(key, cfg.get_value("opciones", key))
 
@@ -73,6 +81,7 @@ func reset_defaults() -> void:
 	sfx = 0.65
 	ui = 0.6
 	music = 0.6
+	echo = true
 	brightness = 1.0
 	vhs = 1.0
 	fullscreen = false
@@ -82,18 +91,7 @@ func reset_defaults() -> void:
 
 
 func _ensure_buses() -> void:
-	for bus: StringName in [BUS_AMBIENCE, BUS_MUSIC, BUS_SFX, BUS_UI]:
-		if AudioServer.get_bus_index(bus) < 0:
-			AudioServer.add_bus()
-			var i: int = AudioServer.bus_count - 1
-			AudioServer.set_bus_name(i, bus)
-			AudioServer.set_bus_send(i, &"Master")
-	# Un limitador suave en el maestro: nada puede saturar.
-	var master_index: int = AudioServer.get_bus_index(&"Master")
-	if AudioServer.get_bus_effect_count(master_index) == 0:
-		var limiter: AudioEffectHardLimiter = AudioEffectHardLimiter.new()
-		limiter.ceiling_db = -1.5
-		AudioServer.add_bus_effect(master_index, limiter)
+	AudioBuses.ensure()
 
 
 func _set_bus(bus: StringName, linear: float) -> void:
