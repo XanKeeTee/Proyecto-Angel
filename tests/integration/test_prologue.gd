@@ -233,6 +233,55 @@ func test_botin_fijo_y_semilla_guardada() -> void:
 	await _teardown()
 
 
+func test_gestos_por_tipo_de_objeto() -> void:
+	await _setup()
+	var expect: Array = [
+		["mesita_09", Interactable.ACT_OPEN, Interactable.ANIM_REACH_LOW],
+		["taquilla_almacen", Interactable.ACT_OPEN, Interactable.ANIM_REACH_MID],
+		["estanteria_archivo", Interactable.ACT_SEARCH, Interactable.ANIM_REACH_HIGH],
+		["estanteria_taller", Interactable.ACT_SEARCH, Interactable.ANIM_REACH_LOW],
+		["parte_control", Interactable.ACT_READ, Interactable.ANIM_PICKUP],
+		["puerta_hab09", Interactable.ACT_OPEN, Interactable.ANIM_REACH_MID],
+		["puerta_archivo", Interactable.ACT_UNLOCK, Interactable.ANIM_KEY],
+		["puerta_quirofano", &"item:0", Interactable.ANIM_PRY],
+		["generador", Interactable.ACT_DEVICE, Interactable.ANIM_LEVER],
+		["generador", &"item:0", Interactable.ANIM_VALVE],
+		["cuadro_electrico", &"item:1", Interactable.ANIM_REACH_MID],
+		["mesita_09", Interactable.ACT_EXAMINE, &""],
+	]
+	for row: Array in expect:
+		check_eq(world.find_object(StringName(row[0])).anim_for(row[1]), row[2], "gesto de %s · %s" % [row[0], row[1]])
+	await _teardown()
+
+
+## Con un protagonista que tiene `play_action` (contrato con el agente del personaje), el cambio
+## de estado llega cuando la mano toca el objeto, no antes.
+func test_el_cambio_llega_al_tocar() -> void:
+	GameState.new_game()
+	world = load(SCENE).instantiate()
+	var fake: GDScript = GDScript.new()
+	fake.source_code = "extends \"res://scenes/world/player/player.gd\"\nsignal action_contact\nvar gestures: Array = []\n" \
+		+ "func play_action(action: StringName, _target: Vector2) -> void:\n\tgestures.append(action)\n" \
+		+ "\tawait get_tree().create_timer(0.3).timeout\n\taction_contact.emit()\n\tawait get_tree().create_timer(0.3).timeout\n"
+	fake.reload()
+	var player: Node = world.find_child("Player", true, false)
+	player.set_script(fake)
+	host.add_child(world)
+	world.message.auto_advance = 0.01
+	await host.get_tree().process_frame
+	var drawer: Interactable = world.find_object(&"mesita_09")
+	world.player.place(Vector2i(3, 23), Vector2i.UP)
+	var run: Callable = func() -> void: await world._perform(drawer, Interactable.ACT_OPEN)
+	run.call()
+	await host.get_tree().create_timer(0.15).timeout
+	check(not drawer.is_open, "antes de tocar, el cajón sigue cerrado")
+	await host.get_tree().create_timer(0.3).timeout
+	check(drawer.is_open, "al tocar, se abre")
+	check_eq(world.player.get("gestures"), [&"reach_low"], "gesto de cajón bajo")
+	await host.get_tree().create_timer(1.0).timeout
+	await _teardown()
+
+
 func _contents(ids: Array) -> PackedStringArray:
 	var result: PackedStringArray = []
 	for id: String in ids:
