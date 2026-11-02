@@ -2569,15 +2569,14 @@
   },
   {
    "name": "amb_tone_hall",
-   "query": "empty lobby ambience large room",
+   "query": "lobby ambience",
    "alt": [
-    "empty hall reverberant room tone",
-    "large empty building interior ambience",
-    "atrium room tone night"
+    "hall room tone",
+    "large room ambience"
    ],
    "duration": [
-    20,
-    900
+    10,
+    600
    ],
    "want": [
     "lobby",
@@ -2929,15 +2928,14 @@
   },
   {
    "name": "amb_tone_morgue",
-   "query": "cold storage room ambience",
+   "query": "cold room ambience",
    "alt": [
-    "cold room hum quiet",
-    "walk-in freezer interior ambience",
-    "mortuary room tone"
+    "refrigerator room hum",
+    "basement room tone"
    ],
    "duration": [
-    20,
-    900
+    10,
+    600
    ],
    "want": [
     "cold",
@@ -3562,15 +3560,14 @@
   },
   {
    "name": "amb_concrete_groan",
-   "query": "concrete structure creak deep",
+   "query": "building creak",
    "alt": [
-    "building settling groan low",
-    "deep structural creak",
-    "heavy beam stress groan"
+    "structure creak",
+    "wood creak low"
    ],
    "duration": [
-    0.8,
-    8
+    0.5,
+    20
    ],
    "want": [
     "concrete",
@@ -3604,15 +3601,14 @@
   },
   {
    "name": "amb_drip_metal",
-   "query": "water drop on metal",
+   "query": "drip metal",
    "alt": [
-    "drip on metal bucket",
-    "drop hitting tin",
-    "water droplet metal plate"
+    "water drop metal",
+    "drip tin"
    ],
    "duration": [
-    0.1,
-    4
+    0.2,
+    20
    ],
    "want": [
     "drip",
@@ -3641,15 +3637,14 @@
   },
   {
    "name": "amb_door_far",
-   "query": "distant door closing building",
+   "query": "door close distant",
    "alt": [
-    "door close far away echo",
-    "door shut down the hall",
-    "distant door slam soft reverb"
+    "door slam far",
+    "door closing reverb"
    ],
    "duration": [
-    0.6,
-    6
+    0.5,
+    15
    ],
    "want": [
     "door",
@@ -3721,15 +3716,14 @@
   },
   {
    "name": "amb_steps_distant",
-   "query": "footsteps distant hallway reverb",
+   "query": "footsteps distant",
    "alt": [
-    "footsteps far corridor echo",
-    "someone walking far away building",
-    "slow footsteps hard floor distant"
+    "footsteps corridor",
+    "footsteps echo"
    ],
    "duration": [
-    1.5,
-    12
+    1,
+    30
    ],
    "want": [
     "footsteps",
@@ -3765,15 +3759,14 @@
   },
   {
    "name": "amb_settle_thump",
-   "query": "building thump distant",
+   "query": "thump wall",
    "alt": [
-    "low thud in building",
-    "heavy thump wall distant",
-    "house settling thump"
+    "knock thud",
+    "bump wood"
    ],
    "duration": [
-    0.3,
-    5
+    0.2,
+    10
    ],
    "want": [
     "thump",
@@ -3849,15 +3842,14 @@
   },
   {
    "name": "amb_vent_rattle",
-   "query": "air vent grille rattle",
+   "query": "vent rattle",
    "alt": [
-    "vent cover rattling",
-    "ventilation grate rattle",
-    "metal grille vibrating draft"
+    "metal rattle",
+    "grate rattle"
    ],
    "duration": [
-    0.4,
-    6
+    0.3,
+    20
    ],
    "want": [
     "vent",
@@ -4007,15 +3999,14 @@
   },
   {
    "name": "amb_trolley_far",
-   "query": "hospital trolley wheels distant",
+   "query": "trolley squeak",
    "alt": [
-    "squeaky trolley rolling far",
-    "gurney wheels corridor",
-    "cart wheels rolling hallway echo"
+    "cart wheels",
+    "squeaky wheel"
    ],
    "duration": [
-    1,
-    10
+    0.5,
+    30
    ],
    "want": [
     "trolley",
@@ -4132,15 +4123,14 @@
   },
   {
    "name": "amb_pipe_tick",
-   "query": "pipes ticking",
+   "query": "pipe ticking",
    "alt": [
-    "heating pipe tick expansion",
-    "metal pipe creaking ticking",
+    "metal tick",
     "radiator ticking"
    ],
    "duration": [
-    0.5,
-    8
+    0.2,
+    30
    ],
    "want": [
     "pipe",
@@ -4289,15 +4279,14 @@
   },
   {
    "name": "amb_rats_wall",
-   "query": "rats scratching inside wall",
+   "query": "rats",
    "alt": [
-    "mice scurrying in walls",
-    "rodent scratching ceiling",
-    "rats running attic"
+    "mouse scratching",
+    "rodent scratching"
    ],
    "duration": [
-    1,
-    10
+    0.5,
+    60
    ],
    "want": [
     "rats",
@@ -4905,14 +4894,14 @@
   },
   {
    "name": "combat_pipe_flesh",
-   "query": "body punch impact meat",
+   "query": "punch body",
    "alt": [
-    "hit flesh thud heavy",
-    "meat hit stick"
+    "hit meat",
+    "body hit"
    ],
    "duration": [
-    0.15,
-    2
+    0.1,
+    5
    ],
    "want": [
     "flesh",
@@ -5091,14 +5080,14 @@
   },
   {
    "name": "combat_saw",
-   "query": "hand saw bone cutting",
+   "query": "hacksaw",
    "alt": [
-    "hacksaw cutting",
-    "saw rasp short"
+    "saw cutting",
+    "hand saw"
    ],
    "duration": [
-    0.5,
-    6
+    0.3,
+    20
    ],
    "want": [
     "saw",
@@ -5195,14 +5184,14 @@
   },
   {
    "name": "enfermero_breath",
-   "query": "wet raspy breathing mask",
+   "query": "monster breathing",
    "alt": [
-    "creature breathing slow wet",
-    "heavy breathing through cloth"
+    "creature breath",
+    "heavy breathing"
    ],
    "duration": [
-    1.5,
-    10
+    1,
+    30
    ],
    "want": [
     "breathing",
@@ -5229,14 +5218,14 @@
   },
   {
    "name": "enfermero_growl",
-   "query": "muffled growl gutteral",
+   "query": "zombie growl",
    "alt": [
-    "monster growl low muffled",
-    "zombie groan muffled"
+    "monster growl",
+    "creature groan"
    ],
    "duration": [
-    0.4,
-    4
+    0.3,
+    10
    ],
    "want": [
     "growl",
@@ -5265,14 +5254,14 @@
   },
   {
    "name": "enfermero_scream",
-   "query": "muffled scream pain creature",
+   "query": "zombie scream",
    "alt": [
-    "distorted pain scream muffled",
-    "zombie shriek"
+    "monster scream",
+    "creature shriek"
    ],
    "duration": [
-    0.5,
-    4
+    0.3,
+    10
    ],
    "want": [
     "scream",
@@ -5336,14 +5325,14 @@
   },
   {
    "name": "enfermero_drag_steps",
-   "query": "foot dragging floor limping",
+   "query": "foot drag",
    "alt": [
-    "dragging foot footsteps",
-    "limp footsteps drag"
+    "dragging feet",
+    "limping footsteps"
    ],
    "duration": [
-    0.6,
-    8
+    0.5,
+    30
    ],
    "want": [
     "drag",
@@ -5372,14 +5361,14 @@
   },
   {
    "name": "combat_transition",
-   "query": "vhs tape glitch static",
+   "query": "vhs glitch",
    "alt": [
-    "tape stop static burst",
-    "vcr glitch noise"
+    "tape glitch",
+    "static burst"
    ],
    "duration": [
-    0.3,
-    4
+    0.2,
+    10
    ],
    "want": [
     "vhs",
@@ -5622,14 +5611,14 @@
   },
   {
    "name": "inv_category",
-   "query": "file folder divider click",
+   "query": "paper click",
    "alt": [
-    "metal tab click office",
-    "cardboard divider flip"
+    "folder click",
+    "cardboard tap"
    ],
    "duration": [
-    0.05,
-    2
+    0.03,
+    5
    ],
    "want": [
     "click",

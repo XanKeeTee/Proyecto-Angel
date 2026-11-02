@@ -834,11 +834,38 @@ def inventory() -> list[dict]:
     return out
 
 
+# Búsquedas más amplias para los que no dieron ningún candidato en la primera pasada
+# (consultas de 1-2 palabras y duraciones holgadas). Se aplican encima de la entrada original.
+BROADER: dict[str, dict] = {
+    "amb_tone_hall": {"query": "lobby ambience", "alt": ["hall room tone", "large room ambience"], "duration": [10, 600]},
+    "amb_tone_morgue": {"query": "cold room ambience", "alt": ["refrigerator room hum", "basement room tone"], "duration": [10, 600]},
+    "amb_concrete_groan": {"query": "building creak", "alt": ["structure creak", "wood creak low"], "duration": [0.5, 20]},
+    "amb_drip_metal": {"query": "drip metal", "alt": ["water drop metal", "drip tin"], "duration": [0.2, 20]},
+    "amb_door_far": {"query": "door close distant", "alt": ["door slam far", "door closing reverb"], "duration": [0.5, 15]},
+    "amb_steps_distant": {"query": "footsteps distant", "alt": ["footsteps corridor", "footsteps echo"], "duration": [1, 30]},
+    "amb_settle_thump": {"query": "thump wall", "alt": ["knock thud", "bump wood"], "duration": [0.2, 10]},
+    "amb_vent_rattle": {"query": "vent rattle", "alt": ["metal rattle", "grate rattle"], "duration": [0.3, 20]},
+    "amb_trolley_far": {"query": "trolley squeak", "alt": ["cart wheels", "squeaky wheel"], "duration": [0.5, 30]},
+    "amb_pipe_tick": {"query": "pipe ticking", "alt": ["metal tick", "radiator ticking"], "duration": [0.2, 30]},
+    "amb_rats_wall": {"query": "rats", "alt": ["mouse scratching", "rodent scratching"], "duration": [0.5, 60]},
+    "combat_pipe_flesh": {"query": "punch body", "alt": ["hit meat", "body hit"], "duration": [0.1, 5]},
+    "combat_saw": {"query": "hacksaw", "alt": ["saw cutting", "hand saw"], "duration": [0.3, 20]},
+    "enfermero_breath": {"query": "monster breathing", "alt": ["creature breath", "heavy breathing"], "duration": [1, 30]},
+    "enfermero_growl": {"query": "zombie growl", "alt": ["monster growl", "creature groan"], "duration": [0.3, 10]},
+    "enfermero_scream": {"query": "zombie scream", "alt": ["monster scream", "creature shriek"], "duration": [0.3, 10]},
+    "enfermero_drag_steps": {"query": "foot drag", "alt": ["dragging feet", "limping footsteps"], "duration": [0.5, 30]},
+    "combat_transition": {"query": "vhs glitch", "alt": ["tape glitch", "static burst"], "duration": [0.2, 10]},
+    "inv_category": {"query": "paper click", "alt": ["folder click", "cardboard tap"], "duration": [0.03, 5]},
+}
+
+
 def main() -> None:
     old = {}
     if MANIFEST.exists():
         old = {x["name"]: x for x in json.loads(MANIFEST.read_text(encoding="utf-8"))["sounds"]}
     entries = WORLD + PLAYER + AMBIENT + AMBIENT_ROOMS + AMBIENT_MORE + HORROR + COMBAT + UI + MUSIC + ITEMS + inventory()
+    for x in entries:
+        x.update(BROADER.get(x["name"], {}))
     names = [x["name"] for x in entries]
     assert len(names) == len(set(names)), "nombres repetidos"
     assert set(REVIEWED_PICKS) <= set(names), "REVIEWED_PICKS con nombres que no existen"
