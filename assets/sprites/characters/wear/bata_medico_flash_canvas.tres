@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/bata_medico_flash.png" id="1_m5l1x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/bata_medico_flash_n.png" id="2_npo4f"]
+
+[resource]
+diffuse_texture = ExtResource("1_m5l1x")
+normal_texture = ExtResource("2_npo4f")
+texture_filter = 1

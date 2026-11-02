@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/items/bata_medico_inspect.png" id="2_mitjr"]
 [ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_iqx7i"]
 [ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_0i5pt"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/bata_medico_canvas.tres" id="5_nvfsn"]
 
 [resource]
 script = ExtResource("3_iqx7i")
@@ -17,6 +16,8 @@ inspect_sheet = ExtResource("2_mitjr")
 inspect_views = 8
 size = Vector2i(2, 2)
 equip_slot = 2
-wear_sheet = ExtResource("5_nvfsn")
+wear_path = "res://assets/sprites/characters/wear/bata_medico_canvas.tres"
 cloth_sway = 1.1
+cloth_waist = 31.0
+cloth_hem = 11.0
 step_volume_db = 0.0

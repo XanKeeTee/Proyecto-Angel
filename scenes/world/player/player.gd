@@ -179,8 +179,10 @@ var _scripted: bool = false
 ## Movimiento pedido por una corrutina (acercarse al objeto).
 var _scripted_wish: Vector2 = Vector2.ZERO
 var _weapon_texture: Texture2D
+var _weapon_upright: bool = false
 ## Depuración (capturas): --walk=grados anda sin parar hacia ese ángulo de pantalla;
-## --act=acción la repite sin parar (con medio segundo de reposo entre una y otra).
+## --act=acción la repite sin parar (con medio segundo de reposo entre una y otra);
+## --weapon=id pone en la mano el icono de ese objeto.
 var _debug_walk: Vector2 = Vector2.ZERO
 var _debug_action: StringName = &""
 
@@ -216,6 +218,10 @@ func _ready() -> void:
 			_debug_walk = Vector2.from_angle(deg_to_rad(arg.trim_prefix("--walk=").to_float()))
 		elif arg.begins_with("--act="):
 			_debug_action = StringName(arg.trim_prefix("--act="))
+		elif arg.begins_with("--weapon="):
+			var item: ItemDef = Registry.item(StringName(arg.trim_prefix("--weapon=")))
+			if item != null:
+				set_held_weapon(item.icon)
 
 
 func _input(event: InputEvent) -> void:
@@ -426,8 +432,9 @@ func flicker_flashlight(duration: float) -> void:
 	_set_light_enabled(false)
 
 
-## Arma en la mano libre (la izquierda): la textura apunta hacia la derecha con la empuñadura a
-## la izquierda; se escala a WEAPON_LENGTH. null = nada.
+## Arma en la mano libre (la izquierda), escalada a WEAPON_LENGTH. Si la textura es más ancha
+## que alta, apunta hacia la derecha con la empuñadura a la izquierda; si es más alta (como los
+## iconos de la bandeja), apunta hacia arriba con la empuñadura abajo. null = nada.
 func set_held_weapon(texture: Texture2D) -> void:
 	_weapon_texture = texture
 	_weapon.texture = texture
@@ -435,7 +442,11 @@ func set_held_weapon(texture: Texture2D) -> void:
 		var size: Vector2 = texture.get_size()
 		var k: float = WEAPON_LENGTH / maxf(size.x, size.y)
 		_weapon.scale = Vector2(k, k)
-		_weapon.offset = Vector2(size.x * (0.5 - WEAPON_GRIP), 0.0)
+		_weapon_upright = size.y > size.x
+		if _weapon_upright:
+			_weapon.offset = Vector2(0.0, -size.y * (0.5 - WEAPON_GRIP))
+		else:
+			_weapon.offset = Vector2(size.x * (0.5 - WEAPON_GRIP), 0.0)
 	_update_weapon()
 
 
@@ -812,7 +823,7 @@ func _update_weapon() -> void:
 		return
 	var hand: Array = data
 	_weapon.position = Vector2(float(hand[0]), float(hand[1]))
-	_weapon.rotation = deg_to_rad(float(hand[2]))
+	_weapon.rotation = deg_to_rad(float(hand[2])) + (PI / 2.0 if _weapon_upright else 0.0)
 	_weapon.show_behind_parent = int(hand[3]) == 0
 
 

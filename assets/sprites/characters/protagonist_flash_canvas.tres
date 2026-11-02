@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/protagonist_flash.png" id="1_140p7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/protagonist_flash_n.png" id="2_oak4n"]
+
+[resource]
+diffuse_texture = ExtResource("1_140p7")
+normal_texture = ExtResource("2_oak4n")
+texture_filter = 1

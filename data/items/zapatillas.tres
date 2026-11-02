@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/items/zapatillas_inspect.png" id="2_s6n0b"]
 [ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_v5uni"]
 [ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_ai260"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/zapatillas_canvas.tres" id="5_xlegv"]
 
 [resource]
 script = ExtResource("3_v5uni")
@@ -17,6 +16,6 @@ inspect_sheet = ExtResource("2_s6n0b")
 inspect_views = 8
 size = Vector2i(2, 1)
 equip_slot = 4
-wear_sheet = ExtResource("5_xlegv")
+wear_path = "res://assets/sprites/characters/wear/zapatillas_canvas.tres"
 step_sound = "step_soft"
 step_volume_db = -13.0

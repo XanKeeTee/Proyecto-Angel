@@ -429,7 +429,7 @@ def getup_pose(f: int) -> tuple[Pose, float, float, list[Prim]]:
     # Esfuerzo: el tronco se encorva al incorporarse; sentado, hundido de dolor.
     pose.pitch = k([(14, 0.0), (19, 0.35), (26, 0.3), (31, 0.15), (36, 0.3), (42, 0.28), (46, 0.1),
                     (49, 0.42), (55, 0.0)])
-    pose.lean = k([(0, 0.6), (30, 0.4), (40, 0.9), (55, 0.6)])
+    pose.lean = k([(0, 0.9), (5, 0.6), (30, 0.4), (40, 0.9), (55, 0.6)])  # empieza como la camilla "lying"
 
     # Cadera: en la camilla, hacia el borde izquierdo y, al final, de pie a un paso.
     edge = (8.6, MATTRESS_TOP + 3.2, lying_hip[2] + 1.0)
@@ -452,7 +452,7 @@ def getup_pose(f: int) -> tuple[Pose, float, float, list[Prim]]:
 
     # Bamboleo al ponerse de pie.
     wobble = keys(f, [(49, 0.0), (51, 1.0), (55, 0.15)])
-    pose.sway_x = 1.4 * wobble * math.sin(f * 1.7)
+    pose.sway_x = 1.4 * wobble * math.sin(f * 1.7) + 0.5 * k([(0, 1.0), (5, 0.0)])
 
     _place_hip(pose, hip_bed)
 
