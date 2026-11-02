@@ -5,6 +5,7 @@ Las convenciones de código, comandos y estructura de carpetas están en [CLAUDE
 ## Documentos
 
 - [arquitectura.md](arquitectura.md) — módulos del prólogo y cómo se amplían.
+- [sonidos.md](sonidos.md) — sonidos pendientes de Freesound y sus provisionales.
 - [tests.md](tests.md) — propuesta de framework de tests (GUT, pendiente). Mientras tanto hay un ejecutor mínimo (ver CLAUDE.md).
 
 ## Configuración del proyecto (provisional)
@@ -55,8 +56,19 @@ Con argumentos tras `--`, el título salta directamente al hospital:
 | `--auto-advance=S` | Los textos avanzan solos |
 | `--screenshot=RUTA` y `--screenshot-delay=S` | Captura y cierra. **Abre una ventana** |
 | `--no-vhs` | Sin filtro |
+<<<<<<< HEAD
 | `--open-doors` | Abre todas las puertas (para comprobar los pasos) |
 | `--loot-seed=N` | Semilla del botín aleatorio en partida nueva (misma semilla, mismo botín) |
+=======
+| `--stalker` / `--scare=id` | La entidad aparece a la espalda / lanza un susto pequeño (ver [terror-ambiental.md](../design/sistemas/terror-ambiental.md)) |
+| `--body=N` `--mind=N` `--bleed` `--use=id@S` | Constantes al empezar y usar un objeto a los S segundos (efectos de estado) |
+
+El título acepta sus propios argumentos sin saltar al hospital: `--screenshot=RUTA --screenshot-delay=S --title-panel=credits|load`.
+
+```bash
+"$GODOT_BIN" --path . res://scenes/ui/title/title_screen.tscn -- --screenshot=titulo.png --screenshot-delay=2.5
+```
+>>>>>>> worktree-agent-a1912f82f34729dfb
 
 ### Regenerar contenido
 
@@ -82,6 +94,12 @@ python -I tools/art/tiles_doors.py
 3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_prologue_data` el plan de botín (`data/loot/prologo.tres`) y los pensamientos (`data/thoughts/prologo.tres`), `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
 El generador del hospital y el de datos del prólogo se ejecutan como escena (no con `-s`) porque necesitan los autoloads.
+
+Aparte (no los llama `build_all.py`):
+- `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
+- `python -I tools/art/title_bg.py`: la ilustración del título (`assets/sprites/title/`, ~30 s).
+
+Sonidos que faltan y qué buscar en Freesound: [sonidos.md](sonidos.md).
 
 ### Notas
 

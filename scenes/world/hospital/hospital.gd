@@ -46,6 +46,7 @@ func _ready() -> void:
 	_ambience.play()
 	EventBus.flag_set.connect(_on_flag)
 	_apply_power_state()
+	HorrorDirector.attach(self, preload("res://data/horror/prologo.tres"))
 
 
 # --- inicio ------------------------------------------------------------------------------------

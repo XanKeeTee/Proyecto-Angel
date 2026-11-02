@@ -34,12 +34,15 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scripts/systems/loot/` | Botín aleatorio: `LootPlan` (muebles y repartos), `LootTable`, `LootScatter`, `LootRoller` (tirada determinista con semilla) |
 | `scripts/systems/thoughts/` | `Thought` y `ThoughtSet`: lo que el protagonista sabe que tiene que hacer (tecla T) |
 | `scripts/systems/events/` | `EventDirector` y eventos de datos (`HorrorEvent` + acciones) |
+| `scripts/systems/horror/` | Terror ambiental aleatorio: `HorrorDirector` (se crea con una línea desde el mapa), `ScarePlanner` + `ScareDef` (sustos pequeños como datos, en `data/horror/`), `Stalker` (la entidad que sigue al jugador) y `PassingShadow`. Ver [terror-ambiental.md](../design/sistemas/terror-ambiental.md) |
 | `scripts/systems/lighting/` | Luces con corriente y parpadeo (`PoweredLight`); capas de luz y sombra (`LightLayers`), luz gemela (`LightMirror`) y rebote que no cruza muros (`BounceClamp`) |
 | `scripts/systems/audio/` | `Sfx`: sonidos posicionales y ambiente |
 | `scripts/systems/character/` | `CharacterState`: custodia, constantes, linterna y ropa puesta (`equip`, `unequip`, `worn`) |
 | `scenes/ui/custody/` | Pantalla del Sistema de Custodia (bandeja, expediente y personaje) |
 | `scenes/ui/hud/` | Indicador de interacción, bolsillos y batería |
 | `scenes/ui/` | Caja de texto, inspector de objetos, lector de documentos, menús |
+| `scenes/ui/status_fx/` | `StatusFx`: efectos de pantalla de herida, sangrado, Mente baja y cura (shader `shaders/status_fx.gdshader`) |
+| `scenes/ui/title/` | Pantalla de título: fondo animado (`TitleBackground`), rótulos de vídeo (`TapeOsd`), paneles de Cargar y Créditos (`TitlePanel`) |
 | `scenes/world/hospital/` | El hospital (una sola escena) y su guion |
 
 ## Flujo de una interacción

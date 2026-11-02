@@ -838,6 +838,7 @@ func _build_ui() -> void:
 	vhs.set_tint(zone_tint)
 	vhs.set_param("grain_amount", 0.085)
 	vhs.set_param("vignette_strength", 0.95)
+	add_child(StatusFx.new())
 	hud = Hud.new()
 	add_child(hud)
 	var reticle: AimReticle = AimReticle.new()
