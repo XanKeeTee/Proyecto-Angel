@@ -185,3 +185,10 @@ Reservados (en el manifiesto, aún sin uso en el código): `breaker` (palanca de
 licencia), que la pantalla de créditos del título muestra en lugar de «atribuciones pendientes». Las
 licencias CC BY obligan a citarlas. Al exportar el juego, añade `*.txt` a los filtros de archivos que no
 son recursos del preset de exportación para que el archivo viaje con el juego.
+
+### Cupo de la API
+
+Freesound limita las peticiones por minuto y por día. Si el registro del flujo muestra
+`HTTP Error 429: Too Many Requests`, se ha agotado el cupo: espera unas horas (el diario se renueva a las
+24 h) y vuelve a lanzar `fetch --missing`. La ficha de revisión de todos los sonidos gasta una petición por
+sonido, así que solo se ejecuta si existe `tools/audio/ci_review.txt`.

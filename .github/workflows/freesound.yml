@@ -86,8 +86,10 @@ jobs:
                         f"dl={s.get('num_downloads')} | {s['name'][:60]} | {' '.join(s.get('tags', [])[:10])} | {d}")
               time.sleep(1.1)
           PY
+      # Gasta una petición por sonido (la API de Freesound tiene un cupo diario): solo si se pide
+      # creando tools/audio/ci_review.txt.
       - name: Ficha de cada sonido elegido (para revisarlos)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && hashFiles('tools/audio/ci_review.txt') != '' }}
         run: |
           python3 -I - <<'PY'
           import json, time, urllib.request, urllib.parse, os
