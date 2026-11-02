@@ -25,7 +25,7 @@ const WARP_WALK: float = 14.0
 const WARP_FADE_OUT: float = 0.45
 const WARP_HOLD: float = 0.45
 const WARP_FADE_IN: float = 0.6
-const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --wear=id,id --aim=grados --open-doors --loot-seed=N --custody --outfit --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
+const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --wear=id,id --aim=grados --open-doors --loot-seed=N --custody --outfit --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs --encounter --battle-pick=parte --battle-maim=p,p --battle-wound=p:estado --battle-seed=N"
 
 ## Virado de color de la zona.
 @export var zone_tint: Color = Color(0.9, 1.0, 0.96)

@@ -20,6 +20,7 @@ const EMERGENCY_PERIOD: float = 1.5
 const WAKE_LIGHT_ENERGY: float = 0.9
 const WAKE_LIGHT_TEXTURE: Texture2D = preload("res://assets/sprites/lights/light_round.png")
 const SOUNDSCAPE: SoundscapeDef = preload("res://data/audio/hospital_soundscape.tres")
+const ENCOUNTER: EncounterDef = preload("res://data/enemies/encuentro_enfermero.tres")
 
 @export var intro_lines: PackedStringArray = [
 	"Frío.",
@@ -55,6 +56,8 @@ func _ready() -> void:
 	EventBus.flag_set.connect(_on_flag)
 	_apply_power_state()
 	HorrorDirector.attach(self, preload("res://data/horror/prologo.tres"))
+	# El enfermero: aparece en el pasillo después de coger el tubo de la 12 (docs/design/enemigos/enfermero.md).
+	EncounterDirector.attach(self, ENCOUNTER)
 	_soundscape = Soundscape.attach(self, SOUNDSCAPE, _ambience)
 
 

@@ -150,16 +150,16 @@ func _build_loot() -> LootPlan:
 		_scatter("bata_medico", 1, 0.5, ["mostrador_control", "mostrador_recepcion_2", "encimera_enfermeria"]),
 		_scatter("chaqueta_celador", 1, 0.55, ["carro_lavanderia_2", "carro_lavanderia_1", "banco_taller", "estanteria_lavanderia"]),
 		_scatter("pantalon_celador", 1, 0.45, ["carro_lavanderia_1", "carro_lavanderia_2", "estanteria_lavanderia"]),
-		# Armas improvisadas [PROPUESTA]: raras, sin combate en el prólogo.
+		# Armas improvisadas [PROPUESTA]: el bisturí, raro. El tubo de hierro ya no se reparte: es un
+		# hallazgo fijo en la habitación 12 (build_hospital.gd, `tubo_hab12`) y dispara el combate.
 		_scatter("bisturi", 1, 0.75, ["encimera_quirofano", "encimera_enfermeria", "mostrador_control"]),
-		_scatter("tubo_metal", 1, 0.8, ["banco_taller", "estanteria_electrica", "estanteria_lavanderia"]),
 		_scatter("botas_goma", 1, 0.55, ["banco_taller", "estanteria_electrica", "carro_lavanderia_2"]),
 	]
 	var plan: LootPlan = LootPlan.new()
 	plan.slots = slots
 	plan.scatter = scatter
 	plan.fixed_items = _ids(["linterna", "palanca", "destornillador", "fusible", "valvula_averiada", "llave_botiquin",
-		"llave_archivo", "llave_sotano", "llave_habitacion_10"])
+		"llave_archivo", "llave_sotano", "llave_habitacion_10", "tubo_metal"])
 	return plan
 
 
