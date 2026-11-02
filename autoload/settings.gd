@@ -1,6 +1,7 @@
 extends Node
-## Opciones del juego (independientes de la partida): volumen por canal, brillo,
-## filtro VHS, pantalla completa y velocidad del texto. Se guardan en user://settings.cfg.
+## Opciones del juego (independientes de la partida): volumen por canal (general, ambiente,
+## música, efectos, interfaz), brillo, filtro VHS, pantalla completa y velocidad del texto.
+## Se guardan en user://settings.cfg. Los buses de audio se crean aquí si no existen.
 
 signal changed
 
@@ -8,6 +9,7 @@ const PATH: String = "user://settings.cfg"
 const BUS_AMBIENCE: StringName = &"Ambiente"
 const BUS_SFX: StringName = &"Efectos"
 const BUS_UI: StringName = &"Interfaz"
+const BUS_MUSIC: StringName = &"Música"
 ## Velocidad del texto: caracteres por segundo (lento, normal, rápido, instantáneo).
 const TEXT_SPEEDS: Array[float] = [25.0, 45.0, 90.0, 10000.0]
 const TEXT_SPEED_NAMES: Array[String] = ["Lento", "Normal", "Rápido", "Instantáneo"]
@@ -17,6 +19,7 @@ var master: float = 0.8
 var ambience: float = 0.7
 var sfx: float = 0.65
 var ui: float = 0.6
+var music: float = 0.6
 ## Brillo: 0,6 (más oscuro) .. 1,6 (más claro). 1 = el previsto.
 var brightness: float = 1.0
 ## Intensidad del filtro VHS: 0 apagado .. 1 completo.
@@ -40,6 +43,7 @@ func apply() -> void:
 	_set_bus(BUS_AMBIENCE, ambience)
 	_set_bus(BUS_SFX, sfx)
 	_set_bus(BUS_UI, ui)
+	_set_bus(BUS_MUSIC, music)
 	if not DisplayServer.get_name() == "headless":
 		var mode: DisplayServer.WindowMode = DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED
 		if DisplayServer.window_get_mode() != mode:
@@ -49,7 +53,7 @@ func apply() -> void:
 
 func save_settings() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
-	for key: String in ["master", "ambience", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
+	for key: String in ["master", "ambience", "music", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
 		cfg.set_value("opciones", key, get(key))
 	cfg.save(PATH)
 
@@ -58,7 +62,7 @@ func load_settings() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
 	if cfg.load(PATH) != OK:
 		return
-	for key: String in ["master", "ambience", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
+	for key: String in ["master", "ambience", "music", "sfx", "ui", "brightness", "vhs", "fullscreen", "text_speed"]:
 		if cfg.has_section_key("opciones", key):
 			set(key, cfg.get_value("opciones", key))
 
@@ -68,6 +72,7 @@ func reset_defaults() -> void:
 	ambience = 0.7
 	sfx = 0.65
 	ui = 0.6
+	music = 0.6
 	brightness = 1.0
 	vhs = 1.0
 	fullscreen = false
@@ -77,7 +82,7 @@ func reset_defaults() -> void:
 
 
 func _ensure_buses() -> void:
-	for bus: StringName in [BUS_AMBIENCE, BUS_SFX, BUS_UI]:
+	for bus: StringName in [BUS_AMBIENCE, BUS_MUSIC, BUS_SFX, BUS_UI]:
 		if AudioServer.get_bus_index(bus) < 0:
 			AudioServer.add_bus()
 			var i: int = AudioServer.bus_count - 1

@@ -38,6 +38,7 @@ func _ready() -> void:
 	col.add_child(grid)
 	_slider(grid, "Volumen general", "master", 0.0, 1.0)
 	_slider(grid, "Ambiente", "ambience", 0.0, 1.0)
+	_slider(grid, "Música", "music", 0.0, 1.0)
 	_slider(grid, "Efectos", "sfx", 0.0, 1.0)
 	_slider(grid, "Interfaz", "ui", 0.0, 1.0)
 	_slider(grid, "Brillo", "brightness", 0.6, 1.6)
