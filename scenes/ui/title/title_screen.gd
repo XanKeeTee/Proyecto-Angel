@@ -2,7 +2,8 @@ extends Control
 ## Pantalla de título: el pasillo de la planta en una cinta VHS (fondo animado, rótulos del
 ## vídeo, lluvia de estática) y el menú: Continuar, Nueva partida, Cargar, Opciones, Créditos y
 ## Salir. Se maneja con teclado, ratón o mando. Al entrar en la partida, la cinta se rebobina
-## entre ruido y empieza a reproducirse.
+## entre ruido y empieza a reproducirse. Suena música tensa del menú (si hay pista) que se
+## funde al empezar la partida.
 ## Con argumentos de depuración tras `--` salta directamente al hospital, salvo los del propio
 ## título: `--screenshot=RUTA --screenshot-delay=S --title-panel=credits|load`.
 
@@ -32,6 +33,15 @@ const FALLBACK_SOUNDS: Dictionary[String, String] = {
 	"ui_move": "flashlight_click", "ui_accept": "flashlight_click", "ui_back": "flashlight_click",
 	"tape_rewind": "pa_static", "title_ambience": "ambience_loop",
 }
+## Música del menú: una de estas pistas al azar (assets/audio/music/<nombre>.ogg, de Freesound;
+## ver docs/tech/sonidos.md). Si no hay ninguna, no suena nada.
+const MENU_TRACKS: PackedStringArray = ["music_menu_drone", "music_menu_piano", "music_menu_tension"]
+const MUSIC_DB: float = -4.0
+const MUSIC_FADE_IN: float = 6.0
+const MUSIC_FADE_OUT: float = 1.4
+## Con música, el ambiente del título baja para no ensuciarla.
+const AMBIENCE_DB: float = -8.0
+const AMBIENCE_UNDER_MUSIC_DB: float = -18.0
 ## Colores fantasma del título (aberración cromática).
 const GHOST_RED: Color = Color(0.75, 0.22, 0.17, 0.5)
 const GHOST_CYAN: Color = Color(0.37, 0.72, 0.69, 0.4)
@@ -47,6 +57,7 @@ var _load_panel: TitlePanel
 var _credits_panel: TitlePanel
 var _fade: ColorRect
 var _ambience: AudioStreamPlayer
+var _music: MusicPlayer
 var _info: Label
 var _quiet: bool = true
 var _leaving: bool = false
@@ -75,6 +86,7 @@ func _ready() -> void:
 	_vhs = VhsOverlay.new()
 	add_child(_vhs)
 	_vhs.set_param(&"vignette_strength", 1.0)
+	_play_music()
 	_play_ambience()
 	_intro()
 	_take_debug_screenshot()
@@ -315,6 +327,7 @@ func _enter_tape() -> void:
 	_load_panel.visible = false
 	_credits_panel.visible = false
 	_sound(SOUND_REWIND, -4.0)
+	_music.fade_out(MUSIC_FADE_OUT)
 	_osd.set_mode(TapeOsd.Mode.REWIND)
 	_vhs.glitch(1.4, 1.0)
 	var tween: Tween = create_tween()
@@ -331,6 +344,7 @@ func _enter_tape() -> void:
 func _quit() -> void:
 	_leaving = true
 	_osd.set_mode(TapeOsd.Mode.STOP)
+	_music.fade_out(0.4)
 	var tween: Tween = create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, 0.4)
 	await tween.finished
@@ -348,9 +362,16 @@ func _play_ambience() -> void:
 	_ambience = AudioStreamPlayer.new()
 	_ambience.stream = stream
 	_ambience.bus = &"Ambiente"
-	_ambience.volume_db = -8.0
+	_ambience.volume_db = AMBIENCE_UNDER_MUSIC_DB if _music.playing else AMBIENCE_DB
 	add_child(_ambience)
 	_ambience.play()
+
+
+func _play_music() -> void:
+	_music = MusicPlayer.new()
+	_music.name = "Music"
+	add_child(_music)
+	_music.play_any(MENU_TRACKS, MUSIC_DB, MUSIC_FADE_IN)
 
 
 func _sound(sound: String, volume_db: float) -> void:

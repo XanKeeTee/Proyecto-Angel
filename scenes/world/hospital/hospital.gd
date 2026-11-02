@@ -3,7 +3,8 @@ extends WorldController
 ## Lo genérico (interacción, custodia, linterna, guardado, eventos de datos) está en WorldController
 ## y en los recursos de la escena. Aquí solo va lo que es propio de este lugar:
 ## despertar, linterna inicial, teléfono, generador, vuelta de la luz, megafonía,
-## pasillo imposible y final.
+## pasillo imposible y final. El sonido de fondo y del entorno lo lleva `Soundscape`
+## (data/audio/hospital_soundscape.tres).
 ## Diseño: docs/design/escenas/prologo.md.
 
 const TITLE_SCENE: String = "res://scenes/ui/title/title_screen.tscn"
@@ -18,6 +19,7 @@ const HEARTBEAT_PERIOD: float = 0.95
 const EMERGENCY_PERIOD: float = 1.5
 const WAKE_LIGHT_ENERGY: float = 0.9
 const WAKE_LIGHT_TEXTURE: Texture2D = preload("res://assets/sprites/lights/light_round.png")
+const SOUNDSCAPE: SoundscapeDef = preload("res://data/audio/hospital_soundscape.tres")
 
 @export var intro_lines: PackedStringArray = [
 	"Frío.",
@@ -28,6 +30,7 @@ const WAKE_LIGHT_TEXTURE: Texture2D = preload("res://assets/sprites/lights/light
 var _ending: bool = false
 var _monitor_base: float = 1.0
 var _emergency_base: Dictionary[Node, float] = {}
+var _soundscape: Soundscape
 
 @onready var _stretcher: Interactable = find_object(&"cama_09")
 @onready var _monitor_light: PointLight2D = %MonitorLight
@@ -44,11 +47,15 @@ func _ready() -> void:
 	if loop != null:
 		loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		loop.loop_end = int(loop.get_length() * loop.mix_rate)
-	_ambience.bus = &"Ambiente"
+	# El ambiente de fondo empieza en silencio: el paisaje sonoro lo sube despacio cuando el
+	# jugador tiene el control (tras el despertar, o al cargar).
+	_ambience.bus = Settings.BUS_AMBIENCE
+	_ambience.volume_db = -80.0
 	_ambience.play()
 	EventBus.flag_set.connect(_on_flag)
 	_apply_power_state()
 	HorrorDirector.attach(self, preload("res://data/horror/prologo.tres"))
+	_soundscape = Soundscape.attach(self, SOUNDSCAPE, _ambience)
 
 
 # --- inicio ------------------------------------------------------------------------------------
@@ -172,9 +179,7 @@ func _power_on(generator: Interactable) -> void:
 	Sfx.at(self, "generator_start", generator.position, -4.0)
 	await message.show_lines(PackedStringArray(["Tiras de la palanca. El motor tose, se sacude… y aguanta."]))
 	await get_tree().create_timer(2.5).timeout
-	var hum: AudioStreamPlayer2D = Sfx.at(self, "generator_loop", generator.position, -6.0, 0.0)
-	if hum != null:
-		(hum.stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+	# Con la corriente, el paisaje sonoro arranca el zumbido del generador, la ventilación…
 	GameState.set_flag(GameState.FLAG_POWER)
 	Sfx.ui(self, "fluorescent_on", -6.0)
 	glitch(0.6, 0.4)
@@ -264,6 +269,7 @@ func _run_ending() -> void:
 	for node: Node in get_tree().get_nodes_in_group(PoweredLight.GROUP):
 		(node as PoweredLight).flicker(1.5)
 	await get_tree().create_timer(1.8).timeout
+	_soundscape.fade_out()
 	await _fade_to(1.0, 0.8)
 	_ambience.stop()
 	await get_tree().create_timer(1.5).timeout
