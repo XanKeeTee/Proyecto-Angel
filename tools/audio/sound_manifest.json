@@ -1,41 +1,2283 @@
 {
  "_doc": "Qué buscar en Freesound para cada sonido del juego (ver tools/audio/freesound.py). name = archivo en assets/audio/sfx; query/alt = búsquedas; duration = [mín, máx] s del original; want/avoid = etiquetas a favor/en contra; level = volumen RMS objetivo (dBFS); slices = cortar varios golpes de una misma grabación; loop = bucle sin costura; pick = id elegido (se rellena solo).",
  "sounds": [
-  {"name": "ambience_loop", "query": "abandoned hospital room tone night", "alt": ["empty building room tone hum", "abandoned building ambience interior"], "duration": [30, 300], "want": ["roomtone", "room-tone", "ambience", "hospital", "abandoned"], "avoid": ["voices", "people", "crowd", "traffic", "birds"], "loop": true, "max_len": 40, "crossfade": 3.0, "stereo": true, "level": -34},
-  {"name": "hum_loop", "query": "fluorescent light hum buzz", "alt": ["electrical hum transformer"], "duration": [5, 120], "want": ["fluorescent", "hum", "buzz"], "loop": true, "max_len": 12, "crossfade": 1.0, "level": -30},
-  {"name": "generator_loop", "query": "diesel generator running loop", "alt": ["old generator engine idle", "industrial engine running"], "duration": [8, 200], "want": ["generator", "engine", "diesel"], "avoid": ["car", "vehicle", "passing"], "loop": true, "max_len": 14, "crossfade": 1.2, "stereo": true, "level": -22},
-  {"name": "generator_start", "query": "diesel generator start pull cord", "alt": ["old engine starting sputter"], "duration": [2, 15], "want": ["generator", "start"], "avoid": ["car"], "max_len": 7.0, "fade_out": 0.6, "level": -18},
-  {"name": "fluorescent_on", "query": "fluorescent tube light turning on flicker", "alt": ["neon light switch on flicker"], "duration": [1, 10], "want": ["fluorescent", "flicker"], "max_len": 4.0, "fade_out": 0.4, "level": -22},
-  {"name": "breaker", "query": "circuit breaker switch heavy clunk", "alt": ["electrical panel switch lever"], "duration": [0.2, 3], "want": ["breaker", "switch"], "max_len": 1.5, "level": -18},
-  {"name": "door_open", "query": "old metal door open creak", "alt": ["hospital door open squeak", "heavy door opening creak"], "duration": [0.8, 5], "want": ["creak", "door"], "avoid": ["car", "wooden-floor"], "max_len": 2.8, "fade_out": 0.25, "level": -20},
-  {"name": "door_close", "query": "metal door close latch", "alt": ["heavy door shut"], "duration": [0.4, 4], "want": ["door", "close"], "avoid": ["car"], "max_len": 2.0, "fade_out": 0.3, "level": -19},
-  {"name": "door_locked", "query": "locked door handle rattle", "alt": ["door knob jiggle locked"], "duration": [0.4, 4], "want": ["locked", "handle", "rattle"], "max_len": 1.8, "level": -21},
-  {"name": "unlock", "query": "key unlock old lock turn", "alt": ["key in lock click"], "duration": [0.3, 4], "want": ["key", "unlock", "lock"], "max_len": 1.6, "level": -22},
-  {"name": "drawer_open", "query": "metal drawer open slide", "alt": ["wooden drawer open"], "duration": [0.3, 3], "want": ["drawer"], "max_len": 1.4, "level": -22},
-  {"name": "drawer_close", "query": "metal drawer close", "alt": ["drawer shut"], "duration": [0.3, 3], "want": ["drawer"], "max_len": 1.2, "level": -21},
-  {"name": "locker_open", "query": "metal locker door open", "alt": ["steel cabinet door open creak"], "duration": [0.4, 4], "want": ["locker", "cabinet"], "max_len": 2.0, "level": -21},
-  {"name": "bed_creak", "query": "hospital bed metal creak", "alt": ["old metal bed springs creak", "bed creak"], "duration": [0.5, 6], "want": ["bed", "creak", "springs"], "max_len": 2.6, "fade_out": 0.3, "level": -22},
-  {"name": "heavy_drag", "query": "heavy furniture drag floor", "alt": ["dragging metal cabinet concrete"], "duration": [0.8, 6], "want": ["drag", "scrape"], "max_len": 2.8, "fade_out": 0.3, "level": -20},
-  {"name": "metal_bang", "query": "metal bang impact distant", "alt": ["elevator door bang", "heavy metal hit reverb"], "duration": [0.5, 6], "want": ["metal", "bang", "impact"], "max_len": 3.5, "fade_out": 0.6, "level": -16},
-  {"name": "knock", "query": "knocking on wall three knocks", "alt": ["knock on door slow"], "duration": [0.5, 5], "want": ["knock"], "max_len": 2.5, "level": -22},
-  {"name": "glass", "query": "glass shards step crunch", "alt": ["broken glass small break"], "duration": [0.2, 3], "want": ["glass"], "max_len": 1.5, "level": -22},
-  {"name": "drip", "query": "single water drip echo", "alt": ["water drop puddle"], "duration": [0.1, 3], "want": ["drip", "drop"], "max_len": 1.2, "level": -26},
-  {"name": "flashlight_click", "query": "flashlight switch click", "alt": ["torch button click"], "duration": [0.05, 2], "want": ["flashlight", "click", "switch"], "max_len": 0.4, "level": -20},
-  {"name": "monitor_beep", "query": "heart monitor single beep", "alt": ["ecg beep hospital"], "duration": [0.1, 5], "want": ["beep", "monitor", "ecg"], "max_len": 0.6, "level": -24},
-  {"name": "pa_chime", "query": "airport announcement chime old", "alt": ["pa system chime ding dong"], "duration": [0.8, 6], "want": ["chime", "announcement"], "max_len": 3.5, "fade_out": 0.6, "level": -18},
-  {"name": "pa_static", "query": "pa speaker static feedback", "alt": ["loudspeaker static noise radio"], "duration": [1, 10], "want": ["static", "speaker"], "max_len": 4.0, "fade_out": 0.5, "level": -24},
-  {"name": "phone_ring", "query": "old rotary telephone ring bell", "alt": ["vintage phone ringing"], "duration": [1, 10], "want": ["telephone", "ring", "rotary"], "max_len": 4.0, "level": -18},
-  {"name": "phone_static", "query": "telephone line static breathing", "alt": ["phone line noise interference"], "duration": [1, 15], "want": ["static", "telephone"], "max_len": 5.0, "fade_out": 0.6, "level": -24},
-  {"name": "tape_save", "query": "cassette recorder record button press", "alt": ["tape recorder button click mechanical"], "duration": [0.3, 5], "want": ["cassette", "tape", "button"], "max_len": 2.0, "level": -20},
-  {"name": "paper", "query": "paper sheet handling rustle", "alt": ["picking up paper"], "duration": [0.3, 3], "want": ["paper"], "max_len": 1.0, "level": -24},
-  {"name": "pickup", "query": "pick up small object cloth rustle", "alt": ["grab item foley"], "duration": [0.2, 2], "want": ["foley", "pickup", "grab"], "max_len": 0.7, "level": -24},
-  {"name": "pills", "query": "pill bottle shake", "alt": ["pills rattle bottle"], "duration": [0.3, 3], "want": ["pills", "bottle"], "max_len": 1.0, "level": -22},
-  {"name": "battery", "query": "battery insert flashlight", "alt": ["batteries click into compartment"], "duration": [0.3, 4], "want": ["battery", "batteries"], "max_len": 1.4, "level": -22},
-  {"name": "bandage", "query": "bandage wrap tape rip", "alt": ["cloth wrap bandage foley", "medical tape tearing"], "duration": [0.5, 5], "want": ["bandage", "tape", "cloth"], "max_len": 2.0, "level": -22},
-  {"name": "whisper", "query": "creepy whisper unintelligible", "alt": ["ghost whisper horror"], "duration": [0.6, 6], "want": ["whisper"], "avoid": ["music"], "max_len": 2.8, "fade_out": 0.5, "level": -26},
-  {"name": "steps_far", "query": "distant footsteps corridor reverb", "alt": ["footsteps hallway echo slow"], "duration": [1.5, 10], "want": ["footsteps", "corridor", "hallway"], "max_len": 4.0, "fade_out": 0.6, "level": -26},
-  {"name": "step", "query": "barefoot footsteps tile floor", "alt": ["bare feet walking hard floor"], "duration": [2, 40], "want": ["barefoot", "footsteps"], "slices": ["step_1", "step_2", "step_3", "step_4"], "slice_len": 0.32, "min_gap": 0.3, "level": -30},
-  {"name": "step_soft", "query": "slippers footsteps floor", "alt": ["soft shoes footsteps indoor"], "duration": [2, 40], "want": ["slippers", "footsteps"], "slices": ["step_soft_1", "step_soft_2", "step_soft_3", "step_soft_4"], "slice_len": 0.32, "min_gap": 0.3, "level": -32},
-  {"name": "step_boot", "query": "rubber boots footsteps concrete", "alt": ["wellington boots walking"], "duration": [2, 40], "want": ["boots", "footsteps"], "slices": ["step_boot_1", "step_boot_2", "step_boot_3", "step_boot_4"], "slice_len": 0.38, "min_gap": 0.3, "level": -26}
+  {
+   "name": "ambience_loop",
+   "query": "abandoned hospital room tone night",
+   "alt": [
+    "empty building room tone hum",
+    "abandoned building ambience interior"
+   ],
+   "duration": [
+    30,
+    300
+   ],
+   "want": [
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "hospital",
+    "abandoned"
+   ],
+   "avoid": [
+    "voices",
+    "people",
+    "crowd",
+    "traffic",
+    "birds"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 3.0,
+   "stereo": true,
+   "level": -34
+  },
+  {
+   "name": "hum_loop",
+   "query": "fluorescent light hum buzz",
+   "alt": [
+    "electrical hum transformer"
+   ],
+   "duration": [
+    5,
+    120
+   ],
+   "want": [
+    "fluorescent",
+    "hum",
+    "buzz"
+   ],
+   "loop": true,
+   "max_len": 12,
+   "crossfade": 1.0,
+   "level": -30
+  },
+  {
+   "name": "generator_loop",
+   "query": "diesel generator running loop",
+   "alt": [
+    "old generator engine idle",
+    "industrial engine running"
+   ],
+   "duration": [
+    8,
+    200
+   ],
+   "want": [
+    "generator",
+    "engine",
+    "diesel"
+   ],
+   "avoid": [
+    "car",
+    "vehicle",
+    "passing"
+   ],
+   "loop": true,
+   "max_len": 14,
+   "crossfade": 1.2,
+   "stereo": true,
+   "level": -22
+  },
+  {
+   "name": "generator_start",
+   "query": "diesel generator start pull cord",
+   "alt": [
+    "old engine starting sputter"
+   ],
+   "duration": [
+    2,
+    15
+   ],
+   "want": [
+    "generator",
+    "start"
+   ],
+   "avoid": [
+    "car"
+   ],
+   "max_len": 7.0,
+   "fade_out": 0.6,
+   "level": -18
+  },
+  {
+   "name": "fluorescent_on",
+   "query": "fluorescent tube light turning on flicker",
+   "alt": [
+    "neon light switch on flicker"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "fluorescent",
+    "flicker"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.4,
+   "level": -22
+  },
+  {
+   "name": "breaker",
+   "query": "circuit breaker switch heavy clunk",
+   "alt": [
+    "electrical panel switch lever"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "breaker",
+    "switch"
+   ],
+   "max_len": 1.5,
+   "level": -18
+  },
+  {
+   "name": "door_open",
+   "query": "old metal door open creak",
+   "alt": [
+    "hospital door open squeak",
+    "heavy door opening creak"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "creak",
+    "door"
+   ],
+   "avoid": [
+    "car",
+    "wooden-floor"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.25,
+   "level": -20
+  },
+  {
+   "name": "door_close",
+   "query": "metal door close latch",
+   "alt": [
+    "heavy door shut"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "door",
+    "close"
+   ],
+   "avoid": [
+    "car"
+   ],
+   "max_len": 2.0,
+   "fade_out": 0.3,
+   "level": -19
+  },
+  {
+   "name": "door_locked",
+   "query": "locked door handle rattle",
+   "alt": [
+    "door knob jiggle locked"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "locked",
+    "handle",
+    "rattle"
+   ],
+   "max_len": 1.8,
+   "level": -21
+  },
+  {
+   "name": "unlock",
+   "query": "key unlock old lock turn",
+   "alt": [
+    "key in lock click"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "key",
+    "unlock",
+    "lock"
+   ],
+   "max_len": 1.6,
+   "level": -22
+  },
+  {
+   "name": "drawer_open",
+   "query": "metal drawer open slide",
+   "alt": [
+    "wooden drawer open"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "drawer"
+   ],
+   "max_len": 1.4,
+   "level": -22
+  },
+  {
+   "name": "drawer_close",
+   "query": "metal drawer close",
+   "alt": [
+    "drawer shut"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "drawer"
+   ],
+   "max_len": 1.2,
+   "level": -21
+  },
+  {
+   "name": "locker_open",
+   "query": "metal locker door open",
+   "alt": [
+    "steel cabinet door open creak"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "locker",
+    "cabinet"
+   ],
+   "max_len": 2.0,
+   "level": -21
+  },
+  {
+   "name": "bed_creak",
+   "query": "hospital bed metal creak",
+   "alt": [
+    "old metal bed springs creak",
+    "bed creak"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "bed",
+    "creak",
+    "springs"
+   ],
+   "max_len": 2.6,
+   "fade_out": 0.3,
+   "level": -22
+  },
+  {
+   "name": "heavy_drag",
+   "query": "heavy furniture drag floor",
+   "alt": [
+    "dragging metal cabinet concrete"
+   ],
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "drag",
+    "scrape"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.3,
+   "level": -20
+  },
+  {
+   "name": "metal_bang",
+   "query": "metal bang impact distant",
+   "alt": [
+    "elevator door bang",
+    "heavy metal hit reverb"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "metal",
+    "bang",
+    "impact"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.6,
+   "level": -16
+  },
+  {
+   "name": "knock",
+   "query": "knocking on wall three knocks",
+   "alt": [
+    "knock on door slow"
+   ],
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "knock"
+   ],
+   "max_len": 2.5,
+   "level": -22
+  },
+  {
+   "name": "glass",
+   "query": "glass shards step crunch",
+   "alt": [
+    "broken glass small break"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "glass"
+   ],
+   "max_len": 1.5,
+   "level": -22
+  },
+  {
+   "name": "drip",
+   "query": "single water drip echo",
+   "alt": [
+    "water drop puddle"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "drip",
+    "drop"
+   ],
+   "max_len": 1.2,
+   "level": -26
+  },
+  {
+   "name": "flashlight_click",
+   "query": "flashlight switch click",
+   "alt": [
+    "torch button click"
+   ],
+   "duration": [
+    0.05,
+    2
+   ],
+   "want": [
+    "flashlight",
+    "click",
+    "switch"
+   ],
+   "max_len": 0.4,
+   "level": -20
+  },
+  {
+   "name": "monitor_beep",
+   "query": "heart monitor single beep",
+   "alt": [
+    "ecg beep hospital"
+   ],
+   "duration": [
+    0.1,
+    5
+   ],
+   "want": [
+    "beep",
+    "monitor",
+    "ecg"
+   ],
+   "max_len": 0.6,
+   "level": -24
+  },
+  {
+   "name": "pa_chime",
+   "query": "airport announcement chime old",
+   "alt": [
+    "pa system chime ding dong"
+   ],
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "chime",
+    "announcement"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.6,
+   "level": -18
+  },
+  {
+   "name": "pa_static",
+   "query": "pa speaker static feedback",
+   "alt": [
+    "loudspeaker static noise radio"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "static",
+    "speaker"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.5,
+   "level": -24
+  },
+  {
+   "name": "phone_ring",
+   "query": "old rotary telephone ring bell",
+   "alt": [
+    "vintage phone ringing"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "telephone",
+    "ring",
+    "rotary"
+   ],
+   "max_len": 4.0,
+   "level": -18
+  },
+  {
+   "name": "phone_static",
+   "query": "telephone line static breathing",
+   "alt": [
+    "phone line noise interference"
+   ],
+   "duration": [
+    1,
+    15
+   ],
+   "want": [
+    "static",
+    "telephone"
+   ],
+   "max_len": 5.0,
+   "fade_out": 0.6,
+   "level": -24
+  },
+  {
+   "name": "tape_save",
+   "query": "cassette recorder record button press",
+   "alt": [
+    "tape recorder button click mechanical"
+   ],
+   "duration": [
+    0.3,
+    5
+   ],
+   "want": [
+    "cassette",
+    "tape",
+    "button"
+   ],
+   "max_len": 2.0,
+   "level": -20
+  },
+  {
+   "name": "paper",
+   "query": "paper sheet handling rustle",
+   "alt": [
+    "picking up paper"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "paper"
+   ],
+   "max_len": 1.0,
+   "level": -24
+  },
+  {
+   "name": "pickup",
+   "query": "pick up small object cloth rustle",
+   "alt": [
+    "grab item foley"
+   ],
+   "duration": [
+    0.2,
+    2
+   ],
+   "want": [
+    "foley",
+    "pickup",
+    "grab"
+   ],
+   "max_len": 0.7,
+   "level": -24
+  },
+  {
+   "name": "pills",
+   "query": "pill bottle shake",
+   "alt": [
+    "pills rattle bottle"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "pills",
+    "bottle"
+   ],
+   "max_len": 1.0,
+   "level": -22
+  },
+  {
+   "name": "battery",
+   "query": "battery insert flashlight",
+   "alt": [
+    "batteries click into compartment"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries"
+   ],
+   "max_len": 1.4,
+   "level": -22
+  },
+  {
+   "name": "bandage",
+   "query": "bandage wrap tape rip",
+   "alt": [
+    "cloth wrap bandage foley",
+    "medical tape tearing"
+   ],
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "bandage",
+    "tape",
+    "cloth"
+   ],
+   "max_len": 2.0,
+   "level": -22
+  },
+  {
+   "name": "whisper",
+   "query": "creepy whisper unintelligible",
+   "alt": [
+    "ghost whisper horror"
+   ],
+   "duration": [
+    0.6,
+    6
+   ],
+   "want": [
+    "whisper"
+   ],
+   "avoid": [
+    "music"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.5,
+   "level": -26
+  },
+  {
+   "name": "steps_far",
+   "query": "distant footsteps corridor reverb",
+   "alt": [
+    "footsteps hallway echo slow"
+   ],
+   "duration": [
+    1.5,
+    10
+   ],
+   "want": [
+    "footsteps",
+    "corridor",
+    "hallway"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.6,
+   "level": -26
+  },
+  {
+   "name": "step",
+   "query": "barefoot footsteps tile floor",
+   "alt": [
+    "bare feet walking hard floor"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "barefoot",
+    "footsteps"
+   ],
+   "slices": [
+    "step_1",
+    "step_2",
+    "step_3",
+    "step_4"
+   ],
+   "slice_len": 0.32,
+   "min_gap": 0.3,
+   "level": -30
+  },
+  {
+   "name": "step_soft",
+   "query": "slippers footsteps floor",
+   "alt": [
+    "soft shoes footsteps indoor"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "slippers",
+    "footsteps"
+   ],
+   "slices": [
+    "step_soft_1",
+    "step_soft_2",
+    "step_soft_3",
+    "step_soft_4"
+   ],
+   "slice_len": 0.32,
+   "min_gap": 0.3,
+   "level": -32
+  },
+  {
+   "name": "step_boot",
+   "query": "rubber boots footsteps concrete",
+   "alt": [
+    "wellington boots walking"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "boots",
+    "footsteps"
+   ],
+   "slices": [
+    "step_boot_1",
+    "step_boot_2",
+    "step_boot_3",
+    "step_boot_4"
+   ],
+   "slice_len": 0.38,
+   "min_gap": 0.3,
+   "level": -26
+  },
+  {
+   "name": "breath_wake_male",
+   "query": "man waking up sharp inhale nose",
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "breath",
+    "inhale",
+    "male"
+   ],
+   "level": -24,
+   "max_len": 1.6,
+   "avoid": [
+    "female",
+    "woman"
+   ]
+  },
+  {
+   "name": "pain_sigh_male",
+   "query": "male pain sigh exhale",
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "sigh",
+    "pain",
+    "male"
+   ],
+   "level": -22,
+   "max_len": 2.0,
+   "avoid": [
+    "female",
+    "woman"
+   ]
+  },
+  {
+   "name": "pain_groan_male",
+   "query": "male groan pain effort closed mouth",
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "groan",
+    "pain",
+    "male"
+   ],
+   "level": -21,
+   "max_len": 2.0,
+   "avoid": [
+    "female",
+    "woman",
+    "zombie"
+   ]
+  },
+  {
+   "name": "breath_strain_male",
+   "query": "male effort breathing teeth clenched",
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "effort",
+    "breath",
+    "male"
+   ],
+   "level": -23,
+   "max_len": 2.2,
+   "avoid": [
+    "female",
+    "woman"
+   ]
+  },
+  {
+   "name": "cloth_rustle",
+   "query": "bed sheet rustle cotton",
+   "duration": [
+    0.4,
+    5
+   ],
+   "want": [
+    "cloth",
+    "rustle",
+    "sheet"
+   ],
+   "level": -26,
+   "max_len": 1.2
+  },
+  {
+   "name": "bare_feet_floor",
+   "query": "barefoot step tile floor",
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "barefoot",
+    "step"
+   ],
+   "level": -26,
+   "max_len": 1.0
+  },
+  {
+   "name": "stairs_concrete",
+   "query": "footsteps concrete stairs echo",
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "stairs",
+    "footsteps"
+   ],
+   "level": -24,
+   "max_len": 2.0
+  },
+  {
+   "name": "entity_breath",
+   "query": "creepy slow raspy breathing close",
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "breathing",
+    "creepy"
+   ],
+   "level": -24,
+   "max_len": 3.0
+  },
+  {
+   "name": "entity_dissolve",
+   "query": "tv static burst crackle short",
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "static",
+    "glitch"
+   ],
+   "level": -22,
+   "max_len": 0.8
+  },
+  {
+   "name": "entity_whisper",
+   "query": "multiple whispers unintelligible ear",
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "whisper"
+   ],
+   "level": -24,
+   "max_len": 1.6
+  },
+  {
+   "name": "scare_door_slam",
+   "query": "distant door slam corridor reverb",
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "slam",
+    "door"
+   ],
+   "level": -18,
+   "max_len": 2.5,
+   "avoid": [
+    "car"
+   ]
+  },
+  {
+   "name": "scare_fall",
+   "query": "metal tray falling tile floor bounce",
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "tray",
+    "fall",
+    "metal"
+   ],
+   "level": -19,
+   "max_len": 2.0
+  },
+  {
+   "name": "scare_glass",
+   "query": "glass jar fall break",
+   "duration": [
+    0.4,
+    3
+   ],
+   "want": [
+    "glass",
+    "break"
+   ],
+   "level": -20,
+   "max_len": 1.2
+  },
+  {
+   "name": "scare_wall_knock",
+   "query": "knocking through wall muffled three knocks",
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "knock",
+    "wall"
+   ],
+   "level": -22,
+   "max_len": 1.8
+  },
+  {
+   "name": "scare_steps_above",
+   "query": "footsteps upstairs ceiling creaking",
+   "duration": [
+    2,
+    15
+   ],
+   "want": [
+    "footsteps",
+    "ceiling",
+    "upstairs"
+   ],
+   "level": -26,
+   "max_len": 6.0
+  },
+  {
+   "name": "scare_roll",
+   "query": "small can rolling floor",
+   "duration": [
+    1,
+    6
+   ],
+   "want": [
+    "rolling",
+    "roll"
+   ],
+   "level": -22,
+   "max_len": 3.0
+  },
+  {
+   "name": "scare_wheelchair",
+   "query": "wheelchair squeak roll",
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "wheelchair",
+    "squeak"
+   ],
+   "level": -22,
+   "max_len": 2.0
+  },
+  {
+   "name": "scare_door_creak",
+   "query": "slow door creak hinge",
+   "duration": [
+    1,
+    6
+   ],
+   "want": [
+    "creak",
+    "hinge"
+   ],
+   "level": -21,
+   "max_len": 3.0
+  },
+  {
+   "name": "scare_breath",
+   "query": "exhale behind close breath",
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "breath",
+    "exhale"
+   ],
+   "level": -24,
+   "max_len": 1.6
+  },
+  {
+   "name": "scare_static_burst",
+   "query": "vhs static burst",
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "static",
+    "vhs"
+   ],
+   "level": -24,
+   "max_len": 0.6
+  },
+  {
+   "name": "scare_drip",
+   "query": "water drips pipe echo",
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "drip",
+    "echo"
+   ],
+   "level": -24,
+   "max_len": 2.2
+  },
+  {
+   "name": "status_heartbeat",
+   "query": "single heartbeat low muffled",
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "heartbeat"
+   ],
+   "level": -20,
+   "max_len": 0.7
+  },
+  {
+   "name": "status_relief_breath",
+   "query": "relieved long exhale male",
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "exhale",
+    "relief"
+   ],
+   "level": -24,
+   "max_len": 1.8,
+   "avoid": [
+    "female",
+    "woman"
+   ]
+  },
+  {
+   "name": "ui_move",
+   "query": "vcr button click",
+   "duration": [
+    0.03,
+    1
+   ],
+   "want": [
+    "click",
+    "button"
+   ],
+   "level": -24,
+   "max_len": 0.12
+  },
+  {
+   "name": "ui_accept",
+   "query": "vcr play button mechanical clunk",
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "button",
+    "vcr",
+    "cassette"
+   ],
+   "level": -22,
+   "max_len": 0.35
+  },
+  {
+   "name": "ui_back",
+   "query": "soft click button",
+   "duration": [
+    0.03,
+    1
+   ],
+   "want": [
+    "click"
+   ],
+   "level": -26,
+   "max_len": 0.12,
+   "pitch": -3
+  },
+  {
+   "name": "tape_rewind",
+   "query": "vhs rewind stop click",
+   "duration": [
+    1,
+    6
+   ],
+   "want": [
+    "rewind",
+    "vhs",
+    "tape"
+   ],
+   "level": -22,
+   "max_len": 2.0
+  },
+  {
+   "name": "title_ambience",
+   "query": "empty building night fluorescent hum room tone",
+   "duration": [
+    30,
+    300
+   ],
+   "want": [
+    "roomtone",
+    "hum"
+   ],
+   "level": -32,
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 3.0,
+   "stereo": true,
+   "avoid": [
+    "voices",
+    "traffic"
+   ]
+  },
+  {
+   "name": "title_tube_flicker",
+   "query": "fluorescent tube flicker buzz",
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "fluorescent",
+    "flicker"
+   ],
+   "level": -24,
+   "max_len": 1.0
+  },
+  {
+   "name": "use_battery_insert",
+   "query": "batteries insert flashlight compartment close",
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries"
+   ],
+   "level": -22,
+   "max_len": 2.0
+  },
+  {
+   "name": "use_bandage_apply",
+   "query": "gauze bandage unroll wrap",
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "bandage",
+    "gauze"
+   ],
+   "level": -22,
+   "max_len": 2.0
+  },
+  {
+   "name": "use_pills_swallow",
+   "query": "pill bottle open shake swallow",
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "pills",
+    "swallow"
+   ],
+   "level": -22,
+   "max_len": 2.0
+  },
+  {
+   "name": "use_syringe_inject",
+   "query": "syringe cap plunger",
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "syringe"
+   ],
+   "level": -24,
+   "max_len": 1.4
+  },
+  {
+   "name": "use_tourniquet_tighten",
+   "query": "cloth twist tighten",
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "cloth",
+    "twist"
+   ],
+   "level": -24,
+   "max_len": 1.4
+  },
+  {
+   "name": "cloth_tear",
+   "query": "fabric tear rip cotton",
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "tear",
+    "rip",
+    "fabric"
+   ],
+   "level": -20,
+   "max_len": 1.0
+  },
+  {
+   "name": "craft_cloth",
+   "query": "cloth handling knot foley",
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "cloth",
+    "foley"
+   ],
+   "level": -24,
+   "max_len": 1.4
+  },
+  {
+   "name": "craft_combine",
+   "query": "small objects handling foley",
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -24,
+   "max_len": 1.0
+  },
+  {
+   "name": "craft_generic",
+   "query": "tinkering small metal parts",
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "foley",
+    "tinker"
+   ],
+   "level": -24,
+   "max_len": 1.0
+  },
+  {
+   "name": "inv_metal_heavy_pick",
+   "query": "heavy iron bar metal tray pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_heavy_place",
+   "query": "heavy iron bar metal tray put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_heavy_rotate",
+   "query": "heavy iron bar metal tray turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_heavy_equip",
+   "query": "heavy iron bar metal tray wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_heavy_unequip",
+   "query": "heavy iron bar metal tray take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_heavy_drop",
+   "query": "heavy iron bar metal tray drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_pick",
+   "query": "small metal object tray pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_place",
+   "query": "small metal object tray put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_rotate",
+   "query": "small metal object tray turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_equip",
+   "query": "small metal object tray wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_unequip",
+   "query": "small metal object tray take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_metal_small_drop",
+   "query": "small metal object tray drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_pick",
+   "query": "keys jingle pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_place",
+   "query": "keys jingle put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_rotate",
+   "query": "keys jingle turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_equip",
+   "query": "keys jingle wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_unequip",
+   "query": "keys jingle take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_keys_drop",
+   "query": "keys jingle drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_pick",
+   "query": "cloth fabric handling pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_place",
+   "query": "cloth fabric handling put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_rotate",
+   "query": "cloth fabric handling turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_equip",
+   "query": "cloth fabric handling wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_unequip",
+   "query": "cloth fabric handling take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_cloth_drop",
+   "query": "cloth fabric handling drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_pick",
+   "query": "paper handling pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_place",
+   "query": "paper handling put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_rotate",
+   "query": "paper handling turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_equip",
+   "query": "paper handling wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_unequip",
+   "query": "paper handling take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_paper_drop",
+   "query": "paper handling drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_pick",
+   "query": "plastic hollow object pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_place",
+   "query": "plastic hollow object put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_rotate",
+   "query": "plastic hollow object turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_equip",
+   "query": "plastic hollow object wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_unequip",
+   "query": "plastic hollow object take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_plastic_drop",
+   "query": "plastic hollow object drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_pick",
+   "query": "glass vial clink pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_place",
+   "query": "glass vial clink put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_rotate",
+   "query": "glass vial clink turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_equip",
+   "query": "glass vial clink wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_unequip",
+   "query": "glass vial clink take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_glass_drop",
+   "query": "glass vial clink drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_pick",
+   "query": "pill bottle rattle pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_place",
+   "query": "pill bottle rattle put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_rotate",
+   "query": "pill bottle rattle turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_equip",
+   "query": "pill bottle rattle wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_unequip",
+   "query": "pill bottle rattle take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pills_drop",
+   "query": "pill bottle rattle drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_pick",
+   "query": "aa batteries clink pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_place",
+   "query": "aa batteries clink put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_rotate",
+   "query": "aa batteries clink turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_equip",
+   "query": "aa batteries clink wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_unequip",
+   "query": "aa batteries clink take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_battery_drop",
+   "query": "aa batteries clink drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_pick",
+   "query": "screwdriver plastic handle table pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_place",
+   "query": "screwdriver plastic handle table put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_rotate",
+   "query": "screwdriver plastic handle table turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_equip",
+   "query": "screwdriver plastic handle table wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_unequip",
+   "query": "screwdriver plastic handle table take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_tool_drop",
+   "query": "screwdriver plastic handle table drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_pick",
+   "query": "rubber boots handling pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_place",
+   "query": "rubber boots handling put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_rotate",
+   "query": "rubber boots handling turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_equip",
+   "query": "rubber boots handling wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_unequip",
+   "query": "rubber boots handling take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rubber_drop",
+   "query": "rubber boots handling drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_pick",
+   "query": "ceramic fuse small pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_place",
+   "query": "ceramic fuse small put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_rotate",
+   "query": "ceramic fuse small turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_equip",
+   "query": "ceramic fuse small wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_unequip",
+   "query": "ceramic fuse small take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_ceramic_drop",
+   "query": "ceramic fuse small drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_pick",
+   "query": "item foley pick up",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_place",
+   "query": "item foley put down",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_rotate",
+   "query": "item foley turn",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_equip",
+   "query": "item foley wear",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_unequip",
+   "query": "item foley take off",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  },
+  {
+   "name": "inv_drop",
+   "query": "item foley drop floor",
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "foley"
+   ],
+   "level": -26,
+   "max_len": 0.5
+  }
  ]
 }
