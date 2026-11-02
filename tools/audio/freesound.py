@@ -274,7 +274,13 @@ def loudness(a: np.ndarray, target_db: float) -> np.ndarray:
     peak = float(np.abs(a).max()) if len(a) else 0.0
     ceiling = 10 ** (-1.0 / 20.0)
     if peak > ceiling:
-        a = np.tanh(a / ceiling * 0.9) * ceiling / np.tanh(0.9)  # limitador suave
+        # Limitador suave: lineal hasta la mitad del techo y, por encima, curva que nunca lo pasa
+        # (la fórmula anterior dejaba picos de hasta +1,9 dBFS y el WAV se recortaba).
+        knee = ceiling * 0.5
+        mag = np.abs(a)
+        over = mag > knee
+        a = a.copy()
+        a[over] = np.sign(a[over]) * (knee + (ceiling - knee) * np.tanh((mag[over] - knee) / (ceiling - knee)))
     return a
 
 

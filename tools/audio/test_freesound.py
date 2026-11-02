@@ -126,6 +126,9 @@ class AudioTest(unittest.TestCase):
         out = fs.loudness(hit, -26.0)
         self.assertAlmostEqual(fs.db(fs.active_rms(out)), -26.0, delta=1.0)
         self.assertLessEqual(float(np.abs(out).max()), 10 ** (-1.0 / 20.0) + 1e-6)
+        # Regresión: con un objetivo alto el limitador dejaba pasar picos por encima de 0 dBFS.
+        loud = fs.loudness(hit, -10.0)
+        self.assertLessEqual(float(np.abs(loud).max()), 10 ** (-1.0 / 20.0) + 1e-6)
 
 
 if __name__ == "__main__":

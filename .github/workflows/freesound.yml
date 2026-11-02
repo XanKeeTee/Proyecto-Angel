@@ -14,6 +14,7 @@ on:
       - "tools/audio/ci_jobs.txt"
       - "tools/audio/ci_queries.txt"
       - "tools/audio/build_manifest.py"
+      - "tools/audio/freesound.py"
       - "tools/audio/sound_manifest.json"
   workflow_dispatch:
 permissions:
