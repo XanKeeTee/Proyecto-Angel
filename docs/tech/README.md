@@ -5,7 +5,7 @@ Las convenciones de código, comandos y estructura de carpetas están en [CLAUDE
 ## Documentos
 
 - [arquitectura.md](arquitectura.md) — módulos del prólogo y cómo se amplían.
-- [sonidos.md](sonidos.md) — sonidos pendientes de Freesound y sus provisionales.
+- [sonidos.md](sonidos.md) — sonido y música de Freesound: cómo traerlos, música del menú y paisaje sonoro.
 - [tests.md](tests.md) — propuesta de framework de tests (GUT, pendiente). Mientras tanto hay un ejecutor mínimo (ver CLAUDE.md).
 
 ## Configuración del proyecto (provisional)
@@ -31,7 +31,7 @@ Arquitectura del código: [arquitectura.md](arquitectura.md). Diseño: [prologo.
 
 - **Escena principal**: `res://scenes/ui/title/title_screen.tscn` (título → Nueva partida / Continuar).
 - **El hospital**: `res://scenes/world/hospital/hospital.tscn` + `hospital.gd` (guion), que hereda de `WorldController`.
-- **Opciones** (`autoload/settings.gd`, menú en `scenes/ui/options_menu.gd`): volúmenes por canal de audio (`Ambiente`, `Efectos` e `Interfaz`, que van al `Master`, con un limitador), brillo (gamma en el shader VHS), intensidad del filtro, pantalla completa y velocidad del texto. Se guardan en `user://settings.cfg`.
+- **Opciones** (`autoload/settings.gd`, menú en `scenes/ui/options_menu.gd`): volúmenes por canal de audio (`Ambiente`, `Música`, `Efectos` e `Interfaz`, que van al `Master`, con un limitador), brillo (gamma en el shader VHS), intensidad del filtro, pantalla completa y velocidad del texto. Se guardan en `user://settings.cfg`.
 - **Guardado**: en las grabadoras de cinta (control de enfermería y sala eléctrica), en `user://saves/slot_0.json`.
 
 ### Depuración
@@ -92,7 +92,7 @@ El generador del hospital y el de datos del prólogo se ejecutan como escena (no
 Aparte (no los llama `build_all.py`):
 - `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
 
-Sonidos que faltan y qué buscar en Freesound: [sonidos.md](sonidos.md).
+Sonido y música de Freesound (`python3 -I tools/audio/freesound.py check|fetch`): [sonidos.md](sonidos.md). `sounds.py` solo crea los WAV provisionales que falten.
 
 **Vista de revisión del mapa** (sin oscuridad ni luces, o con `--lit` como en el juego con corriente):
 
