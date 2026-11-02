@@ -1,6 +1,6 @@
 extends TestCase
 ## Ropa por capas (ponerse, quitarse, guardar), física de la bata, apuntar y andar de espaldas,
-## pantalla de personaje e iconos a medida de la bandeja.
+## pantalla de equipo e iconos a medida.
 
 const SCENE: String = "res://scenes/world/hospital/hospital.tscn"
 const PLAYER: String = "res://scenes/world/player/player.tscn"
@@ -31,18 +31,15 @@ func test_ponerse_y_quitarse() -> void:
 	check(c.equip(c.custody.find_first(&"pilas")) != "", "las pilas no se pueden poner")
 
 
-func test_sin_sitio_no_se_cambia() -> void:
+func test_quitarse_siempre_cabe() -> void:
 	GameState.new_game()
 	var c: CharacterState = GameState.character
 	GameState.give_item(Registry.item(&"gorro_lana"))
 	check_eq(c.equip(c.custody.find_first(&"gorro_lana")), "", "se pone el gorro")
-	# Llena la bandeja: al quitarse el gorro no hay dónde guardarlo.
-	while c.custody.room_for(Registry.item(&"fusible"), 1) > 0:
+	for i: int in 30:
 		GameState.give_item(Registry.item(&"fusible"))
-	while c.custody.room_for(Registry.item(&"llave_botiquin"), 1) > 0:
-		GameState.give_item(Registry.item(&"llave_botiquin"))
-	check(c.unequip(ItemDef.EquipSlot.HEAD) != "", "avisa de que no cabe")
-	check(c.worn(ItemDef.EquipSlot.HEAD) != null, "sigue con el gorro puesto")
+	check_eq(c.unequip(ItemDef.EquipSlot.HEAD), "", "con la custodia llena se lo quita igual")
+	check(c.worn(ItemDef.EquipSlot.HEAD) == null and c.custody.has(&"gorro_lana"), "y vuelve a la lista")
 
 
 func test_la_ropa_se_guarda() -> void:
@@ -123,16 +120,18 @@ func test_apunta_y_anda_de_espaldas() -> void:
 	await host.get_tree().process_frame
 
 
-func test_pantalla_de_personaje() -> void:
+func test_pantalla_de_equipo() -> void:
 	GameState.new_game()
 	var w: WorldController = await _spawn_world()
 	GameState.give_item(Registry.item(&"pantalon_pijama"))
 	w.custody_screen.open(CustodyScreen.Tab.CHARACTER)
 	await host.get_tree().process_frame
-	check(w.custody_screen._outfit_page.visible, "se ve la página de personaje")
-	check(w.custody_screen._slot_buttons[ItemDef.EquipSlot.BODY].text.contains("Bata de paciente"), "la ranura de cuerpo muestra la bata")
-	check_eq(w.custody_screen._wardrobe.get_child_count(), 1, "el pantalón aparece en la lista de ropa")
-	w.custody_screen._wear(GameState.character.custody.find_first(&"pantalon_pijama"))
+	var page: EquipmentPage = w.custody_screen.equipment_page()
+	check(page.visible, "se ve la página de equipo")
+	check(page.item_in(ItemDef.EquipSlot.BODY).def.id == &"bata_paciente", "la ranura de cuerpo tiene la bata")
+	page.select_slot(ItemDef.EquipSlot.LEGS)
+	check_eq(page.candidates().size(), 1, "el pantalón aparece en la lista de la ranura de piernas")
+	page.equip_in_slot(page.candidates()[0])
 	check_eq(GameState.character.worn(ItemDef.EquipSlot.LEGS).def.id, &"pantalon_pijama", "se pone el pantalón desde la lista")
 	w.custody_screen.close()
 	await w.custody_screen.closed
@@ -142,7 +141,7 @@ func test_pantalla_de_personaje() -> void:
 	await host.get_tree().process_frame
 
 
-func test_iconos_a_medida_de_la_bandeja() -> void:
+func test_iconos_a_medida() -> void:
 	for item: ItemDef in Registry.all_items():
 		if item.icon == null:
 			continue  # objetos antiguos del prototipo de combate, sin icono

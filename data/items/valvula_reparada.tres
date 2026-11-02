@@ -11,6 +11,7 @@ id = &"valvula_reparada"
 display_name = "Válvula reparada"
 description = "La válvula de presión, con el asiento atornillado. Debería aguantar."
 category = 5
+section = 5
 icon = ExtResource("1_qjx7e")
 inspect_sheet = ExtResource("2_imfv3")
 inspect_views = 8

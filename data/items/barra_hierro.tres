@@ -12,6 +12,7 @@ id = &"barra_hierro"
 display_name = "Barra de hierro"
 description = "Hierro corrugado de obra, oxidado. Pesa lo suficiente para hacer daño."
 category = 8
+section = 1
 icon = ExtResource("1_x47pb")
 inspect_sheet = ExtResource("2_r16p3")
 inspect_views = 8

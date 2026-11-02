@@ -11,6 +11,7 @@ id = &"bata_paciente"
 display_name = "Bata de paciente"
 description = "La bata con la que despertaste. Tela fina, abierta por la espalda, con «09» bordado en el cuello. Huele a desinfectante y a algo más."
 category = 7
+section = 2
 icon = ExtResource("1_sckpi")
 inspect_sheet = ExtResource("2_h5agq")
 inspect_views = 8

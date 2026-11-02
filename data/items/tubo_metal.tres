@@ -12,6 +12,7 @@ id = &"tubo_metal"
 display_name = "Tubo de hierro"
 description = "Un trozo de tubería arrancado de algún sitio, con la rosca a la vista. Resbala en la mano."
 category = 8
+section = 1
 icon = ExtResource("1_xm8af")
 inspect_sheet = ExtResource("2_p2at7")
 inspect_views = 8

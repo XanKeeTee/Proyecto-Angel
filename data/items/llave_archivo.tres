@@ -11,6 +11,7 @@ id = &"llave_archivo"
 display_name = "Llave del archivo"
 description = "Llave larga de latón. Etiqueta: «ARCHIVO — solo personal autorizado»."
 category = 1
+section = 5
 icon = ExtResource("1_wrqmp")
 inspect_sheet = ExtResource("2_r6iu4")
 inspect_views = 8

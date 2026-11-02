@@ -11,6 +11,7 @@ id = &"zapatillas"
 display_name = "Zapatillas"
 description = "Zapatillas de tela con suela de goma. Con ellas los pasos apenas se oyen."
 category = 7
+section = 2
 icon = ExtResource("1_on770")
 inspect_sheet = ExtResource("2_s6n0b")
 inspect_views = 8

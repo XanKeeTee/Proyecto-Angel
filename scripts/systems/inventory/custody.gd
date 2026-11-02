@@ -1,19 +1,25 @@
 class_name Custody
 extends RefCounted
 ## Sistema de Custodia: el inventario de La Novena Vigilia.
-## - Bandeja de custodia: cuadrícula de 5x4 donde los objetos ocupan varias casillas,
-##   se pueden girar, apilar y recolocar.
-## - Bolsillos: 5 huecos de acceso rápido, independientes de la bandeja (un montón por hueco).
-## - Expediente personal: documentos (no ocupan sitio).
+## - Objetos: una lista sin límite de espacio, ordenada por llegada y repartida en categorías
+##   (`ItemDef.resolved_section`: Armas, Armaduras, Útiles, Medicina, Objetos principales, Otros).
+##   Los objetos apilables van en un solo montón por tipo (los contaminados, aparte).
+## - Atajos 1-5 (`pockets`): referencias a montones de la lista para usarlos sin abrir la custodia.
+##   No son un contenedor aparte: lo que está en un atajo sigue en la lista.
+## - Expediente personal: documentos.
 ## Solo lógica: la interfaz está en scenes/ui/custody/.
 
 signal changed
 signal document_added(doc: DocumentDef)
 
-const TRAY_SIZE: Vector2i = Vector2i(5, 4)
+## Número de atajos (teclas 1-5).
 const POCKETS: int = 5
+## Versión del formato de guardado (1 = bandeja por casillas, 2 = lista).
+const SAVE_VERSION: int = 2
 
-var tray: Array[ItemStack] = []
+## Montones, en el orden en que llegaron.
+var items: Array[ItemStack] = []
+## Atajos 1-5: montones de `items` (null = vacío).
 var pockets: Array[ItemStack] = []
 var documents: Array[StringName] = []
 ## Documentos ya abiertos alguna vez (para marcar los nuevos).
@@ -26,76 +32,25 @@ func _init() -> void:
 	pockets.resize(POCKETS)
 
 
-# --- bandeja ------------------------------------------------------------------------
+# --- lista -----------------------------------------------------------------------------------
 
-func stack_at(cell: Vector2i) -> ItemStack:
-	for stack: ItemStack in tray:
-		if stack.cells().has(cell):
-			return stack
-	return null
-
-
-func is_inside(cell: Vector2i, footprint: Vector2i) -> bool:
-	return cell.x >= 0 and cell.y >= 0 and cell.x + footprint.x <= TRAY_SIZE.x and cell.y + footprint.y <= TRAY_SIZE.y
-
-
-## ¿Cabe `footprint` en `cell` sin pisar nada (salvo `ignore`)?
-func can_place(footprint: Vector2i, cell: Vector2i, ignore: ItemStack = null) -> bool:
-	if not is_inside(cell, footprint):
-		return false
-	for other: ItemStack in tray:
-		if other == ignore:
-			continue
-		var r1: Rect2i = Rect2i(cell, footprint)
-		var r2: Rect2i = Rect2i(other.cell, other.footprint())
-		if r1.intersects(r2):
-			return false
-	return true
-
-
-## Primer hueco libre (de arriba a abajo, de izquierda a derecha), probando también girado.
-## Devuelve [celda, girado] o [] si no cabe.
-func find_space(item: ItemDef, ignore: ItemStack = null) -> Array:
-	for rotated: bool in [false, true]:
-		if rotated and item.size.x == item.size.y:
-			continue
-		var fp: Vector2i = item.footprint(rotated)
-		for y: int in TRAY_SIZE.y:
-			for x: int in TRAY_SIZE.x:
-				if can_place(fp, Vector2i(x, y), ignore):
-					return [Vector2i(x, y), rotated]
-	return []
-
-
-## Mueve (o gira) un montón de la bandeja. Si cae sobre un montón igual, los junta.
-func move(stack: ItemStack, cell: Vector2i, rotated: bool) -> bool:
-	var target: ItemStack = stack_at(cell)
-	if target != null and target != stack and target.def == stack.def and target.can_merge(stack):
-		_merge_into(stack, target)
-		return true
-	if not can_place(stack.def.footprint(rotated), cell, stack):
-		return false
-	stack.cell = cell
-	stack.rotated = rotated
-	changed.emit()
-	return true
-
-
-func remove(stack: ItemStack) -> void:
-	tray.erase(stack)
-	var i: int = pockets.find(stack)
-	if i >= 0:
-		pockets[i] = null
-	changed.emit()
-
-
-## ¿Está este montón en la custodia (bandeja o bolsillo)?
+## ¿Está este montón en la custodia?
 func contains(stack: ItemStack) -> bool:
-	return stack != null and (tray.has(stack) or pockets.has(stack))
+	return stack != null and items.has(stack)
 
 
-## Saca un montón entero para dejarlo en el suelo. Los objetos clave no se pueden descartar.
-## Devuelve true si se ha sacado.
+## Saca un montón de la custodia (y de su atajo, si tenía).
+func remove(stack: ItemStack) -> void:
+	items.erase(stack)
+	var i: int = pockets.find(stack)
+	while i >= 0:
+		pockets[i] = null
+		i = pockets.find(stack)
+	changed.emit()
+
+
+## Saca un montón entero para dejarlo en el suelo. Los objetos clave y los principales no se
+## pueden descartar. Devuelve true si se ha sacado.
 func discard(stack: ItemStack) -> bool:
 	if not contains(stack) or not stack.def.can_discard():
 		return false
@@ -103,82 +58,62 @@ func discard(stack: ItemStack) -> bool:
 	return true
 
 
-## Añade objetos: primero completa montones, luego bolsillos vacíos no (solo bandeja).
-## Devuelve las unidades que no han cabido.
+## Añade objetos. Los apilables se juntan con su montón (si coincide la contaminación); los demás
+## entran de uno en uno, cada uno con su estado. `template` copia desgaste, carga y contaminación.
+## Devuelve las unidades que no han cabido: siempre 0, porque ya no hay límite de espacio (se
+## mantiene por compatibilidad con quien lo comprueba).
 func add_item(item: ItemDef, amount: int = 1, template: ItemStack = null) -> int:
-	var left: int = amount
+	if item == null or amount <= 0:
+		return 0
+	var contaminated: bool = template.contaminated if template != null else item.contaminated
 	if item.is_stackable():
-		for stack: ItemStack in _all_stacks():
-			if left <= 0:
-				break
-			if stack.def == item and stack.quantity < item.max_stack and (template == null or stack.contaminated == template.contaminated):
-				var moved: int = mini(left, item.max_stack - stack.quantity)
-				stack.quantity += moved
-				left -= moved
-	while left > 0:
-		var space: Array = find_space(item)
-		if space.is_empty():
-			break
-		var stack: ItemStack = ItemStack.create(item, mini(left, maxi(1, item.max_stack)))
-		if template != null:
-			stack.durability = template.durability
-			stack.charge = template.charge
-			stack.contaminated = template.contaminated
-		stack.cell = space[0]
-		stack.rotated = space[1]
-		tray.append(stack)
-		left -= stack.quantity
-	if left < amount:
-		changed.emit()
-	return left
+		for stack: ItemStack in items:
+			if stack.def == item and stack.contaminated == contaminated:
+				stack.quantity += amount
+				changed.emit()
+				return 0
+		items.append(_new_stack(item, amount, template, contaminated))
+	else:
+		for i: int in amount:
+			items.append(_new_stack(item, 1, template, contaminated))
+	changed.emit()
+	return 0
 
 
-## Cuántas unidades caben ahora mismo (para avisar antes de recoger).
-func room_for(item: ItemDef, amount: int) -> int:
-	var probe: Custody = Custody.from_dict(to_dict())
-	return amount - probe.add_item(item, amount)
+## Cuántas unidades caben ahora mismo: todas (no hay límite). Por compatibilidad.
+func room_for(_item: ItemDef, amount: int) -> int:
+	return amount
 
 
-# --- bolsillos ------------------------------------------------------------------------
+## Montones de una categoría, en orden de llegada.
+func items_in(section: ItemDef.Section) -> Array[ItemStack]:
+	var result: Array[ItemStack] = []
+	for stack: ItemStack in items:
+		if stack.def.resolved_section() == section:
+			result.append(stack)
+	return result
 
-## Pasa un montón de la bandeja a un bolsillo. Si el bolsillo está ocupado, intercambia.
+
+# --- atajos 1-5 --------------------------------------------------------------------------------
+
+## Asigna un montón al atajo `index` (lo quita del que tuviera). Lo que había en ese atajo queda
+## sin atajo, pero sigue en la custodia.
 func to_pocket(stack: ItemStack, index: int) -> bool:
-	if index < 0 or index >= POCKETS or not tray.has(stack):
+	if index < 0 or index >= POCKETS or not contains(stack):
 		return false
-	var current: ItemStack = pockets[index]
-	tray.erase(stack)
+	var old: int = pockets.find(stack)
+	if old >= 0:
+		pockets[old] = null
 	pockets[index] = stack
-	if current != null:
-		var space: Array = find_space(current.def)
-		if space.is_empty():
-			# No cabe lo que había: se deshace.
-			pockets[index] = current
-			tray.append(stack)
-			return false
-		current.cell = space[0]
-		current.rotated = space[1]
-		tray.append(current)
 	changed.emit()
 	return true
 
 
-## Devuelve el contenido de un bolsillo a la bandeja (en `cell` o en el primer hueco).
-func from_pocket(index: int, cell: Vector2i = Vector2i(-1, -1), rotated: bool = false) -> bool:
-	var stack: ItemStack = pockets[index]
-	if stack == null:
-		return false
-	if cell.x < 0:
-		var space: Array = find_space(stack.def)
-		if space.is_empty():
-			return false
-		cell = space[0]
-		rotated = space[1]
-	elif not can_place(stack.def.footprint(rotated), cell):
+## Vacía un atajo (el objeto sigue en la custodia). Devuelve false si ya estaba vacío.
+func from_pocket(index: int) -> bool:
+	if index < 0 or index >= POCKETS or pockets[index] == null:
 		return false
 	pockets[index] = null
-	stack.cell = cell
-	stack.rotated = rotated
-	tray.append(stack)
 	changed.emit()
 	return true
 
@@ -190,11 +125,16 @@ func swap_pockets(a: int, b: int) -> void:
 	changed.emit()
 
 
+## Atajo de un montón (0-4) o -1.
+func pocket_of(stack: ItemStack) -> int:
+	return pockets.find(stack) if stack != null else -1
+
+
 # --- consultas ---------------------------------------------------------------------------
 
 func count(id: StringName) -> int:
 	var total: int = 0
-	for stack: ItemStack in _all_stacks():
+	for stack: ItemStack in items:
 		if stack.def.id == id:
 			total += stack.quantity
 	return total
@@ -205,7 +145,7 @@ func has(id: StringName) -> bool:
 
 
 func find_first(id: StringName) -> ItemStack:
-	for stack: ItemStack in _all_stacks():
+	for stack: ItemStack in items:
 		if stack.def.id == id:
 			return stack
 	return null
@@ -232,7 +172,7 @@ func take(id: StringName, amount: int = 1) -> bool:
 	if count(id) < amount:
 		return false
 	var left: int = amount
-	for stack: ItemStack in _all_stacks():
+	for stack: ItemStack in items.duplicate():
 		if left <= 0:
 			break
 		if stack.def.id == id:
@@ -245,17 +185,12 @@ func take(id: StringName, amount: int = 1) -> bool:
 	return true
 
 
-func occupied_cells() -> int:
-	var total: int = 0
-	for stack: ItemStack in tray:
-		total += stack.footprint().x * stack.footprint().y
-	return total
-
-
 # --- combinación ------------------------------------------------------------------------
 
 ## Intenta combinar dos montones. Devuelve el texto para el jugador, o "" si no encajan.
 func combine(a: ItemStack, b: ItemStack) -> String:
+	if a == null or b == null or a == b:
+		return ""
 	var recipe: RecipeDef = Registry.find_recipe(a.def, b.def)
 	if recipe == null:
 		return ""
@@ -270,15 +205,11 @@ func combine(a: ItemStack, b: ItemStack) -> String:
 			target.charge = minf(target.def.max_charge, target.charge + recipe.charge_amount)
 			consume(source)
 		RecipeDef.Mode.PRODUCE:
-			# El resultado hereda la contaminación si cualquiera la tenía y la receta no la limpia.
 			if recipe.consume_first:
 				consume(first, first.def.max_durability > 0)
 			if recipe.consume_second:
 				consume(second, second.def.max_durability > 0)
-			var leftover: int = add_item(recipe.result, recipe.result_quantity)
-			learn_recipe(recipe.id)
-			if leftover > 0:
-				return recipe.message + "\n(No queda sitio en la bandeja: lo sostienes un momento y lo dejas caer.)"
+			add_item(recipe.result, recipe.result_quantity)
 		RecipeDef.Mode.CRAFT:
 			return ""
 	learn_recipe(recipe.id)
@@ -319,52 +250,97 @@ func is_unread(id: StringName) -> bool:
 # --- guardado -------------------------------------------------------------------------------
 
 func to_dict() -> Dictionary:
-	var tray_data: Array = []
-	for stack: ItemStack in tray:
-		tray_data.append(stack.to_dict())
-	var pocket_data: Array = []
+	var item_data: Array = []
+	for stack: ItemStack in items:
+		item_data.append(stack.to_dict())
+	var shortcut_data: Array = []
 	for stack: ItemStack in pockets:
-		pocket_data.append(stack.to_dict() if stack != null else null)
+		shortcut_data.append(items.find(stack) if stack != null else -1)
 	return {
-		"tray": tray_data, "pockets": pocket_data,
+		"version": SAVE_VERSION, "items": item_data, "shortcuts": shortcut_data,
 		"documents": documents.map(func(d: StringName) -> String: return String(d)),
 		"read": documents_read.map(func(d: StringName) -> String: return String(d)),
 		"recipes": known_recipes.map(func(d: StringName) -> String: return String(d)),
 	}
 
 
+## Lee una custodia guardada. Admite el formato antiguo (bandeja por casillas + bolsillos): los
+## objetos de la bandeja pasan a la lista en orden de lectura (fila a fila) y los de los bolsillos
+## se añaden detrás y quedan en su atajo. Los montones iguales se juntan.
 static func from_dict(data: Dictionary) -> Custody:
 	var custody: Custody = Custody.new()
-	for entry: Variant in data.get("tray", []):
-		var stack: ItemStack = ItemStack.from_dict(entry)
-		if stack != null:
-			custody.tray.append(stack)
-	var pocket_data: Array = data.get("pockets", [])
-	for i: int in mini(POCKETS, pocket_data.size()):
-		if pocket_data[i] != null:
-			custody.pockets[i] = ItemStack.from_dict(pocket_data[i])
+	if data.has("items"):
+		for entry: Variant in data.get("items", []):
+			custody._append_loaded(entry)
+		var shortcuts: Array = data.get("shortcuts", [])
+		for i: int in mini(POCKETS, shortcuts.size()):
+			var index: int = int(shortcuts[i]) if shortcuts[i] != null else -1
+			if index >= 0 and index < custody.items.size():
+				custody.pockets[i] = custody.items[index]
+	else:
+		custody._load_legacy(data)
 	for d: Variant in data.get("documents", []):
 		custody.documents.append(StringName(d))
 	for d: Variant in data.get("read", []):
 		custody.documents_read.append(StringName(d))
 	for r: Variant in data.get("recipes", []):
 		custody.known_recipes.append(StringName(r))
+	custody._merge_duplicates()
 	return custody
 
 
-func _all_stacks() -> Array[ItemStack]:
-	var result: Array[ItemStack] = []
-	for stack: ItemStack in pockets:
+## Partidas guardadas con la bandeja de casillas (formato 1).
+func _load_legacy(data: Dictionary) -> void:
+	var tray_entries: Array = []
+	for entry: Variant in data.get("tray", []):
+		if typeof(entry) == TYPE_DICTIONARY:
+			tray_entries.append(entry)
+	tray_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var ca: Array = a.get("cell", [0, 0])
+		var cb: Array = b.get("cell", [0, 0])
+		return int(ca[1]) < int(cb[1]) or (int(ca[1]) == int(cb[1]) and int(ca[0]) < int(cb[0])))
+	for entry: Dictionary in tray_entries:
+		_append_loaded(entry)
+	var pocket_data: Array = data.get("pockets", [])
+	for i: int in mini(POCKETS, pocket_data.size()):
+		var stack: ItemStack = _append_loaded(pocket_data[i])
 		if stack != null:
-			result.append(stack)
-	result.append_array(tray)
-	return result
+			pockets[i] = stack
 
 
-func _merge_into(source: ItemStack, target: ItemStack) -> void:
-	var moved: int = mini(source.quantity, target.def.max_stack - target.quantity)
-	target.quantity += moved
-	source.quantity -= moved
-	if source.quantity <= 0:
-		remove(source)
-	changed.emit()
+func _append_loaded(entry: Variant) -> ItemStack:
+	if typeof(entry) != TYPE_DICTIONARY:
+		return null
+	var stack: ItemStack = ItemStack.from_dict(entry)
+	if stack != null:
+		items.append(stack)
+	return stack
+
+
+## Junta los montones apilables repetidos (p. ej. dos de pilas de una partida antigua). El atajo
+## que apuntaba a uno que desaparece pasa al que queda.
+func _merge_duplicates() -> void:
+	var i: int = 0
+	while i < items.size():
+		var keep: ItemStack = items[i]
+		var j: int = i + 1
+		while j < items.size():
+			var other: ItemStack = items[j]
+			if keep.can_merge(other):
+				keep.quantity += other.quantity
+				items.remove_at(j)
+				var p: int = pockets.find(other)
+				if p >= 0:
+					pockets[p] = keep if not pockets.has(keep) else null
+			else:
+				j += 1
+		i += 1
+
+
+func _new_stack(item: ItemDef, amount: int, template: ItemStack, contaminated: bool) -> ItemStack:
+	var stack: ItemStack = ItemStack.create(item, amount)
+	if template != null:
+		stack.durability = template.durability
+		stack.charge = template.charge
+	stack.contaminated = contaminated
+	return stack

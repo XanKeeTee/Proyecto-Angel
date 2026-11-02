@@ -64,24 +64,28 @@ func test_fabricar_varios_ingredientes() -> void:
 	check(c.find_first(&"tubo_envuelto").def.weapon.accuracy > _item("tubo_metal").weapon.accuracy, "agarra mejor")
 
 
-func test_fabricar_sin_sitio_no_gasta() -> void:
+func test_fabricar_sin_limite_de_espacio() -> void:
 	var c: Custody = Custody.new()
-	for i: int in 4:
+	for i: int in 20:
 		c.add_item(_item("valvula_averiada"))
-	# Bandeja llena salvo una columna de 4: tela (1 casilla) + 3 vendas improvisadas llenas.
 	c.add_item(_item("tela"), 2)
-	for i: int in 3:
-		var s: ItemStack = ItemStack.create(_item("venda_improvisada"), 4)
-		s.cell = Vector2i(4, 1 + i)
-		c.tray.append(s)
 	check(not Crafting.can_craft(c, _recipe("torniquete")), "no hay tela suficiente")
-	c.add_item(_item("tela"), 1)
+	check(Crafting.blocker(c, _recipe("torniquete")).begins_with("Falta"), "y lo dice")
 	var recipe: RecipeDef = _recipe("venda_improvisada")
-	var before: int = c.count(&"tela")
-	# Gastar 2 de 3 tiras deja la casilla ocupada y no cabe otra venda (montones llenos).
-	check(not Crafting.can_craft(c, recipe), "no cabe el resultado")
-	check_eq(Crafting.craft(c, recipe), "", "no fabrica")
-	check_eq(c.count(&"tela"), before, "no gasta nada")
+	check(Crafting.can_craft(c, recipe), "con la custodia muy llena se puede fabricar igual")
+	check(Crafting.craft(c, recipe) != "", "fabrica")
+	check_eq(c.count(&"tela"), 0, "gasta las dos tiras")
+	check(c.has(&"venda_improvisada"), "y da la venda")
+
+
+func test_rasgar_lo_que_esta_en_un_atajo() -> void:
+	var c: Custody = Custody.new()
+	c.add_item(_item("bata_medico"))
+	var gown: ItemStack = c.find_first(&"bata_medico")
+	c.to_pocket(gown, 0)
+	check(Crafting.tear(c, gown) != "", "se rasga")
+	check(c.pockets[0] == null, "el atajo queda vacío")
+	check_eq(c.count(&"tela"), 3, "tres tiras")
 
 
 func test_descubrir_recetas() -> void:
@@ -129,9 +133,43 @@ func test_arma_en_la_mano_se_guarda() -> void:
 	check(ch.custody.contains(tube), "sigue en la custodia")
 	var loaded: CharacterState = CharacterState.from_dict(ch.to_dict())
 	check(loaded.wielded() != null and loaded.wielded().def.id == &"tubo_metal", "se carga con el arma en la mano")
-	check_eq(loaded.wielded().cell, tube.cell, "el mismo montón")
+	check_eq(loaded.custody.items.find(loaded.wielded()), ch.custody.items.find(tube), "el mismo montón")
 	ch.custody.remove(tube)
 	check(ch.wielded() == null, "si sale de la custodia, la mano queda vacía")
+
+
+func test_dos_manos() -> void:
+	var ch: CharacterState = CharacterState.new()
+	for id: String in ["bisturi", "tubo_metal", "palanca"]:
+		ch.custody.add_item(_item(id))
+	var scalpel: ItemStack = ch.custody.find_first(&"bisturi")
+	var tube: ItemStack = ch.custody.find_first(&"tubo_metal")
+	var lever: ItemStack = ch.custody.find_first(&"palanca")
+	check_eq(ch.wield(tube), "", "tubo en la derecha")
+	check_eq(ch.wield_offhand(scalpel), "", "bisturí en la izquierda")
+	check(ch.wielded() == tube and ch.offhand() == scalpel, "una en cada mano")
+	check(ch.wield_offhand(lever) != "", "la palanca es de dos manos: no va en la izquierda")
+	var loaded: CharacterState = CharacterState.from_dict(JSON.parse_string(JSON.stringify(ch.to_dict())))
+	check(loaded.offhand() != null and loaded.offhand().def.id == &"bisturi", "la mano izquierda se guarda")
+	check_eq(ch.wield(lever), "", "empuña la palanca")
+	check(ch.offhand() == null, "un arma de dos manos libera la izquierda")
+	check(ch.wield_offhand(scalpel) != "", "y no deja coger otra")
+	ch.wield(tube)
+	check_eq(ch.wield_offhand(tube), "", "pasar el arma de la derecha a la izquierda")
+	check(ch.wielded() == null and ch.offhand() == tube, "cambia de mano")
+	ch.discard(scalpel)
+	check(ch.offhand() == tube, "descartar otra cosa no la suelta")
+
+
+func test_defensa_de_la_ropa() -> void:
+	var ch: CharacterState = CharacterState.new()
+	check_eq(ch.defense(), 0, "la bata no protege")
+	ch.custody.add_item(_item("chaqueta_celador"))
+	ch.custody.add_item(_item("botas_goma"))
+	ch.equip(ch.custody.find_first(&"chaqueta_celador"))
+	ch.equip(ch.custody.find_first(&"botas_goma"))
+	check_eq(ch.defense(), _item("chaqueta_celador").defense + _item("botas_goma").defense, "suma la de lo puesto")
+	check(ch.defense() > 0, "la chaqueta y las botas protegen algo")
 
 
 func test_descartar_el_arma_vacia_la_mano() -> void:

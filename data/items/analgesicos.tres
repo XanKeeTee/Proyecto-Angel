@@ -17,6 +17,7 @@ id = &"analgesicos"
 display_name = "Analgésicos"
 description = "Comprimidos sueltos en un bote sin etiqueta. Alguien escribió a mano: «para el dolor de los vigilantes»."
 category = 2
+section = 4
 icon = ExtResource("1_d4u2k")
 inspect_sheet = ExtResource("2_ogum0")
 inspect_views = 8

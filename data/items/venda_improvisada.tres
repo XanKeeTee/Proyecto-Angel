@@ -21,6 +21,7 @@ id = &"venda_improvisada"
 display_name = "Venda improvisada"
 description = "Tiras de tela enrolladas. No están limpias: mejor pasarlas por desinfectante antes."
 category = 2
+section = 4
 icon = ExtResource("1_8wr4e")
 inspect_sheet = ExtResource("2_grl4e")
 inspect_views = 8

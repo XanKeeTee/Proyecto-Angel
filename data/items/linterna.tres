@@ -16,6 +16,7 @@ display_name = "Linterna"
 description = "Una linterna de bolsillo de metal, con la pintura desconchada. Alguien grabó un número en el mango: 09.
 Funciona con pilas."
 category = 0
+section = 3
 icon = ExtResource("1_d0xoe")
 inspect_sheet = ExtResource("2_opdrp")
 inspect_views = 8

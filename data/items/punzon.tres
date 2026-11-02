@@ -12,6 +12,7 @@ id = &"punzon"
 display_name = "Punzón"
 description = "Un punzón de zapatero con el mango de madera pulido por el uso."
 category = 8
+section = 1
 icon = ExtResource("1_qs16s")
 inspect_sheet = ExtResource("2_gmuyn")
 inspect_views = 8

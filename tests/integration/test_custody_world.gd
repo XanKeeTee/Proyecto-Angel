@@ -1,6 +1,6 @@
 extends TestCase
 ## Custodia y mundo: descartar deja el objeto en el suelo (y en el guardado), recogerlo lo devuelve
-## con su estado, arrastrar a SUELO descarta, la pestaña FABRICAR y la ranura de la mano.
+## con su estado, descartar desde la lista, la pestaña FABRICAR y las manos en EQUIPO.
 
 const SCENE: String = "res://scenes/world/hospital/hospital.tscn"
 
@@ -69,41 +69,29 @@ func test_descartar_deja_el_objeto_en_el_suelo_y_se_guarda() -> void:
 	await host.get_tree().process_frame
 
 
-func test_arrastrar_al_suelo_descarta() -> void:
+func test_descartar_desde_la_lista() -> void:
 	GameState.new_game()
 	var w: WorldController = await _spawn()
 	var c: Custody = GameState.character.custody
 	GameState.give_item(Registry.item(&"analgesicos"), 2)
 	GameState.give_item(Registry.item(&"fusible"))
 	w.custody_screen.open()
-	var tray: TrayView = w.custody_screen.find_children("*", "TrayView", true, false)[0]
-	var floor_point: Vector2 = tray._floor_rect().get_center()
-	tray.debug_drag(c.find_first(&"fusible"), floor_point)
-	check(tray.held != null and tray.drop_state() == "bad", "un objeto clave sobre el suelo se marca en rojo")
-	tray.drop()
-	check(c.has(&"fusible"), "el fusible no se descarta")
-	tray.debug_drag(c.find_first(&"analgesicos"), floor_point)
-	check(tray.drop_state() == "ok", "los analgésicos sí")
-	tray.drop()
-	check(not c.has(&"analgesicos"), "soltar en SUELO descarta")
+	var page: ItemsPage = w.custody_screen.items_page()
+	page.select_stack(c.find_first(&"fusible"))
+	_key(w.custody_screen, KEY_DELETE)
+	check(c.has(&"fusible"), "el fusible (objeto principal) no se descarta")
+	check(page.actions_for(c.find_first(&"fusible")).all(func(a: Dictionary) -> bool: return a["label"] != "Descartar"),
+		"ni se ofrece")
+	page.select_stack(c.find_first(&"analgesicos"))
+	_key(w.custody_screen, KEY_DELETE)
+	check(not c.has(&"analgesicos"), "Supr descarta los analgésicos")
 	check_eq(_dropped(w).size(), 1, "y aparecen en el mundo")
-	# Soltar fuera de la bandeja devuelve el objeto a su sitio.
-	var fuse: ItemStack = c.find_first(&"fusible")
-	var cell: Vector2i = fuse.cell
-	tray.debug_drag(fuse, Vector2(-80, -80))
-	tray.drop()
-	check_eq(fuse.cell, cell, "fuera de la bandeja: vuelve a su sitio")
-	# Girar mientras se arrastra.
-	tray.debug_drag(fuse, Vector2(30, 30))
-	tray.rotate_held()
-	check(tray.held_rotated != fuse.rotated, "se gira mientras se arrastra")
-	tray.cancel()
 	await w.custody_screen.close()
 	w.queue_free()
 	await host.get_tree().process_frame
 
 
-func test_pestanas_fabricar_y_mano() -> void:
+func test_pestanas_fabricar_y_equipo() -> void:
 	GameState.new_game()
 	var w: WorldController = await _spawn()
 	var c: Custody = GameState.character.custody
@@ -111,8 +99,11 @@ func test_pestanas_fabricar_y_mano() -> void:
 	GameState.give_item(Registry.item(&"bisturi"))
 	var screen: CustodyScreen = w.custody_screen
 	screen.open()
-	screen._tear(c.find_first(&"bata_medico"))
-	check_eq(c.count(&"tela"), 3, "rasgar desde la bandeja da tela")
+	var page: ItemsPage = screen.items_page()
+	check(page.select_stack(c.find_first(&"bata_medico")), "la bata está en Armaduras")
+	check_eq(page.section, ItemDef.Section.ARMOR, "cambia a su categoría")
+	_key(screen, KEY_T)
+	check_eq(c.count(&"tela"), 3, "rasgar desde la lista da tela")
 	screen._set_tab(CustodyScreen.Tab.CRAFT)
 	check(screen._selected_recipe != null, "hay una receta elegida")
 	screen._selected_recipe = null
@@ -123,11 +114,22 @@ func test_pestanas_fabricar_y_mano() -> void:
 	check(c.has(&"torniquete"), "fabricar desde la pestaña")
 	screen._set_craft_mode(CustodyScreen.CraftMode.COMBINE)
 	screen._set_tab(CustodyScreen.Tab.CHARACTER)
-	screen._select_slot(CustodyScreen.HAND_SLOT)
-	screen._wield_from_list(c.find_first(&"bisturi"))
-	check(GameState.character.wielded() != null and GameState.character.wielded().def.id == &"bisturi", "empuña desde PERSONAJE")
-	screen._take_off()
+	var equip: EquipmentPage = screen.equipment_page()
+	equip.select_slot(EquipmentPage.HAND_R)
+	equip.equip_in_slot(c.find_first(&"bisturi"))
+	check(GameState.character.wielded() != null and GameState.character.wielded().def.id == &"bisturi", "empuña desde EQUIPO")
+	equip.select_slot(EquipmentPage.HAND_L)
+	check(equip.candidates().has(c.find_first(&"bisturi")), "las armas aparecen también para la izquierda")
+	equip.select_slot(EquipmentPage.HAND_R)
+	equip.clear_selected()
 	check(GameState.character.wielded() == null, "guardar el arma")
 	await screen.close()
 	w.queue_free()
 	await host.get_tree().process_frame
+
+
+func _key(screen: CustodyScreen, code: Key) -> void:
+	var ev: InputEventKey = InputEventKey.new()
+	ev.keycode = code
+	ev.pressed = true
+	screen._unhandled_input(ev)

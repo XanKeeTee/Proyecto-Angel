@@ -11,6 +11,7 @@ id = &"fusible"
 display_name = "Fusible de alta tensión"
 description = "Cartucho cerámico con contactos de latón. Lleva escrito: «CUADRO GENERAL — SÓTANO»."
 category = 5
+section = 5
 icon = ExtResource("1_5ukti")
 inspect_sheet = ExtResource("2_uvv46")
 inspect_views = 8

@@ -91,8 +91,6 @@ static func blocker(custody: Custody, recipe: RecipeDef) -> String:
 			var def: ItemDef = entry["def"]
 			names.append(def.display_name.to_lower() + ("" if entry["tool"] else " ×%d" % (int(entry["need"]) - int(entry["have"]))))
 		return "Falta: " + ", ".join(names) + "."
-	if not _fits_after(custody, recipe):
-		return "No hay sitio en la bandeja para el resultado."
 	return ""
 
 
@@ -110,13 +108,6 @@ static func tear(custody: Custody, stack: ItemStack) -> String:
 		return ""
 	var strip: ItemDef = Registry.item(stack.def.tear_result_id())
 	var amount: int = stack.def.tear_yield()
-	# Probar antes en una copia: si las tiras no caben, no se rasga nada.
-	var probe: Custody = Custody.from_dict(custody.to_dict())
-	var probe_stack: ItemStack = probe.tray[custody.tray.find(stack)] if custody.tray.has(stack) \
-		else probe.pockets[custody.pockets.find(stack)]
-	probe.consume(probe_stack)
-	if probe.add_item(strip, amount) > 0:
-		return "No tendrías dónde guardar las tiras. Haz sitio primero."
 	custody.consume(stack)
 	custody.add_item(strip, amount)
 	return "Rasgas %s en %d %s." % [stack.def.display_name.to_lower(), amount,
@@ -136,9 +127,6 @@ static func _spend(custody: Custody, recipe: RecipeDef) -> void:
 		custody.take(ing.item.id, ing.amount)
 
 
-static func _fits_after(custody: Custody, recipe: RecipeDef) -> bool:
-	if recipe.result == null:
-		return false
-	var probe: Custody = Custody.from_dict(custody.to_dict())
-	_spend(probe, recipe)
-	return probe.add_item(recipe.result, recipe.result_quantity) == 0
+## Ya no hay límite de espacio: el resultado siempre cabe si la receta tiene resultado.
+static func _fits_after(_custody: Custody, recipe: RecipeDef) -> bool:
+	return recipe.result != null

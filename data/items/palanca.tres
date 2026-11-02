@@ -12,6 +12,7 @@ id = &"palanca"
 display_name = "Palanca"
 description = "Una palanca de hierro, pesada. Tiene pelo pegado en un extremo."
 category = 0
+section = 5
 icon = ExtResource("1_16wi1")
 inspect_sheet = ExtResource("2_e2bs4")
 inspect_views = 8

@@ -1,7 +1,7 @@
 class_name Hud
 extends CanvasLayer
-## HUD de exploración, discreto: indicador de interacción, bolsillos, batería y avisos.
-## Los bolsillos y la batería se ocultan solos cuando no cambian. El aliento (correr) es una
+## HUD de exploración, discreto: indicador de interacción, atajos 1-5 (Custody.pockets), batería y avisos.
+## Los atajos y la batería se ocultan solos cuando no cambian. El aliento (correr) es una
 ## raya fina abajo en el centro que solo se ve mientras no está lleno.
 
 const SHOW_TIME: float = 3.5

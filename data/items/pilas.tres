@@ -17,6 +17,7 @@ id = &"pilas"
 display_name = "Pilas"
 description = "Pilas alcalinas. Una de ellas tiene la fecha de caducidad rascada."
 category = 4
+section = 3
 icon = ExtResource("1_ll1iv")
 inspect_sheet = ExtResource("2_t8giq")
 inspect_views = 8

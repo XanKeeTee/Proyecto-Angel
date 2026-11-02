@@ -11,6 +11,7 @@ id = &"valvula_averiada"
 display_name = "Válvula averiada"
 description = "La válvula de presión del generador. El cuerpo está bien, pero el asiento se ha soltado: le faltan los tornillos apretados."
 category = 5
+section = 5
 icon = ExtResource("1_yx0ni")
 inspect_sheet = ExtResource("2_8bmdb")
 inspect_views = 8

@@ -12,6 +12,7 @@ id = &"bisturi"
 display_name = "Bisturí"
 description = "Bisturí de acero con una hoja curva del número 22. Todavía tiene sangre seca en el filo."
 category = 8
+section = 1
 icon = ExtResource("1_8w1mu")
 inspect_sheet = ExtResource("2_lyj66")
 inspect_views = 8

@@ -11,6 +11,7 @@ id = &"destornillador"
 display_name = "Destornillador"
 description = "Destornillador de electricista con el mango agrietado. Aguantará unos pocos usos."
 category = 0
+section = 3
 icon = ExtResource("1_37d68")
 inspect_sheet = ExtResource("2_ff4d7")
 inspect_views = 8

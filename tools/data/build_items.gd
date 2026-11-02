@@ -11,6 +11,26 @@ const RECIPES: String = "res://data/recipes/"
 const WEAPONS: String = "res://data/weapons/"
 const ICONS: String = "res://assets/sprites/items/"
 
+## Categoría del inventario de cada objeto (ItemDef.Section). La ropa la pone build_wear.gd (o se
+## deduce: Armaduras). Objetos principales = piezas del camino principal: no se descartan.
+const SECTIONS: Dictionary = {
+	"linterna": ItemDef.Section.UTILITY, "pilas": ItemDef.Section.UTILITY,
+	"destornillador": ItemDef.Section.UTILITY,
+	"venda": ItemDef.Section.MEDICINE, "venda_sucia": ItemDef.Section.MEDICINE,
+	"desinfectante": ItemDef.Section.MEDICINE, "venda_esterilizada": ItemDef.Section.MEDICINE,
+	"analgesicos": ItemDef.Section.MEDICINE, "jeringa": ItemDef.Section.MEDICINE,
+	"ampolla": ItemDef.Section.MEDICINE, "sedante": ItemDef.Section.MEDICINE,
+	"venda_improvisada": ItemDef.Section.MEDICINE, "torniquete": ItemDef.Section.MEDICINE,
+	"palanca": ItemDef.Section.MAIN, "fusible": ItemDef.Section.MAIN,
+	"valvula_averiada": ItemDef.Section.MAIN, "valvula_reparada": ItemDef.Section.MAIN,
+	"llave_botiquin": ItemDef.Section.MAIN, "llave_habitacion_10": ItemDef.Section.MAIN,
+	"llave_archivo": ItemDef.Section.MAIN, "llave_sotano": ItemDef.Section.MAIN,
+	"tela": ItemDef.Section.OTHER,
+	"cuchilla": ItemDef.Section.WEAPONS, "barra_hierro": ItemDef.Section.WEAPONS,
+	"punzon": ItemDef.Section.WEAPONS, "bisturi": ItemDef.Section.WEAPONS,
+	"tubo_metal": ItemDef.Section.WEAPONS, "tubo_envuelto": ItemDef.Section.WEAPONS,
+}
+
 var items: Dictionary = {}
 var weapons: Dictionary = {}
 
@@ -198,6 +218,7 @@ func _item(id: String, name: String, category: ItemDef.Category, size: Vector2i,
 	item.id = StringName(id)
 	item.display_name = name
 	item.category = category
+	item.section = SECTIONS.get(id, ItemDef.Section.AUTO)
 	item.size = size
 	item.max_stack = stack
 	item.description = description

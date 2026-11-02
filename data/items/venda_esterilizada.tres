@@ -18,6 +18,7 @@ id = &"venda_esterilizada"
 display_name = "Venda esterilizada"
 description = "Venda empapada en desinfectante. Escuece solo de mirarla."
 category = 2
+section = 4
 icon = ExtResource("1_67m3h")
 inspect_sheet = ExtResource("2_1odk1")
 inspect_views = 8

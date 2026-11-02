@@ -5,23 +5,29 @@ extends RefCounted
 
 ## Ha cambiado la ropa puesta.
 signal outfit_changed
-## Ha cambiado el arma empuñada (null = manos vacías).
+## Ha cambiado el arma de la mano derecha (null = mano vacía).
 signal weapon_changed(stack: ItemStack)
+## Ha cambiado lo que lleva en la mano izquierda (null = mano vacía).
+signal offhand_changed(stack: ItemStack)
 
 ## Ropa con la que empieza (ranura -> id de objeto).
 const START_OUTFIT: Dictionary[int, StringName] = {ItemDef.EquipSlot.BODY: &"bata_paciente"}
+## Ficha de combate del protagonista (atributos para la pantalla de equipo). Si no existe, no se muestran.
+const COMBAT_SHEET: String = "res://data/party/protagonist.tres"
 
 var id: StringName = &"paciente_09"
 var display_name: String = "Paciente 09"
 var custody: Custody = Custody.new()
 var vitals: Vitals = Vitals.new()
 var flashlight_on: bool = false
-## Ropa puesta: ranura (ItemDef.EquipSlot) -> ItemStack. No ocupa sitio en la bandeja.
+## Ropa puesta: ranura (ItemDef.EquipSlot) -> ItemStack. La ropa puesta sale de la lista de la custodia.
 var equipment: Dictionary[int, ItemStack] = {}
-## Arma empuñada. A diferencia de la ropa, **sigue en la custodia** (bandeja o bolsillo) y ocupa
-## su sitio: así una palanca empuñada se puede seguir usando en una puerta. Si sale de la
-## custodia (se descarta, se gasta, se queda encajada), la mano queda vacía sola.
+## Arma de la mano derecha. A diferencia de la ropa, **sigue en la custodia** (en Armas, o en
+## Objetos principales si es la palanca): así una palanca empuñada se puede seguir usando en una
+## puerta. Si sale de la custodia (se descarta, se gasta, se queda encajada), la mano queda vacía sola.
 var _weapon: ItemStack
+## Mano izquierda [PROPUESTA]: un arma de una mano, si la derecha no lleva una de dos manos.
+var _offhand: ItemStack
 
 
 func _init() -> void:
@@ -36,36 +42,53 @@ func worn(slot: ItemDef.EquipSlot) -> ItemStack:
 	return equipment.get(slot)
 
 
-## Se pone una prenda de la custodia. Lo que llevaba en esa ranura vuelve a la bandeja.
+## Se pone una prenda de la custodia. Lo que llevaba en esa ranura vuelve a la custodia.
 ## Devuelve el texto para el jugador; "" si se ha puesto.
 func equip(stack: ItemStack) -> String:
 	if stack == null or not stack.def.is_wearable():
 		return "Eso no se puede poner."
+	if not custody.contains(stack):
+		return "Tiene que estar en la custodia."
 	var slot: int = stack.def.equip_slot
 	var old: ItemStack = equipment.get(slot)
 	custody.remove(stack)
-	if old != null and custody.add_item(old.def, 1, old) > 0:
-		# No cabe lo que se quita: se deshace el cambio.
-		custody.add_item(stack.def, 1, stack)
-		return "No hay sitio en la bandeja para guardar " + old.def.display_name.to_lower() + "."
-	equipment[slot] = ItemStack.create(stack.def, 1)
+	if old != null:
+		custody.add_item(old.def, 1, old)
+	var worn_stack: ItemStack = ItemStack.create(stack.def, 1)
+	worn_stack.durability = stack.durability
+	worn_stack.contaminated = stack.contaminated
+	equipment[slot] = worn_stack
 	outfit_changed.emit()
 	return ""
 
 
-## Se quita lo que lleva en una ranura y lo guarda en la bandeja. "" si se ha podido.
+## Se quita lo que lleva en una ranura y lo guarda en la custodia. "" si se ha podido.
 func unequip(slot: ItemDef.EquipSlot) -> String:
 	var old: ItemStack = equipment.get(slot)
 	if old == null:
 		return "No llevas nada ahí."
-	if custody.add_item(old.def, 1, old) > 0:
-		return "No hay sitio en la bandeja."
+	custody.add_item(old.def, 1, old)
 	equipment.erase(slot)
 	outfit_changed.emit()
 	return ""
 
 
-## Arma empuñada, o null.
+## Defensa total de la ropa puesta [PROPUESTA].
+func defense() -> int:
+	var total: int = 0
+	for slot: int in equipment:
+		total += equipment[slot].def.defense
+	return total
+
+
+## Ficha de combate del protagonista (atributos), o null.
+func combat_sheet() -> CombatantDef:
+	if not ResourceLoader.exists(COMBAT_SHEET):
+		return null
+	return load(COMBAT_SHEET) as CombatantDef
+
+
+## Arma de la mano derecha, o null.
 func wielded() -> ItemStack:
 	if _weapon != null and not custody.contains(_weapon):
 		_weapon = null
@@ -73,23 +96,70 @@ func wielded() -> ItemStack:
 	return _weapon
 
 
-## Empuña un arma de la custodia. Devuelve el texto para el jugador; "" si se ha empuñado.
+## Lo que lleva en la mano izquierda, o null.
+func offhand() -> ItemStack:
+	if _offhand != null and not custody.contains(_offhand):
+		_offhand = null
+		offhand_changed.emit(null)
+	return _offhand
+
+
+## Empuña un arma de la custodia con la mano derecha. Un arma de dos manos deja libre la
+## izquierda. Devuelve el texto para el jugador; "" si se ha empuñado.
 func wield(stack: ItemStack) -> String:
 	if stack == null or not stack.def.is_weapon():
 		return "Eso no sirve como arma."
 	if not custody.contains(stack):
 		return "Tiene que estar en la custodia."
+	if stack == offhand():
+		_offhand = null
+		offhand_changed.emit(null)
+	if stack.def.weapon.two_handed and offhand() != null:
+		_offhand = null
+		offhand_changed.emit(null)
 	_weapon = stack
 	weapon_changed.emit(stack)
 	return ""
 
 
-## Deja de empuñar el arma (sigue en la custodia).
+## Lleva un arma de una mano en la izquierda. "" si se ha podido.
+func wield_offhand(stack: ItemStack) -> String:
+	if stack == null or not stack.def.is_weapon():
+		return "Eso no sirve como arma."
+	if not custody.contains(stack):
+		return "Tiene que estar en la custodia."
+	if stack.def.weapon.two_handed:
+		return "Para eso necesitas las dos manos."
+	var right: ItemStack = wielded()
+	if right != null and right != stack and right.def.weapon.two_handed:
+		return "Tienes las dos manos ocupadas con " + right.def.display_name.to_lower() + "."
+	if right == stack:
+		_weapon = null
+		weapon_changed.emit(null)
+	_offhand = stack
+	offhand_changed.emit(stack)
+	return ""
+
+
+## Deja de empuñar el arma de la mano derecha (sigue en la custodia).
 func unwield() -> void:
 	if _weapon == null:
 		return
 	_weapon = null
 	weapon_changed.emit(null)
+
+
+## Suelta lo que lleva en la mano izquierda (sigue en la custodia).
+func unwield_offhand() -> void:
+	if _offhand == null:
+		return
+	_offhand = null
+	offhand_changed.emit(null)
+
+
+## ¿Lleva este montón en alguna mano?
+func is_held(stack: ItemStack) -> bool:
+	return stack != null and (stack == wielded() or stack == offhand())
 
 
 ## Deja un montón en el suelo. Devuelve el texto para el jugador. Si se ha podido, avisa con
@@ -101,13 +171,15 @@ func discard(stack: ItemStack) -> String:
 		return "No. Podrías necesitarlo."
 	if stack == _weapon:
 		unwield()
+	if stack == _offhand:
+		unwield_offhand()
 	if not custody.discard(stack):
 		return ""
 	_emit(&"item_discarded", stack)
 	return "Dejas %s en el suelo." % _stack_label(stack)
 
 
-## Linterna que lleva (en bandeja o bolsillo), o null.
+## Linterna que lleva, o null.
 func flashlight() -> ItemStack:
 	return custody.find_first(&"linterna")
 
@@ -136,7 +208,7 @@ func to_dict() -> Dictionary:
 	return {
 		"id": String(id), "name": display_name, "custody": custody.to_dict(),
 		"vitals": vitals.to_dict(), "flashlight_on": flashlight_on, "equipment": _equipment_to_dict(),
-		"weapon": _weapon_to_dict(),
+		"weapon": _hand_to_dict(wielded()), "offhand": _hand_to_dict(offhand()),
 	}
 
 
@@ -155,6 +227,9 @@ static func from_dict(data: Dictionary) -> CharacterState:
 			if def != null:
 				c.equipment[key.to_int()] = ItemStack.create(def, 1)
 	c._weapon = c._find_weapon(data.get("weapon", {}))
+	c._offhand = c._find_weapon(data.get("offhand", {}))
+	if c._offhand == c._weapon:
+		c._offhand = null
 	return c
 
 
@@ -165,29 +240,30 @@ func _equipment_to_dict() -> Dictionary:
 	return result
 
 
-## Dónde está el arma empuñada: id del objeto y bolsillo o casilla.
-func _weapon_to_dict() -> Dictionary:
-	var stack: ItemStack = wielded()
+## Qué lleva en una mano: id del objeto y su posición en la lista de la custodia.
+func _hand_to_dict(stack: ItemStack) -> Dictionary:
 	if stack == null:
 		return {}
-	return {"id": String(stack.def.id), "pocket": custody.pockets.find(stack), "cell": [stack.cell.x, stack.cell.y]}
+	return {"id": String(stack.def.id), "index": custody.items.find(stack)}
 
 
+## Busca el arma guardada: por su posición en la lista; en partidas antiguas, por su bolsillo
+## (ahora atajo); si no, el primer objeto con ese id.
 func _find_weapon(data: Variant) -> ItemStack:
 	if typeof(data) != TYPE_DICTIONARY or (data as Dictionary).is_empty():
 		return null
 	var d: Dictionary = data
 	var item_id: StringName = StringName(d.get("id", ""))
+	var index: int = int(d.get("index", -1))
+	if index >= 0 and index < custody.items.size() and custody.items[index].def.id == item_id:
+		return custody.items[index]
 	var pocket: int = int(d.get("pocket", -1))
 	if pocket >= 0 and pocket < Custody.POCKETS:
 		var p: ItemStack = custody.pockets[pocket]
 		if p != null and p.def.id == item_id:
 			return p
-	var c: Array = d.get("cell", [-1, -1])
-	var at: ItemStack = custody.stack_at(Vector2i(int(c[0]), int(c[1])))
-	if at != null and at.def.id == item_id:
-		return at
-	return custody.find_first(item_id)
+	var found: ItemStack = custody.find_first(item_id)
+	return found if found != null and found.def.is_weapon() else null
 
 
 ## Nombre en minúsculas, con la cantidad si hay varias (para los textos).

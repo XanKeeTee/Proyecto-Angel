@@ -11,6 +11,7 @@ id = &"llave_habitacion_10"
 display_name = "Llave de la habitación 10"
 description = "Llave con una chapa de plástico: «10». La chapa está mordida."
 category = 1
+section = 5
 icon = ExtResource("1_7nuys")
 inspect_sheet = ExtResource("2_khjrc")
 inspect_views = 8

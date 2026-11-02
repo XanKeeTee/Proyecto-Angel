@@ -12,6 +12,7 @@ id = &"cuchilla"
 display_name = "Cuchilla"
 description = "Una cuchilla de cocina con el mango de madera hinchado por la humedad."
 category = 8
+section = 1
 icon = ExtResource("1_iu0fe")
 inspect_sheet = ExtResource("2_ucmcp")
 inspect_views = 8

@@ -11,6 +11,7 @@ id = &"llave_sotano"
 display_name = "Llave del sótano"
 description = "Llave de hierro con un cordel. Huele a gasóleo."
 category = 1
+section = 5
 icon = ExtResource("1_n5qmp")
 inspect_sheet = ExtResource("2_6mwwn")
 inspect_views = 8

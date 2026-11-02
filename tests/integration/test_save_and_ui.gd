@@ -51,24 +51,32 @@ func test_interfaz_custodia() -> void:
 	GameState.give_document(Registry.document(&"expediente_09"))
 	w.custody_screen.open()
 	check(w.custody_screen.is_open() and host.get_tree().paused, "abre y pausa")
-	var tray: TrayView = w.custody_screen.find_children("*", "TrayView", true, false)[0]
-	var lever: ItemStack = c.find_first(&"palanca")
-	tray.set_cursor(lever.cell)
-	tray.pick_or_drop()
-	tray.set_cursor(Vector2i(4, 1))
-	tray.pick_or_drop()
-	check_eq(lever.cell, Vector2i(4, 1), "arrastrar y soltar mueve la palanca")
-	tray.set_cursor(c.find_first(&"venda").cell)
-	tray.pick_or_drop()
-	tray.set_cursor(c.find_first(&"desinfectante").cell)
-	tray.pick_or_drop()
-	check(c.has(&"venda_esterilizada"), "soltar venda sobre desinfectante combina")
-	tray.set_cursor(c.find_first(&"linterna").cell)
-	tray.pick_or_drop()
-	tray.set_cursor(Vector2i(0, TrayView.POCKET_ROW))
-	tray.pick_or_drop()
-	check(c.pockets[0] != null and c.pockets[0].def.id == &"linterna", "arrastrar al bolsillo 1")
-	w.custody_screen._set_tab(CustodyScreen.Tab.DOSSIER)
+	var screen: CustodyScreen = w.custody_screen
+	var page: ItemsPage = screen.items_page()
+	check(page.visible, "abre en OBJETOS")
+	# Combinar con el teclado: venda (C) + desinfectante (↓, Intro).
+	page.show_section(ItemDef.Section.MEDICINE, false)
+	check(page.select_stack(c.find_first(&"venda")), "la venda está en Medicina")
+	_key(screen, KEY_C)
+	_action(screen, &"ui_down")
+	check(page.selected() != null and page.selected().def.id == &"desinfectante", "↓ elige el desinfectante")
+	_action(screen, &"ui_accept")
+	check(c.has(&"venda_esterilizada"), "C y luego Intro combinan")
+	# ← cambia de categoría: de Medicina a Útiles.
+	_action(screen, &"ui_left")
+	check_eq(page.section, ItemDef.Section.UTILITY, "← va a la categoría anterior")
+	check(page.select_stack(c.find_first(&"linterna")), "la linterna está en Útiles")
+	_key(screen, KEY_1)
+	check(c.pockets[0] != null and c.pockets[0].def.id == &"linterna", "1 la pone en el atajo 1")
+	_action(screen, &"ui_accept")
+	check(page.is_menu_open(), "Intro abre el menú de acciones")
+	_action(screen, &"ui_cancel")
+	check(not page.is_menu_open() and screen.is_open(), "Esc cierra el menú, no la custodia")
+	page.show_section(ItemDef.Section.MAIN, false)
+	check(page.select_stack(c.find_first(&"palanca")), "la palanca está en Objetos principales")
+	_key(screen, KEY_DELETE)
+	check(c.has(&"palanca"), "no se descarta")
+	screen._set_tab(CustodyScreen.Tab.DOSSIER)
 	w.custody_screen._show_document(&"expediente_09")
 	check(not c.is_unread(&"expediente_09"), "leer marca el documento")
 	await w.custody_screen.close()
@@ -89,3 +97,17 @@ func test_interfaz_custodia() -> void:
 	check(title.get_child_count() > 0, "el título se construye")
 	title.queue_free()
 	await host.get_tree().process_frame
+
+
+func _key(screen: CustodyScreen, code: Key) -> void:
+	var ev: InputEventKey = InputEventKey.new()
+	ev.keycode = code
+	ev.pressed = true
+	screen._unhandled_input(ev)
+
+
+func _action(screen: CustodyScreen, action: StringName) -> void:
+	var ev: InputEventAction = InputEventAction.new()
+	ev.action = action
+	ev.pressed = true
+	screen._unhandled_input(ev)

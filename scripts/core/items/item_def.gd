@@ -3,7 +3,10 @@ extends Resource
 ## Definición de un objeto que puede ir en el Sistema de Custodia.
 ## Se crea un `.tres` por objeto en `data/items/`; el código no necesita cambios.
 
+## Tipo de objeto (lo usan los sonidos y algunas reglas). Para la interfaz cuenta `section`.
 enum Category { TOOL, KEY, MEDICAL, CONSUMABLE, POWER, PART, MISC, CLOTHING, WEAPON }
+## Categoría del inventario en la que se lista (pestañas de la custodia). AUTO = según `category`.
+enum Section { AUTO, WEAPONS, ARMOR, UTILITY, MEDICINE, MAIN, OTHER }
 ## Dónde se lleva puesta una prenda (NONE = no es ropa).
 enum EquipSlot { NONE, HEAD, BODY, LEGS, FEET }
 ## De qué está hecho (para los sonidos al cogerlo, soltarlo, girarlo…). AUTO = según la categoría.
@@ -11,8 +14,15 @@ enum SoundMaterial {
 	AUTO, METAL_HEAVY, METAL_SMALL, KEYS, CLOTH, PAPER, PLASTIC, GLASS, PILLS, BATTERY, TOOL, RUBBER, CERAMIC,
 }
 
-## Casilla de la bandeja en píxeles. Los iconos miden `size * ICON_CELL - 4`.
+## Medida de referencia de los iconos: miden `size * ICON_CELL - 4` píxeles. (Ya no hay casillas:
+## el inventario es una lista; `size` solo da la forma del icono.)
 const ICON_CELL: int = 36
+## Orden de las categorías en la custodia (sin AUTO).
+const SECTIONS: Array[Section] = [
+	Section.WEAPONS, Section.ARMOR, Section.UTILITY, Section.MEDICINE, Section.MAIN, Section.OTHER,
+]
+## Nombre de cada categoría para la interfaz (por índice de Section).
+const SECTION_NAMES: Array[String] = ["—", "Armas", "Armaduras", "Útiles", "Medicina", "Objetos principales", "Otros"]
 ## Nombre de cada material en los nombres de los sonidos (`inv_<material>_<acción>`).
 const SOUND_MATERIAL_NAMES: Array[String] = [
 	"", "metal_heavy", "metal_small", "keys", "cloth", "paper", "plastic", "glass", "pills", "battery", "tool",
@@ -25,14 +35,18 @@ const TEAR_BY_SLOT: Array[int] = [0, 1, 3, 2, 0]
 @export var display_name: String = ""
 @export_multiline var description: String = ""
 @export var category: Category = Category.MISC
-## Icono para la bandeja; mide `size * ICON_CELL - 4` píxeles (la casilla menos el margen).
+## Categoría del inventario: Armas, Armaduras, Útiles, Medicina, Objetos principales (los del camino
+## principal: no se descartan) u Otros. AUTO la deduce de `category` (ver resolved_section).
+@export var section: Section = Section.AUTO
+## Icono del objeto; mide `size * ICON_CELL - 4` píxeles.
 @export var icon: Texture2D
 ## Hoja con vistas giradas para el inspector (una fila de `inspect_views` imágenes).
 @export var inspect_sheet: Texture2D
 @export var inspect_views: int = 1
-## Casillas que ocupa en la bandeja (ancho x alto, sin girar).
+## Forma del icono (ancho x alto en unidades de ICON_CELL). No ocupa sitio: no hay casillas.
 @export var size: Vector2i = Vector2i.ONE
-## Cantidad máxima por montón (1 = no se apila).
+## Se apila si es mayor que 1: todas las unidades iguales van en un mismo montón, sin límite (el
+## valor solo indica cuántas se dan de golpe con --give).
 @export var max_stack: int = 1
 ## Usos antes de romperse (0 = no se gasta).
 @export var max_durability: int = 0
@@ -48,7 +62,7 @@ const TEAR_BY_SLOT: Array[int] = [0, 1, 3, 2, 0]
 @export var use_effects: Array[ItemEffect] = []
 ## Texto del botón de uso ("Aplicar", "Tomar", "Encender"…).
 @export var use_verb: String = "Usar"
-## Los objetos clave no se pueden descartar.
+## Los objetos clave no se pueden descartar (tampoco los de la categoría Objetos principales).
 @export var key_item: bool = false
 
 @export_group("Ropa")
@@ -68,9 +82,11 @@ const TEAR_BY_SLOT: Array[int] = [0, 1, 3, 2, 0]
 ## Calzado: sonido de pisada (prefijo de los sonidos _1 a _4) y su volumen. Vacío = descalzo.
 @export var step_sound: String = ""
 @export var step_volume_db: float = -10.0
+## Defensa que da puesta [PROPUESTA]. Se suma en la pantalla de equipo (CharacterState.defense).
+@export_range(0, 20) var defense: int = 0
 
 @export_group("Arma")
-## Si no es null, se puede empuñar (ranura MANO de la pestaña PERSONAJE).
+## Si no es null, se puede empuñar (manos derecha e izquierda de la pestaña EQUIPO).
 @export var weapon: WeaponDef
 
 @export_group("Rasgar")
@@ -93,10 +109,6 @@ var wear_sheet: Texture2D:
 		return load(wear_path)
 
 
-func footprint(rotated: bool) -> Vector2i:
-	return Vector2i(size.y, size.x) if rotated else size
-
-
 func is_stackable() -> bool:
 	return max_stack > 1
 
@@ -109,9 +121,31 @@ func is_weapon() -> bool:
 	return weapon != null
 
 
-## Se puede descartar (dejar en el suelo). Los objetos clave, nunca.
+## Se puede descartar (dejar en el suelo). Los objetos clave y los principales, nunca.
 func can_discard() -> bool:
-	return not key_item
+	return not key_item and resolved_section() != Section.MAIN
+
+
+## Categoría del inventario (resuelve AUTO): armas, ropa, útiles, medicina, principales u otros.
+func resolved_section() -> Section:
+	if section != Section.AUTO:
+		return section
+	if is_wearable():
+		return Section.ARMOR
+	match category:
+		Category.WEAPON:
+			return Section.WEAPONS
+		Category.CLOTHING:
+			return Section.ARMOR
+		Category.TOOL, Category.POWER:
+			return Section.UTILITY
+		Category.MEDICAL, Category.CONSUMABLE:
+			return Section.MEDICINE
+		Category.KEY, Category.PART:
+			return Section.MAIN
+	if is_weapon():
+		return Section.WEAPONS
+	return Section.OTHER
 
 
 ## Tiras de tela que da al rasgarlo (0 = no se puede).
@@ -145,6 +179,11 @@ func resolved_sound_material() -> SoundMaterial:
 		Category.PART, Category.WEAPON:
 			return SoundMaterial.METAL_HEAVY
 	return SoundMaterial.PLASTIC
+
+
+## Nombre de una categoría del inventario.
+static func section_name(value: Section) -> String:
+	return SECTION_NAMES[value]
 
 
 ## Nombre de la ranura para la interfaz.

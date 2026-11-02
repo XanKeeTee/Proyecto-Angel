@@ -11,6 +11,7 @@ id = &"pantalon_pijama"
 display_name = "Pantalón de pijama"
 description = "Pantalón de pijama del hospital, a rayas. Lleva cosida una etiqueta: «CAMA 12»."
 category = 7
+section = 2
 icon = ExtResource("1_3ut6f")
 inspect_sheet = ExtResource("2_chgjw")
 inspect_views = 8

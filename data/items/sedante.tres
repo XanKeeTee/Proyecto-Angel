@@ -17,6 +17,7 @@ id = &"sedante"
 display_name = "Sedante preparado"
 description = "Una dosis lista para inyectar. Calma la mente; no hace que duermas."
 category = 2
+section = 4
 icon = ExtResource("1_lf5ej")
 inspect_sheet = ExtResource("2_mmlgu")
 inspect_views = 8

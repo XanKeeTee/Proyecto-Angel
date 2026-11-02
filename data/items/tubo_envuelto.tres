@@ -12,6 +12,7 @@ id = &"tubo_envuelto"
 display_name = "Tubo con mango envuelto"
 description = "El tubo de hierro con tiras de tela apretadas en un extremo. Ya no resbala."
 category = 8
+section = 1
 icon = ExtResource("1_66sy6")
 inspect_sheet = ExtResource("2_tcmcs")
 inspect_views = 8

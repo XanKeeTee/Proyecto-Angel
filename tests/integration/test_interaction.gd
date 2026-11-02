@@ -77,24 +77,18 @@ func test_cerrado_con_llave() -> void:
 	box.queue_free()
 
 
-func test_bandeja_llena_deja_el_resto() -> void:
+func test_con_mucho_encima_se_coge_igual() -> void:
+	# Sin límite de espacio (lista al estilo de Fear & Hunger): registrar siempre lo coge todo.
 	var ch: CharacterState = _fresh()
-	for i: int in 4:
+	for i: int in 10:
 		ch.custody.add_item(_item("valvula_averiada"))
-	for i: int in 4:
-		ch.custody.add_item(_item("desinfectante"))
-	check_eq(ch.custody.occupied_cells(), 20, "bandeja llena")
 	var bin: Interactable = Interactable.new()
 	bin.object_id = &"t_papelera"
 	bin.kind = Interactable.Kind.CONTAINER
 	bin.contents = [_loot("venda_sucia")]
 	_spawn(bin)
 	bin.perform(Interactable.ACT_SEARCH, ch)
-	check(not bin.is_empty(), "lo que no cabe se queda dentro")
-	check_eq(bin.primary_action(ch)["id"], Interactable.ACT_SEARCH, "se puede volver a coger")
-	ch.custody.remove(ch.custody.tray[0])
-	bin.perform(Interactable.ACT_SEARCH, ch)
-	check(bin.is_empty() and ch.custody.has(&"venda_sucia"), "tras hacer sitio, se coge")
+	check(bin.is_empty() and ch.custody.has(&"venda_sucia"), "se coge")
 	bin.queue_free()
 
 
@@ -125,7 +119,7 @@ func test_leer_documento() -> void:
 	var r: InteractionResult = note.perform(Interactable.ACT_READ, ch)
 	check(r.read_document == doc, "abre el lector")
 	check(ch.custody.documents.has(&"t_doc"), "pasa al expediente")
-	check_eq(ch.custody.occupied_cells(), 0, "no ocupa la bandeja")
+	check(ch.custody.items.is_empty(), "no es un objeto de la lista")
 	note.queue_free()
 
 

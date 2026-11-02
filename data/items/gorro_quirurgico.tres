@@ -11,6 +11,7 @@ id = &"gorro_quirurgico"
 display_name = "Gorro quirúrgico"
 description = "Gorro de tela de quirófano. Tapa la cicatriz de la cabeza."
 category = 7
+section = 2
 icon = ExtResource("1_hmm7f")
 inspect_sheet = ExtResource("2_ypxg0")
 inspect_views = 8

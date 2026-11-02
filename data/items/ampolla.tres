@@ -11,6 +11,7 @@ id = &"ampolla"
 display_name = "Ampolla"
 description = "Ampolla de cristal. La etiqueta dice «Sedante — uso restringido. No administrar en planta 3»."
 category = 2
+section = 4
 icon = ExtResource("1_rs3v0")
 inspect_sheet = ExtResource("2_uiro0")
 inspect_views = 8
