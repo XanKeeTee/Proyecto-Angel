@@ -61,7 +61,8 @@
    "stereo": true,
    "af": "highpass=f=70,lowpass=f=7000",
    "ideal": 90,
-   "note": "Tono de sala limpio y MUY bajo, sin sucesos ni zumbido: el aire de un edificio vacío."
+   "note": "Tono de sala limpio y MUY bajo, sin sucesos ni zumbido: el aire de un edificio vacío.",
+   "pick": 635727
   },
   {
    "name": "hum_loop",
@@ -108,7 +109,8 @@
    "crossfade": 1.5,
    "af": "highpass=f=80",
    "ideal": 30,
-   "note": "Zumbido continuo de un fluorescente (50/60 Hz con algo de agudo). Sin parpadeos ni clics."
+   "note": "Zumbido continuo de un fluorescente (50/60 Hz con algo de agudo). Sin parpadeos ni clics.",
+   "pick": 553075
   },
   {
    "name": "generator_loop",
@@ -157,7 +159,8 @@
    "max_len": 16,
    "crossfade": 1.5,
    "ideal": 40,
-   "note": "Generador de gasóleo en marcha, constante, sin arranques ni aceleraciones."
+   "note": "Generador de gasóleo en marcha, constante, sin arranques ni aceleraciones.",
+   "pick": 606933
   },
   {
    "name": "generator_start",
@@ -194,7 +197,8 @@
    ],
    "max_len": 7.0,
    "fade_out": 0.8,
-   "note": "Motor que tose y arranca (tirón, petardeo, se estabiliza)."
+   "note": "Motor que tose y arranca (tirón, petardeo, se estabiliza).",
+   "pick": 79286
   },
   {
    "name": "fluorescent_on",
@@ -229,7 +233,8 @@
    ],
    "max_len": 4.0,
    "fade_out": 0.5,
-   "note": "Tubos que arrancan: clics del cebador, parpadeo y zumbido que se asienta."
+   "note": "Tubos que arrancan: clics del cebador, parpadeo y zumbido que se asienta.",
+   "pick": 553462
   },
   {
    "name": "breaker",
@@ -262,7 +267,8 @@
    ],
    "max_len": 1.5,
    "reserved": true,
-   "note": "Palanca del cuadro eléctrico: clonc metálico grave. (Aún sin uso: cuadro del sótano.)"
+   "note": "Palanca del cuadro eléctrico: clonc metálico grave. (Aún sin uso: cuadro del sótano.)",
+   "pick": 131599
   },
   {
    "name": "door_open",
@@ -301,7 +307,8 @@
    ],
    "max_len": 2.8,
    "fade_out": 0.3,
-   "note": "Puerta interior de hospital (madera con marco metálico) que se abre con un chirrido corto."
+   "note": "Puerta interior de hospital (madera con marco metálico) que se abre con un chirrido corto.",
+   "pick": 553250
   },
   {
    "name": "door_close",
@@ -338,7 +345,8 @@
    ],
    "max_len": 2.0,
    "fade_out": 0.3,
-   "note": "Puerta que se cierra con el clic del pestillo, sin portazo."
+   "note": "Puerta que se cierra con el clic del pestillo, sin portazo.",
+   "pick": 126044
   },
   {
    "name": "door_locked",
@@ -372,7 +380,8 @@
     "glitch-music"
    ],
    "max_len": 1.8,
-   "note": "Manilla que baja y choca con la cerradura: está cerrada."
+   "note": "Manilla que baja y choca con la cerradura: está cerrada.",
+   "pick": 321087
   },
   {
    "name": "unlock",
@@ -403,7 +412,8 @@
    ],
    "max_len": 1.6,
    "reserved": true,
-   "note": "Llave que entra y gira (aún sin uso: abrir con llave usa door_open)."
+   "note": "Llave que entra y gira (aún sin uso: abrir con llave usa door_open).",
+   "pick": 146348
   },
   {
    "name": "drawer_open",
@@ -435,7 +445,8 @@
     "glitch-music"
    ],
    "max_len": 1.4,
-   "note": "Cajón metálico de archivador que se desliza al abrir."
+   "note": "Cajón metálico de archivador que se desliza al abrir.",
+   "pick": 151575
   },
   {
    "name": "drawer_close",
@@ -466,7 +477,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Cajón metálico que se cierra con un golpe seco."
+   "note": "Cajón metálico que se cierra con un golpe seco.",
+   "pick": 816652
   },
   {
    "name": "locker_open",
@@ -496,7 +508,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Taquilla de chapa: pestillo y puerta fina que vibra."
+   "note": "Taquilla de chapa: pestillo y puerta fina que vibra.",
+   "pick": 94134
   },
   {
    "name": "bed_creak",
@@ -599,7 +612,8 @@
    ],
    "max_len": 3.5,
    "fade_out": 0.7,
-   "note": "Golpe metálico grande con cola (hueco del ascensor)."
+   "note": "Golpe metálico grande con cola (hueco del ascensor).",
+   "pick": 703248
   },
   {
    "name": "knock",
@@ -629,7 +643,8 @@
     "glitch-music"
    ],
    "max_len": 2.5,
-   "note": "Golpes de nudillos lentos, secos."
+   "note": "Golpes de nudillos lentos, secos.",
+   "pick": 237937
   },
   {
    "name": "glass",
@@ -659,7 +674,8 @@
     "glitch-music"
    ],
    "max_len": 1.5,
-   "note": "Cristales rotos pisados o que caen, cortos."
+   "note": "Cristales rotos pisados o que caen, cortos.",
+   "pick": 221536
   },
   {
    "name": "drip",
@@ -692,7 +708,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Una sola gota en un charco, con algo de eco."
+   "note": "Una sola gota en un charco, con algo de eco.",
+   "pick": 166321
   },
   {
    "name": "flashlight_click",
@@ -722,7 +739,8 @@
     "glitch-music"
    ],
    "max_len": 0.4,
-   "note": "Botón de linterna: clic de plástico corto."
+   "note": "Botón de linterna: clic de plástico corto.",
+   "pick": 435845
   },
   {
    "name": "monitor_beep",
@@ -754,7 +772,8 @@
    ],
    "max_len": 0.6,
    "reserved": true,
-   "note": "Un pitido de monitor de constantes (reservado para la Habitación 09)."
+   "note": "Un pitido de monitor de constantes (reservado para la Habitación 09).",
+   "pick": 668978
   },
   {
    "name": "pa_chime",
@@ -792,7 +811,8 @@
    ],
    "max_len": 3.5,
    "fade_out": 0.6,
-   "note": "Campanita de megafonía de dos o tres notas, antigua."
+   "note": "Campanita de megafonía de dos o tres notas, antigua.",
+   "pick": 244583
   },
   {
    "name": "pa_static",
@@ -830,7 +850,8 @@
    ],
    "max_len": 4.0,
    "fade_out": 0.5,
-   "note": "Altavoces que se encienden: estática y zumbido."
+   "note": "Altavoces que se encienden: estática y zumbido.",
+   "pick": 696593
   },
   {
    "name": "phone_ring",
@@ -866,7 +887,8 @@
     "glitch-music"
    ],
    "max_len": 4.0,
-   "note": "Timbre de campana de teléfono de disco."
+   "note": "Timbre de campana de teléfono de disco.",
+   "pick": 663840
   },
   {
    "name": "phone_static",
@@ -899,7 +921,8 @@
    ],
    "max_len": 5.0,
    "fade_out": 0.6,
-   "note": "Línea muerta con estática (sin voz clara)."
+   "note": "Línea muerta con estática (sin voz clara).",
+   "pick": 567315
   },
   {
    "name": "tape_save",
@@ -929,7 +952,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Botón de grabar de una grabadora de casete: clac mecánico y motor."
+   "note": "Botón de grabar de una grabadora de casete: clac mecánico y motor.",
+   "pick": 204715
   },
   {
    "name": "paper",
@@ -961,7 +985,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Una hoja que se coge o se gira."
+   "note": "Una hoja que se coge o se gira.",
+   "pick": 873835
   },
   {
    "name": "pickup",
@@ -991,7 +1016,8 @@
     "glitch-music"
    ],
    "max_len": 0.7,
-   "note": "Coger algo pequeño: roce de ropa y contacto."
+   "note": "Coger algo pequeño: roce de ropa y contacto.",
+   "pick": 216629
   },
   {
    "name": "pills",
@@ -1021,7 +1047,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Bote de pastillas que se agita."
+   "note": "Bote de pastillas que se agita.",
+   "pick": 536419
   },
   {
    "name": "battery",
@@ -1049,7 +1076,8 @@
     "glitch-music"
    ],
    "max_len": 1.4,
-   "note": "Pilas que encajan (provisional de varios)."
+   "note": "Pilas que encajan (provisional de varios).",
+   "pick": 19466
   },
   {
    "name": "bandage",
@@ -1079,7 +1107,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Venda que se desenrolla (provisional de varios)."
+   "note": "Venda que se desenrolla (provisional de varios).",
+   "pick": 718668
   },
   {
    "name": "whisper",
@@ -1111,7 +1140,8 @@
    ],
    "max_len": 2.8,
    "fade_out": 0.5,
-   "note": "Susurro sin palabras claras."
+   "note": "Susurro sin palabras claras.",
+   "pick": 234044
   },
   {
    "name": "steps_far",
@@ -1146,7 +1176,8 @@
    ],
    "max_len": 4.0,
    "fade_out": 0.6,
-   "note": "Pasos lentos lejos, con eco."
+   "note": "Pasos lentos lejos, con eco.",
+   "pick": 707246
   },
   {
    "name": "step",
@@ -1189,7 +1220,8 @@
    ],
    "slice_len": 0.32,
    "min_gap": 0.3,
-   "note": "Pies descalzos en baldosa: varios pasos en una toma."
+   "note": "Pies descalzos en baldosa: varios pasos en una toma.",
+   "pick": 338106
   },
   {
    "name": "step_soft",
@@ -1230,7 +1262,8 @@
    ],
    "slice_len": 0.32,
    "min_gap": 0.3,
-   "note": "Calzado blando en interior."
+   "note": "Calzado blando en interior.",
+   "pick": 260120
   },
   {
    "name": "step_boot",
@@ -1272,7 +1305,8 @@
    ],
    "slice_len": 0.38,
    "min_gap": 0.3,
-   "note": "Botas de goma en suelo duro."
+   "note": "Botas de goma en suelo duro.",
+   "pick": 72030
   },
   {
    "name": "breath_wake_male",
@@ -1306,7 +1340,8 @@
     "glitch-music"
    ],
    "max_len": 1.6,
-   "note": "Inspiración brusca de quien se despierta."
+   "note": "Inspiración brusca de quien se despierta.",
+   "pick": 271245
   },
   {
    "name": "pain_sigh_male",
@@ -1339,7 +1374,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Suspiro de dolor contenido."
+   "note": "Suspiro de dolor contenido.",
+   "pick": 850703
   },
   {
    "name": "pain_groan_male",
@@ -1373,7 +1409,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Gruñido de dolor con la boca cerrada."
+   "note": "Gruñido de dolor con la boca cerrada.",
+   "pick": 257706
   },
   {
    "name": "breath_strain_male",
@@ -1473,7 +1510,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Sábana que se mueve al incorporarse."
+   "note": "Sábana que se mueve al incorporarse.",
+   "pick": 644490
   },
   {
    "name": "bare_feet_floor",
@@ -1533,7 +1571,8 @@
    ],
    "max_len": 2.0,
    "reserved": true,
-   "note": "Bajar o subir escalera de hormigón (reservado: el cambio de planta usa las pisadas)."
+   "note": "Bajar o subir escalera de hormigón (reservado: el cambio de planta usa las pisadas).",
+   "pick": 119911
   },
   {
    "name": "amb_vent_loop",
@@ -1586,7 +1625,8 @@
    "crossfade": 2.0,
    "ideal": 40,
    "af": "highpass=f=60",
-   "note": "Aire por un conducto: soplido sordo y continuo, sin golpeteos."
+   "note": "Aire por un conducto: soplido sordo y continuo, sin golpeteos.",
+   "pick": 211683
   },
   {
    "name": "amb_drip_loop",
@@ -1627,7 +1667,8 @@
    "max_len": 14,
    "crossfade": 0.6,
    "ideal": 30,
-   "note": "Grifo que gotea despacio en un lavabo de loza (gotas espaciadas, irregulares)."
+   "note": "Grifo que gotea despacio en un lavabo de loza (gotas espaciadas, irregulares).",
+   "pick": 271335
   },
   {
    "name": "amb_pipes_loop",
@@ -1674,7 +1715,8 @@
    "crossfade": 2.0,
    "ideal": 40,
    "af": "lowpass=f=4000",
-   "note": "Agua que se mueve por tuberías gruesas, gorgoteo lejano (la caldera está apagada)."
+   "note": "Agua que se mueve por tuberías gruesas, gorgoteo lejano (la caldera está apagada).",
+   "pick": 194454
   },
   {
    "name": "amb_fridge_loop",
@@ -1720,7 +1762,8 @@
    "crossfade": 1.5,
    "ideal": 30,
    "af": "highpass=f=40",
-   "note": "Motor de cámara frigorífica: zumbido grave constante con algo de vibración."
+   "note": "Motor de cámara frigorífica: zumbido grave constante con algo de vibración.",
+   "pick": 98220
   },
   {
    "name": "amb_electric_buzz",
@@ -1765,7 +1808,8 @@
    "max_len": 12,
    "crossfade": 1.2,
    "ideal": 25,
-   "note": "Zumbido eléctrico seco de un cuadro con carga."
+   "note": "Zumbido eléctrico seco de un cuadro con carga.",
+   "pick": 733736
   },
   {
    "name": "amb_creak_building",
@@ -1806,7 +1850,8 @@
    "max_len": 3.0,
    "fade_out": 0.4,
    "af": "lowpass=f=6000",
-   "note": "Crujido grave de la estructura del edificio, aislado."
+   "note": "Crujido grave de la estructura del edificio, aislado.",
+   "pick": 238288
   },
   {
    "name": "amb_creak_wood",
@@ -1842,7 +1887,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.3,
-   "note": "Una tabla o un marco de madera que cruje solo."
+   "note": "Una tabla o un marco de madera que cruje solo.",
+   "pick": 502504
   },
   {
    "name": "amb_creak_metal",
@@ -1880,7 +1926,8 @@
    ],
    "max_len": 3.5,
    "fade_out": 0.5,
-   "note": "Metal que se tensa y gime (vigas, conductos) en el sótano."
+   "note": "Metal que se tensa y gime (vigas, conductos) en el sótano.",
+   "pick": 508272
   },
   {
    "name": "amb_pipe_knock",
@@ -1919,7 +1966,8 @@
    "max_len": 2.5,
    "fade_out": 0.4,
    "af": "lowpass=f=5000",
-   "note": "Una tubería que golpea dentro de la pared (dos o tres golpes metálicos sordos)."
+   "note": "Una tubería que golpea dentro de la pared (dos o tres golpes metálicos sordos).",
+   "pick": 586114
   },
   {
    "name": "amb_water_pipes",
@@ -1961,7 +2009,8 @@
    "fade_in": 0.4,
    "fade_out": 1.0,
    "af": "lowpass=f=3500",
-   "note": "Agua que corre un momento por una bajante, oída a través de la pared."
+   "note": "Agua que corre un momento por una bajante, oída a través de la pared.",
+   "pick": 219372
   },
   {
    "name": "amb_wind_gust",
@@ -2043,7 +2092,8 @@
    "fade_in": 0.3,
    "fade_out": 0.8,
    "af": "lowpass=f=2200,highpass=f=300",
-   "note": "Tres o cuatro pitidos de monitor, lejanos (filtrados), en otra habitación."
+   "note": "Tres o cuatro pitidos de monitor, lejanos (filtrados), en otra habitación.",
+   "pick": 668978
   },
   {
    "name": "amb_elevator_cables",
@@ -2119,7 +2169,8 @@
    "max_len": 2.5,
    "fade_in": 0.2,
    "fade_out": 0.6,
-   "note": "Hojas sueltas que se mueven con una corriente, sin manos."
+   "note": "Hojas sueltas que se mueven con una corriente, sin manos.",
+   "pick": 389440
   },
   {
    "name": "amb_spark_crackle",
@@ -2155,7 +2206,8 @@
    ],
    "max_len": 1.5,
    "fade_out": 0.2,
-   "note": "Chisporroteo corto de un cable o un contacto."
+   "note": "Chisporroteo corto de un cable o un contacto.",
+   "pick": 87040
   },
   {
    "name": "entity_breath",
@@ -2190,7 +2242,8 @@
     "glitch-music"
    ],
    "max_len": 3.0,
-   "note": "Respiración lenta y ronca, muy cerca, sin voz."
+   "note": "Respiración lenta y ronca, muy cerca, sin voz.",
+   "pick": 514794
   },
   {
    "name": "entity_dissolve",
@@ -2222,7 +2275,8 @@
    ],
    "max_len": 0.8,
    "fade_out": 0.08,
-   "note": "Ráfaga de estática que se corta en seco."
+   "note": "Ráfaga de estática que se corta en seco.",
+   "pick": 585798
   },
   {
    "name": "entity_whisper",
@@ -2253,7 +2307,8 @@
     "glitch-music"
    ],
    "max_len": 1.6,
-   "note": "Varios susurros superpuestos sin palabras."
+   "note": "Varios susurros superpuestos sin palabras.",
+   "pick": 446083
   },
   {
    "name": "scare_door_slam",
@@ -2285,7 +2340,8 @@
     "glitch-music"
    ],
    "max_len": 2.5,
-   "note": "Portazo lejano con cola de pasillo."
+   "note": "Portazo lejano con cola de pasillo.",
+   "pick": 478076
   },
   {
    "name": "scare_fall",
@@ -2347,7 +2403,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Frasco que cae y se rompe."
+   "note": "Frasco que cae y se rompe.",
+   "pick": 447699
   },
   {
    "name": "scare_wall_knock",
@@ -2438,7 +2495,8 @@
     "glitch-music"
    ],
    "max_len": 3.0,
-   "note": "Bote o linterna que rueda y se para."
+   "note": "Bote o linterna que rueda y se para.",
+   "pick": 235605
   },
   {
    "name": "scare_wheelchair",
@@ -2468,7 +2526,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Silla de ruedas empujada un palmo, con chirrido."
+   "note": "Silla de ruedas empujada un palmo, con chirrido.",
+   "pick": 57640
   },
   {
    "name": "scare_door_creak",
@@ -2499,7 +2558,8 @@
     "glitch-music"
    ],
    "max_len": 3.0,
-   "note": "Bisagra que chirría larga y lenta."
+   "note": "Bisagra que chirría larga y lenta.",
+   "pick": 590950
   },
   {
    "name": "scare_breath",
@@ -2529,7 +2589,8 @@
     "glitch-music"
    ],
    "max_len": 1.6,
-   "note": "Exhalación justo detrás."
+   "note": "Exhalación justo detrás.",
+   "pick": 277043
   },
   {
    "name": "scare_static_burst",
@@ -2559,7 +2620,8 @@
     "glitch-music"
    ],
    "max_len": 0.6,
-   "note": "Ráfaga de estática de vídeo."
+   "note": "Ráfaga de estática de vídeo.",
+   "pick": 531279
   },
   {
    "name": "scare_drip",
@@ -2591,7 +2653,8 @@
     "glitch-music"
    ],
    "max_len": 2.2,
-   "note": "Dos a cuatro gotas con eco de tubería."
+   "note": "Dos a cuatro gotas con eco de tubería.",
+   "pick": 422873
   },
   {
    "name": "status_heartbeat",
@@ -2625,7 +2688,8 @@
     "glitch-music"
    ],
    "max_len": 0.7,
-   "note": "Un latido grave, amortiguado, sin clic inicial."
+   "note": "Un latido grave, amortiguado, sin clic inicial.",
+   "pick": 485076
   },
   {
    "name": "status_relief_breath",
@@ -2656,7 +2720,8 @@
     "glitch-music"
    ],
    "max_len": 1.8,
-   "note": "Exhalación larga de alivio."
+   "note": "Exhalación larga de alivio.",
+   "pick": 801137
   },
   {
    "name": "ui_move",
@@ -2686,7 +2751,8 @@
     "glitch-music"
    ],
    "max_len": 0.12,
-   "note": "Clic corto de botón de vídeo VHS."
+   "note": "Clic corto de botón de vídeo VHS.",
+   "pick": 615059
   },
   {
    "name": "ui_accept",
@@ -2716,7 +2782,8 @@
     "glitch-music"
    ],
    "max_len": 0.35,
-   "note": "Botón de vídeo más firme, con el clonc de la cinta."
+   "note": "Botón de vídeo más firme, con el clonc de la cinta.",
+   "pick": 407720
   },
   {
    "name": "ui_back",
@@ -2745,7 +2812,8 @@
    ],
    "max_len": 0.12,
    "pitch": -3,
-   "note": "Clic suave, más grave que ui_move."
+   "note": "Clic suave, más grave que ui_move.",
+   "pick": 150382
   },
   {
    "name": "tape_rewind",
@@ -2777,7 +2845,8 @@
    ],
    "max_len": 2.0,
    "fade_out": 0.15,
-   "note": "Vídeo rebobinando con chasquido de parada."
+   "note": "Vídeo rebobinando con chasquido de parada.",
+   "pick": 613352
   },
   {
    "name": "title_ambience",
@@ -2829,7 +2898,8 @@
    "crossfade": 4.0,
    "stereo": true,
    "af": "highpass=f=70,lowpass=f=7000",
-   "note": "Bucle de fondo del título, muy bajo (la música va encima)."
+   "note": "Bucle de fondo del título, muy bajo (la música va encima).",
+   "pick": 788451
   },
   {
    "name": "title_tube_flicker",
@@ -2859,7 +2929,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Chasquido y zumbido entrecortado de un tubo."
+   "note": "Chasquido y zumbido entrecortado de un tubo.",
+   "pick": 253978
   },
   {
    "name": "music_menu_drone",
@@ -2922,7 +2993,8 @@
    "format": "ogg",
    "af": "highpass=f=28",
    "quality": 5,
-   "note": "Dron oscuro y lento, con capas que respiran; nada de ritmo ni melodía clara."
+   "note": "Dron oscuro y lento, con capas que respiran; nada de ritmo ni melodía clara.",
+   "pick": 333932
   },
   {
    "name": "music_menu_piano",
@@ -2987,7 +3059,8 @@
    "format": "ogg",
    "af": "highpass=f=28",
    "quality": 5,
-   "note": "Piano lejano con mucha reverberación y notas sueltas, tensión sin resolver."
+   "note": "Piano lejano con mucha reverberación y notas sueltas, tensión sin resolver.",
+   "pick": 610640
   },
   {
    "name": "music_menu_tension",
@@ -3049,7 +3122,8 @@
    "format": "ogg",
    "af": "highpass=f=28",
    "quality": 5,
-   "note": "Atmósfera de suspense (cuerdas graves, texturas), sin golpes ni sustos."
+   "note": "Atmósfera de suspense (cuerdas graves, texturas), sin golpes ni sustos.",
+   "pick": 777335
   },
   {
    "name": "use_battery_insert",
@@ -3107,7 +3181,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Venda que se desenrolla y se ciñe."
+   "note": "Venda que se desenrolla y se ciñe.",
+   "pick": 718668
   },
   {
    "name": "use_pills_swallow",
@@ -3138,7 +3213,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Abrir el bote, sacar pastillas (y tragar)."
+   "note": "Abrir el bote, sacar pastillas (y tragar).",
+   "pick": 536418
   },
   {
    "name": "use_syringe_inject",
@@ -3167,7 +3243,8 @@
     "glitch-music"
    ],
    "max_len": 1.4,
-   "note": "Capuchón de jeringuilla y émbolo."
+   "note": "Capuchón de jeringuilla y émbolo.",
+   "pick": 117352
   },
   {
    "name": "use_tourniquet_tighten",
@@ -3197,7 +3274,8 @@
     "glitch-music"
    ],
    "max_len": 1.4,
-   "note": "Tela que se retuerce y se aprieta."
+   "note": "Tela que se retuerce y se aprieta.",
+   "pick": 321858
   },
   {
    "name": "cloth_tear",
@@ -3227,7 +3305,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Tela de algodón que se rasga de un tirón."
+   "note": "Tela de algodón que se rasga de un tirón.",
+   "pick": 591195
   },
   {
    "name": "craft_cloth",
@@ -3256,7 +3335,8 @@
     "glitch-music"
    ],
    "max_len": 1.4,
-   "note": "Manipular tiras de tela, hacer un nudo."
+   "note": "Manipular tiras de tela, hacer un nudo.",
+   "pick": 798839
   },
   {
    "name": "craft_combine",
@@ -3284,7 +3364,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Juntar dos objetos pequeños."
+   "note": "Juntar dos objetos pequeños.",
+   "pick": 868825
   },
   {
    "name": "craft_generic",
@@ -3314,7 +3395,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Trastear con piezas pequeñas."
+   "note": "Trastear con piezas pequeñas.",
+   "pick": 459647
   },
   {
    "name": "inv_metal_heavy_pick",
@@ -3425,7 +3507,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 608056
   },
   {
    "name": "inv_metal_heavy_equip",
@@ -3571,7 +3654,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_metal_small_place",
@@ -3606,7 +3690,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_metal_small_rotate",
@@ -3641,7 +3726,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_metal_small_equip",
@@ -3676,7 +3762,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_metal_small_unequip",
@@ -3711,7 +3798,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: quitárselo. Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: quitárselo. Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_metal_small_drop",
@@ -3746,7 +3834,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "bisturí, tijeras, piezas: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "bisturí, tijeras, piezas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 743260
   },
   {
    "name": "inv_keys_pick",
@@ -3784,7 +3873,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "llaves: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "llaves: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 267711
   },
   {
    "name": "inv_keys_place",
@@ -3822,7 +3912,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "llaves: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "llaves: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 453050
   },
   {
    "name": "inv_keys_rotate",
@@ -3860,7 +3951,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "llaves: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "llaves: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 453050
   },
   {
    "name": "inv_keys_equip",
@@ -3898,7 +3990,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "llaves: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "llaves: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 416286
   },
   {
    "name": "inv_keys_unequip",
@@ -3936,7 +4029,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "llaves: quitárselo. Corto y seco, sin sala."
+   "note": "llaves: quitárselo. Corto y seco, sin sala.",
+   "pick": 453050
   },
   {
    "name": "inv_keys_drop",
@@ -3974,7 +4068,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "llaves: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "llaves: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 152898
   },
   {
    "name": "inv_cloth_pick",
@@ -4010,7 +4105,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 667271
   },
   {
    "name": "inv_cloth_place",
@@ -4046,7 +4142,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 798838
   },
   {
    "name": "inv_cloth_rotate",
@@ -4082,7 +4179,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 798838
   },
   {
    "name": "inv_cloth_equip",
@@ -4118,7 +4216,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 798838
   },
   {
    "name": "inv_cloth_unequip",
@@ -4154,7 +4253,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: quitárselo. Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: quitárselo. Corto y seco, sin sala.",
+   "pick": 798838
   },
   {
    "name": "inv_cloth_drop",
@@ -4190,7 +4290,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "ropa, tela, vendas: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "ropa, tela, vendas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 798838
   },
   {
    "name": "inv_paper_pick",
@@ -4224,7 +4325,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "documentos, notas: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "documentos, notas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 466350
   },
   {
    "name": "inv_paper_place",
@@ -4258,7 +4360,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "documentos, notas: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "documentos, notas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 421712
   },
   {
    "name": "inv_paper_rotate",
@@ -4292,7 +4395,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "documentos, notas: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "documentos, notas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 459429
   },
   {
    "name": "inv_paper_equip",
@@ -4326,7 +4430,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "documentos, notas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "documentos, notas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 497703
   },
   {
    "name": "inv_paper_unequip",
@@ -4360,7 +4465,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "documentos, notas: quitárselo. Corto y seco, sin sala."
+   "note": "documentos, notas: quitárselo. Corto y seco, sin sala.",
+   "pick": 415767
   },
   {
    "name": "inv_paper_drop",
@@ -4394,7 +4500,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "documentos, notas: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "documentos, notas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 421712
   },
   {
    "name": "inv_plastic_pick",
@@ -4428,7 +4535,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 863256
   },
   {
    "name": "inv_plastic_place",
@@ -4496,7 +4604,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 488047
   },
   {
    "name": "inv_plastic_equip",
@@ -4530,7 +4639,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 101574
   },
   {
    "name": "inv_plastic_unequip",
@@ -4564,7 +4674,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: quitárselo. Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: quitárselo. Corto y seco, sin sala.",
+   "pick": 396587
   },
   {
    "name": "inv_plastic_drop",
@@ -4598,7 +4709,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 321294
   },
   {
    "name": "inv_glass_pick",
@@ -4634,7 +4746,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "frascos, viales: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "frascos, viales: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 261386
   },
   {
    "name": "inv_glass_place",
@@ -4670,7 +4783,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "frascos, viales: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "frascos, viales: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 386432
   },
   {
    "name": "inv_glass_rotate",
@@ -4706,7 +4820,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "frascos, viales: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "frascos, viales: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 219841
   },
   {
    "name": "inv_glass_equip",
@@ -4742,7 +4857,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "frascos, viales: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "frascos, viales: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 386432
   },
   {
    "name": "inv_glass_unequip",
@@ -4778,7 +4894,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "frascos, viales: quitárselo. Corto y seco, sin sala."
+   "note": "frascos, viales: quitárselo. Corto y seco, sin sala.",
+   "pick": 344266
   },
   {
    "name": "inv_glass_drop",
@@ -4814,7 +4931,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "frascos, viales: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "frascos, viales: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 344266
   },
   {
    "name": "inv_pills_pick",
@@ -4850,7 +4968,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "botes de pastillas: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "botes de pastillas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 536418
   },
   {
    "name": "inv_pills_place",
@@ -4886,7 +5005,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "botes de pastillas: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "botes de pastillas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 460153
   },
   {
    "name": "inv_pills_rotate",
@@ -4922,7 +5042,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "botes de pastillas: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "botes de pastillas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 460153
   },
   {
    "name": "inv_pills_equip",
@@ -4958,7 +5079,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "botes de pastillas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "botes de pastillas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 460153
   },
   {
    "name": "inv_pills_unequip",
@@ -4994,7 +5116,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "botes de pastillas: quitárselo. Corto y seco, sin sala."
+   "note": "botes de pastillas: quitárselo. Corto y seco, sin sala.",
+   "pick": 460153
   },
   {
    "name": "inv_pills_drop",
@@ -5030,7 +5153,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "botes de pastillas: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "botes de pastillas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 460153
   },
   {
    "name": "inv_battery_pick",
@@ -5064,7 +5188,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "pilas: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "pilas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 847716
   },
   {
    "name": "inv_battery_place",
@@ -5098,7 +5223,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "pilas: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "pilas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 198233
   },
   {
    "name": "inv_battery_rotate",
@@ -5132,7 +5258,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "pilas: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "pilas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 49705
   },
   {
    "name": "inv_battery_equip",
@@ -5166,7 +5293,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "pilas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "pilas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 198233
   },
   {
    "name": "inv_battery_unequip",
@@ -5200,7 +5328,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "pilas: quitárselo. Corto y seco, sin sala."
+   "note": "pilas: quitárselo. Corto y seco, sin sala.",
+   "pick": 198233
   },
   {
    "name": "inv_battery_drop",
@@ -5234,7 +5363,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "pilas: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "pilas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 61087
   },
   {
    "name": "inv_tool_pick",
@@ -5270,7 +5400,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "linterna, destornillador: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 557505
   },
   {
    "name": "inv_tool_place",
@@ -5306,7 +5437,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "linterna, destornillador: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 557505
   },
   {
    "name": "inv_tool_rotate",
@@ -5342,7 +5474,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "linterna, destornillador: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 557505
   },
   {
    "name": "inv_tool_equip",
@@ -5378,7 +5511,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "linterna, destornillador: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 435845
   },
   {
    "name": "inv_tool_unequip",
@@ -5414,7 +5548,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: quitárselo. Corto y seco, sin sala."
+   "note": "linterna, destornillador: quitárselo. Corto y seco, sin sala.",
+   "pick": 557505
   },
   {
    "name": "inv_tool_drop",
@@ -5450,7 +5585,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "linterna, destornillador: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "linterna, destornillador: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 557505
   },
   {
    "name": "inv_rubber_pick",
@@ -5486,7 +5622,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "botas, guantes de goma: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 571937
   },
   {
    "name": "inv_rubber_place",
@@ -5522,7 +5659,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "botas, guantes de goma: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 571937
   },
   {
    "name": "inv_rubber_rotate",
@@ -5558,7 +5696,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "botas, guantes de goma: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 704921
   },
   {
    "name": "inv_rubber_equip",
@@ -5594,7 +5733,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "botas, guantes de goma: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 571937
   },
   {
    "name": "inv_rubber_unequip",
@@ -5630,7 +5770,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: quitárselo. Corto y seco, sin sala."
+   "note": "botas, guantes de goma: quitárselo. Corto y seco, sin sala.",
+   "pick": 571937
   },
   {
    "name": "inv_rubber_drop",
@@ -5666,7 +5807,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "botas, guantes de goma: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "botas, guantes de goma: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 571937
   },
   {
    "name": "inv_ceramic_pick",
@@ -5701,7 +5843,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 128277
   },
   {
    "name": "inv_ceramic_place",
@@ -5736,7 +5879,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 240782
   },
   {
    "name": "inv_ceramic_rotate",
@@ -5771,7 +5915,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: girarlo en la mano (suave). Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 830458
   },
   {
    "name": "inv_ceramic_equip",
@@ -5806,7 +5951,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 830458
   },
   {
    "name": "inv_ceramic_unequip",
@@ -5841,7 +5987,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: quitárselo. Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: quitárselo. Corto y seco, sin sala.",
+   "pick": 830458
   },
   {
    "name": "inv_ceramic_drop",
@@ -5876,7 +6023,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "fusible cerámico, taza: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "fusible cerámico, taza: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 828399
   },
   {
    "name": "inv_pick",
@@ -5908,7 +6056,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: cogerlo de la bandeja."
+   "note": "Genérico para cualquier material: cogerlo de la bandeja.",
+   "pick": 216629
   },
   {
    "name": "inv_place",
@@ -5940,7 +6089,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: dejarlo en la bandeja."
+   "note": "Genérico para cualquier material: dejarlo en la bandeja.",
+   "pick": 459637
   },
   {
    "name": "inv_rotate",
@@ -5972,7 +6122,8 @@
    ],
    "max_len": 0.35,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: girarlo en la mano (suave)."
+   "note": "Genérico para cualquier material: girarlo en la mano (suave).",
+   "pick": 803396
   },
   {
    "name": "inv_equip",
@@ -6004,7 +6155,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: equiparlo (ponérselo o guardarlo a mano)."
+   "note": "Genérico para cualquier material: equiparlo (ponérselo o guardarlo a mano).",
+   "pick": 411177
   },
   {
    "name": "inv_unequip",
@@ -6036,7 +6188,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: quitárselo."
+   "note": "Genérico para cualquier material: quitárselo.",
+   "pick": 204418
   },
   {
    "name": "inv_drop",
@@ -6068,7 +6221,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "Genérico para cualquier material: tirarlo al suelo."
+   "note": "Genérico para cualquier material: tirarlo al suelo.",
+   "pick": 459637
   }
  ]
 }
