@@ -1,6 +1,9 @@
 """Efectos de sonido PROVISIONALES sintetizados en Python puro (sin dependencias).
 
-Uso: python -I tools/art/sounds.py   (escribe WAV en assets/audio/sfx/)
+Uso: python -I tools/art/sounds.py [--force]   (escribe WAV en assets/audio/sfx/)
+
+NO sobrescribe ningún WAV que ya exista (los de Freesound, que trae tools/audio/freesound.py,
+o el ambiente ya filtrado): solo crea los que falten. `--force` los rehace todos (no hace falta).
 
 Se sintetizan con modelos físicos sencillos en lugar de tonos puros, que suenan a juguete:
   - golpes y metal: ruido corto que excita un banco de resonadores (modos del objeto),
@@ -16,6 +19,7 @@ from __future__ import annotations
 import math
 import random
 import struct
+import sys
 import wave
 from pathlib import Path
 
@@ -170,6 +174,8 @@ def loopable(x: list[float], fade: float = 0.6) -> list[float]:
 
 def save(name: str, x: list[float], peak: float) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
+    if (OUT / f"{name}.wav").exists() and "--force" not in sys.argv:
+        return
     data = fade_edges(normalize(x, peak))
     with wave.open(str(OUT / f"{name}.wav"), "wb") as w:
         w.setnchannels(1)
