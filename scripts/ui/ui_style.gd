@@ -3,12 +3,15 @@ extends RefCounted
 ## Identidad visual de la interfaz: oscura, industrial y médica.
 ## Colores de la guía estética (docs/art/guia-estetica.md).
 ##
-## Fuentes pixel (licencia OFL, en assets/fonts/; créditos en docs/art/fuentes.md):
-## - `ui()`: Pixelify Sans. Menús, caja de mensajes, HUD, nombres y botones.
-## - `mono()`: VT323, de terminal. Fichas, datos, etiquetas y documentos mecanografiados.
+## Fuentes (licencia OFL, en assets/fonts/; créditos en docs/art/fuentes.md). Se importan **sin
+## antialias** ni posición subpíxel y con hinting completo (ver los .import): así se dibujan píxel a
+## píxel en la rejilla de 640x360, nítidas y con un toque pixelado, sin el borroso de antes.
+## - `ui()` / `ui_bold()`: PT Serif. Menús, caja de mensajes, descripciones y botones (la guía
+##   estética pide serifa legible para los menús).
+## - `pixel()`: Pixelify Sans, fuente pixel para títulos y rótulos grandes (a 20 px es nítida).
+## - `mono()`: Courier Prime, de máquina de escribir. Datos, fichas, pistas y documentos mecanografiados.
 ## - `hand()`: Patrick Hand. Notas escritas a mano.
-## Se importan sin antialias ni posición subpíxel (ver los .import) para que se vean nítidas
-## en la rejilla de 640x360. Usa los tamaños de abajo: son los que caen bien en la rejilla.
+## Usa las constantes de tamaño de abajo: son las que se ven bien. `fit_size` redondea a ellas.
 
 const BONE: Color = Color("e8e1d3")
 const BONE_DIM: Color = Color("bfb6a3")
@@ -25,25 +28,28 @@ const PAPER: Color = Color("cfc6b0")
 const PAPER_DARK: Color = Color("a89f88")
 const PAPER_INK: Color = Color("2a2620")
 
-const FONT_UI: String = "res://assets/fonts/pixelify_sans/PixelifySans.ttf"
-const FONT_MONO: String = "res://assets/fonts/vt323/VT323-Regular.ttf"
+const FONT_UI: String = "res://assets/fonts/pt_serif/PTSerif-Regular.ttf"
+const FONT_UI_BOLD: String = "res://assets/fonts/pt_serif/PTSerif-Bold.ttf"
+const FONT_PIXEL: String = "res://assets/fonts/pixelify_sans/PixelifySans.ttf"
+const FONT_MONO: String = "res://assets/fonts/courier_prime/CourierPrime-Regular.ttf"
 const FONT_HAND: String = "res://assets/fonts/patrick_hand/PatrickHand-Regular.ttf"
 
-## Tamaños de `ui()`.
-const SIZE_SMALL: int = 11
+## Tamaños de `ui()` y `ui_bold()`.
+const SIZE_SMALL: int = 12
 const SIZE_TEXT: int = 13
 const SIZE_LARGE: int = 16
-## Títulos: 20 px es el doble de la rejilla de Pixelify Sans (cada píxel de la letra son 2).
+## Tamaño de `pixel()`: 20 px es su rejilla nativa (cada píxel de la letra son 2 de pantalla).
 const SIZE_TITLE: int = 20
-## Tamaños de `mono()` (VT323 es estrecha y baja: 16 se lee como un 11).
-const MONO_SMALL: int = 14
-const MONO_TEXT: int = 16
-const MONO_LARGE: int = 32
+## Tamaños de `mono()`.
+const MONO_SMALL: int = 11
+const MONO_TEXT: int = 12
+const MONO_LARGE: int = 24
 ## Tamaño de `hand()`.
 const HAND_TEXT: int = 16
 
 static var _ui: Font
 static var _ui_bold: Font
+static var _pixel: Font
 static var _mono: Font
 static var _hand: Font
 
@@ -58,22 +64,26 @@ static func ui() -> Font:
 	return _ui
 
 
-## Interfaz en negrita (títulos y nombres).
+## Interfaz en negrita (nombres y títulos pequeños).
 static func ui_bold() -> Font:
 	if _ui_bold == null:
-		var v: FontVariation = FontVariation.new()
-		v.base_font = ui()
-		v.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): 700}
-		_ui_bold = v
+		_ui_bold = _load_font(FONT_UI_BOLD)
 	return _ui_bold
 
 
-## Antes había una fuente con serifa del sistema; ahora todo usa `ui()`. Se mantiene por compatibilidad.
+## Fuente pixel para títulos grandes (usa SIZE_TITLE).
+static func pixel() -> Font:
+	if _pixel == null:
+		_pixel = _load_font(FONT_PIXEL)
+	return _pixel
+
+
+## Antes había una fuente con serifa del sistema; ahora es `ui()`. Se mantiene por compatibilidad.
 static func serif() -> Font:
 	return ui()
 
 
-## Máquina de escribir / terminal: documentos mecanografiados, etiquetas, fichas y datos.
+## Máquina de escribir: documentos mecanografiados, etiquetas, fichas y datos.
 static func mono() -> Font:
 	if _mono == null:
 		_mono = _load_font(FONT_MONO)
@@ -90,19 +100,28 @@ static func hand() -> Font:
 ## Ajusta un tamaño pedido al más cercano que se lee bien con esa fuente (nunca más pequeño
 ## que el mínimo legible). Así el código antiguo con tamaños de 7-9 px sigue siendo legible.
 static func fit_size(font: Font, size: int) -> int:
+	if font == pixel():
+		return SIZE_TITLE if size <= 28 else 40
 	if font == mono():
-		if size <= 15:
-			return MONO_SMALL if size <= 9 else MONO_TEXT
-		return MONO_LARGE if size >= 28 else maxi(size, MONO_TEXT)
+		if size <= 11:
+			return MONO_SMALL
+		if size <= 14:
+			return MONO_TEXT
+		return 16 if size <= 20 else MONO_LARGE
 	if font == hand():
 		return maxi(size, HAND_TEXT - 2)
-	if size <= 11:
+	if size <= 12:
 		return SIZE_SMALL
 	if size <= 14:
 		return SIZE_TEXT
-	if size <= 17:
+	if size <= 18:
 		return SIZE_LARGE
 	return SIZE_TITLE if size <= 22 else size
+
+
+## Rótulo con la fuente pixel (títulos de pantalla y pestañas grandes).
+static func title(text: String, color: Color = BONE) -> Label:
+	return label(text, SIZE_TITLE, color, pixel())
 
 
 static func label(text: String, size: int = SIZE_TEXT, color: Color = BONE, font: Font = null) -> Label:

@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dpn05dql3e28v"
-path="res://.godot/imported/VT323-Regular.ttf-5a084931c3312a47b4b47b126df23023.fontdata"
+uid="uid://bqnflersfvu6e"
+path="res://.godot/imported/PTSerif-Regular.ttf-0df947789303b801a8a00e68e3540b3c.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/vt323/VT323-Regular.ttf"
-dest_files=["res://.godot/imported/VT323-Regular.ttf-5a084931c3312a47b4b47b126df23023.fontdata"]
+source_file="res://assets/fonts/pt_serif/PTSerif-Regular.ttf"
+dest_files=["res://.godot/imported/PTSerif-Regular.ttf-0df947789303b801a8a00e68e3540b3c.fontdata"]
 
 [params]
 
@@ -22,7 +22,7 @@ msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
-hinting=1
+hinting=2
 subpixel_positioning=0
 keep_rounding_remainders=true
 oversampling=0.0
