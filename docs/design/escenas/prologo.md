@@ -89,7 +89,7 @@ Cada paso del camino principal tiene pistas dentro del mundo, para que nadie se 
 
 ## Botín
 
-El contenido «suelto» de los muebles se reparte **al azar al empezar partida nueva**, con una semilla que se guarda con la partida (al cargar sale lo mismo). Lo del camino principal no cambia: linterna y 2 pilas de la mesita de la 09, palanca, destornillador, llaves, fusible, válvula, documentos, la venda usada de la papelera de la 09 y la venda esterilizada del armario de la enfermería.
+El contenido «suelto» de los muebles se reparte **al azar al empezar partida nueva**, con una semilla que se guarda con la partida (al cargar sale lo mismo). Lo del camino principal no cambia: linterna y 2 pilas de la mesita de la 09, palanca, destornillador, llaves, fusible, válvula, documentos, la venda usada de la papelera de la 09, la venda esterilizada del armario de la enfermería y el tubo de hierro de la habitación 12.
 
 Datos: `data/loot/prologo.tres` (de `tools/data/build_prologue_data.gd`).
 
@@ -111,7 +111,7 @@ Datos: `data/loot/prologo.tres` (de `tools/data/build_prologue_data.gd`).
 La medicación sigue igual de escasa: analgésicos (2 garantizados + tablas); jeringas y ampollas, que combinadas dan **sedante**. El **desinfectante** limpia vendas usadas y esteriliza vendas.
 
 - `[PROPUESTA]` **Tela**: rasgando ropa que no se lleva puesta (las batas dan 3 tiras). Con ella se fabrican vendas improvisadas (sucias hasta desinfectarlas), torniquetes y el mango envuelto del tubo. Ver [custodia](../sistemas/custodia.md).
-- `[PROPUESTA]` **Armas improvisadas** (el prólogo no tiene combate; se pueden empuñar desde PERSONAJE › MANO): la palanca ya sirve; un **bisturí** en el quirófano y un **tubo de hierro** en el taller o la sala de calderas.
+- `[PROPUESTA]` **Armas improvisadas** (se empuñan desde PERSONAJE › MANO): la palanca ya sirve; un **bisturí** en el quirófano (al azar) y el **tubo de hierro**, que ya no se reparte: está siempre en el suelo de la **habitación 12**, junto a la 09, arrancado de la toma de la pared (`tubo_hab12`). Al cogerlo se empuña solo si la mano está vacía, y desencadena el combate (ver «Combate»).
 
 ## Ropa
 
@@ -139,8 +139,21 @@ Por ahora el efecto es visual y de sonido; no cambian estadísticas.
 - **Sangrado**: al bajar al sótano «se abren los puntos». El Cuerpo baja poco a poco hasta que se venda. Una venda contaminada corta la hemorragia, pero resta Cuerpo y Mente.
 - **Cuerpo bajo**: caminas más despacio y la imagen se enrojece.
 - **Mente**: baja con los sucesos. Con la Mente baja se oyen susurros, pasos y golpes que no existen, y hay más distorsión de cinta. Se recupera con sedante.
-- **Sin muerte en el prólogo**: el sangrado no baja el Cuerpo de 20. Es una decisión de diseño para que el prólogo sea de exploración.
+- **Muerte**: el sangrado sigue sin bajar el Cuerpo de 20 (así el prólogo no castiga explorar). `[PROPUESTA]` **Cambio**: hasta ahora el prólogo no mataba; con el combate del enfermero se puede morir. Si el protagonista muere en combate, **pantalla de muerte** («FIN DE LA CINTA»: la imagen se corta entre nieve) y se elige **volver a la última cinta grabada** (si hay alguna) o **volver al título**. Pendiente de aprobar por el equipo; la alternativa sería un combate con `derrota_continua` (despertar de nuevo en la 09).
 - **Efectos en pantalla**: herida (viñeta granate que late), sangrado (regueros en los bordes), cura con venda (onda cálida) y analgésicos o sedante (suavizado). Detalle en [terror-ambiental.md](../sistemas/terror-ambiental.md#efectos-de-pantalla-según-el-estado).
+
+## Combate: el enfermero `[PROPUESTA]`
+
+El único combate del prólogo, temprano y opcional en la práctica (casi todo el mundo coge el tubo, que destella):
+
+1. En la **habitación 12** hay un tubo de hierro en el suelo. Al cogerlo se empuña (si no llevabas nada en la mano).
+2. Al salir al **pasillo**, un fluorescente se enciende solo al fondo, falla, y bajo él hay alguien muy alto con uniforme de enfermero y una máscara pálida. Se le oye arrastrar un pie mientras se acerca. La cinta salta y empieza el combate.
+3. **Combate por turnos con mutilaciones** (ver [combate.md](../sistemas/combate.md) y [el enfermero](../enemigos/enfermero.md)): el enemigo arriba, el protagonista abajo. El Cuerpo, la Mente, el sangrado y las heridas pasan del mapa al combate y vuelven.
+4. **Victoria**: su cuerpo se queda en el pasillo, sin lo que perdió, y se recuerda al guardar. Al examinarlo se ve la pieza de metal entre sus omóplatos, como la del protagonista.
+5. **Huida** (≈ 50 %, más si le has roto las piernas; imposible si te tiene agarrado): vuelve a buscarte más tarde (pasado algo más de un minuto, al volver al pasillo o en el del sótano), con las heridas que le hiciste.
+6. **Derrota**: pantalla de muerte (ver «Supervivencia»).
+
+El resto del prólogo no depende del combate: se puede terminar ganándolo, huyendo o sin coger el tubo.
 
 ## Terror ambiental (eventos)
 

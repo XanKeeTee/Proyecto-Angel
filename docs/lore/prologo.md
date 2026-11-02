@@ -55,7 +55,21 @@ Textos nuevos para que los puzles se entiendan sin salir del mundo. No añaden c
 - **Pensamientos** (tecla T), en segunda persona como el resto de textos del protagonista. Resumen lo que ya sabe; no revelan nada que no haya visto u oído, salvo dos suposiciones de sentido común: «El generador de un hospital suele estar en el sótano» y «En un quirófano siempre queda instrumental tirado». El último pensamiento, tras la megafonía, señala las huellas mojadas hacia el muro oeste.
 - **Registrar**: los textos de los muebles con botín aleatorio ya no nombran objetos («Rebuscas entre ropa de otra persona», «Revuelves la ropa del carro»…), porque lo que hay cambia de una partida a otra.
 
+## `[PROPUESTA]` El enfermero (primer combate)
+
+Nada de esto es canon. Encaja con el dossier sin rellenar sus pendientes: es un **Transfigurado** (§ 5, «humanos o seres cuya naturaleza ha sido alterada») y lo grotesco tiene intención (§ 12). No se dice quién lo alteró, ni por qué, ni qué es la Unidad de Vigilia.
+
+- **Qué es**: uno de los enfermeros de la planta, transformado. Alto, demacrado, uniforme blanco manchado y roto; piel gris azulada con venas oscuras; la mascarilla quirúrgica **cosida a la cara**; una **máscara de porcelana** agrietada sobre los ojos; la columna arqueada y demasiado larga.
+- **Su cuerpo cuenta su oficio**: el antebrazo derecho se ha fundido con el instrumental (bisturíes y una sierra de hueso que le salen de la carne, con una costura de grapas donde se unen); en la mano izquierda, una jeringa grande con un líquido oscuro; vías que le entran en el pecho con ese mismo líquido.
+- **La pieza entre los omóplatos**: lleva la misma pieza metálica que el protagonista. Se ve al examinar el cuerpo y en el último texto del combate («Te llevas la mano a la espalda. La tuya es igual»). Sugiere que pasaron por el mismo procedimiento; **no se explica**. Enlaza con el «puerto dorsal» del informe quirúrgico sin afirmar nada nuevo.
+- **Encaja con lo ya propuesto**: la circular nº 9 dice que, cuando un paciente despierta solo, el personal se va y «el edificio se encarga». El enfermero puede leerse como lo que queda del personal que no se fue, o como parte de «lo que se encarga». Las dos lecturas quedan abiertas.
+- **Textos**: en `tools/data/build_enemies.gd` (ataques, avisos, partes, aparición, huida, victoria y cadáver). Tono físico y concreto: lo que se ve y se oye, nunca una explicación.
+- **Muerte del protagonista**: la pantalla de muerte dice «FIN DE LA CINTA · La vigilia termina aquí». Usa la metáfora de la cinta del título; no afirma nada del mundo.
+
 ## Revisar con `lore-keeper`
+
+- Que un Transfigurado con la misma pieza dorsal que el protagonista no cierre demasiado qué es el «protocolo de recuperación».
+- Que la jeringa con líquido oscuro no choque con el «material recuperado» luminoso del informe quirúrgico (aquí es oscuro a propósito: no es lo mismo).
 
 - Que «el edificio se encarga» no choque con lo que el equipo quiera hacer con el hospital después.
 - Que la extracción del puerto dorsal no se acerque demasiado a la premisa prohibida.
