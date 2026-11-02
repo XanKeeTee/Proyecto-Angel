@@ -2,7 +2,7 @@
 
 Esta carpeta es la **única fuente de verdad** del mundo. Lo que no está aquí no es canon.
 
-> Estado: **vacío**. Todavía no se ha escrito lore. Este documento solo fija las reglas.
+> Estado: el equipo ha entregado el **[dossier de lore](dossier.md)** (biblia narrativa provisional, 1987, El Desvelo de 1968, el Concordato, las entidades y los cinco protagonistas). Lo que el dossier da por establecido es canon; lo que marca como pendiente sigue abierto y solo se rellena con `[PROPUESTA]`.
 
 ## Reglas de universo propio
 
