@@ -36,6 +36,11 @@ extends Resource
 @export var sprites: EnemySpriteDef
 ## Clave de tools/art/sprite_meta.json para leer las capas en desarrollo si `sprites` falta.
 @export var sprite_key: String = ""
+## Aliados: figura de espaldas en el combate (arte definitivo). Vacío = fotograma de espaldas del
+## sprite del mapa ampliado (provisional; ver `PartyBattler`).
+@export var battle_back: Texture2D
+## Pies dentro de `battle_back`, en píxeles.
+@export var battle_back_origin: Vector2 = Vector2.ZERO
 ## Sonidos (nombres de `Sfx`): respiración o gruñido de espera, dolor y muerte.
 @export var sound_idle: String = ""
 @export var sound_hurt: String = ""

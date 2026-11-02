@@ -244,10 +244,14 @@ func _run_battle_scene(battle: Battle) -> void:
 		if world.debug.has(key):
 			passthrough[key] = world.debug[key]
 	_battle_scene.setup(battle, world.character, snapshot, def.music, passthrough)
+	_battle_scene.vhs = world.vhs
 	layer.add_child(_battle_scene)
 	var uncover: Tween = create_tween()
 	uncover.tween_method(func(v: float) -> void: noise.set_shader_parameter(&"amount", v), 1.0, 0.0, 0.6)
+	# Las rayas de la cinta no dependen de `amount`: durante el combate, fuera (la pantalla es limpia).
+	uncover.tween_callback(func() -> void: noise.set_shader_parameter(&"streaks", 0.0))
 	await _battle_scene.battle_closed
+	noise.set_shader_parameter(&"streaks", 1.0)
 	_sound_ui(SOUND_TRANSITION, -6.0)
 	var out: Tween = create_tween()
 	out.tween_method(func(v: float) -> void: noise.set_shader_parameter(&"amount", v), 0.0, 1.0, 0.45)

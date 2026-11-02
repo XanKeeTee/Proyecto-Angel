@@ -197,30 +197,81 @@ func test_pantalla_de_combate() -> void:
 	var views: Array[Node] = scene.find_children("*", "EnemyView", true, false)
 	check_eq(views.size(), 1, "el enemigo está en pantalla")
 	var view: EnemyView = views[0] as EnemyView
-	check(view.position.y < 250.0 and absf(view.position.x - 320.0) < 1.0, "arriba, en el centro")
-	var cards: Array[Node] = scene.find_children("*", "PartyCard", true, false)
-	check_eq(cards.size(), 1, "el protagonista, abajo")
-	check((cards[0] as Control).position.y > 240.0, "en la parte de abajo")
-	# Elegir parte: la retícula señala la parte sobre el sprite con acierto y daño.
+	check(view.position.y < BattleScene.BOX_Y and absf(view.position.x - 320.0) < 1.0, "en el centro, sobre las cajas")
+	# El grupo, de espaldas y en primer plano: más abajo que el enemigo.
+	var battlers: Array[PartyBattler] = scene.party_battlers()
+	check_eq(battlers.size(), 1, "el protagonista está en el escenario")
+	check(not battlers[0].textures.is_empty(), "con su imagen de espaldas")
+	check(battlers[0].position.y > view.position.y, "delante del enemigo y más abajo")
+	# Abajo, dos cajas: órdenes a la izquierda (estrecha) y el grupo a la derecha (ancha).
+	var commands: BattleFrame = scene.command_box()
+	var party: BattleFrame = scene.party_box()
+	check(commands != null and party != null, "las dos cajas existen")
+	check(commands.position.y >= 240.0 and party.position.y >= 240.0, "abajo")
+	check(commands.position.x < party.position.x and commands.size.x < party.size.x, "órdenes a la izquierda, más estrecha")
+	var options: PackedStringArray = scene.menu_options()
+	check(options.size() >= 4 and options[0] == "Atacar", "las órdenes empiezan por Atacar")
+	check(options.has("Guardia") and options.has("Habilidades"), "con Guardia y Habilidades")
+	# Una fila por miembro con Cuerpo y Mente.
+	var rows: Array[PartyRow] = scene.party_rows()
+	check_eq(rows.size(), 1, "una fila por miembro")
+	check(rows[0].selected, "el que elige, resaltado")
+	var columns: Dictionary[StringName, Vector2] = rows[0].columns()
+	check(columns.has(&"body") and columns.has(&"mind"), "la fila tiene Cuerpo y Mente")
+	check(columns[&"body"].y > 40.0 and columns[&"mind"].y > 40.0, "con sitio para la barra y el número")
+	check(rows[0].weapon_icon != null, "con el icono del arma empuñada")
+	# Arriba, la ventana de mensajes con el aviso del enemigo.
+	var messages: MessageWindow = scene.message_window()
+	check(messages.position.y < 20.0 and messages.size.x > 600.0, "ventana de mensajes arriba, a todo lo ancho")
+	var waited_msg: float = 0.0
+	while not messages.is_idle() and waited_msg < 5.0:
+		messages.skip()
+		await host.get_tree().process_frame
+		waited_msg += 0.02
+	await host.get_tree().process_frame
+	check(messages.visible_text().contains("prepara"), "cuenta lo que prepara el enemigo")
+	# Atacar: la caja de órdenes lista las partes con su acierto y la parte se marca sobre el enemigo.
 	scene._show_part_menu(battle.enemies[0])
+	options = scene.menu_options()
+	check(options[0].begins_with(battle.enemies[0].parts[battle.enemies[0].part_order[0]].def.display_name),
+		"al atacar se listan las partes")
+	check(options[0].ends_with("%"), "con su probabilidad de acierto")
 	scene._aim_at(battle.enemies[0], CombatTypes.ARM_R)
 	var reticle: PartReticle = scene.find_children("*", "PartReticle", true, false)[0] as PartReticle
-	check(reticle.visible, "se señala la parte")
-	check(reticle.lines.size() >= 3 and reticle.lines[1].contains("%"), "con su probabilidad de acierto")
-	check(reticle.lines[2].begins_with("Daño"), "y el daño estimado")
+	check(reticle.visible and reticle.lines.is_empty(), "se marca la parte, sin ficha")
 	check(reticle.position.distance_to(view.position + view.anchor(CombatTypes.ARM_R)) < 1.5, "sobre la propia parte")
-	# Golpear el brazo y resolver la ronda.
+	check(messages.visible_text().contains("acierto") and messages.visible_text().contains("daño"),
+		"arriba, el acierto y el daño estimado")
+	# Golpear el brazo y resolver la ronda (mensajes rápidos).
+	messages.line_seconds = 0.02
+	messages.per_char = 0.0
 	scene._add_order(CombatTypes.ActionType.ATTACK, battle.enemies[0], CombatTypes.ARM_R)
 	var waited: float = 0.0
-	while battle.round_number < 2 and battle.outcome == Battle.Outcome.ONGOING and waited < 8.0:
+	while battle.round_number < 2 and battle.outcome == Battle.Outcome.ONGOING and waited < 12.0:
 		await host.get_tree().create_timer(0.1).timeout
 		waited += 0.1
 	check(battle.round_number >= 2 or battle.outcome != Battle.Outcome.ONGOING, "la ronda se resuelve en pantalla")
-	check(scene._log.get_parsed_text().contains("RONDA 1"), "el registro cuenta lo que pasa")
+	check("\n".join(messages.history).contains("RONDA 1"), "el historial cuenta lo que pasa")
+	check(messages.history.size() >= 3, "con varias líneas")
 	# Una amputación se ve en el sprite.
 	battle.enemies[0].parts[CombatTypes.LEG_R].amputate()
 	scene._refresh()
 	check_eq(view.part_state(CombatTypes.LEG_R), CombatTypes.PartState.AMPUTATED, "la vista oculta la parte amputada")
+	var marks: EnemyMarks = scene.find_children("*", "EnemyMarks", true, false)[0] as EnemyMarks
+	var amputated_mark: bool = false
+	for mark: Dictionary in marks.marks():
+		if mark["part"] == CombatTypes.LEG_R and mark["kind"] == BattleFrame.ICON_AMPUTATED:
+			amputated_mark = true
+	check(amputated_mark, "un icono de amputada junto a la pierna")
+	# Las heridas propias, en una ventanita al pasar por la fila.
+	battle.protagonist().parts[CombatTypes.ARM_L].worsen()
+	scene._on_row_details(rows[0], true, false)
+	var wounds: WoundsPanel = scene.wounds_panel()
+	check(wounds.visible, "al pasar por la fila se ven las heridas")
+	check(wounds.lines().has("%s: Herida" % battle.protagonist().parts[CombatTypes.ARM_L].def.display_name),
+		"con la parte herida")
+	scene._on_row_details(rows[0], false, false)
+	check(not wounds.visible, "y se cierran al salir")
 	scene.queue_free()
 	await host.get_tree().process_frame
 	GameState.new_game()

@@ -172,6 +172,11 @@ Ya no es la escena principal: abre `res://scenes/battle/battle_scene.tscn` y pul
   ```
 
   `--autoplay=N` juega N rondas solo; `--screenshot=RUTA` guarda una captura y cierra.
+  Para capturas de la pantalla nueva: `--battle-pick=arm_r` (apuntando a una parte), `--battle-maim=arm_r`
+  (empieza amputada), `--battle-hurt=head:1,leg_l:2` (partes del enemigo Herida/Rota), `--battle-strike=arm_l`
+  (golpe que la arranca), `--battle-wound=arm_r:1` (herida propia), `--battle-wounds` (abre la ventanita de
+  heridas), `--battle-say=Texto_con_guiones` (mensaje arriba), `--battle-seed=N`, `--battle-shot-delay=S`.
+  La lista completa está en la cabecera de `battle_scene.gd`.
 
 Qué incluye: rondas con telegrafiado, ataque por partes, Guardia, Respirar, Vendas, huida individual y en grupo, amputación, fracturas, sangrado, aturdimiento, Mente (Inquietud, Pánico, Quiebre), Caídos y rematar, fin de partida por muerte del protagonista.
 

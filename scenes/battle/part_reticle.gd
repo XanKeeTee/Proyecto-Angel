@@ -1,13 +1,14 @@
 class_name PartReticle
 extends Node2D
-## Retícula sobre la parte del cuerpo apuntada: cuatro esquinas que laten y una ficha al lado con
-## la parte, la probabilidad de acierto, el daño estimado y su estado.
+## Marca discreta sobre la parte del cuerpo apuntada: cuatro esquinas finas que laten despacio.
+## Si se le dan líneas, dibuja además una ficha al lado (el combate ya no la usa: los datos van en
+## la ventana de mensajes).
 
-const COLOR: Color = Color("d0a24a")
-const SHADOW: Color = Color(0, 0, 0, 0.7)
+const COLOR: Color = Color(0.92, 0.89, 0.83, 0.8)
+const SHADOW: Color = Color(0, 0, 0, 0.6)
 const PANEL: Color = Color(0.03, 0.03, 0.05, 0.86)
-const SIZE: float = 26.0
-const ARM: float = 7.0
+const SIZE: float = 20.0
+const ARM: float = 5.0
 
 ## Textos de la ficha (líneas). Vacío = sin ficha.
 var lines: PackedStringArray = []
@@ -33,15 +34,14 @@ func point_at(point: Vector2, info: PackedStringArray) -> void:
 
 
 func _draw() -> void:
-	var pulse: float = 1.0 + 0.12 * sin(_time * 7.0)
+	var pulse: float = 1.0 + 0.08 * sin(_time * 4.0)
 	var h: float = SIZE * 0.5 * pulse
 	for corner: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(1, 1), Vector2(-1, 1)]:
 		var c: Vector2 = corner * h
 		for pass_color: Color in [SHADOW, COLOR]:
 			var o: Vector2 = Vector2(1, 1) if pass_color == SHADOW else Vector2.ZERO
-			draw_line(c + o, c + o - Vector2(corner.x * ARM, 0), pass_color, 2.0)
-			draw_line(c + o, c + o - Vector2(0, corner.y * ARM), pass_color, 2.0)
-	draw_rect(Rect2(Vector2(-1, -1), Vector2(2, 2)), COLOR)
+			draw_line(c + o, c + o - Vector2(corner.x * ARM, 0), pass_color, 1.0)
+			draw_line(c + o, c + o - Vector2(0, corner.y * ARM), pass_color, 1.0)
 	if lines.is_empty() or font == null:
 		return
 	var font_size: int = UiStyle.MONO_SMALL

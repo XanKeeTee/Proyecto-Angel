@@ -222,7 +222,7 @@ Temporales, como datos (`CombatStatusDef`, en `data/statuses/`). Duran unas rond
 | `blocks_flee` | No puede huir |
 | `breakable` | Se rompe con **Zafarse**: `45 + 5 × (FUE propia − FUE de quien sujeta)` %, entre 15 y 90. También se suelta si a quien sujeta se le rompe la parte con la que sujeta, cae o muere |
 
-Estados actuales: **Agarrado** y **Sedación** (ver [el enfermero](../enemigos/enfermero.md#estados)). Se ven en la ficha del personaje y en el registro.
+Estados actuales: **Agarrado** y **Sedación** (ver [el enfermero](../enemigos/enfermero.md#estados)). Se ven como iconos en la fila del personaje (y sobre el enemigo), en su ventanita de heridas y en la ventana de mensajes.
 
 ## Intenciones ocultas
 
@@ -253,13 +253,19 @@ Si al resolverse una acción su objetivo ya no es válido:
 
 ## Presentación `[PROPUESTA]`
 
-A la manera de *Fear & Hunger* (`scenes/battle/battle_scene.gd`, vista 640×360):
+A la manera de *Fear & Hunger* (`scenes/battle/battle_scene.gd`, vista 640×360), siguiendo la captura de referencia que mandó el equipo:
 
-- **Fondo**: el lugar donde ocurre (captura oscurecida del mapa justo antes del combate) con un cono de luz sobre el enemigo; sin captura, un pasillo genérico.
-- **Arriba**: el enemigo **grande en el centro** (pies a 238 px; ~230 px de alto). A la izquierda, su nombre, cómo está («Entero», «Herido», «Malherido», «Agonizando»; no se ve su Cuerpo exacto), sus estados y el estado de cada parte. A la derecha, el **aviso**: «PREPARA · TAJO · → BRAZO DER.» y el texto del gesto.
-- **Abajo** (desde 246 px): órdenes a la izquierda, la **ficha** de cada personaje en el centro (retrato con la ropa puesta, Cuerpo, Mente, estados, silueta con las heridas, lista de heridas y arma) y el **registro** a la derecha.
-- **Apuntar**: al elegir parte, una **retícula** late sobre la parte en el propio sprite y una ficha dice su acierto, el daño estimado al Cuerpo (`Battle.preview_damage`), su estado y qué se consigue («Si se rompe: sin tajo», «Se puede arrancar», «Puede aturdir»). Con el ratón se apunta y se hace clic sobre el sprite.
-- **Al resolver**: el enemigo hace su animación de preparación al anunciar y la de ataque al golpear; los golpes producen destello, sacudida de pantalla, salpicaduras de sangre que quedan en el suelo, números flotantes («−16», «FALLO», «CRÍTICO»), el rótulo de impacto («FRACTURA.», «AMPUTACIÓN.») y aberración del filtro VHS. Los golpes al protagonista enrojecen la pantalla y su ficha.
+- **Escena**: fondo **negro** con un **foco** cenital: un haz muy tenue desde arriba y una elipse de luz en el suelo que se difumina hacia fuera. El enemigo, grande, en el centro y de pie sobre la luz (pies a 250 px; ~210 px de alto). Ya no se usa la captura del mapa como fondo.
+- **El grupo, de espaldas y en primer plano** (`PartyBattler`): delante del enemigo y más abajo, al borde de la luz, con la mitad inferior tapada por las cajas. En el prólogo solo está el protagonista, abajo y un poco a la izquierda. Su imagen es un dato: `CombatantDef.battle_back` (+ `battle_back_origin`, los pies); mientras se rehace el arte en 2D, se usa el fotograma de espaldas (fila 8, reposo) del sprite del mapa con la ropa puesta, ampliado ×2 sin suavizar.
+- **Abajo, dos cajas** (`BattleFrame`: fondo oscuro translúcido y marco fino de dos tonos):
+  - **izquierda, estrecha: órdenes** — Atacar, Habilidades (por ahora, Respirar), Guardia, Objeto, Zafarse (si te agarran), Huir solo (con más de un personaje) y Huir. La seleccionada, en una franja clara. Los porcentajes y cantidades van en azul grisáceo a la derecha. En los submenús la caja se ensancha lo justo para los nombres largos; Esc o «Atrás» vuelve.
+  - **derecha, ancha: el grupo** (`PartyRow`) — una fila por miembro: nombre, iconos de sus estados, icono del arma empuñada, **Cuerpo** con barra fina roja y su número, **Mente** con barra fina azul y su número. El miembro que elige, resaltado.
+- **Apuntar**: al elegir Atacar, la caja de órdenes lista las **partes del enemigo con su probabilidad de acierto** (las amputadas, con «—» y sin poder elegirse). La parte señalada se marca **discretamente** sobre el propio enemigo (cuatro esquinas finas, `PartReticle`) y la ventana de arriba dice su estado, el acierto, el daño estimado al Cuerpo (`Battle.preview_damage`) y qué se consigue («Si se rompe: sin tajo», «Se puede arrancar», «Puede aturdir»). Con el ratón se apunta y se hace clic sobre el sprite.
+- **Estados sobre el enemigo** (`EnemyMarks`): iconos pequeños con marquito junto a cada parte afectada — gota (Herida), hueso partido (Rota), muñón (Amputada) — y, sobre la cabeza, los de todo el cuerpo (sangrado, aturdimiento, agarre…). No se ve su Cuerpo exacto.
+- **Mensajes** (`MessageWindow`): ventana **arriba, a todo lo ancho**, con el mismo marco, que enseña 1-2 líneas cada vez como en un RPG clásico. Cada mensaje se queda un momento y pasa solo (Intro o clic lo adelanta); la resolución de la ronda espera a que se haya contado todo. Cuando no queda nada que contar enseña lo que **prepara el enemigo** («ENFERMERO prepara AGARRAR → BRAZO DER.» y, debajo, el gesto) o los datos de la parte apuntada. Todo queda en `MessageWindow.history` (también «— RONDA N —», que no se enseña).
+- **Heridas propias** (`WoundsPanel`): ventanita al pasar el ratón por la fila del personaje (al pulsar, se queda abierta; Esc la cierra) con cada parte y su estado, sus estados y el arma. Se abre sola al elegir qué cubrir con la Guardia, con la parte señalada.
+- **Al resolver**: el enemigo hace su animación de preparación al anunciar y la de ataque al golpear; el personaje da un paso al atacar y se sacude en rojo al recibir; los golpes producen destello, sacudida de pantalla, salpicaduras de sangre que quedan en el suelo, números flotantes («−16», «FALLO», «CRÍTICO»), el rótulo de impacto («FRACTURA.», «AMPUTACIÓN.») y aberración del filtro de imagen (`VhsOverlay`; el del mapa si se entra desde el mapa). Mientras dura el combate la viñeta del filtro se suaviza para que se lean las cajas, y al salir vuelve a su valor.
+- Se quitaron (no están en la referencia): la lista de partes con su estado a la izquierda, la caja de previsión, la silueta de heridas, la ficha grande con retrato y el registro lateral.
 - **Vista del enemigo** (`EnemyView`): lee las hojas **por capas** del arte (contrato J ↔ K: `tools/art/sprite_meta.json` → `enemy_<nombre>`, horneado en `EnemySpriteDef` por `tools/data/build_enemies.gd`; en desarrollo lo lee del JSON). Oculta la capa de cada parte amputada y enseña su muñón (`stump_<parte>`), oscurece las Rotas y reproduce `idle`, `windup`, `attack`, `hit`, `stagger` y `death`. Sin hojas dibuja un **marcador provisional** por partes con las mismas animaciones y mutilaciones. La misma vista, escalada, es la figura del enemigo en el mapa y su cadáver.
 
 ## Del mapa al combate `[PROPUESTA]`
