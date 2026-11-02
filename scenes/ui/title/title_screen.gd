@@ -225,7 +225,7 @@ func _intro() -> void:
 	_vhs.glitch(1.2, 0.8)
 	var tween: Tween = create_tween()
 	tween.tween_property(_fade, "color:a", 0.0, 0.6)
-	tween.parallel().tween_method(_background.set_noise, 1.0, 0.12, 1.0)
+	tween.parallel().tween_method(_background.set_noise, 1.0, TitleBackground.REST_NOISE, 1.0)
 	await tween.finished
 	_set_menu_enabled(true)
 	_focus_first()
@@ -321,7 +321,7 @@ func _enter_tape() -> void:
 	_osd.set_mode(TapeOsd.Mode.REWIND)
 	_vhs.glitch(1.4, 1.0)
 	var tween: Tween = create_tween()
-	tween.tween_method(_background.set_noise, 0.12, 1.0, 1.0).set_ease(Tween.EASE_IN)
+	tween.tween_method(_background.set_noise, TitleBackground.REST_NOISE, 1.0, 1.0).set_ease(Tween.EASE_IN)
 	tween.parallel().tween_property(_menu, "modulate:a", 0.0, 0.5)
 	tween.parallel().tween_property(_title, "modulate:a", 0.0, 0.8)
 	tween.tween_property(_fade, "color:a", 1.0, 0.25)

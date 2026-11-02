@@ -89,3 +89,28 @@ func test_navegacion_y_paneles() -> void:
 	title.queue_free()
 	await host.get_tree().process_frame
 	_restore_saves()
+
+
+func test_el_fondo_es_el_hospital_sin_guion_ni_estado() -> void:
+	_stash_saves()
+	GameState.new_game()
+	var flags_before: int = GameState.flags.size()
+	var objects_before: int = GameState.objects.size()
+	var title: Node = load(SCENE).instantiate()
+	host.add_child(title)
+	await host.get_tree().create_timer(0.5).timeout
+	var background: TitleBackground = title.get("_background")
+	var viewport: SubViewport = null
+	for node: Node in background.find_children("*", "SubViewport", true, false):
+		viewport = node as SubViewport
+	check(viewport != null, "el fondo va en un SubViewport")
+	check(viewport.find_child("Stretcher09", true, false) != null, "con la Habitación 09 de verdad")
+	check(viewport.find_children("*", "WorldController", true, false).is_empty(), "sin el guion del mapa")
+	check(viewport.find_child("Player", true, false) == null, "sin jugador")
+	check(viewport.find_child("HorrorDirector", true, false) == null, "sin el terror del juego")
+	check(viewport.find_child("Ambience", true, false) == null, "sin el ambiente del juego")
+	check_eq(GameState.flags.size(), flags_before, "no toca las banderas")
+	check_eq(GameState.objects.size(), objects_before, "no toca el estado de los objetos")
+	title.queue_free()
+	await host.get_tree().process_frame
+	_restore_saves()
