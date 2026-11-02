@@ -22,13 +22,15 @@ func _ready() -> void:
 	dim.color = Color(0, 0, 0, 0.8)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
-	var title: Label = UiStyle.label("PAUSA", 16, UiStyle.BONE)
-	title.position = Vector2(290, 110)
+	var title: Label = UiStyle.title("PAUSA")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.size = Vector2(640, 24)
+	title.position = Vector2(0, 104)
 	add_child(title)
 	_box = VBoxContainer.new()
-	_box.position = Vector2(260, 145)
-	_box.custom_minimum_size = Vector2(120, 0)
-	_box.add_theme_constant_override("separation", 4)
+	_box.position = Vector2(245, 140)
+	_box.custom_minimum_size = Vector2(150, 0)
+	_box.add_theme_constant_override("separation", 5)
 	add_child(_box)
 	_resume = UiStyle.button("Reanudar")
 	_resume.pressed.connect(close)
@@ -42,11 +44,16 @@ func _ready() -> void:
 	var quit_title: Button = UiStyle.button("Volver al título")
 	quit_title.pressed.connect(_to_title)
 	_box.add_child(quit_title)
-	var hint: Label = UiStyle.label("Se guarda en las grabadoras de cinta.", 8, UiStyle.ASH, UiStyle.mono())
-	hint.position = Vector2(220, 210)
+	var hint: Label = UiStyle.label("Se guarda en las grabadoras de cinta.", UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.size = Vector2(640, 14)
+	hint.position = Vector2(0, 232)
 	add_child(hint)
-	var keys: Label = UiStyle.label("WASD/flechas mover · E usar · R examinar · F linterna · Tab custodia · 1-5 bolsillos", 7, UiStyle.ASH, UiStyle.mono())
-	keys.position = Vector2(110, 330)
+	var keys: Label = UiStyle.label("WASD/flechas mover · E usar · R examinar · F linterna · Tab custodia · 1-5 bolsillos",
+		UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
+	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	keys.size = Vector2(640, 14)
+	keys.position = Vector2(0, 330)
 	add_child(keys)
 
 
