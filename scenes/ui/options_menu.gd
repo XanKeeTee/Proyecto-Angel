@@ -79,7 +79,7 @@ apenas se distinga. La oscuridad es parte del juego.", UiStyle.MONO_SMALL, UiSty
 	calib.add_child(hint)
 	col.add_child(calib)
 	var keys: Label = UiStyle.label(
-		"Mover: WASD / flechas / stick · Usar: E · Examinar: R · Linterna: F\nCustodia: Tab · Bolsillos: 1-5 · Pausa: Esc · Filtro VHS: F2",
+		"Mover: WASD / flechas / stick · Correr: Shift / L3 / L2 · Usar: E · Examinar: R\nLinterna: F · Custodia: Tab · Bolsillos: 1-5 · Pausa: Esc · Filtro VHS: F2",
 		UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
 	col.add_child(keys)
 	var buttons: HBoxContainer = HBoxContainer.new()

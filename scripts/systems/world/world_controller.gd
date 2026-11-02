@@ -688,9 +688,12 @@ func _update_flashlight(delta: float) -> void:
 
 
 func _update_vitals(delta: float) -> void:
+	var v: Vitals = character.vitals
+	# Aliento para correr: la forma física según el Cuerpo, y la raya del HUD.
+	player.set_run_condition(v.body_ratio(), v.bleeding)
+	hud.set_breath(player.breath_ratio(), player.breath.winded)
 	if not player.input_enabled:
 		return
-	var v: Vitals = character.vitals
 	v.tick(delta)
 	# Cuerpo bajo: más lento y con la imagen enrojecida.
 	var hurt: float = clampf((50.0 - v.body) / 30.0, 0.0, 1.0)

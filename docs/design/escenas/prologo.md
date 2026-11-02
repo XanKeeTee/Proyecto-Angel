@@ -206,6 +206,7 @@ Se guardan en `user://settings.cfg`, aparte de la partida.
 | Acción | Teclado | Mando |
 |---|---|---|
 | Moverse | WASD / flechas | Stick izquierdo / cruceta |
+| Correr (un poco, solo hacia delante, con aliento limitado) | Shift | Stick izquierdo pulsado (L3) / L2 |
 | Apuntar (mirar y alumbrar) | Ratón | Stick derecho |
 | Acción (abrir, coger, leer…; si hay varias, se elige) | E / Intro / Espacio | A |
 | Examinar | R | X |
@@ -214,6 +215,14 @@ Se guardan en `user://settings.cfg`, aparte de la partida.
 | Sistema de Custodia | Tab / I | Select |
 | Bolsillos | 1–5 | — |
 | Pausa | Esc | Start |
+
+**Correr.** El protagonista está recién operado: correr es poco más que apretar el paso
+(×1,5 la velocidad de andar; ×1,2 con el Cuerpo al mínimo). Solo corre hacia donde mira o en
+diagonal hacia delante; de espaldas o de lado, Shift no hace nada. Aguanta unos 4 s; el
+aliento se recupera tras ~0,7 s sin correr, más deprisa parado que andando, y si se agota
+del todo no puede volver a correr hasta recuperar un tercio (respira agitado). Con el Cuerpo
+bajo se gasta hasta el doble de rápido y se recupera a la mitad; sangrando, ×1,5 y ×0,7. El
+HUD muestra una raya fina abajo en el centro solo mientras el aliento no está lleno.
 
 ## Pendiente
 

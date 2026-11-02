@@ -49,7 +49,7 @@ func _ready() -> void:
 	hint.size = Vector2(640, 14)
 	hint.position = Vector2(0, 232)
 	add_child(hint)
-	var keys: Label = UiStyle.label("WASD/flechas mover · E usar · R examinar · F linterna · Tab custodia · 1-5 bolsillos",
+	var keys: Label = UiStyle.label("WASD/flechas mover · Shift correr · E usar · R examinar · F linterna · Tab custodia · 1-5 bolsillos",
 		UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
 	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	keys.size = Vector2(640, 14)

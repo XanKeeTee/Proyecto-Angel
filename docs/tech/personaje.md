@@ -79,6 +79,20 @@ Acciones (10 fotogramas cada una, 11–13 fps, 0,75–0,9 s): `reach_low` 0–9,
   patinar) y el tronco y la cabeza siguen mirando al frente. Para que los pies no patinen en
   los ángulos intermedios, el cuerpo se gira hasta una orientación (22,5°) hacia donde van las
   piernas; la luz sigue apuntando al puntero.
+- **Correr** (`InputActions.RUN`: Shift, L3 o L2): multiplica la velocidad de andar por
+  `RunBreath.speed_multiplier()` (1,5 en forma, 1,2 con el Cuerpo al mínimo, algo menos
+  sangrando). Solo hacia delante: corre del todo hasta 45° entre hacia dónde anda y hacia
+  dónde mira, nada a partir de 60°. Entra en 0,35 s y sale en 0,5 s (`run_amount()`). Usa la
+  misma hoja y la misma zancada que andar (64 px): como el ciclo avanza con la distancia, la
+  cadencia sube sola y los pies no patinan más que al andar. Inclina el sprite hasta 0,07 rad
+  (`skew`, con los pies quietos; solo se nota en horizontal; la luz sigue a la lente con la
+  transformación del sprite). Las pisadas suenan 4 dB más fuertes y algo más agudas. Las
+  acciones, levantarse y `stop()` cortan la carrera.
+- **Aliento** (`scenes/world/player/run_breath.gd`, lógica pura): ~4 s de carrera; se recupera
+  tras 0,7 s sin correr (0,22/s parado, 0,09/s andando); agotado, no corre hasta tener 0,35.
+  Solo se gasta si avanza de verdad (no empujando una pared). `WorldController` le pasa cada
+  fotograma el Cuerpo y el sangrado (`set_run_condition`) y pone la raya del HUD
+  (`Hud.set_breath`). Al agotarse suena `breath_run_male`.
 - **Giro en el sitio**: parado, si tiene que girar 3 orientaciones o más (> 45°), arrastra los
   pies y gira algo más despacio.
 - **Acciones**: `play_action(acción, destino)` (corrutina). Se gira hacia el destino pasando por
@@ -130,11 +144,17 @@ Se piden con `Sfx.at` en fotogramas concretos (`motion.GETUP_SOUNDS`). Mientras 
 
 `bed_creak` ya existe (crujido de la camilla).
 
+Al correr:
+
+| Sonido | Qué |
+|---|---|
+| `breath_run_male` | Hombre adulto sin aliento tras una carrera corta: jadeo rápido por la boca, 4–6 respiraciones entrecortadas que se van calmando, con un leve quejido de dolor, 2–3 s, cerca del micro, sin voz ni tos. |
+
 ## Depuración
 
 Además de las opciones de `WorldController.DEBUG_ARGS_HELP`, el jugador lee:
 `--walk=grados` (anda sin parar hacia ese ángulo de pantalla; con `--aim=` se prueba el paso de
-espaldas o el lateral), `--act=acción` (repite una acción) y `--weapon=id` (pone en la mano el
+espaldas o el lateral; con `--run`, corriendo), `--act=acción` (repite una acción) y `--weapon=id` (pone en la mano el
 icono de ese objeto). Ejemplo:
 
 ```bash
