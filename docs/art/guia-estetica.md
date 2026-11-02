@@ -69,7 +69,9 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
   - la cabeza se estabiliza con un leve cabeceo;
   - el tronco va inclinado hacia delante;
   - el bajo de la bata se balancea.
+- **Ropa por capas**: cuerpo con ropa interior y una hoja por prenda, del mismo tamaño. Las prendas largas se balancean en el juego (el bajo, no la cintura).
 - **En el juego**:
+  - mira hacia el puntero y puede andar de espaldas (paso al revés, más lento);
   - los giros pasan por las orientaciones intermedias;
   - tras unos segundos quieto, el personaje hace uno de sus gestos;
   - la luz de la linterna sale de la lente en cada fotograma.
@@ -86,6 +88,14 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
   - vía arrancada con sangre en la mano izquierda;
   - pulsera de paciente;
   - pies sucios.
+
+### Iconos de objetos
+
+- Miden lo mismo que sus casillas en la bandeja (`casillas × 30 − 4` px) y el objeto llena el recuadro.
+- Detalle a escala real: moleteado, estrías, roscas, etiquetas con líneas de texto, graduaciones, tornillería, dientes de llave, pintura desconchada.
+- Metal, cristal y plástico llevan brillo especular. Tramado suave (menos que en el mapa).
+- La ropa se dibuja con el mismo modelo que lleva puesto el personaje, sin cuerpo.
+- El inspector y el panel de detalles usan vistas de 112 px.
 
 ### Escenarios
 

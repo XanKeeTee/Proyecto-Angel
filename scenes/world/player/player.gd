@@ -2,6 +2,11 @@ class_name Player
 extends CharacterBody2D
 ## Protagonista en el mapa: movimiento libre en cualquier ángulo (analógico con mando),
 ## con aceleración y frenada suaves, colisión con paredes y muebles, y sprite en 8 orientaciones.
+## - Apunta con el ratón (o el stick derecho): mira y alumbra hacia el puntero aunque camine
+##   en otra dirección. Andar de espaldas es más lento y el paso se reproduce al revés.
+##   Sin ratón ni stick derecho, mira hacia donde camina.
+## - La ropa va en capas (cabeza, cuerpo, piernas, pies) encima del cuerpo. Las prendas
+##   largas (la bata) se balancean con un muelle amortiguado que reacciona al movimiento.
 ## - El ciclo de paso avanza con la distancia recorrida de verdad (los pies no patinan,
 ##   tampoco al deslizarse contra una pared).
 ## - En reposo respira.
@@ -44,6 +49,24 @@ const ANIM_WALK_FLASH: Vector2i = Vector2i(52, 12)
 const BOUNCE_DISTANCE: float = 76.0
 ## Distancias a las que se mira al examinar.
 const REACH: Array[float] = [18.0, 30.0]
+## Altura del pecho sobre los pies: desde ahí se apunta al ratón.
+const AIM_HEIGHT: float = 30.0
+## Por debajo de esta distancia al puntero no se cambia de orientación (evita giros locos).
+const AIM_DEADZONE: float = 10.0
+const STICK_DEADZONE: float = 0.35
+## Velocidad relativa al andar de lado y de espaldas.
+const STRAFE_SPEED: float = 0.85
+const BACKWARD_SPEED: float = 0.62
+## Física de la tela: rigidez y amortiguación del muelle, cuánto se queda atrás con la velocidad
+## y desplazamiento máximo del bajo (píxeles).
+const CLOTH_STIFFNESS: float = 55.0
+const CLOTH_DAMPING: float = 6.5
+const CLOTH_DRAG: float = 0.03
+const CLOTH_MAX: float = 3.2
+## Orden de dibujo de las capas de ropa (de abajo arriba).
+const OUTFIT_LAYERS: Array[StringName] = [&"feet", &"legs", &"body", &"head"]
+
+enum AimMode { MOVE, MOUSE, STICK }
 
 ## Origen de la luz (la mano) por fila de orientación: abajo, abajo-izq., izq., arriba-izq.,
 ## arriba, arriba-der., der., abajo-der.
@@ -57,6 +80,10 @@ const REACH: Array[float] = [18.0, 30.0]
 @export var light_sway: float = 0.045
 
 var input_enabled: bool = false
+## Con qué se apunta ahora mismo (cambia solo según lo último que se ha tocado).
+var aim_mode: AimMode = AimMode.MOUSE
+## Si no es cero, apunta en esa dirección sin mirar ratón ni mando (pruebas y escenas guionizadas).
+var forced_aim: Vector2 = Vector2.ZERO
 ## Ángulo hacia el que mira (radianes, 0 = derecha, PI/2 = abajo).
 var facing_angle: float = PI / 2.0
 ## Casilla en la que están los pies.
@@ -77,8 +104,18 @@ var _display_row: int = 0
 var _turn_timer: float = 0.0
 var _fidget_time: float = -1.0
 var _next_fidget: float = 9.0
+## Fase del ciclo de paso: avanza al andar hacia delante y retrocede al andar de espaldas.
+var _stride: float = 0.0
+var _cloth_offset: Vector2 = Vector2.ZERO
+var _cloth_velocity: Vector2 = Vector2.ZERO
+var _prev_velocity: Vector2 = Vector2.ZERO
+var _layers: Dictionary[StringName, Sprite2D] = {}
+var _cloth_amount: Dictionary[StringName, float] = {}
 ## Multiplicador de velocidad (heridas, sangrado…).
 var speed_scale: float = 1.0
+## Sonido de pisada (prefijo; hay variantes _1 a _4) y su volumen. Cambian con el calzado.
+var step_sound: String = "step"
+var step_volume_db: float = -10.0
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _glow: Sprite2D = $Sprite2D/Glow
@@ -93,7 +130,24 @@ func _ready() -> void:
 	_set_light_enabled(false)
 	_light_angle = facing_angle
 	_last_cell = cell
+	for layer: StringName in OUTFIT_LAYERS:
+		var node: Sprite2D = _sprite.get_node_or_null(NodePath(String(layer).capitalize())) as Sprite2D
+		if node != null:
+			_layers[layer] = node
+			node.visible = false
 	_update_frame()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		aim_mode = AimMode.MOUSE
+	elif event is InputEventJoypadMotion:
+		var motion: InputEventJoypadMotion = event
+		if absf(motion.axis_value) > STICK_DEADZONE:
+			if motion.axis == JOY_AXIS_RIGHT_X or motion.axis == JOY_AXIS_RIGHT_Y:
+				aim_mode = AimMode.STICK
+			elif aim_mode == AimMode.MOUSE and (motion.axis == JOY_AXIS_LEFT_X or motion.axis == JOY_AXIS_LEFT_Y):
+				aim_mode = AimMode.MOVE
 
 
 func _physics_process(delta: float) -> void:
@@ -104,17 +158,28 @@ func _physics_process(delta: float) -> void:
 		elif Input.is_action_just_pressed(InputActions.EXAMINE):
 			examine_requested.emit(_probe_cells())
 		wish = Input.get_vector(InputActions.MOVE_LEFT, InputActions.MOVE_RIGHT, InputActions.MOVE_UP, InputActions.MOVE_DOWN)
-	if wish != Vector2.ZERO:
-		velocity = velocity.move_toward(wish * MAX_SPEED * speed_scale, ACCELERATION * delta)
+	var aim: Vector2 = _aim_vector() if input_enabled else forced_aim
+	if aim != Vector2.ZERO:
+		facing_angle = aim.angle()
+	elif wish != Vector2.ZERO:
 		facing_angle = wish.angle()
+	if wish != Vector2.ZERO:
+		# De lado y de espaldas se anda más despacio.
+		var along: float = wish.normalized().dot(Vector2.from_angle(facing_angle))
+		var gait: float = lerpf(STRAFE_SPEED, 1.0, along) if along >= 0.0 else lerpf(STRAFE_SPEED, BACKWARD_SPEED, -along)
+		velocity = velocity.move_toward(wish * MAX_SPEED * speed_scale * gait, ACCELERATION * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 	var before: Vector2 = position
 	move_and_slide()
-	var stepped: float = position.distance_to(before)
+	var moved: Vector2 = position - before
+	var stepped: float = moved.length()
+	# El ciclo de paso va hacia atrás si camina de espaldas.
+	_stride += stepped * (-1.0 if moved.dot(Vector2.from_angle(facing_angle)) < -0.3 * stepped else 1.0)
+	_update_cloth(delta)
 	# Un paso cada media zancada: suena el pie descalzo.
 	if floori(_walk_distance / (STRIDE_PIXELS / 2.0)) != floori((_walk_distance + stepped) / (STRIDE_PIXELS / 2.0)):
-		Sfx.at(get_parent(), "step_%d" % randi_range(1, 4), position, -10.0, 0.08)
+		Sfx.at(get_parent(), "%s_%d" % [step_sound, randi_range(1, 4)], position, step_volume_db, 0.08)
 	_walk_distance += stepped
 	if cell != _last_cell:
 		_last_cell = cell
@@ -139,6 +204,22 @@ func _process(delta: float) -> void:
 	_turn(delta)
 	_update_frame()
 	_update_light(delta)
+
+
+## Viste al personaje: por capa (&"head", &"body", &"legs", &"feet"), la hoja de la prenda
+## (CanvasTexture con normales) y cuánto se mueve con la física (0 = rígida). null = nada.
+func set_outfit_layer(layer: StringName, sheet: Texture2D, cloth: float = 0.0) -> void:
+	var node: Sprite2D = _layers.get(layer)
+	if node == null:
+		return
+	node.texture = sheet
+	node.visible = sheet != null
+	_cloth_amount[layer] = cloth
+
+
+## Desplazamiento actual del bajo de la ropa (píxeles), para pruebas.
+func cloth_offset() -> Vector2:
+	return _cloth_offset
 
 
 ## Coloca al personaje en el centro de una celda, parado.
@@ -236,6 +317,46 @@ func _row() -> int:
 	return posmod(index, DIRECTIONS)
 
 
+## Hacia dónde apunta (vector sin normalizar) o cero si no hay puntero ni stick.
+func _aim_vector() -> Vector2:
+	if forced_aim != Vector2.ZERO:
+		return forced_aim
+	match aim_mode:
+		AimMode.MOUSE:
+			if not is_inside_tree() or DisplayServer.get_name() == "headless":
+				return Vector2.ZERO
+			var to_mouse: Vector2 = get_global_mouse_position() - (global_position + Vector2(0.0, -AIM_HEIGHT))
+			return to_mouse if to_mouse.length() > AIM_DEADZONE else Vector2.ZERO
+		AimMode.STICK:
+			var stick: Vector2 = Vector2(Input.get_joy_axis(0, JOY_AXIS_RIGHT_X), Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y))
+			return stick if stick.length() > STICK_DEADZONE else Vector2.ZERO
+	return Vector2.ZERO
+
+
+## Muelle amortiguado para el bajo de la ropa: se queda atrás con la velocidad, se lanza
+## hacia delante al frenar, ondea un poco con cada paso y oscila al girar.
+func _update_cloth(delta: float) -> void:
+	if delta <= 0.0:
+		return
+	var accel: Vector2 = (velocity - _prev_velocity) / delta
+	_prev_velocity = velocity
+	var target: Vector2 = -velocity * CLOTH_DRAG
+	target.y *= 0.35
+	var walk: float = clampf(velocity.length() / MAX_SPEED, 0.0, 1.0)
+	target.x += sin(_stride / STRIDE_PIXELS * TAU * 2.0) * 0.45 * walk
+	var force: Vector2 = (target - _cloth_offset) * CLOTH_STIFFNESS - _cloth_velocity * CLOTH_DAMPING
+	force -= accel * 0.012  # inercia: al arrancar se queda atrás, al frenar sigue de largo
+	_cloth_velocity += force * delta
+	_cloth_offset += _cloth_velocity * delta
+	if _cloth_offset.length() > CLOTH_MAX:
+		_cloth_offset = _cloth_offset.limit_length(CLOTH_MAX)
+		_cloth_velocity *= 0.5
+	for layer: StringName in _layers:
+		var mat: ShaderMaterial = _layers[layer].material as ShaderMaterial
+		if mat != null:
+			mat.set_shader_parameter(&"sway", _cloth_offset * float(_cloth_amount.get(layer, 0.0)))
+
+
 ## Gira el sprite hacia la orientación deseada pasando por las intermedias.
 func _turn(delta: float) -> void:
 	var target: int = _row()
@@ -247,7 +368,10 @@ func _turn(delta: float) -> void:
 		return
 	_turn_timer = 0.0
 	var diff: int = posmod(target - _display_row, DIRECTIONS)
-	_display_row = posmod(_display_row + (1 if diff <= DIRECTIONS / 2 else -1), DIRECTIONS)
+	var step: int = 1 if diff <= DIRECTIONS / 2 else -1
+	_display_row = posmod(_display_row + step, DIRECTIONS)
+	# Al girar, la tela sale despedida hacia fuera.
+	_cloth_velocity.x -= float(step) * 14.0
 
 
 func _update_frame() -> void:
@@ -255,7 +379,7 @@ func _update_frame() -> void:
 	var index: int
 	if _is_walking():
 		anim = ANIM_WALK_FLASH if _holding_flashlight else ANIM_WALK
-		index = int(fposmod(_walk_distance, STRIDE_PIXELS) / STRIDE_PIXELS * anim.y) % anim.y
+		index = int(fposmod(_stride, STRIDE_PIXELS) / STRIDE_PIXELS * anim.y) % anim.y
 	elif _fidget_time >= 0.0:
 		anim = ANIM_LOOK if _holding_flashlight else ANIM_FIDGET
 		index = mini(int(_fidget_time * FIDGET_FPS), anim.y - 1)
@@ -263,6 +387,8 @@ func _update_frame() -> void:
 		anim = ANIM_IDLE_FLASH if _holding_flashlight else ANIM_IDLE
 		index = int(_idle_time * IDLE_FPS) % anim.y
 	_sprite.frame = _display_row * COLUMNS + anim.x + index
+	for node: Sprite2D in _layers.values():
+		node.frame = _sprite.frame
 	_glow.frame = _sprite.frame
 	_glow.visible = _flashlight.enabled
 

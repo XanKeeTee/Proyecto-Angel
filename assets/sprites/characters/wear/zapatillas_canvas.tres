@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/zapatillas.png" id="1_nymeo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/zapatillas_n.png" id="2_aowaj"]
+
+[resource]
+diffuse_texture = ExtResource("1_nymeo")
+normal_texture = ExtResource("2_aowaj")
+texture_filter = 1

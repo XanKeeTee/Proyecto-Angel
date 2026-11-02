@@ -12,7 +12,7 @@ const TILE_SIZE: int = 32
 ## Carga que gasta la linterna por segundo encendida (100 = carga completa).
 const FLASHLIGHT_DRAIN: float = 100.0 / 540.0
 const SAVE_SPECIAL: StringName = &"save"
-const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --custody --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
+const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --wear=id,id --aim=grados --custody --outfit --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
 
 ## Virado de color de la zona.
 @export var zone_tint: Color = Color(0.9, 1.0, 0.96)
@@ -62,6 +62,8 @@ func _ready() -> void:
 	if director != null:
 		director.setup(self)
 	_apply_debug_state()
+	apply_outfit()
+	character.outfit_changed.connect(apply_outfit)
 	if _resume_from_save():
 		_fade.color.a = 1.0
 		_fade_to(0.0, 0.8)
@@ -208,6 +210,21 @@ func open_custody(document_id: StringName = &"") -> void:
 	await custody_screen.closed
 	hud.refresh_pockets()
 	unlock()
+
+
+## Viste al jugador con lo que lleva puesto el personaje: capas del sprite, balanceo de la
+## tela y sonido de las pisadas según el calzado.
+func apply_outfit() -> void:
+	for slot: ItemDef.EquipSlot in [ItemDef.EquipSlot.HEAD, ItemDef.EquipSlot.BODY, ItemDef.EquipSlot.LEGS, ItemDef.EquipSlot.FEET]:
+		var stack: ItemStack = character.worn(slot)
+		if stack != null:
+			player.set_outfit_layer(ItemDef.slot_layer(slot), stack.def.wear_sheet, stack.def.cloth_sway)
+		else:
+			player.set_outfit_layer(ItemDef.slot_layer(slot), null)
+	var feet: ItemStack = character.worn(ItemDef.EquipSlot.FEET)
+	var shod: bool = feet != null and feet.def.step_sound != ""
+	player.step_sound = feet.def.step_sound if shod else "step"
+	player.step_volume_db = feet.def.step_volume_db if shod else -10.0
 
 
 func toggle_flashlight() -> void:
@@ -494,6 +511,12 @@ func _apply_debug_state() -> void:
 	if debug.has("flag"):
 		for f: String in debug["flag"].split(","):
 			GameState.set_flag(StringName(f))
+	if debug.has("wear"):
+		for id: String in debug["wear"].split(","):
+			var item: ItemDef = Registry.item(StringName(id))
+			if item != null and item.is_wearable():
+				GameState.give_item(item)
+				character.equip(character.custody.find_first(item.id))
 	if debug.has("auto-advance"):
 		message.auto_advance = debug["auto-advance"].to_float()
 	vhs.set_enabled(not debug.has("no-vhs"))
@@ -519,6 +542,10 @@ func _start_debug() -> void:
 		var options: OptionsMenu = OptionsMenu.new()
 		add_child(options)
 		options.open()
+	if debug.has("aim"):
+		player.forced_aim = Vector2.from_angle(deg_to_rad(debug["aim"].to_float()))
+	if debug.has("outfit"):
+		custody_screen.open(CustodyScreen.Tab.CHARACTER)
 	if debug.has("custody") or debug.has("doc"):
 		if debug.has("doc"):
 			GameState.give_document(Registry.document(StringName(debug["doc"])))
@@ -561,6 +588,9 @@ func _build_ui() -> void:
 	vhs.set_param("vignette_strength", 0.95)
 	hud = Hud.new()
 	add_child(hud)
+	var reticle: AimReticle = AimReticle.new()
+	reticle.player = player
+	add_child(reticle)
 	custody_screen = CustodyScreen.new()
 	add_child(custody_screen)
 	inspector = Inspector.new()

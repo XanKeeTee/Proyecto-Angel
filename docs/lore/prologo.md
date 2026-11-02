@@ -29,6 +29,8 @@ Nada de esto es canon hasta que lo aprueben las dos personas del equipo. Está e
 - **Reingresos**: el libro de admisiones muestra nueve ingresos de la Habitación 09 con el mismo nombre tachado. En la morgue hay una etiqueta «09 — Causa: fin de la vigilia», con el cuerpo desaparecido.
 - **El pasillo imposible**: la libreta del celador dice que el ala mide once metros más por dentro que por fuera. Al final del prólogo, el pasillo lleva a otra Habitación 09 con alguien que tiene la cara del protagonista.
 
+- **Ropa del prólogo**: descripciones en `tools/levels/build_wear.gd`. Detalles que sugieren cosas sin cerrarlas: «09» bordado en la bata, la placa arrancada del celador, la etiqueta «CAMA 12» del pijama, un nombre escrito y tachado dentro del gorro de lana.
+
 ## Revisar con `lore-keeper`
 
 - Que «el edificio se encarga» no choque con lo que el equipo quiera hacer con el hospital después.

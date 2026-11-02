@@ -1,8 +1,9 @@
 class_name CustodyScreen
 extends CanvasLayer
-## Pantalla del Sistema de Custodia. Dos pestañas:
+## Pantalla del Sistema de Custodia. Tres pestañas:
 ## - BANDEJA: bandeja 5x4, bolsillos, detalles del objeto y constantes.
 ## - EXPEDIENTE: documentos encontrados y lector.
+## - PERSONAJE: el protagonista con la ropa puesta y sus ranuras (cabeza, cuerpo, piernas, pies).
 ## Pausa el juego mientras está abierta. Ratón y teclado:
 ##   flechas/ratón mueven · Intro coge/suelta · R gira · E usa · X examina · C combina
 ##   1-5 al bolsillo · Q cambia de pestaña · Tab/Esc cierra.
@@ -11,9 +12,13 @@ signal closed
 ## Pide abrir el inspector para un objeto (lo gestiona la escena).
 signal inspect_requested(stack: ItemStack)
 
-enum Tab { TRAY, DOSSIER }
+enum Tab { TRAY, DOSSIER, CHARACTER }
 
 const SLIDE: float = 14.0
+const TAB_NAMES: Array[String] = ["BANDEJA", "EXPEDIENTE", "PERSONAJE"]
+const SLOTS: Array[ItemDef.EquipSlot] = [
+	ItemDef.EquipSlot.HEAD, ItemDef.EquipSlot.BODY, ItemDef.EquipSlot.LEGS, ItemDef.EquipSlot.FEET,
+]
 
 var character: CharacterState
 var _tab: Tab = Tab.TRAY
@@ -27,6 +32,7 @@ var _dossier_page: Control
 var _name: Label
 var _meta: Label
 var _desc: Label
+var _detail_image: TextureRect
 var _actions: VBoxContainer
 var _feedback: Label
 var _body_bar: ProgressBar
@@ -41,6 +47,15 @@ var _doc_body: RichTextLabel
 var _doc_image: TextureRect
 var _doc_stamp: Label
 var _current_doc: StringName = &""
+var _outfit_page: Control
+var _preview: OutfitPreview
+var _slot_buttons: Dictionary[int, Button] = {}
+var _wardrobe: VBoxContainer
+var _outfit_name: Label
+var _outfit_desc: Label
+var _outfit_feedback: Label
+var _remove_button: Button
+var _selected_slot: ItemDef.EquipSlot = ItemDef.EquipSlot.BODY
 
 
 func _init() -> void:
@@ -109,7 +124,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var key: InputEventKey = event as InputEventKey
 	if key != null and key.pressed and not key.echo and key.keycode == KEY_Q:
-		_set_tab(Tab.DOSSIER if _tab == Tab.TRAY else Tab.TRAY)
+		_set_tab(((_tab + 1) % TAB_NAMES.size()) as Tab)
 		get_viewport().set_input_as_handled()
 		return
 	if _tab != Tab.TRAY:
@@ -147,6 +162,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _use(stack: ItemStack) -> void:
 	if stack == null:
+		return
+	if stack.def.is_wearable():
+		var result: String = character.equip(stack)
+		_say(result if result != "" else "Te pones " + stack.def.display_name.to_lower() + ".")
+		_refresh()
 		return
 	if not stack.def.usable:
 		_say("No se puede usar así. Quizá combinado con otra cosa.")
@@ -217,11 +237,14 @@ func _refresh() -> void:
 	_show_details(_tray.selected())
 	if _tab == Tab.DOSSIER:
 		_fill_dossier()
+	elif _tab == Tab.CHARACTER:
+		_fill_outfit()
 
 
 func _show_details(stack: ItemStack) -> void:
 	for child: Node in _actions.get_children():
 		child.queue_free()
+	_detail_image.texture = _detail_texture(stack)
 	if stack == null:
 		_name.text = "—"
 		_meta.text = "Casilla vacía."
@@ -239,7 +262,11 @@ func _show_details(stack: ItemStack) -> void:
 		meta.append("Objeto clave")
 	_meta.text = "  ·  ".join(meta)
 	_desc.text = stack.def.description
-	if stack.def.usable:
+	if stack.def.is_wearable():
+		meta.append(ItemDef.slot_name(stack.def.equip_slot))
+		_meta.text = "  ·  ".join(meta)
+		_add_action("Ponerse  [E]", _use.bind(stack))
+	elif stack.def.usable:
 		_add_action(stack.def.use_verb + "  [E]", _use.bind(stack))
 	_add_action("Examinar  [X]", _examine.bind(stack))
 	_add_action("Combinar  [C]", _start_combine.bind(stack))
@@ -252,6 +279,19 @@ func _show_details(stack: ItemStack) -> void:
 			_add_action("Al bolsillo %d  [1-5]" % (free + 1), _to_pocket.bind(stack, free))
 	if not in_pocket and stack.def.size.x != stack.def.size.y:
 		_add_action("Girar  [R]", _tray.rotate_held)
+
+
+## Vista grande del objeto (la primera del inspector) para el panel de detalles.
+func _detail_texture(stack: ItemStack) -> Texture2D:
+	if stack == null:
+		return null
+	var sheet: Texture2D = stack.def.inspect_sheet
+	if sheet == null:
+		return stack.def.icon
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = sheet
+	atlas.region = Rect2(0, 0, sheet.get_height(), sheet.get_height())
+	return atlas
 
 
 func _add_action(text: String, callback: Callable) -> void:
@@ -269,6 +309,11 @@ func _set_tab(tab: Tab) -> void:
 	_tab = tab
 	_tray_page.visible = tab == Tab.TRAY
 	_dossier_page.visible = tab == Tab.DOSSIER
+	_outfit_page.visible = tab == Tab.CHARACTER
+	if tab == Tab.CHARACTER:
+		_preview.character = character
+		_outfit_feedback.text = ""
+		_fill_outfit()
 	for i: int in _tab_buttons.size():
 		_tab_buttons[i].modulate = Color.WHITE if i == tab else Color(1, 1, 1, 0.45)
 	if tab == Tab.DOSSIER:
@@ -348,10 +393,10 @@ func _build() -> void:
 	who.position = Vector2(26, 34)
 	_root.add_child(who)
 	var tabs: HBoxContainer = HBoxContainer.new()
-	tabs.position = Vector2(410, 16)
+	tabs.position = Vector2(330, 16)
 	_root.add_child(tabs)
-	for i: int in 2:
-		var b: Button = UiStyle.button(["BANDEJA", "EXPEDIENTE"][i])
+	for i: int in TAB_NAMES.size():
+		var b: Button = UiStyle.button(TAB_NAMES[i])
 		b.pressed.connect(_set_tab.bind(i))
 		tabs.add_child(b)
 		_tab_buttons.append(b)
@@ -366,6 +411,7 @@ func _build() -> void:
 
 	_build_tray_page()
 	_build_dossier_page()
+	_build_outfit_page()
 
 
 func _build_tray_page() -> void:
@@ -421,7 +467,8 @@ func _build_tray_page() -> void:
 	box.add_child(_meta)
 	_desc = UiStyle.label("", 10, UiStyle.BONE_DIM)
 	_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_desc.custom_minimum_size = Vector2(380, 70)
+	_desc.custom_minimum_size = Vector2(262, 70)
+	_desc.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN  # deja sitio a la imagen del objeto
 	box.add_child(_desc)
 	_actions = VBoxContainer.new()
 	_actions.add_theme_constant_override("separation", 2)
@@ -433,6 +480,14 @@ func _build_tray_page() -> void:
 	_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_feedback.custom_minimum_size = Vector2(380, 0)
 	box.add_child(_feedback)
+	_detail_image = TextureRect.new()
+	_detail_image.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_detail_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_detail_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_detail_image.position = Vector2(496, 64)
+	_detail_image.size = Vector2(112, 112)
+	_detail_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tray_page.add_child(_detail_image)
 
 
 func _build_dossier_page() -> void:
@@ -484,3 +539,131 @@ func _build_dossier_page() -> void:
 	_doc_stamp.rotation = -0.18
 	_doc_stamp.position = Vector2(470, 70)
 	_dossier_page.add_child(_doc_stamp)
+
+
+# --- personaje y ropa ----------------------------------------------------------------------------
+
+func _fill_outfit() -> void:
+	for slot: ItemDef.EquipSlot in SLOTS:
+		var stack: ItemStack = character.worn(slot)
+		var b: Button = _slot_buttons[slot]
+		b.text = ItemDef.slot_name(slot).to_upper() + "\n" + (stack.def.display_name if stack != null else "—")
+		b.icon = stack.def.icon if stack != null else null
+		b.modulate = Color.WHITE if slot == _selected_slot else Color(1, 1, 1, 0.7)
+	for child: Node in _wardrobe.get_children():
+		child.queue_free()
+	var any: bool = false
+	var custody: Custody = character.custody
+	for stack: ItemStack in custody.tray + custody.pockets:
+		if stack == null or not stack.def.is_wearable():
+			continue
+		any = true
+		var b: Button = UiStyle.button(stack.def.display_name + "  ·  " + ItemDef.slot_name(stack.def.equip_slot))
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.icon = stack.def.icon
+		b.expand_icon = true
+		b.custom_minimum_size = Vector2(196, 26)
+		b.clip_text = true
+		b.tooltip_text = stack.def.description
+		b.pressed.connect(_wear.bind(stack))
+		_wardrobe.add_child(b)
+	if not any:
+		_wardrobe.add_child(UiStyle.label("No llevas ropa de repuesto.", 9, UiStyle.ASH))
+	var worn: ItemStack = character.worn(_selected_slot)
+	_outfit_name.text = worn.def.display_name if worn != null else ItemDef.slot_name(_selected_slot) + ": nada"
+	_outfit_desc.text = worn.def.description if worn != null else "Elige una prenda de la lista para ponértela."
+	_remove_button.visible = worn != null
+
+
+func _wear(stack: ItemStack) -> void:
+	var result: String = character.equip(stack)
+	_selected_slot = stack.def.equip_slot
+	_outfit_feedback.text = result if result != "" else "Te pones " + stack.def.display_name.to_lower() + "."
+	_fill_outfit()
+
+
+func _take_off() -> void:
+	var worn: ItemStack = character.worn(_selected_slot)
+	if worn == null:
+		return
+	var result: String = character.unequip(_selected_slot)
+	_outfit_feedback.text = result if result != "" else "Te quitas " + worn.def.display_name.to_lower() + ". Va a la bandeja."
+	_fill_outfit()
+
+
+func _select_slot(slot: ItemDef.EquipSlot) -> void:
+	_selected_slot = slot
+	_outfit_feedback.text = ""
+	_fill_outfit()
+
+
+func _build_outfit_page() -> void:
+	_outfit_page = Control.new()
+	_outfit_page.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_outfit_page.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_outfit_page)
+
+	var stage: Panel = Panel.new()
+	stage.position = Vector2(24, 58)
+	stage.size = Vector2(176, 280)
+	stage.add_theme_stylebox_override("panel", UiStyle.steel_box(Color("0c0d0f"), Color("2e3338"), 0.95))
+	_outfit_page.add_child(stage)
+	_preview = OutfitPreview.new()
+	_preview.position = Vector2(24 + (176 - _preview.size.x) / 2.0, 62)
+	_outfit_page.add_child(_preview)
+	var turn_left: Button = UiStyle.button("◀")
+	turn_left.position = Vector2(36, 300)
+	turn_left.pressed.connect(func() -> void: _preview.turn(-1))
+	_outfit_page.add_child(turn_left)
+	var turn_right: Button = UiStyle.button("▶")
+	turn_right.position = Vector2(166, 300)
+	turn_right.pressed.connect(func() -> void: _preview.turn(1))
+	_outfit_page.add_child(turn_right)
+	var who: Label = UiStyle.label("PACIENTE 09", 8, UiStyle.ASH, UiStyle.mono())
+	who.position = Vector2(84, 306)
+	_outfit_page.add_child(who)
+
+	var slots: VBoxContainer = VBoxContainer.new()
+	slots.position = Vector2(210, 58)
+	slots.add_theme_constant_override("separation", 6)
+	_outfit_page.add_child(slots)
+	slots.add_child(UiStyle.label("PUESTO", 8, UiStyle.ASH, UiStyle.mono()))
+	for slot: ItemDef.EquipSlot in SLOTS:
+		var b: Button = UiStyle.button("")
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.expand_icon = true
+		b.custom_minimum_size = Vector2(194, 52)
+		b.pressed.connect(_select_slot.bind(slot))
+		slots.add_child(b)
+		_slot_buttons[slot] = b
+
+	var right: VBoxContainer = VBoxContainer.new()
+	right.position = Vector2(414, 58)
+	right.add_theme_constant_override("separation", 4)
+	_outfit_page.add_child(right)
+	right.add_child(UiStyle.label("ROPA EN LA CUSTODIA", 8, UiStyle.ASH, UiStyle.mono()))
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(202, 112)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	right.add_child(scroll)
+	_wardrobe = VBoxContainer.new()
+	_wardrobe.add_theme_constant_override("separation", 2)
+	scroll.add_child(_wardrobe)
+	var line: ColorRect = ColorRect.new()
+	line.color = Color("3a4046")
+	line.custom_minimum_size = Vector2(202, 1)
+	right.add_child(line)
+	_outfit_name = UiStyle.label("", 12, UiStyle.BONE)
+	right.add_child(_outfit_name)
+	_outfit_desc = UiStyle.label("", 9, UiStyle.BONE_DIM)
+	_outfit_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_outfit_desc.custom_minimum_size = Vector2(202, 0)
+	right.add_child(_outfit_desc)
+	_remove_button = UiStyle.button("Quitarse")
+	_remove_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_remove_button.pressed.connect(_take_off)
+	right.add_child(_remove_button)
+	_outfit_feedback = UiStyle.label("", 9, UiStyle.BONE)
+	_outfit_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_outfit_feedback.custom_minimum_size = Vector2(202, 0)
+	right.add_child(_outfit_feedback)

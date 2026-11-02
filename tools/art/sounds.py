@@ -201,6 +201,21 @@ def footstep(i: int) -> list[float]:
     return mix((pat, 1.0, 0.0), (skin, 0.18, 0.008))
 
 
+def footstep_soft(i: int) -> list[float]:
+    # Zapatilla de tela con suela de goma: golpe muy apagado y un roce de tela.
+    pat = lowpass(burst(0.07, 0.014 + i * 0.002), 300 + i * 25)
+    cloth = lowpass(highpass(burst(0.06, 0.012), 600), 1800)
+    return mix((pat, 1.0, 0.0), (cloth, 0.1, 0.01))
+
+
+def footstep_boot(i: int) -> list[float]:
+    # Bota de goma: talón y planta (dos golpes graves), caña que resuena y un chirrido corto.
+    heel = modes(lowpass(burst(0.05, 0.008), 900), [(140 + i * 8, 0.05, 1.0), (310, 0.03, 0.5)])
+    sole = lowpass(burst(0.08, 0.015), 600)
+    squeak = env(friction(0.07, 900 + i * 60, 0.3, [(1900 + i * 70, 0.01, 1.0)]), [(0, 0), (0.2, 1), (1.0, 0)])
+    return mix((heel, 1.0, 0.0), (sole, 0.7, 0.045), (squeak, 0.06 if i % 2 else 0.0, 0.05))
+
+
 def bell_ring(seconds: float) -> list[float]:
     # Timbre antiguo: un martillo golpea dos campanas unas 20 veces por segundo.
     x = [0.0] * n(seconds)
@@ -236,6 +251,8 @@ def build() -> None:
     print("Generando sonidos provisionales:")
     for i in range(4):
         save(f"step_{i + 1}", room(footstep(i), 0.3, 0.15, 0.25), 0.3)
+        save(f"step_soft_{i + 1}", room(footstep_soft(i), 0.3, 0.12, 0.2), 0.22)
+        save(f"step_boot_{i + 1}", room(footstep_boot(i), 0.35, 0.18, 0.3), 0.32)
 
     hinge = [(420, 0.03, 1.0), (930, 0.02, 0.7), (1750, 0.012, 0.4)]
     creak = env(friction(1.0, 70, 0.45, hinge), [(0, 0), (0.1, 1), (0.8, 0.7), (1.0, 0)])

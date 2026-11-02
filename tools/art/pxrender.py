@@ -154,7 +154,7 @@ class Hit:
     normal: Vec
 
 
-MaterialFn = Callable[[Vec, Vec], tuple]  # (p, n) -> (rampa, brillo[, normal])
+MaterialFn = Callable[[Vec, Vec], tuple]  # (p, n) -> (rampa, brillo[, normal[, especular]])
 
 
 @dataclass
@@ -414,8 +414,8 @@ def transform(prims: list["Prim"], basis: Mat3, offset: Vec) -> list["Prim"]:
         def wrapped(p: Vec, n: Vec, _mat=mat) -> tuple:
             r = _mat(back(p), to_local(basis, n))
             if len(r) > 2 and r[2] is not None:
-                return (r[0], r[1], to_world(basis, r[2]))
-            return (r[0], r[1])
+                return (r[0], r[1], to_world(basis, r[2])) + tuple(r[3:])
+            return (r[0], r[1], None) + tuple(r[3:])
 
         q.material = wrapped
         if prim.cut is not None:
@@ -431,6 +431,7 @@ def render(prims: list[Prim], width: int, height: int, origin: tuple[float, floa
     up_s = norm((0.0, view.a, -view.b))
     view_dir = norm((0.0, view.b, view.a))
     light = norm(view.light)
+    half = norm(add(light, view_dir))  # brillo especular (Blinn-Phong)
     yaw = view.yaw
     # Al girar el modelo con yaw, giramos la cámara al revés.
     d_local = rot_y(d_world, -yaw)
@@ -495,6 +496,8 @@ def render(prims: list[Prim], width: int, height: int, origin: tuple[float, floa
                     n_world = rot_y(n_local, yaw)
                     lam = max(0.0, dot(n_world, light))
                     lum = (view.ambient + (1 - view.ambient) * lam) * bright
+                    if len(result) > 3 and result[3]:  # 4º valor opcional: brillo especular
+                        lum += result[3] * max(0.0, dot(n_world, half)) ** 18
                     if ramp_name.startswith("!"):  # emisivo: sin sombreado
                         lum = bright
                     votes.setdefault(ramp_name, []).append(lum)

@@ -15,7 +15,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | Nombre | Archivo | Qué guarda o hace |
 |---|---|---|
 | `EventBus` | `autoload/event_bus.gd` | Señales globales (objeto recibido, documento nuevo, bandera activada, corriente…) |
-| `GameState` | `autoload/game_state.gd` | Banderas, estado de cada objeto del mundo, personaje activo (custodia, constantes), posición |
+| `GameState` | `autoload/game_state.gd` | Banderas, estado de cada objeto del mundo, personaje activo (custodia, constantes, ropa puesta), posición |
 | `SaveSystem` | `autoload/save_system.gd` | Guardar y cargar `GameState` en JSON (`user://saves/`) |
 | `Settings` | `autoload/settings.gd` | Opciones del jugador y canales de audio (`user://settings.cfg`) |
 
@@ -34,7 +34,8 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scripts/systems/events/` | `EventDirector` y eventos de datos (`HorrorEvent` + acciones) |
 | `scripts/systems/lighting/` | Luces con corriente y parpadeo (`PoweredLight`) |
 | `scripts/systems/audio/` | `Sfx`: sonidos posicionales y ambiente |
-| `scenes/ui/custody/` | Pantalla del Sistema de Custodia |
+| `scripts/systems/character/` | `CharacterState`: custodia, constantes, linterna y ropa puesta (`equip`, `unequip`, `worn`) |
+| `scenes/ui/custody/` | Pantalla del Sistema de Custodia (bandeja, expediente y personaje) |
 | `scenes/ui/hud/` | Indicador de interacción, bolsillos y batería |
 | `scenes/ui/` | Caja de texto, inspector de objetos, lector de documentos, menús |
 | `scenes/world/hospital/` | El hospital (una sola escena) y su guion |
@@ -52,6 +53,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 - la posición del jugador;
 - el inventario (bandeja, bolsillos y documentos);
 - las constantes vitales y la carga de la linterna;
+- la ropa puesta (ranura → id de objeto);
 - el estado de cada objeto del mundo (por `object_id`);
 - las banderas de eventos.
 

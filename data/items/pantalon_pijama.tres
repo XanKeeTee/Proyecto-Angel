@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/pantalon_pijama.png" id="1_3ut6f"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/pantalon_pijama_inspect.png" id="2_chgjw"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_t4r45"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_fbhvm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/pantalon_pijama_canvas.tres" id="5_4um7f"]
+
+[resource]
+script = ExtResource("3_t4r45")
+id = &"pantalon_pijama"
+display_name = "Pantalón de pijama"
+description = "Pantalón de pijama del hospital, a rayas. Lleva cosida una etiqueta: «CAMA 12»."
+category = 7
+icon = ExtResource("1_3ut6f")
+inspect_sheet = ExtResource("2_chgjw")
+inspect_views = 8
+size = Vector2i(1, 2)
+equip_slot = 3
+wear_sheet = ExtResource("5_4um7f")
+step_volume_db = 0.0

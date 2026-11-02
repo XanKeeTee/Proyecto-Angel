@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/botas_goma.png" id="1_rs5bt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/botas_goma_n.png" id="2_4e7ah"]
+
+[resource]
+diffuse_texture = ExtResource("1_rs5bt")
+normal_texture = ExtResource("2_4e7ah")
+texture_filter = 1

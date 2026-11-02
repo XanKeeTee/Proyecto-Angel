@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/gorro_quirurgico.png" id="1_hmm7f"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/gorro_quirurgico_inspect.png" id="2_ypxg0"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_k42it"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_4pdpo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/gorro_quirurgico_canvas.tres" id="5_3xi3t"]
+
+[resource]
+script = ExtResource("3_k42it")
+id = &"gorro_quirurgico"
+display_name = "Gorro quirúrgico"
+description = "Gorro de tela de quirófano. Tapa la cicatriz de la cabeza."
+category = 7
+icon = ExtResource("1_hmm7f")
+inspect_sheet = ExtResource("2_ypxg0")
+inspect_views = 8
+equip_slot = 1
+wear_sheet = ExtResource("5_3xi3t")
+step_volume_db = 0.0

@@ -1447,7 +1447,45 @@
      -21.4
     ]
    ]
-  ]
+  ],
+  "wear": {
+   "bata_paciente": {
+    "path": "res://assets/sprites/characters/wear/bata_paciente.png",
+    "slot": "body"
+   },
+   "chaqueta_celador": {
+    "path": "res://assets/sprites/characters/wear/chaqueta_celador.png",
+    "slot": "body"
+   },
+   "bata_medico": {
+    "path": "res://assets/sprites/characters/wear/bata_medico.png",
+    "slot": "body"
+   },
+   "pantalon_pijama": {
+    "path": "res://assets/sprites/characters/wear/pantalon_pijama.png",
+    "slot": "legs"
+   },
+   "pantalon_celador": {
+    "path": "res://assets/sprites/characters/wear/pantalon_celador.png",
+    "slot": "legs"
+   },
+   "zapatillas": {
+    "path": "res://assets/sprites/characters/wear/zapatillas.png",
+    "slot": "feet"
+   },
+   "botas_goma": {
+    "path": "res://assets/sprites/characters/wear/botas_goma.png",
+    "slot": "feet"
+   },
+   "gorro_quirurgico": {
+    "path": "res://assets/sprites/characters/wear/gorro_quirurgico.png",
+    "slot": "head"
+   },
+   "gorro_lana": {
+    "path": "res://assets/sprites/characters/wear/gorro_lana.png",
+    "slot": "head"
+   }
+  }
  },
  "stretcher": {
   "path": "res://assets/sprites/props/stretcher.png",

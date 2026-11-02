@@ -82,6 +82,25 @@ Las puertas con llave guardan la llave puesta, que deja de ocupar sitio. Las com
 
 La batería gasta un 100 % en unos 9 minutos encendida, y hay pilas para unos 40 minutos más si se buscan.
 
+## Ropa
+
+Desde la pestaña **PERSONAJE** de la Custodia se ve al protagonista con lo que lleva y se cambia la ropa como en un RPG: cuatro ranuras (cabeza, cuerpo, piernas, pies). La ropa puesta no ocupa sitio en la bandeja; lo que se quita vuelve a ella (si no cabe, no se cambia). Desde la bandeja también se puede usar «Ponerse» (E).
+
+Empieza con la bata de paciente, descalzo. Prendas del prólogo `[PROPUESTA]`:
+
+| Prenda | Ranura | Dónde | Efecto |
+|---|---|---|---|
+| Bata de paciente | Cuerpo | Puesta al empezar | Se balancea mucho |
+| Zapatillas | Pies | Hab. 09, bajo la cama | Pasos casi mudos |
+| Gorro de lana | Cabeza | Hab. 07, taquilla | — |
+| Pantalón de pijama | Piernas | Hab. 12, mesita | — |
+| Gorro quirúrgico | Cabeza | Quirófano, encimera | Tapa la cicatriz |
+| Bata de médico | Cuerpo | Control, mostrador | Se balancea mucho |
+| Chaqueta y pantalón de celador | Cuerpo / Piernas | Lavandería, carro 2 | — |
+| Botas de goma | Pies | Taller, banco | Pasos fuertes |
+
+Por ahora el efecto es visual y de sonido; no cambian estadísticas.
+
 ## Supervivencia en el prólogo
 
 - **Linterna**: batería limitada. Con poca carga amarillea, se debilita y parpadea. Indicador en el HUD. Se enciende con F o con su bolsillo.
@@ -146,6 +165,7 @@ Se guardan en `user://settings.cfg`, aparte de la partida.
 | Acción | Teclado | Mando |
 |---|---|---|
 | Moverse | WASD / flechas | Stick izquierdo / cruceta |
+| Apuntar (mirar y alumbrar) | Ratón | Stick derecho |
 | Acción principal (abrir, coger, leer…) | E / Intro / Espacio | A |
 | Examinar | R | X |
 | Linterna | F | Y |

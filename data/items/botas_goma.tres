@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/botas_goma.png" id="1_4m3lh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/botas_goma_inspect.png" id="2_ruibl"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_syaj6"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_wxb17"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/botas_goma_canvas.tres" id="5_wy7gx"]
+
+[resource]
+script = ExtResource("3_syaj6")
+id = &"botas_goma"
+display_name = "Botas de goma"
+description = "Botas altas de goma, de las que se usan para baldear suelos. Pesan y se oyen al pisar."
+category = 7
+icon = ExtResource("1_4m3lh")
+inspect_sheet = ExtResource("2_ruibl")
+inspect_views = 8
+size = Vector2i(2, 2)
+equip_slot = 4
+wear_sheet = ExtResource("5_wy7gx")
+step_sound = "step_boot"
+step_volume_db = -8.0

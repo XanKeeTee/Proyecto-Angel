@@ -1,7 +1,8 @@
 extends Node
 ## Construye la escena del protagonista (scenes/world/player/player.tscn):
-## sprite con mapa de normales y brillo de la lente, colisión de los pies, halo, linterna,
-## luz rebotada, polvo en suspensión y cámara. Lee tools/art/sprite_meta.json.
+## sprite con mapa de normales y brillo de la lente, capas de ropa con balanceo, colisión
+## de los pies, halo, linterna, luz rebotada, polvo en suspensión y cámara.
+## Lee tools/art/sprite_meta.json.
 ## Uso: "$GODOT_BIN" --headless --path . res://tools/levels/build_player.tscn
 
 const META: String = "res://tools/art/sprite_meta.json"
@@ -48,6 +49,25 @@ func _ready() -> void:
 	sprite.light_mask = LAYER_PLAYER  # la linterna no ilumina al que la lleva
 	sprite.frame = 0
 	_add(player, sprite)
+	# Capas de ropa (de abajo arriba). La textura la pone el juego según lo que lleve puesto.
+	var cloth_shader: Shader = load("res://shaders/cloth_sway.gdshader")
+	for layer_name: String in ["Feet", "Legs", "Body", "Head"]:
+		var layer: Sprite2D = Sprite2D.new()
+		layer.name = layer_name
+		layer.hframes = sprite.hframes
+		layer.vframes = sprite.vframes
+		layer.offset = sprite.offset
+		layer.light_mask = LAYER_PLAYER
+		layer.visible = false
+		var mat: ShaderMaterial = ShaderMaterial.new()
+		mat.shader = cloth_shader
+		mat.resource_local_to_scene = true
+		mat.set_shader_parameter(&"frames", Vector2(sprite.hframes, sprite.vframes))
+		mat.set_shader_parameter(&"frame_px", Vector2(frame[0], frame[1]))
+		mat.set_shader_parameter(&"feet_y", float(origin[1]))
+		layer.material = mat
+		sprite.add_child(layer)
+		layer.owner = player
 	var glow: Sprite2D = Sprite2D.new()
 	glow.name = "Glow"
 	glow.texture = load(String(m["path"]).get_basename() + "_glow.png")

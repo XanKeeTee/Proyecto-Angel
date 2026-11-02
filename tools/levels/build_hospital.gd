@@ -600,7 +600,9 @@ func _room_hab09() -> void:
 	_bed("cama_09", "Tu cama", [2, 23], 1, {"node": "Stretcher09", "verb": "Mirar a los pies",
 		"examine": "Tu cama. Las correas están desabrochadas. Alguien las soltó.",
 		"examine_done": "Hay una mancha donde tenías la espalda. Tiene la forma de una columna.",
-		"search": "A los pies de la cama cuelga una hoja de constantes con tu número.", "loot": ["doc:hoja_constantes"],
+		"search": "A los pies de la cama cuelga una hoja de constantes con tu número.
+Debajo de la cama, unas zapatillas de tela.",
+		"loot": ["doc:hoja_constantes", ["zapatillas", 1]],
 		"empty": ""})
 	obj({"id": "mesita_09", "name": "Mesita", "sprite": "nightstand", "cell": [3, 22], "kind": "container", "openable": true,
 		"examine": "Una mesita de hospital con un vaso de agua. El agua tiene una película de polvo.",
@@ -637,8 +639,8 @@ func _room_hab07() -> void:
 	obj({"id": "mesita_07", "name": "Mesita", "sprite": "nightstand", "cell": [3, 5], "kind": "container", "openable": true,
 		"examine": "Una mesita con marcas de uñas en el borde.", "empty": "El cajón está vacío, salvo por unas uñas cortadas."})
 	obj({"id": "taquilla_07", "name": "Taquilla", "sprite": "locker", "cell": [6, 4], "kind": "container", "openable": true,
-		"examine": "Una taquilla abollada a puñetazos.", "search": "Entre ropa de otra persona hay un blíster con pilas.",
-		"loot": [["pilas", 2]], "sounds": {"open": "locker_open", "close": "door_close"}, "shadow": [-13, -14, 26, 12]})
+		"examine": "Una taquilla abollada a puñetazos.", "search": "Entre ropa de otra persona hay un blíster con pilas y un gorro de lana.",
+		"loot": [["pilas", 2], ["gorro_lana", 1]], "sounds": {"open": "locker_open", "close": "door_close"}, "shadow": [-13, -14, 26, 12]})
 	obj({"id": "silla_07", "name": "Silla", "sprite": "chair", "cell": [6, 8],
 		"examine": "Una silla junto a la cama. El asiento está hundido: alguien se sentó aquí mucho tiempo.", "shadow": [-7, -7, 14, 14]})
 	_wall_extra("hab07", 5, 1, X_WINDOW)
@@ -688,7 +690,8 @@ func _room_hab12() -> void:
 		"search": "Debajo de la almohada, una llave con una chapa de plástico mordida: «10».", "loot": [["llave_habitacion_10", 1]],
 		"empty": "Nada más."})
 	obj({"id": "mesita_12", "name": "Mesita", "sprite": "nightstand", "cell": [11, 22], "kind": "container", "openable": true,
-		"examine": "Una mesita.", "search": "Una venda en su envoltorio.", "loot": [["venda", 1]], "empty": "Vacío."})
+		"examine": "Una mesita.", "search": "Una venda en su envoltorio y un pantalón de pijama doblado.",
+		"loot": [["venda", 1], ["pantalon_pijama", 1]], "empty": "Vacío."})
 	obj({"id": "taquilla_12", "name": "Taquilla", "sprite": "locker", "cell": [15, 21], "kind": "container", "openable": true,
 		"examine": "Una taquilla.", "empty": "Una bata doblada con una mancha en la espalda. No es la tuya.",
 		"sounds": {"open": "locker_open", "close": "door_close"}, "shadow": [-13, -14, 26, 12]})
@@ -726,7 +729,8 @@ func _room_banos() -> void:
 func _room_control() -> void:
 	obj({"id": "mostrador_control", "name": "Mostrador", "sprite": "counter", "cell": [31, 23], "fp": WIDE, "icells": [[0, 0]],
 		"kind": "container", "openable": true, "examine": "El mostrador del control. Hay una taza con el café helado.",
-		"search": "En el armario de abajo, medicación suelta.", "loot": [["analgesicos", 2]], "empty": "Carpetas vacías."})
+		"search": "En el armario de abajo, medicación suelta. Colgada en la puerta, una bata blanca.",
+		"loot": [["analgesicos", 2], ["bata_medico", 1]], "empty": "Carpetas vacías."})
 	obj({"id": "telefono_control", "name": "Teléfono", "sprite": "phone", "cell": [32, 23], "kind": "device", "blocks": false,
 		"examine": "Un teléfono de baquelita. El cable está enrollado como si alguien hubiera tirado de él.",
 		"device_label": "Descolgar", "special": "phone"})
@@ -787,8 +791,8 @@ func _room_quirofano() -> void:
 	obj({"id": "vitrina_quirofano", "name": "Vitrina", "sprite": "med_cabinet", "cell": [51, 21], "kind": "container", "openable": true,
 		"examine": "Una vitrina con instrumental.", "search": "Un informe grapado.", "loot": ["doc:informe_quirurgico"], "empty": "Vacía."})
 	obj({"id": "encimera_quirofano", "name": "Encimera", "sprite": "counter", "cell": [39, 21], "fp": WIDE, "kind": "container",
-		"openable": true, "examine": "Una encimera de acero.", "search": "Un formulario y una venda empapada en yodo.",
-		"loot": ["doc:consentimiento", ["venda_esterilizada", 1]], "empty": "Nada."})
+		"openable": true, "examine": "Una encimera de acero.", "search": "Un formulario, una venda empapada en yodo y un gorro de quirófano.",
+		"loot": ["doc:consentimiento", ["venda_esterilizada", 1], ["gorro_quirurgico", 1]], "empty": "Nada."})
 	obj({"id": "gotero_quirofano", "name": "Gotero", "sprite": "iv_stand", "cell": [52, 25], "examine": "La bolsa está llena de algo que no es suero. Brilla un poco."})
 
 
@@ -913,7 +917,8 @@ func _basement() -> void:
 		"examine": "Un carro lleno de sábanas.", "search": "Prendida a un saco hay una etiqueta escrita a mano.",
 		"loot": ["doc:nota_lavanderia"], "empty": "Sábanas. Algunas brillan un poco en la oscuridad."})
 	obj({"id": "carro_lavanderia_2", "name": "Carro de lavandería", "sprite": "laundry_cart", "cell": [25, 37], "kind": "container",
-		"examine": "Otro carro.", "search": "Una venda limpia, perdida entre la ropa.", "loot": [["venda", 1]], "empty": "Ropa de cama."})
+		"examine": "Otro carro.", "search": "Una venda limpia y un uniforme de celador, perdidos entre la ropa.",
+		"loot": [["venda", 1], ["chaqueta_celador", 1], ["pantalon_celador", 1]], "empty": "Ropa de cama."})
 	obj({"id": "estanteria_lavanderia", "name": "Estantería", "sprite": "shelf", "cell": [19, 34], "fp": WIDE, "kind": "container",
 		"frame": 0, "examine": "Detergente y cajas.", "search": "Un paquete de pilas.", "loot": [["pilas", 2]], "empty": "Detergente."})
 	obj({"id": "morgue", "name": "Cámara frigorífica", "sprite": "morgue", "cell": [2, 51], "fp": WIDE, "node": "Morgue",
@@ -945,8 +950,8 @@ func _basement() -> void:
 		"search": "En la balda de abajo, la válvula de presión del generador. Desmontada: el asiento está suelto.",
 		"loot": [["valvula_averiada", 1]], "empty": "Herramientas rotas."})
 	obj({"id": "banco_taller", "name": "Banco de trabajo", "sprite": "desk", "cell": [27, 54], "fp": WIDE, "kind": "container",
-		"openable": true, "examine": "Un banco de trabajo.", "search": "Una libreta con las tapas manchadas de grasa, y unas pilas.",
-		"loot": ["doc:diario_celador", ["pilas", 1]], "empty": "Tornillos sueltos.", "shadow": [-14, -12, 60, 24]})
+		"openable": true, "examine": "Un banco de trabajo.", "search": "Una libreta con las tapas manchadas de grasa, unas pilas y unas botas de goma con barro seco.",
+		"loot": ["doc:diario_celador", ["pilas", 1], ["botas_goma", 1]], "empty": "Tornillos sueltos.", "shadow": [-14, -12, 60, 24]})
 	obj({"id": "cubo_taller", "name": "Cubo", "sprite": "mop_bucket", "cell": [33, 56], "examine": "Agua negra."})
 	obj({"id": "cajas_pasillo_b", "name": "Cajas", "sprite": "crates", "cell": [26, 44], "examine": "Cajas que bloquean media pared."})
 
