@@ -1,10 +1,14 @@
 class_name Hud
 extends CanvasLayer
 ## HUD de exploración, discreto: indicador de interacción, bolsillos, batería y avisos.
-## Los bolsillos y la batería se ocultan solos cuando no cambian.
+## Los bolsillos y la batería se ocultan solos cuando no cambian. El aliento (correr) es una
+## raya fina abajo en el centro que solo se ve mientras no está lleno.
 
 const SHOW_TIME: float = 3.5
 const LOW_CHARGE: float = 0.2
+## Raya de aliento: ancho y alto (píxeles) y por debajo de qué nivel se pone roja.
+const BREATH_SIZE: Vector2 = Vector2(36, 2)
+const LOW_BREATH: float = 0.25
 
 var _prompt_name: Label
 var _prompt_keys: Label
@@ -17,6 +21,8 @@ var _battery: Control
 var _battery_fill: ColorRect
 var _battery_label: Label
 var _bleed: Label
+var _breath: Control
+var _breath_fill: ColorRect
 var _notices: VBoxContainer
 var _visible_timer: float = 0.0
 var _last_charge: float = -1.0
@@ -62,6 +68,15 @@ func set_prompt(object_name: String, actions: Array[String]) -> void:
 	_prompt_box.visible = object_name != ""
 	_prompt_name.text = object_name
 	_prompt_keys.text = "    ".join(actions)
+
+
+## Aliento para correr (0..1). Se muestra solo mientras no está lleno, y se desvanece al llenarse.
+func set_breath(ratio: float, winded: bool = false) -> void:
+	var delta: float = get_process_delta_time()
+	_breath_fill.size.x = roundf(BREATH_SIZE.x * clampf(ratio, 0.0, 1.0))
+	_breath_fill.color = UiStyle.BLOOD if winded or ratio < LOW_BREATH else UiStyle.BONE_DIM
+	var target: float = 0.75 if ratio < 0.995 else 0.0
+	_breath.modulate.a = move_toward(_breath.modulate.a, target, delta * (4.0 if target > 0.0 else 1.5))
 
 
 ## Saca los bolsillos y la batería un rato.
@@ -183,6 +198,24 @@ func _build() -> void:
 	UiStyle.add_shadow(_bleed)
 	_bleed.position = Vector2(566, 316)
 	add_child(_bleed)
+
+	_breath = Control.new()
+	_breath.position = Vector2(320.0 - BREATH_SIZE.x / 2.0, 346)
+	_breath.modulate.a = 0.0
+	add_child(_breath)
+	# Ranura tenue: se ve aunque esté vacía.
+	var groove: ColorRect = ColorRect.new()
+	groove.color = Color(0.0, 0.0, 0.0, 0.6)
+	groove.position = Vector2(-1, -1)
+	groove.size = BREATH_SIZE + Vector2(2, 2)
+	_breath.add_child(groove)
+	var track: ColorRect = ColorRect.new()
+	track.color = Color(UiStyle.ASH, 0.35)
+	track.size = BREATH_SIZE
+	_breath.add_child(track)
+	_breath_fill = ColorRect.new()
+	_breath_fill.size = BREATH_SIZE
+	_breath.add_child(_breath_fill)
 
 	_notices = VBoxContainer.new()
 	_notices.set_anchors_preset(Control.PRESET_TOP_RIGHT)

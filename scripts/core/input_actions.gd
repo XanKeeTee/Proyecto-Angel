@@ -7,6 +7,8 @@ const MOVE_LEFT: StringName = &"move_left"
 const MOVE_RIGHT: StringName = &"move_right"
 const MOVE_UP: StringName = &"move_up"
 const MOVE_DOWN: StringName = &"move_down"
+## Correr (un poco): solo hacia delante y mientras quede aliento.
+const RUN: StringName = &"run"
 const INTERACT: StringName = &"interact"
 const EXAMINE: StringName = &"examine"
 const FLASHLIGHT: StringName = &"flashlight"
@@ -22,6 +24,7 @@ static func setup() -> void:
 	_action(MOVE_RIGHT, [KEY_D, KEY_RIGHT], [JOY_BUTTON_DPAD_RIGHT], JOY_AXIS_LEFT_X, 1.0)
 	_action(MOVE_UP, [KEY_W, KEY_UP], [JOY_BUTTON_DPAD_UP], JOY_AXIS_LEFT_Y, -1.0)
 	_action(MOVE_DOWN, [KEY_S, KEY_DOWN], [JOY_BUTTON_DPAD_DOWN], JOY_AXIS_LEFT_Y, 1.0)
+	_action(RUN, [KEY_SHIFT], [JOY_BUTTON_LEFT_STICK], JOY_AXIS_TRIGGER_LEFT, 1.0)
 	_action(INTERACT, [KEY_E, KEY_ENTER, KEY_SPACE], [JOY_BUTTON_A])
 	_action(EXAMINE, [KEY_R], [JOY_BUTTON_X])
 	_action(FLASHLIGHT, [KEY_F], [JOY_BUTTON_Y])

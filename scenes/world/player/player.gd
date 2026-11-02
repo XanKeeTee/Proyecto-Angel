@@ -10,6 +10,9 @@ extends CharacterBody2D
 ##   se gira hasta una orientación (22,5°) hacia donde van las piernas.
 ## - El ciclo de paso avanza con la distancia recorrida de verdad (los pies no patinan,
 ##   tampoco al deslizarse contra una pared).
+## - Con Shift (o el stick izquierdo pulsado / L2) corre un poco: solo hacia delante o en diagonal
+##   hacia delante, con transición suave y mientras le quede aliento (RunBreath). Inclina algo
+##   el cuerpo y pisa más fuerte; al agotarse respira agitado.
 ## - Al girar parado más de 45° arrastra los pies. En reposo respira y, de vez en cuando, hace
 ##   un gesto (mano a la herida o mirar alrededor con la linterna).
 ## - La ropa va en capas (cabeza, cuerpo, piernas, pies) encima del cuerpo. Las prendas
@@ -86,6 +89,21 @@ const STICK_DEADZONE: float = 0.35
 ## Velocidad relativa al andar de lado y de espaldas.
 const STRAFE_SPEED: float = 0.8
 const BACKWARD_SPEED: float = 0.6
+## Correr: a partir de qué coseno entre hacia dónde anda y hacia dónde mira empieza a poder
+## correr (0,5 = 60°) y desde cuál corre del todo (0,7 ≈ 45°, la diagonal hacia delante).
+const RUN_ALONG_MIN: float = 0.5
+const RUN_ALONG_FULL: float = 0.7
+## Segundos que tarda en pasar de andar a correr y de correr a andar.
+const RUN_BLEND_IN: float = 0.35
+const RUN_BLEND_OUT: float = 0.5
+## Inclinación hacia delante al correr (radianes de sesgo del sprite, solo se ve en horizontal).
+const RUN_LEAN: float = 0.07
+## Pisadas al correr: cuánto más fuertes (dB) y más agudas (más rápidas).
+const RUN_STEP_DB: float = 4.0
+const RUN_STEP_PITCH: float = 0.07
+## Respiración agitada al quedarse sin aliento.
+const RUN_BREATH_SOUND: String = "breath_run_male"
+const RUN_BREATH_DB: float = -6.0
 ## Física de la tela: rigidez y amortiguación del muelle, cuánto se queda atrás con la velocidad,
 ## ondeo con cada paso, empujón al girar y desplazamiento máximo del bajo (píxeles).
 const CLOTH_STIFFNESS: float = 48.0
@@ -146,6 +164,8 @@ var speed_scale: float = 1.0
 ## Sonido de pisada (prefijo; hay variantes _1 a _4) y su volumen. Cambian con el calzado.
 var step_sound: String = "step"
 var step_volume_db: float = -10.0
+## Aliento para correr (lógica en RunBreath).
+var breath: RunBreath = RunBreath.new()
 
 var _last_cell: Vector2i = Vector2i(-999, -999)
 var _walk_distance: float = 0.0
@@ -185,6 +205,10 @@ var _weapon_upright: bool = false
 ## --weapon=id pone en la mano el icono de ese objeto.
 var _debug_walk: Vector2 = Vector2.ZERO
 var _debug_action: StringName = &""
+## Depuración: --run corre al andar con --walk.
+var _debug_run: bool = false
+## Intensidad de la carrera (0 = andar, 1 = correr), con transición suave.
+var _run_blend: float = 0.0
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _glow: Sprite2D = $Sprite2D/Glow
@@ -213,11 +237,14 @@ func _ready() -> void:
 		_sprite.add_child(_weapon)
 	_use_sheet(SHEET_MOVE)
 	_update_frame()
+	breath.exhausted.connect(_on_exhausted)
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--walk="):
 			_debug_walk = Vector2.from_angle(deg_to_rad(arg.trim_prefix("--walk=").to_float()))
 		elif arg.begins_with("--act="):
 			_debug_action = StringName(arg.trim_prefix("--act="))
+		elif arg == "--run":
+			_debug_run = true
 		elif arg.begins_with("--weapon="):
 			var item: ItemDef = Registry.item(StringName(arg.trim_prefix("--weapon=")))
 			if item != null:
@@ -238,9 +265,12 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	var wish: Vector2 = _scripted_wish
+	var wants_run: bool = false
 	if _debug_walk != Vector2.ZERO and not _scripted and visible:
 		wish = _debug_walk
+		wants_run = _debug_run
 	elif input_enabled and not _scripted:
+		wants_run = Input.is_action_pressed(InputActions.RUN)
 		if Input.is_action_just_pressed(InputActions.INTERACT):
 			interact_requested.emit(_probe_cells())
 		elif Input.is_action_just_pressed(InputActions.EXAMINE):
@@ -252,12 +282,19 @@ func _physics_process(delta: float) -> void:
 			facing_angle = aim.angle()
 		elif wish != Vector2.ZERO:
 			facing_angle = wish.angle()
+	var run_target: float = 0.0
 	if wish != Vector2.ZERO:
 		# De lado y de espaldas se anda más despacio.
 		var along: float = wish.normalized().dot(Vector2.from_angle(facing_angle))
 		var pace: float = lerpf(STRAFE_SPEED, 1.0, along) if along >= 0.0 else lerpf(STRAFE_SPEED, BACKWARD_SPEED, -along)
+		# Correr: solo hacia delante (o en diagonal hacia delante) y si le queda aliento.
+		if wants_run and breath.can_run():
+			run_target = clampf((along - RUN_ALONG_MIN) / (RUN_ALONG_FULL - RUN_ALONG_MIN), 0.0, 1.0)
+		_run_blend = move_toward(_run_blend, run_target, delta / (RUN_BLEND_IN if run_target > _run_blend else RUN_BLEND_OUT))
+		pace *= lerpf(1.0, breath.speed_multiplier(), _run_blend)
 		velocity = velocity.move_toward(wish * MAX_SPEED * speed_scale * pace, ACCELERATION * delta)
 	else:
+		_run_blend = move_toward(_run_blend, 0.0, delta / RUN_BLEND_OUT)
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 	var before: Vector2 = position
 	move_and_slide()
@@ -270,9 +307,15 @@ func _physics_process(delta: float) -> void:
 	var phase_before: float = _phase
 	_phase += stepped / _stride_length()
 	_update_cloth(delta)
-	# Una pisada cada medio ciclo.
+	# Gasta aliento solo si avanza de verdad (no empujando una pared).
+	var advancing: bool = stepped > WALK_THRESHOLD * delta
+	breath.tick(delta, _run_blend if advancing else 0.0, advancing)
+	# Una pisada cada medio ciclo; corriendo, más fuerte y algo más rápida.
 	if floori(phase_before * 2.0) != floori(_phase * 2.0):
-		Sfx.at(get_parent(), "%s_%d" % [step_sound, randi_range(1, 4)], position, step_volume_db, 0.08)
+		var step: AudioStreamPlayer2D = Sfx.at(get_parent(), "%s_%d" % [step_sound, randi_range(1, 4)], position,
+			step_volume_db + RUN_STEP_DB * _run_blend, 0.08)
+		if step != null:
+			step.pitch_scale += RUN_STEP_PITCH * _run_blend
 	_walk_distance += stepped
 	if cell != _last_cell:
 		_last_cell = cell
@@ -281,6 +324,7 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	if _scripted:
+		_sprite.skew = 0.0
 		_update_light(delta)
 		return
 	if not _is_walking():
@@ -298,6 +342,7 @@ func _process(delta: float) -> void:
 		_fidget_time = -1.0
 	_turn(delta)
 	_update_frame()
+	_update_lean(delta)
 	_update_light(delta)
 	if _debug_action != &"" and _idle_time > 0.5 and visible:
 		play_action(_debug_action, position + Vector2.from_angle(facing_angle) * 32.0)
@@ -378,6 +423,22 @@ func face(direction: Vector2i) -> void:
 ## Detiene al personaje en seco (para textos y eventos).
 func stop() -> void:
 	velocity = Vector2.ZERO
+	_run_blend = 0.0
+
+
+## Intensidad de la carrera ahora mismo (0 = andando, 1 = corriendo del todo).
+func run_amount() -> float:
+	return _run_blend
+
+
+## Aliento que le queda (0..1), para el indicador del HUD.
+func breath_ratio() -> float:
+	return breath.amount
+
+
+## Forma física para correr: Cuerpo (0..1) y si sangra. Lo llama el mundo cada fotograma.
+func set_run_condition(body_ratio: float, bleeding: bool) -> void:
+	breath.set_condition(body_ratio, bleeding)
 
 
 func has_flashlight_on() -> bool:
@@ -462,6 +523,7 @@ func play_action(action: StringName, target: Vector2) -> void:
 		return
 	_scripted = true
 	velocity = Vector2.ZERO
+	_run_blend = 0.0
 	var to_target: Vector2 = target - position
 	if to_target.length() > 1.0:
 		facing_angle = to_target.angle()
@@ -516,6 +578,8 @@ func play_get_up(bed_position: Vector2) -> void:
 		return
 	var spec: Dictionary = sheets[SHEET_GETUP]
 	_scripted = true
+	_run_blend = 0.0
+	_sprite.skew = 0.0
 	# El nodo, justo delante de la camilla en el orden de dibujo (y-sort); el dibujo, encima.
 	prepare_get_up(bed_position)
 	_use_sheet(SHEET_GETUP)
@@ -642,7 +706,24 @@ func _stride_length() -> float:
 			return BACK_STRIDE_PIXELS
 		Gait.LEFT, Gait.RIGHT:
 			return STRAFE_STRIDE_PIXELS
+	# Corriendo usa la misma zancada que andando (la hoja es la de andar): sube la cadencia y
+	# los pies no patinan más que al andar.
 	return STRIDE_PIXELS
+
+
+## Al correr se inclina un poco hacia donde va (sesgo del sprite con los pies quietos; solo se
+## nota al moverse en horizontal).
+func _update_lean(delta: float) -> void:
+	var target: float = 0.0
+	if _is_walking():
+		target = RUN_LEAN * _run_blend * velocity.normalized().x
+	_sprite.skew = lerpf(_sprite.skew, target, 1.0 - exp(-10.0 * delta))
+	if target == 0.0 and absf(_sprite.skew) < 0.002:
+		_sprite.skew = 0.0
+
+
+func _on_exhausted() -> void:
+	Sfx.at(get_parent(), RUN_BREATH_SOUND, position, RUN_BREATH_DB, 0.04)
 
 
 func _gait_anim() -> Vector2i:
@@ -871,7 +952,8 @@ func _lens_offset() -> Vector2:
 	var data: Variant = _frame_data(&"lens")
 	if data != null:
 		var p: Array = data
-		return Vector2(float(p[0]), float(p[1])) + _sprite.position
+		# Con la transformación del sprite: así sigue a la lente también inclinado al correr.
+		return _sprite.transform * Vector2(float(p[0]), float(p[1]))
 	var row: int = row_for_angle(facing_angle)
 	return flashlight_offsets[row] if row < flashlight_offsets.size() else Vector2.ZERO
 
