@@ -251,11 +251,24 @@ def fade(a: np.ndarray, fade_in: float, fade_out: float) -> np.ndarray:
     return a
 
 
+def active_rms(a: np.ndarray, win: float = 0.05) -> float:
+    """RMS de las muestras de los tramos activos (con pico > 10 % del máximo), con un margen de -3 dB.
+
+    Se mide sobre las muestras, no sobre la envolvente de picos: con la envolvente, un golpe corto
+    quedaba con el pico en el nivel objetivo (10-25 dB más bajo de lo pedido)."""
+    if len(a) == 0:
+        return 0.0
+    n = max(1, int(SR * win))
+    pad = (-len(a)) % n
+    blocks = np.pad(a, ((0, pad), (0, 0))).reshape(-1, n, a.shape[1])
+    env = np.abs(blocks).max(axis=(1, 2))
+    active = blocks[env > env.max() * 0.1]
+    return float(np.sqrt(np.mean(np.square(active)))) * 0.7
+
+
 def loudness(a: np.ndarray, target_db: float) -> np.ndarray:
     """Ajusta el nivel RMS de la parte activa al objetivo (dBFS) y limita los picos a -1 dBFS."""
-    env = envelope(a, 0.05)
-    active = env[env > env.max() * 0.1] if len(env) else env
-    rms = float(np.sqrt(np.mean(np.square(a)))) if len(active) == 0 else float(np.sqrt(np.mean(np.square(active)))) * 0.7
+    rms = active_rms(a)
     gain = 10 ** ((target_db - db(rms)) / 20.0)
     a = a * gain
     peak = float(np.abs(a).max()) if len(a) else 0.0

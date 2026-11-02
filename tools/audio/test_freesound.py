@@ -114,6 +114,19 @@ class AudioTest(unittest.TestCase):
             self.assertLessEqual(len(out) / fs.SR, 1.0 + 1e-3)
             self.assertEqual(out.shape[1], 1)
 
+    def test_nivel_de_un_golpe_corto(self) -> None:
+        # Regresión: el nivel se medía sobre la envolvente de picos y los golpes cortos (pisadas,
+        # clics) quedaban 10-25 dB por debajo del objetivo.
+        if fs.np is None:
+            self.skipTest("sin numpy")
+        np = fs.np
+        rng = np.random.default_rng(1)
+        t = np.arange(int(fs.SR * 0.3)) / fs.SR
+        hit = (rng.standard_normal(len(t)) * np.exp(-t * 40.0) * 0.5)[:, None]
+        out = fs.loudness(hit, -26.0)
+        self.assertAlmostEqual(fs.db(fs.active_rms(out)), -26.0, delta=1.0)
+        self.assertLessEqual(float(np.abs(out).max()), 10 ** (-1.0 / 20.0) + 1e-6)
+
 
 if __name__ == "__main__":
     sys.exit(0 if unittest.main(exit=False, verbosity=1).result.wasSuccessful() else 1)

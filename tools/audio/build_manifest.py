@@ -454,6 +454,69 @@ ACTIONS = {
 WEARABLE = {"cloth": ("put on clothes", "take off clothes"), "rubber": ("put on boots", "take off boots")}
 
 
+# --- elecciones revisadas a mano -----------------------------------------------------------------
+# Ids de Freesound escogidos tras leer título, etiquetas, descripción, duración y licencia (solo CC0
+# o CC BY). Mandan sobre lo que eligió `fetch` solo. Motivo entre paréntesis cuando sustituye a otro.
+REVIEWED_PICKS = {
+    # sin candidatos con la consulta original (demasiado concreta para el buscador)
+    "bed_creak": 655947,             # muelles de cama que crujen
+    "heavy_drag": 453347,            # pieza metálica pesada arrastrada por el suelo
+    "breath_strain_male": 554928,    # jadeo de esfuerzo
+    "breath_run_male": 467369,       # hombre jadeando tras correr (CC BY)
+    "bare_feet_floor": 197402,       # pies descalzos en baldosa
+    "amb_wind_gust": 67707,          # viento que silba en una ventana (CC BY)
+    "amb_elevator_cables": 326487,   # viento y mecanismos en un hueco de ascensor
+    "scare_fall": 438329,            # bandeja metálica que cae y repiquetea
+    "scare_wall_knock": 795281,      # golpes en la pared desde la habitación de al lado
+    "scare_steps_above": 210592,     # pasos del vecino de arriba, a través del techo
+    "use_battery_insert": 765865,    # cambiar las pilas de un mando
+    "inv_metal_heavy_pick": 452585,  # coger una palanca
+    "inv_metal_heavy_place": 198299, # manipular una llave grifa (metal pesado)
+    "inv_metal_heavy_equip": 198299,
+    "inv_metal_heavy_unequip": 452585,
+    "inv_metal_heavy_drop": 189221,  # palanca que cae
+    "inv_plastic_place": 637747,     # teléfono de plástico dejado en la mesa
+    # sustituyen a elecciones automáticas que no encajaban
+    "generator_start": 434660,       # motor de tirón que tose y arranca (era un cortacésped que no arranca)
+    "battery": 627837,               # manipular pilas (era un juguete electrónico sintético)
+    "whisper": 198434,               # susurros ininteligibles (CC BY; el anterior decía una frase reconocible)
+    "amb_vent_loop": 848969,         # rejilla de aire acondicionado (era un puente de nave con pitidos)
+    "amb_pipe_knock": 104370,        # radiador de hierro golpeado (era un golpe de destrucción)
+    "amb_spark_crackle": 849772,     # chispas de un cable (CC BY; era un efecto de robot)
+    "scare_wheelchair": 559469,      # rueda pequeña oxidada (era un columpio)
+    "scare_breath": 151920,          # exhalación de hombre (el anterior estaba mal valorado)
+    "title_tube_flicker": 484157,    # fluorescente parpadeando (el anterior estaba mal valorado)
+    "music_menu_drone": 631650,      # dron de terror lento (el anterior tenía golpes rítmicos)
+    "use_syringe_inject": 458423,    # émbolo de jeringuilla (era un descorche)
+    "use_pills_swallow": 272439,     # abrir un bote de pastillas
+    "inv_glass_place": 610391,       # vaso sobre una mesa de madera (era agua agitándose)
+    "inv_glass_unequip": 219841,     # manipular una botella (CC BY; era una botella rompiéndose)
+    "inv_glass_drop": 594443,        # botella vacía que cae sin romperse (era una botella rompiéndose)
+    "inv_plastic_equip": 513770,     # manipular plástico (era un efecto raro)
+    "inv_plastic_unequip": 513770,   # (era un tambor)
+    "inv_battery_pick": 627837,      # manipular pilas (era una llave de impacto)
+    "inv_battery_place": 627837,     # (era un billete rasgado)
+    "inv_battery_rotate": 627837,    # (era un juguete)
+    "inv_battery_equip": 627837,
+    "inv_battery_unequip": 627837,
+    "inv_tool_drop": 533954,         # destornillador que cae (CC BY; era un clic de linterna)
+    "inv_rubber_pick": 429404,       # sacar un guante de látex (eran pasos en hierba)
+    "inv_rubber_place": 704921,      # guante de goma apretado
+    "inv_rubber_equip": 266649,      # ponerse guantes (CC BY)
+    "inv_rubber_unequip": 631973,    # quitarse guantes de látex médicos
+    "inv_rubber_drop": 405112,       # bota que golpea el suelo
+    "inv_ceramic_pick": 478580,      # coger y dejar una taza (el anterior se rompía)
+    "inv_ceramic_drop": 495645,      # taza que golpea la madera (era una ficha de juego)
+    "inv_paper_place": 432917,       # papel que cae sobre la mesa (CC BY; era dibujar con un boli)
+    "inv_paper_drop": 486377,        # libreta que cae
+    "inv_place": 873911,             # dejar un objeto en la encimera
+    "inv_drop": 339363,              # objeto de madera que cae al suelo
+    "inv_rotate": 798838,            # roce de tela al manipular (CC BY; era una bolsa de comida)
+    "inv_equip": 416286,             # rebuscar en un bolsillo (era un efecto de juego)
+    "inv_unequip": 798839,           # roce de tela (CC BY; era un motor de nave espacial)
+}
+
+
 def inventory() -> list[dict]:
     out: list[dict] = []
     for mat, (what, noun, alt_noun, tags) in MATERIALS.items():
@@ -479,9 +542,12 @@ def main() -> None:
     entries = WORLD + PLAYER + AMBIENT + HORROR + UI + MUSIC + ITEMS + inventory()
     names = [x["name"] for x in entries]
     assert len(names) == len(set(names)), "nombres repetidos"
+    assert set(REVIEWED_PICKS) <= set(names), "REVIEWED_PICKS con nombres que no existen"
     for x in entries:
         # Un `pick` fijado a mano aquí (revisado) manda sobre el elegido automáticamente.
-        if "pick" not in x and old.get(x["name"], {}).get("pick"):
+        if x["name"] in REVIEWED_PICKS:
+            x["pick"] = REVIEWED_PICKS[x["name"]]
+        elif "pick" not in x and old.get(x["name"], {}).get("pick"):
             x["pick"] = old[x["name"]]["pick"]
     MANIFEST.write_text(json.dumps({"_doc": DOC, "sounds": entries}, indent=1, ensure_ascii=False) + "\n",
                         encoding="utf-8")

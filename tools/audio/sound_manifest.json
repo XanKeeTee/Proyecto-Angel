@@ -198,7 +198,7 @@
    "max_len": 7.0,
    "fade_out": 0.8,
    "note": "Motor que tose y arranca (tirón, petardeo, se estabiliza).",
-   "pick": 79286
+   "pick": 434660
   },
   {
    "name": "fluorescent_on",
@@ -546,7 +546,8 @@
    ],
    "max_len": 2.6,
    "fade_out": 0.3,
-   "note": "Somier metálico que cruje al moverse alguien."
+   "note": "Somier metálico que cruje al moverse alguien.",
+   "pick": 655947
   },
   {
    "name": "heavy_drag",
@@ -577,7 +578,8 @@
    ],
    "max_len": 2.8,
    "fade_out": 0.3,
-   "note": "Mueble pesado arrastrado un palmo sobre baldosa."
+   "note": "Mueble pesado arrastrado un palmo sobre baldosa.",
+   "pick": 453347
   },
   {
    "name": "metal_bang",
@@ -1077,7 +1079,7 @@
    ],
    "max_len": 1.4,
    "note": "Pilas que encajan (provisional de varios).",
-   "pick": 19466
+   "pick": 627837
   },
   {
    "name": "bandage",
@@ -1141,7 +1143,7 @@
    "max_len": 2.8,
    "fade_out": 0.5,
    "note": "Susurro sin palabras claras.",
-   "pick": 234044
+   "pick": 198434
   },
   {
    "name": "steps_far",
@@ -1443,7 +1445,8 @@
     "glitch-music"
    ],
    "max_len": 2.2,
-   "note": "Respiración de esfuerzo entre dientes (al levantarse de la camilla)."
+   "note": "Respiración de esfuerzo entre dientes (al levantarse de la camilla).",
+   "pick": 554928
   },
   {
    "name": "breath_run_male",
@@ -1479,7 +1482,8 @@
    ],
    "max_len": 3.0,
    "fade_out": 0.5,
-   "note": "Jadeo de un hombre herido que se queda sin aliento tras correr un poco; se va calmando."
+   "note": "Jadeo de un hombre herido que se queda sin aliento tras correr un poco; se va calmando.",
+   "pick": 467369
   },
   {
    "name": "cloth_rustle",
@@ -1540,7 +1544,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Los pies desnudos tocan el suelo frío."
+   "note": "Los pies desnudos tocan el suelo frío.",
+   "pick": 197402
   },
   {
    "name": "stairs_concrete",
@@ -1626,7 +1631,7 @@
    "ideal": 40,
    "af": "highpass=f=60",
    "note": "Aire por un conducto: soplido sordo y continuo, sin golpeteos.",
-   "pick": 211683
+   "pick": 848969
   },
   {
    "name": "amb_drip_loop",
@@ -1967,7 +1972,7 @@
    "fade_out": 0.4,
    "af": "lowpass=f=5000",
    "note": "Una tubería que golpea dentro de la pared (dos o tres golpes metálicos sordos).",
-   "pick": 586114
+   "pick": 104370
   },
   {
    "name": "amb_water_pipes",
@@ -2052,7 +2057,8 @@
    "max_len": 5.0,
    "fade_in": 0.6,
    "fade_out": 1.2,
-   "note": "Ráfaga de viento que silba por una ventana rota, desde dentro."
+   "note": "Ráfaga de viento que silba por una ventana rota, desde dentro.",
+   "pick": 67707
   },
   {
    "name": "amb_monitor_far",
@@ -2132,7 +2138,8 @@
    "max_len": 4.0,
    "fade_in": 0.3,
    "fade_out": 0.8,
-   "note": "Cables tensos que crujen en el hueco del ascensor, con algo de eco."
+   "note": "Cables tensos que crujen en el hueco del ascensor, con algo de eco.",
+   "pick": 326487
   },
   {
    "name": "amb_paper_draft",
@@ -2207,7 +2214,7 @@
    "max_len": 1.5,
    "fade_out": 0.2,
    "note": "Chisporroteo corto de un cable o un contacto.",
-   "pick": 87040
+   "pick": 849772
   },
   {
    "name": "entity_breath",
@@ -2372,7 +2379,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Bandeja metálica que cae y rebota."
+   "note": "Bandeja metálica que cae y rebota.",
+   "pick": 438329
   },
   {
    "name": "scare_glass",
@@ -2433,7 +2441,8 @@
     "glitch-music"
    ],
    "max_len": 1.8,
-   "note": "Tres golpes apagados al otro lado del tabique."
+   "note": "Tres golpes apagados al otro lado del tabique.",
+   "pick": 795281
   },
   {
    "name": "scare_steps_above",
@@ -2465,7 +2474,8 @@
    ],
    "max_len": 6.0,
    "af": "lowpass=f=1800",
-   "note": "Pasos lentos en el piso de arriba, sin agudos."
+   "note": "Pasos lentos en el piso de arriba, sin agudos.",
+   "pick": 210592
   },
   {
    "name": "scare_roll",
@@ -2527,7 +2537,7 @@
    ],
    "max_len": 2.0,
    "note": "Silla de ruedas empujada un palmo, con chirrido.",
-   "pick": 57640
+   "pick": 559469
   },
   {
    "name": "scare_door_creak",
@@ -2590,7 +2600,7 @@
    ],
    "max_len": 1.6,
    "note": "Exhalación justo detrás.",
-   "pick": 277043
+   "pick": 151920
   },
   {
    "name": "scare_static_burst",
@@ -2930,7 +2940,7 @@
    ],
    "max_len": 1.0,
    "note": "Chasquido y zumbido entrecortado de un tubo.",
-   "pick": 253978
+   "pick": 484157
   },
   {
    "name": "music_menu_drone",
@@ -2994,7 +3004,7 @@
    "af": "highpass=f=28",
    "quality": 5,
    "note": "Dron oscuro y lento, con capas que respiran; nada de ritmo ni melodía clara.",
-   "pick": 333932
+   "pick": 631650
   },
   {
    "name": "music_menu_piano",
@@ -3152,7 +3162,8 @@
     "glitch-music"
    ],
    "max_len": 2.0,
-   "note": "Abrir la tapa, pilas que encajan y clic al cerrar."
+   "note": "Abrir la tapa, pilas que encajan y clic al cerrar.",
+   "pick": 765865
   },
   {
    "name": "use_bandage_apply",
@@ -3214,7 +3225,7 @@
    ],
    "max_len": 2.0,
    "note": "Abrir el bote, sacar pastillas (y tragar).",
-   "pick": 536418
+   "pick": 272439
   },
   {
    "name": "use_syringe_inject",
@@ -3244,7 +3255,7 @@
    ],
    "max_len": 1.4,
    "note": "Capuchón de jeringuilla y émbolo.",
-   "pick": 117352
+   "pick": 458423
   },
   {
    "name": "use_tourniquet_tighten",
@@ -3433,7 +3444,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: cogerlo de la bandeja. Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 452585
   },
   {
    "name": "inv_metal_heavy_place",
@@ -3470,7 +3482,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 198299
   },
   {
    "name": "inv_metal_heavy_rotate",
@@ -3545,7 +3558,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 198299
   },
   {
    "name": "inv_metal_heavy_unequip",
@@ -3582,7 +3596,8 @@
    ],
    "max_len": 0.6,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: quitárselo. Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: quitárselo. Corto y seco, sin sala.",
+   "pick": 452585
   },
   {
    "name": "inv_metal_heavy_drop",
@@ -3619,7 +3634,8 @@
    ],
    "max_len": 0.9,
    "fade_out": 0.08,
-   "note": "palanca, llave inglesa, tubo: tirarlo al suelo. Corto y seco, sin sala."
+   "note": "palanca, llave inglesa, tubo: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 189221
   },
   {
    "name": "inv_metal_small_pick",
@@ -4361,7 +4377,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "documentos, notas: dejarlo en la bandeja. Corto y seco, sin sala.",
-   "pick": 421712
+   "pick": 432917
   },
   {
    "name": "inv_paper_rotate",
@@ -4501,7 +4517,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "documentos, notas: tirarlo al suelo. Corto y seco, sin sala.",
-   "pick": 421712
+   "pick": 486377
   },
   {
    "name": "inv_plastic_pick",
@@ -4570,7 +4586,8 @@
    ],
    "max_len": 0.5,
    "fade_out": 0.08,
-   "note": "cajas y objetos de plástico: dejarlo en la bandeja. Corto y seco, sin sala."
+   "note": "cajas y objetos de plástico: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 637747
   },
   {
    "name": "inv_plastic_rotate",
@@ -4640,7 +4657,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "cajas y objetos de plástico: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
-   "pick": 101574
+   "pick": 513770
   },
   {
    "name": "inv_plastic_unequip",
@@ -4675,7 +4692,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "cajas y objetos de plástico: quitárselo. Corto y seco, sin sala.",
-   "pick": 396587
+   "pick": 513770
   },
   {
    "name": "inv_plastic_drop",
@@ -4784,7 +4801,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "frascos, viales: dejarlo en la bandeja. Corto y seco, sin sala.",
-   "pick": 386432
+   "pick": 610391
   },
   {
    "name": "inv_glass_rotate",
@@ -4895,7 +4912,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "frascos, viales: quitárselo. Corto y seco, sin sala.",
-   "pick": 344266
+   "pick": 219841
   },
   {
    "name": "inv_glass_drop",
@@ -4932,7 +4949,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "frascos, viales: tirarlo al suelo. Corto y seco, sin sala.",
-   "pick": 344266
+   "pick": 594443
   },
   {
    "name": "inv_pills_pick",
@@ -5189,7 +5206,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "pilas: cogerlo de la bandeja. Corto y seco, sin sala.",
-   "pick": 847716
+   "pick": 627837
   },
   {
    "name": "inv_battery_place",
@@ -5224,7 +5241,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "pilas: dejarlo en la bandeja. Corto y seco, sin sala.",
-   "pick": 198233
+   "pick": 627837
   },
   {
    "name": "inv_battery_rotate",
@@ -5259,7 +5276,7 @@
    "max_len": 0.35,
    "fade_out": 0.08,
    "note": "pilas: girarlo en la mano (suave). Corto y seco, sin sala.",
-   "pick": 49705
+   "pick": 627837
   },
   {
    "name": "inv_battery_equip",
@@ -5294,7 +5311,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "pilas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
-   "pick": 198233
+   "pick": 627837
   },
   {
    "name": "inv_battery_unequip",
@@ -5329,7 +5346,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "pilas: quitárselo. Corto y seco, sin sala.",
-   "pick": 198233
+   "pick": 627837
   },
   {
    "name": "inv_battery_drop",
@@ -5586,7 +5603,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "linterna, destornillador: tirarlo al suelo. Corto y seco, sin sala.",
-   "pick": 557505
+   "pick": 533954
   },
   {
    "name": "inv_rubber_pick",
@@ -5623,7 +5640,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "botas, guantes de goma: cogerlo de la bandeja. Corto y seco, sin sala.",
-   "pick": 571937
+   "pick": 429404
   },
   {
    "name": "inv_rubber_place",
@@ -5660,7 +5677,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "botas, guantes de goma: dejarlo en la bandeja. Corto y seco, sin sala.",
-   "pick": 571937
+   "pick": 704921
   },
   {
    "name": "inv_rubber_rotate",
@@ -5734,7 +5751,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "botas, guantes de goma: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
-   "pick": 571937
+   "pick": 266649
   },
   {
    "name": "inv_rubber_unequip",
@@ -5771,7 +5788,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "botas, guantes de goma: quitárselo. Corto y seco, sin sala.",
-   "pick": 571937
+   "pick": 631973
   },
   {
    "name": "inv_rubber_drop",
@@ -5808,7 +5825,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "botas, guantes de goma: tirarlo al suelo. Corto y seco, sin sala.",
-   "pick": 571937
+   "pick": 405112
   },
   {
    "name": "inv_ceramic_pick",
@@ -5844,7 +5861,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "fusible cerámico, taza: cogerlo de la bandeja. Corto y seco, sin sala.",
-   "pick": 128277
+   "pick": 478580
   },
   {
    "name": "inv_ceramic_place",
@@ -6024,7 +6041,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "fusible cerámico, taza: tirarlo al suelo. Corto y seco, sin sala.",
-   "pick": 828399
+   "pick": 495645
   },
   {
    "name": "inv_pick",
@@ -6090,7 +6107,7 @@
    "max_len": 0.5,
    "fade_out": 0.08,
    "note": "Genérico para cualquier material: dejarlo en la bandeja.",
-   "pick": 459637
+   "pick": 873911
   },
   {
    "name": "inv_rotate",
@@ -6123,7 +6140,7 @@
    "max_len": 0.35,
    "fade_out": 0.08,
    "note": "Genérico para cualquier material: girarlo en la mano (suave).",
-   "pick": 803396
+   "pick": 798838
   },
   {
    "name": "inv_equip",
@@ -6156,7 +6173,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "Genérico para cualquier material: equiparlo (ponérselo o guardarlo a mano).",
-   "pick": 411177
+   "pick": 416286
   },
   {
    "name": "inv_unequip",
@@ -6189,7 +6206,7 @@
    "max_len": 0.6,
    "fade_out": 0.08,
    "note": "Genérico para cualquier material: quitárselo.",
-   "pick": 204418
+   "pick": 798839
   },
   {
    "name": "inv_drop",
@@ -6222,7 +6239,7 @@
    "max_len": 0.9,
    "fade_out": 0.08,
    "note": "Genérico para cualquier material: tirarlo al suelo.",
-   "pick": 459637
+   "pick": 339363
   }
  ]
 }
