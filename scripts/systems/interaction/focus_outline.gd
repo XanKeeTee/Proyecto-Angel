@@ -6,7 +6,7 @@ extends Sprite2D
 
 const SHADER: Shader = preload("res://shaders/focus_outline.gdshader")
 const NODE_NAME: StringName = &"FocusOutline"
-const BASE_STRENGTH: float = 0.28
+const BASE_STRENGTH: float = 0.34
 const PULSE: float = 0.12
 const PULSE_SPEED: float = 2.2
 

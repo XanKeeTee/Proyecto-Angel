@@ -613,7 +613,7 @@ func _check_thoughts() -> void:
 	if text == _last_thought:
 		return
 	if _last_thought != "" and text != "":
-		hud.notice("T: pensar")
+		hud.notice("Algo nuevo en lo que pensar  ·  T")
 	_last_thought = text
 
 
