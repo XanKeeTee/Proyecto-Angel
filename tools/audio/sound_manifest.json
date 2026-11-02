@@ -5034,6 +5034,40 @@
    "pick": 150382
   },
   {
+   "name": "inv_category",
+   "query": "file folder divider click",
+   "alt": [
+    "metal tab click office",
+    "cardboard divider flip"
+   ],
+   "duration": [
+    0.05,
+    2
+   ],
+   "want": [
+    "click",
+    "folder",
+    "paper",
+    "office"
+   ],
+   "level": -26,
+   "avoid": [
+    "beep",
+    "electronic",
+    "digital",
+    "game",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.18,
+   "note": "Al cambiar de categoría en el inventario: clic seco de pestaña de archivador, sin pitido."
+  },
+  {
    "name": "tape_rewind",
    "query": "vhs rewind",
    "alt": [

@@ -186,7 +186,7 @@ El camino principal, sabiendo qué hacer, dura unos 15 minutos. Explorando, leye
 
 ## Pantalla de título
 
-El título es una cinta de vídeo que se está reproduciendo: la Habitación 09 vista desde arriba, con el mismo arte del mapa (es la escena real del hospital, sin guion ni jugador, en un SubViewport con la cámara fija): la camilla deshecha, el monitor que late, un fluorescente que falla, polvo en la luz y lluvia de estática. En algunos apagones la máscara de la entidad asoma en un rincón. El menú queda a la izquierda, sobre el negro de fuera del mapa. Arriba, los rótulos del vídeo (PLAY ▶, contador de cinta); abajo, la fecha y la hora del sistema.
+El título es una cinta de vídeo que se está reproduciendo: la Habitación 09 vista desde arriba, con el mismo arte del mapa (es la escena real del hospital, sin guion ni jugador, en un SubViewport con la cámara fija): la camilla deshecha, el monitor que late, un fluorescente que falla, polvo en la luz y lluvia de estática. En algunos apagones la silueta de la entidad asoma en un rincón. El menú queda a la izquierda, sobre el negro de fuera del mapa. Arriba, los rótulos del vídeo (PLAY ▶, contador de cinta); abajo, la fecha y la hora del sistema.
 
 Menú: **Continuar** (la grabación más reciente), **Nueva partida**, **Cargar** (si hay alguna grabación), **Opciones**, **Créditos** y **Salir**. Teclado, ratón o mando. Al entrar en la partida la cinta se rebobina entre nieve y empieza a reproducirse. Los créditos tendrán la atribución de los sonidos de Freesound.
 
