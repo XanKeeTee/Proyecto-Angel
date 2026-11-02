@@ -37,6 +37,6 @@ ramp("tube", ["#2a302f", "#56625f", "#8a9893"])  # vía/goma traslúcida
 ramp("tube_dark", ["#0f0b0e", "#2a1b22", "#4c3038"])  # tubo con líquido oscuro
 ramp("paint", ["#1e2522", "#36423d", "#53615a", "#71807a", "#8d9a92"])  # taquilla verde gris
 ramp("floor", ["#17171a", "#25252a", "#36363a", "#4a4947", "#5d5b56"])
-ramp("tile", ["#1a1e1e", "#2c3332", "#424b49", "#5b6461", "#737b76"])
+ramp("tile", ["#181b1c", "#262c2c", "#373f3e", "#4b5452", "#606865"])
 ramp("plaster", ["#1f1d1b", "#36322d", "#504a41", "#6c6456", "#887e6c"])
 ramp("mold", ["#151a12", "#232c1c", "#36422a"])
