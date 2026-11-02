@@ -1,19 +1,23 @@
 class_name VhsOverlay
 extends CanvasLayer
-## Filtro VHS de pantalla completa. Su intensidad y el brillo salen de las opciones (Settings).
+## Filtro de pantalla completa (shaders/film_grade.gdshader): color desaturado y de baja saturación,
+## sombras con contraste, grano de película, viñeta oscura y tramado sutil. Los fallos de cinta
+## (`glitch`) quedan solo para sustos y eventos. Su intensidad y el brillo salen de las opciones.
 ## F2 lo apaga o enciende rápidamente (el brillo se mantiene).
+## (El nombre de la clase se conserva por compatibilidad con el resto del código.)
 ## Se añade por código: `var vhs := VhsOverlay.new(); add_child(vhs)`.
 
-const SHADER: Shader = preload("res://shaders/vhs_post.gdshader")
+const SHADER: Shader = preload("res://shaders/film_grade.gdshader")
 ## Parámetros que escalan con la intensidad elegida en opciones.
-const SCALED: Array[StringName] = [&"grain_amount", &"aberration_px", &"scanline_strength", &"tracking"]
+const SCALED: Array[StringName] = [&"grain_amount", &"aberration_px", &"tracking", &"desaturation", &"shadow_contrast", &"dither_amount"]
 
 var _rect: ColorRect
 var _material: ShaderMaterial
 var _glitch_tween: Tween
 var _base: Dictionary[StringName, Variant] = {
-	&"grain_amount": 0.06, &"aberration_px": 1.0, &"scanline_strength": 0.08, &"vignette_strength": 0.7,
-	&"tracking": 0.0, &"tint": Color.WHITE,
+	&"grain_amount": 0.05, &"aberration_px": 0.0, &"vignette_strength": 0.85, &"tracking": 0.0,
+	&"tint": Color.WHITE, &"desaturation": 0.38, &"saturation": 0.78, &"shadow_contrast": 0.22,
+	&"dither_amount": 0.6,
 }
 var _enabled: bool = true
 
@@ -75,5 +79,7 @@ func _apply() -> void:
 			value = float(value) * strength
 		elif param == &"vignette_strength":
 			value = float(value) * lerpf(0.55, 1.0, strength)
+		elif param == &"saturation":
+			value = lerpf(1.0, float(value), strength)
 		_material.set_shader_parameter(param, value)
 	_material.set_shader_parameter(&"gamma", Settings.brightness)

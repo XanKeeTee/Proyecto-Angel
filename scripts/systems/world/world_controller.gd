@@ -701,7 +701,7 @@ func _update_vitals(delta: float) -> void:
 	vhs.set_tint(zone_tint.lerp(Color(1.0, 0.75, 0.75), hurt * 0.6))
 	# Mente baja: ruidos y distorsiones que no existen.
 	var unease: float = clampf((45.0 - v.mind) / 40.0, 0.0, 1.0)
-	vhs.set_param("aberration_px", 1.0 + unease * 1.5)
+	vhs.set_param("aberration_px", unease * 1.2)
 	_mind_noise_timer -= delta * (0.3 + unease)
 	if _mind_noise_timer <= 0.0:
 		_mind_noise_timer = randf_range(14.0, 30.0)
@@ -846,8 +846,8 @@ func _build_ui() -> void:
 	vhs = VhsOverlay.new()
 	add_child(vhs)
 	vhs.set_tint(zone_tint)
-	vhs.set_param("grain_amount", 0.085)
-	vhs.set_param("vignette_strength", 0.95)
+	vhs.set_param("grain_amount", 0.055)
+	vhs.set_param("vignette_strength", 0.9)
 	add_child(StatusFx.new())
 	hud = Hud.new()
 	add_child(hud)

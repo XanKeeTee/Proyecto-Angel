@@ -12,7 +12,7 @@ var _sliders: Dictionary[String, HSlider] = {}
 
 
 func _init() -> void:
-	layer = 48  # por debajo del filtro VHS: así el brillo se ve al ajustarlo
+	layer = 48  # por debajo del filtro de imagen: así el brillo se ve al ajustarlo
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 
@@ -43,7 +43,7 @@ func _ready() -> void:
 	_slider(grid, "Efectos", "sfx", 0.0, 1.0)
 	_slider(grid, "Interfaz", "ui", 0.0, 1.0)
 	_slider(grid, "Brillo", "brightness", 0.6, 1.6)
-	_slider(grid, "Filtro VHS", "vhs", 0.0, 1.0)
+	_slider(grid, "Filtro de imagen", "vhs", 0.0, 1.0)
 
 	grid.add_child(UiStyle.label("Velocidad del texto", UiStyle.SIZE_TEXT, UiStyle.BONE_DIM))
 	_speed_button = UiStyle.button("")
@@ -92,7 +92,7 @@ apenas se distinga. La oscuridad es parte del juego.", UiStyle.MONO_SMALL, UiSty
 	calib.add_child(hint)
 	col.add_child(calib)
 	var keys: Label = UiStyle.label(
-		"Mover: WASD / flechas / stick · Correr: Shift / L3 / L2 · Usar: E · Examinar: R\nLinterna: F · Custodia: Tab · Bolsillos: 1-5 · Pausa: Esc · Filtro VHS: F2",
+		"Mover: WASD / flechas / stick · Correr: Shift / L3 / L2 · Usar: E · Examinar: R\nLinterna: F · Custodia: Tab · Bolsillos: 1-5 · Pausa: Esc · Filtro: F2",
 		UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
 	col.add_child(keys)
 	var buttons: HBoxContainer = HBoxContainer.new()
