@@ -12,6 +12,8 @@ signal notice(text: String)
 signal flashlight_toggled(on: bool)
 ## Carga de la linterna entre 0 y 1.
 signal flashlight_charge_changed(ratio: float)
+## Se ha usado un objeto desde la custodia o un bolsillo (vendas, pilas, pastillas…).
+signal item_used(item: ItemDef)
 ## Corriente del hospital restablecida o cortada.
 signal power_changed(on: bool)
 ## Se ha guardado o cargado la partida.

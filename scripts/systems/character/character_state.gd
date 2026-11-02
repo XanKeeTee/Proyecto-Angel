@@ -78,6 +78,7 @@ func use_item(stack: ItemStack) -> String:
 				texts.append(text)
 	if not applied:
 		return ""
+	EventBus.item_used.emit(stack.def)
 	if stack.def.consumed_on_use:
 		custody.consume(stack)
 	return "\n".join(texts) if not texts.is_empty() else "·"
