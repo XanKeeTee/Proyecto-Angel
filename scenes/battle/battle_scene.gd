@@ -518,10 +518,7 @@ func _play_action(action: CombatAction, fast: bool) -> void:
 	elif action.type == CombatTypes.ActionType.ATTACK:
 		var index: int = battle.party.find(action.actor)
 		if index >= 0 and index < _cards.size():
-			var card: PartyCard = _cards[index]
-			var tween: Tween = create_tween()
-			tween.tween_property(card, "position:y", card.position.y - 8.0, 0.08)
-			tween.tween_property(card, "position:y", card.position.y, 0.12)
+			_cards[index].bump()
 		if not fast:
 			await _wait(0.12)
 
@@ -562,7 +559,7 @@ func _play_strike(info: Dictionary, fast: bool) -> void:
 	else:
 		var index: int = battle.party.find(target)
 		var card: PartyCard = _cards[index] if index >= 0 and index < _cards.size() else null
-		var anchor: Vector2 = card.position + Vector2(card.size.x * 0.5, 4.0) if card != null else Vector2(320, PANEL_Y)
+		var anchor: Vector2 = card.home + Vector2(card.size.x * 0.5, 4.0) if card != null else Vector2(320, PANEL_Y)
 		if not hit:
 			_sound("combat_swing_miss", -6.0)
 			_float_text(anchor + Vector2(0, -10), "ESQUIVAS", UiStyle.ASH)
@@ -969,6 +966,7 @@ func _build_bottom() -> void:
 	for member: Combatant in battle.party:
 		var card: PartyCard = PartyCard.new()
 		card.position = Vector2(x, PANEL_Y + 7)
+		card.home = card.position
 		card.setup(member, character if member.def.is_protagonist else null)
 		_content.add_child(card)
 		_cards.append(card)

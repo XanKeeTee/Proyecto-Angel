@@ -19,6 +19,8 @@ var combatant: Combatant
 ## Para el arma y la ropa del retrato (opcional).
 var character: CharacterState
 var selected: bool = false
+## Posición de reposo (las sacudidas y saltos vuelven siempre aquí).
+var home: Vector2 = Vector2.ZERO
 
 var _diagram: BodyDiagram
 var _portrait_layers: Array[Texture2D] = []
@@ -77,11 +79,20 @@ func hurt(strength: float = 1.0) -> void:
 	_flash_tween.parallel().tween_method(func(_v: float) -> void: queue_redraw(), 0.0, 1.0, 0.45)
 	if _shake_tween != null:
 		_shake_tween.kill()
-	var base: Vector2 = position
+	var base: Vector2 = home
 	_shake_tween = create_tween()
 	for i: int in 5:
 		_shake_tween.tween_property(self, "position", base + Vector2(randf_range(-3, 3), randf_range(-2, 2)) * strength, 0.03)
 	_shake_tween.tween_property(self, "position", base, 0.04)
+
+
+## Pequeño salto al atacar.
+func bump() -> void:
+	if _shake_tween != null:
+		_shake_tween.kill()
+	_shake_tween = create_tween()
+	_shake_tween.tween_property(self, "position", home + Vector2(0, -8), 0.08)
+	_shake_tween.tween_property(self, "position", home, 0.12)
 
 
 func _draw() -> void:

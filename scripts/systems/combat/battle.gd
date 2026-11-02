@@ -663,7 +663,13 @@ func _summary() -> String:
 		for id: StringName in member.part_order:
 			if member.parts[id].is_amputated():
 				lost.append(member.parts[id].def.display_name.to_upper())
-		var state: String = "muerte" if member.dead else "sigue con vida"
+		var state: String = "sigue con vida"
+		if member.dead:
+			state = "muerte"
+		elif member.fallen:
+			state = "en el suelo"
+		elif member.fled:
+			state = "ha huido"
 		var line: String = "%s: %s." % [member.display_name(), state]
 		if not lost.is_empty():
 			line += " Pierde: %s." % ", ".join(lost)
