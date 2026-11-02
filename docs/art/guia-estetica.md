@@ -126,6 +126,9 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 ### Arte provisional generado
 
 Todo el arte actual se genera con `python -I tools/art/build_all.py`, con un renderizador propio (`tools/art/pxrender.py`) que modela con volúmenes simples, reduce a rampas de color con tramado y saca los mapas de normales. Sirve para fijar el estilo y la escala. El arte definitivo puede pintarse a mano encima, **manteniendo tamaños de fotograma, puntos de apoyo (`tools/art/sprite_meta.json`) y la disposición del atlas** (ver `tools/art/tiles.py`).
+
+> **En revisión**: el usuario ha pedido rehacer todo el arte en 2D, sin volúmenes 3D, con 8 direcciones.
+> Muestra, flujo propuesto, plan y decisiones pendientes en [arte-2d.md](arte-2d.md).
 - **Mapas** (ref_06): vista cenital RPG Maker, personajes **de proporciones realistas** (ver abajo) de 4 direcciones y 3 frames. Texturas densas y "sucias", no limpias. Iluminación con máscara de oscuridad alrededor del jugador.
 - **Combate** (ref_05): enemigo grande de frente en el centro, grupo del jugador de espaldas en primer plano, escenario con perspectiva. Los enemigos deben tener **partes del cuerpo distinguibles a simple vista**, porque son objetivos de combate.
 - **Retratos y escenas ilustradas** (ref_02, ref_04): pueden tener más detalle, estilo pintado o anime oscuro, siempre con la paleta del juego. Útiles para momentos clave y finales.
