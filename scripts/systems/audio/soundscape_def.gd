@@ -5,6 +5,8 @@ extends Resource
 ## `Soundscape`. Diseño y lista de sonidos: docs/tech/sonidos.md.
 
 @export var sounds: Array[AmbientSoundDef] = []
+## Acústica del mapa (eco y ecualización por sala; ver `RoomAcoustics`). Null = sin eco.
+@export var acoustics: AcousticsDef
 
 @export_group("Mezcla")
 ## Volumen (dB) del ambiente de fondo del mapa (%Ambience), si se le pasa a `Soundscape`.
