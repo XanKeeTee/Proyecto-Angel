@@ -7,6 +7,9 @@
   y bases «apoyan» en el suelo en vez de flotar.
 - `wall`: para lo que cuelga de la pared (lavabos, armarios de pared, cuadros…): una sombra
   arrojada de 1-2 px sobre el muro, que lo despega del fondo y lo pega a la cara del muro.
+- `blend_in`: ajusta valores y saturación del objeto a los de suelos y paredes (tiles.py), para
+  que el mobiliario y el decorado formen parte del escenario y no destaquen como pegatinas.
+  Lo interactuable lo señala el juego (contorno de foco y destello), no el dibujo.
 
 No toca pxrender: usa sus primitivas (`intersect`) y el resultado ya renderizado.
 """
@@ -16,7 +19,14 @@ from __future__ import annotations
 from pxrender import BAYER4, RenderResult, View, norm
 
 SHADOW_RGB = (8, 6, 12)
-LEVELS = (0.0, 0.28, 0.46, 0.62)
+LEVELS = (0.0, 0.22, 0.36, 0.5)
+
+# Curva de valor de blend_in: por debajo de KNEE casi igual; por encima, las luces se comprimen
+# para que el blanco hueso de un objeto no pase mucho del tramo más claro de las paredes (~110).
+KNEE = 0.24
+LOW_GAIN = 0.92
+HIGH_GAIN = 0.36
+SATURATION = 0.7
 
 
 def _ground_normal(view: View) -> tuple[int, int, int]:
@@ -117,11 +127,46 @@ def wall(result: RenderResult, offset: tuple[int, int] = (1, 2), alpha: float = 
     return result
 
 
+def _fit_value(v: float) -> float:
+    if v <= KNEE:
+        return v * LOW_GAIN
+    return KNEE * LOW_GAIN + (v - KNEE) * HIGH_GAIN
+
+
+def blend_in(result: RenderResult) -> RenderResult:
+    """Integra el objeto en el escenario: comprime las luces y baja la saturación.
+    Los píxeles emisivos (rampas con "!") no se tocan: siguen brillando en la oscuridad."""
+    w, h = result.color.size
+    px = result.color.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if a == 0:
+                continue
+            cell = result.depth[y * w + x] if result.depth else None
+            if cell is not None and cell[0].startswith("!"):
+                continue
+            v = max(r, g, b) / 255.0
+            if v <= 0:
+                continue
+            k = _fit_value(v) / v
+            lum = 0.3 * r + 0.59 * g + 0.11 * b
+            out = []
+            for c in (r, g, b):
+                c2 = lum + (c - lum) * SATURATION
+                out.append(max(0, min(255, int(round(c2 * k)))))
+            px[x, y] = (*out, a)
+    return result
+
+
 def render_shadowed(prims: list, w: int, h: int, origin: tuple[float, float], view: View, kind: str = "ground",
                     **kw) -> RenderResult:
     """Renderiza con pxrender y añade la sombra que toque ("ground", "wall" o "none")."""
+    from dataclasses import replace
+
     from pxrender import render
-    result = render(prims, w, h, origin, view)
+    result = render(prims, w, h, origin, replace(view, outline=False))
+    blend_in(result)
     if kind == "ground":
         ground(prims, result, origin, view, **kw)
     elif kind == "wall":

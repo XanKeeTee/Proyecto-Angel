@@ -6,6 +6,11 @@ Genera dos imágenes (con su mapa de normales):
                                    0 cerrada / 1 abierta (planta), 2 / 3 (sótano, hormigón), 4 / 5 (quirófano, azulejo).
                                    Es lo que queda POR ENCIMA del jugador cuando cruza: remate, dintel, jambas y hoja.
                                    El hueco de la puerta abierta es transparente: deja ver el suelo del paso.
+                                   El remate de la puerta no es el del muro: es el hueco visto desde arriba (cabezas
+                                   de las jambas, suelo del paso en penumbra, canto de la hoja y umbral), para que una
+                                   puerta se adivine también desde el lado de atrás del muro (las salas al sur del
+                                   pasillo), donde solo se ve el remate. La puerta tapa la luz solo con el canto sur
+                                   del remate (build_hospital.gd), así la linterna alumbra el hueco desde el pasillo.
   assets/tilesets/hospital_doors.png  atlas de 2 columnas x 4 filas de 32 px: suelo del paso por dentro del muro
                                    (fila 0 = casilla del remate, filas 1-3 = tramos de la pared), columna 0 linóleo,
                                    columna 1 hormigón. No tiene colisión: la pone la puerta cuando está cerrada.
@@ -42,10 +47,49 @@ def _wall(style: str) -> Canvas:
     return wall_column(0)
 
 
+def door_cap(style: str, open_: bool) -> Canvas:
+    """Remate de la puerta visto desde arriba (32x32; norte arriba, la cara de la puerta al sur).
+
+    Sutil a propósito: el muro sigue a los lados; en medio, el grosor del muro se interrumpe
+    con las cabezas metálicas de las jambas, el suelo del paso en penumbra (más oscuro hacia
+    las jambas), el canto de la hoja contra el borde sur y un umbral metálico al norte."""
+    c = Canvas(T, T)
+    cap = cap_tile()
+    floor = tiles.lino_tile(0) if style != "basement" else tiles_extra.concrete_floor(0)
+    for y in range(T):
+        for x in range(T):
+            c.set(x, y, cap.mat[y][x], cap.lum[y][x], cap.height[y][x])
+    for y in range(T):
+        for x in range(X0, X1 + 1):
+            side = min(x - X0, X1 - x)
+            shade = 0.14 if side < 2 else 0.2 + 0.015 * min(side, 5)
+            # Penumbra al fondo (sur), donde la hoja hace sombra.
+            shade *= 1.0 - 0.6 * y / 31
+            c.set(x, y, floor.mat[y][x], floor.lum[y][x] * shade, floor.height[y][x] - 0.4)
+    for y in range(T):  # cabezas de las jambas: el marco visto desde arriba
+        for x in (X0 - 2, X0 - 1, X1 + 1, X1 + 2):
+            outer = x in (X0 - 2, X1 + 2)
+            c.set(x, y, "metal", (0.1 if outer else 0.18) + 0.04 * _hash2(x, y // 4, 64), 1.2)
+    for x in range(X0, X1 + 1):  # umbral metálico (lado norte) con rozaduras
+        c.set(x, 0, "metal", 0.2 + 0.1 * _hash2(x, 0, 65), 0.8)
+        c.set(x, 1, "metal", 0.1, 0.2)
+    if open_:  # hoja abierta hacia dentro: el canto, pegado a la jamba izquierda
+        for y in range(T - 12, T):
+            for x in range(X0, X0 + 2):
+                c.set(x, y, "door", 0.42 if x == X0 + 1 else 0.3, 1.4)
+        return c
+    for x in range(X0, X1 + 1):  # canto de la hoja cerrada y su sombra hacia el norte
+        c.set(x, T - 4, "void", 0.15, -0.6)
+        c.set(x, T - 3, "door", 0.34 + 0.08 * _hash2(x, 3, 66), 1.4)
+        c.set(x, T - 2, "door", 0.22, 1.0)
+        c.set(x, T - 1, "door", 0.14, 0.6)
+    return c
+
+
 def frame_column(style: str, open_: bool) -> Canvas:
     """Remate (32 px) + pared (96 px) con el marco y la hoja."""
     c = Canvas(T, T * 4, fill="none")
-    cap = cap_tile()
+    cap = door_cap(style, open_)
     wall = _wall(style)
     for y in range(T):
         for x in range(T):

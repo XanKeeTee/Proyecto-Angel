@@ -5,7 +5,7 @@
    32,
    32
   ],
-  "hframes": 30,
+  "hframes": 31,
   "vframes": 1,
   "origin": [
    16,
@@ -46,7 +46,8 @@
    "smear",
    "bandage",
    "leaflets",
-   "contact"
+   "contact",
+   "doorway"
   ]
  },
  "protagonist": {
