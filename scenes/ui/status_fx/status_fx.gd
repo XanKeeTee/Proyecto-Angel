@@ -208,11 +208,13 @@ func _apply_debug_args() -> void:
 			"bleed":
 				_vitals.bleeding = true
 			"use":
+				# Lo usa de verdad (tiene que estar en la custodia: --give=venda).
 				var parts: PackedStringArray = pair[1].split("@")
-				var item: ItemDef = Registry.item(StringName(parts[0]))
-				if item != null:
-					get_tree().create_timer(parts[1].to_float() if parts.size() > 1 else 1.0).timeout.connect(func() -> void:
-						EventBus.item_used.emit(item))
+				var id: StringName = StringName(parts[0])
+				get_tree().create_timer(parts[1].to_float() if parts.size() > 1 else 1.0).timeout.connect(func() -> void:
+					var stack: ItemStack = GameState.character.custody.find_first(id)
+					if stack != null:
+						GameState.character.use_item(stack))
 	_last_body = _vitals.body
 
 

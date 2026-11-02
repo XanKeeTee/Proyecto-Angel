@@ -23,7 +23,7 @@ uniform float calm : hint_range(0.0, 1.0) = 0.0;
 uniform vec3 blood_dark : source_color = vec3(0.165, 0.039, 0.055);
 uniform vec3 blood : source_color = vec3(0.353, 0.086, 0.125);
 uniform vec3 blood_light : source_color = vec3(0.557, 0.227, 0.208);
-uniform vec3 warm : source_color = vec3(0.91, 0.80, 0.62);
+uniform vec3 warm : source_color = vec3(1.0, 0.74, 0.46);
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -135,13 +135,14 @@ void fragment() {
 		color *= 1.0 - pulse * bleed * 0.12 * smoothstep(0.4, 0.9, r);
 	}
 
-	// Cura: onda cálida que sale del centro, y un respiro de luz que se apaga.
+	// Cura: onda cálida y ancha que sale del centro, y un respiro de luz que se apaga.
 	if (heal_strength > 0.0) {
-		float ring = heal * 1.15;
-		float band = 1.0 - clamp(abs(r - ring) / 0.07, 0.0, 1.0);
-		band = step(bayer4(px), band);
-		color = mix(color, color + warm * 0.18, band * heal_strength);
-		color += warm * 0.05 * heal_strength * (1.0 - heal);
+		float ring = heal * 1.2;
+		float band = 1.0 - clamp(abs(r - ring) / 0.16, 0.0, 1.0);
+		band = band * band;
+		float dithered = step(bayer4(px), band * 1.3);
+		color += warm * (0.05 + 0.1 * dithered) * band * heal_strength;
+		color = mix(color, color * warm * 1.25, 0.25 * heal_strength * (1.0 - heal));
 	}
 	COLOR = vec4(color, 1.0);
 }

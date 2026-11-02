@@ -108,6 +108,7 @@ Por ahora el efecto es visual y de sonido; no cambian estadísticas.
 - **Cuerpo bajo**: caminas más despacio y la imagen se enrojece.
 - **Mente**: baja con los sucesos. Con la Mente baja se oyen susurros, pasos y golpes que no existen, y hay más distorsión de cinta. Se recupera con sedante.
 - **Sin muerte en el prólogo**: el sangrado no baja el Cuerpo de 20. Es una decisión de diseño para que el prólogo sea de exploración.
+- **Efectos en pantalla**: herida (viñeta granate que late), sangrado (regueros en los bordes), cura con venda (onda cálida) y analgésicos o sedante (suavizado). Detalle en [terror-ambiental.md](../sistemas/terror-ambiental.md#efectos-de-pantalla-según-el-estado).
 
 ## Terror ambiental (eventos)
 
@@ -130,6 +131,8 @@ Todos son datos (`HorrorEvent`) en la escena. Se guardan como ocurridos y no se 
 | Ascensor | En el vestíbulo | Un golpe metálico dentro del hueco |
 | Parpadeos | Tramo central del pasillo (a veces) | Las luces y la linterna fallan un momento |
 
+Además de estos, hay **terror aleatorio** que puede pasar o no en cada partida: una entidad de humo que a veces te sigue por la espalda y se deshace si la alumbras, y sustos pequeños (portazos lejanos, algo que cae, pasos arriba, una sombra que cruza, una silla de ruedas que se mueve…). Reglas y valores en [terror-ambiental.md](../sistemas/terror-ambiental.md). `[PROPUESTA]` La entidad no tiene nombre ni explicación en el canon: solo se ve.
+
 Además hay detalles fijos:
 - una ventana con alguien mirando desde el ala de enfrente;
 - un monitor que refleja a alguien en una cama vacía;
@@ -148,6 +151,12 @@ El pasillo nuevo repite puertas con el número 09. Al fondo hay una puerta abier
 El camino principal, sabiendo qué hacer, dura unos 15 minutos. Explorando, leyendo los 21 documentos, registrando los ~110 objetos y gestionando la batería, el objetivo es de **30–45 minutos**.
 
 **Sin medir**: nadie lo ha jugado entero todavía.
+
+## Pantalla de título
+
+El título es una cinta de vídeo que se está reproduciendo: el pasillo de la planta de noche, con una camilla cruzada y una sábana sobre algo, un fluorescente que falla, polvo en la luz y lluvia de estática. En algunos apagones se ve una figura al fondo, junto a la luz roja de emergencia. Arriba, los rótulos del vídeo (PLAY ▶, contador de cinta); abajo, la fecha y la hora del sistema.
+
+Menú: **Continuar** (la grabación más reciente), **Nueva partida**, **Cargar** (si hay alguna grabación), **Opciones**, **Créditos** y **Salir**. Teclado, ratón o mando. Al entrar en la partida la cinta se rebobina entre nieve y empieza a reproducirse. Los créditos tendrán la atribución de los sonidos de Freesound.
 
 ## Opciones
 
