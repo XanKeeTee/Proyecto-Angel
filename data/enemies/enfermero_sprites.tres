@@ -1,0 +1,76 @@
+[gd_resource type="Resource" script_class="EnemySpriteDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/shadow.png" id="1_sbuoc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/leg_l.png" id="2_23ns1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/leg_r.png" id="3_n0t1l"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/body.png" id="4_x8vuo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_head.png" id="5_wijtb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_arm_l.png" id="6_83di8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_arm_r.png" id="7_ujpcu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_leg_l.png" id="8_rqhej"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_leg_r.png" id="9_t6lqt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/head.png" id="10_ae5yn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/arm_l.png" id="11_wuk6a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/arm_r.png" id="12_f1n0k"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/leg_l_n.png" id="13_52xay"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/leg_r_n.png" id="14_jlx7n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/body_n.png" id="15_jnxvr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_head_n.png" id="16_rmo3w"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_arm_l_n.png" id="17_hxkj6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_arm_r_n.png" id="18_q5n7k"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_leg_l_n.png" id="19_sh8qq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/stump_leg_r_n.png" id="20_yl7ux"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/head_n.png" id="21_rku35"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/arm_l_n.png" id="22_saovf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/enfermero/arm_r_n.png" id="23_fsg2h"]
+[ext_resource type="Script" path="res://scripts/systems/combat/enemy_sprite_def.gd" id="24_fa6g5"]
+
+[resource]
+script = ExtResource("24_fa6g5")
+frame = Vector2i(256, 300)
+origin = Vector2i(124, 282)
+layers = Dictionary[StringName, Texture2D]({
+&"arm_l": ExtResource("11_wuk6a"),
+&"arm_r": ExtResource("12_f1n0k"),
+&"body": ExtResource("4_x8vuo"),
+&"head": ExtResource("10_ae5yn"),
+&"leg_l": ExtResource("2_23ns1"),
+&"leg_r": ExtResource("3_n0t1l"),
+&"shadow": ExtResource("1_sbuoc"),
+&"stump_arm_l": ExtResource("6_83di8"),
+&"stump_arm_r": ExtResource("7_ujpcu"),
+&"stump_head": ExtResource("5_wijtb"),
+&"stump_leg_l": ExtResource("8_rqhej"),
+&"stump_leg_r": ExtResource("9_t6lqt")
+})
+normals = Dictionary[StringName, Texture2D]({
+&"arm_l": ExtResource("22_saovf"),
+&"arm_r": ExtResource("23_fsg2h"),
+&"body": ExtResource("15_jnxvr"),
+&"head": ExtResource("21_rku35"),
+&"leg_l": ExtResource("13_52xay"),
+&"leg_r": ExtResource("14_jlx7n"),
+&"stump_arm_l": ExtResource("17_hxkj6"),
+&"stump_arm_r": ExtResource("18_q5n7k"),
+&"stump_head": ExtResource("16_rmo3w"),
+&"stump_leg_l": ExtResource("19_sh8qq"),
+&"stump_leg_r": ExtResource("20_yl7ux")
+})
+order = Array[StringName]([&"shadow", &"leg_l", &"leg_r", &"body", &"stump_head", &"stump_arm_l", &"stump_arm_r", &"stump_leg_l", &"stump_leg_r", &"head", &"arm_l", &"arm_r"])
+anims = Dictionary[StringName, Array]({
+&"attack": [20, 8, 16.0, 0],
+&"attack_syringe": [28, 10, 14.0, 0],
+&"death": [54, 14, 10.0, 0],
+&"hit": [38, 6, 12.0, 0],
+&"idle": [0, 12, 8.0, 1],
+&"stagger": [44, 10, 10.0, 0],
+&"windup": [12, 8, 12.0, 0]
+})
+anchors = Dictionary[StringName, Vector2]({
+&"arm_l": Vector2(160, 165),
+&"arm_r": Vector2(89, 178),
+&"body": Vector2(127, 128),
+&"head": Vector2(131, 85),
+&"leg_l": Vector2(145, 217),
+&"leg_r": Vector2(111, 220)
+})

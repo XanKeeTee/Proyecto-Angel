@@ -11,6 +11,7 @@
 [ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_l.tres" id="9_4wyfp"]
 [ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_r.tres" id="10_vsryd"]
 [ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="11_wuqal"]
+[ext_resource type="Resource" path="res://data/enemies/enfermero_sprites.tres" id="12_qi8nj"]
 
 [sub_resource type="Resource" id="Resource_4uvoe"]
 script = ExtResource("1_7uuj2")
@@ -140,6 +141,7 @@ armor = 1
 parts = Array[ExtResource("4_3wje8")]([ExtResource("5_a5fni"), ExtResource("6_e4qk1"), ExtResource("7_srs77"), ExtResource("8_ppvgm"), ExtResource("9_4wyfp"), ExtResource("10_vsryd")])
 attacks = Array[ExtResource("1_7uuj2")]([SubResource("Resource_4uvoe"), SubResource("Resource_r0qv7"), SubResource("Resource_hv5fp"), SubResource("Resource_l7x0e"), SubResource("Resource_fuko5"), SubResource("Resource_j2quo"), SubResource("Resource_845ka"), SubResource("Resource_o2swa")])
 intro_text = "Un enfermero. Lo que queda de uno."
+sprites = ExtResource("12_qi8nj")
 sprite_key = "enemy_enfermero"
 sound_idle = "enfermero_breath"
 sound_hurt = "enfermero_scream"

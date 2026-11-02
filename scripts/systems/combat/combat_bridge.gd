@@ -117,7 +117,7 @@ static func lost_parts(state: Dictionary) -> Array[StringName]:
 static func combat_items(character: CharacterState) -> Array[ItemStack]:
 	var result: Array[ItemStack] = []
 	var seen: Array[ItemStack] = []
-	for stack: ItemStack in character.custody.pockets + character.custody.tray:
+	for stack: ItemStack in character.custody.items:
 		if stack == null or seen.has(stack) or not stack.def.usable:
 			continue
 		seen.append(stack)
