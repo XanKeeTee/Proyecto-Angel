@@ -125,7 +125,7 @@ Todo el arte actual se genera con `python -I tools/art/build_all.py`, con un ren
 
 - Sobria y funcional (ref_05): ventanas rectangulares de fondo oscuro semitransparente, borde fino claro, comandos en lista vertical a la izquierda y estado del grupo a la derecha.
 - Barras finas y discretas. La idea de **dos recursos por personaje** (cuerpo y mente) es interesante para el diseño; se decide en `docs/design/`, no aquí.
-- Fuente con serifa legible para menús (PT Serif), máquina de escribir para datos y documentos (Courier Prime), letra a mano para notas y una fuente pixel solo para títulos. Sin antialias: nítidas en la rejilla de 640×360. Ver [fuentes.md](fuentes.md).
+- Fuentes del sistema: serifa legible para menús y títulos, máquina de escribir para datos y documentos y letra a mano para notas, con suavizado y tamaños pensados para la vista de 640×360. Ver [fuentes.md](fuentes.md).
 - La legibilidad manda sobre los efectos.
 
 ## Tratamiento analógico (post-procesado)

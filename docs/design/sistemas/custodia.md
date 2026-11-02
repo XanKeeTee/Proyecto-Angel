@@ -15,7 +15,7 @@ Ocupa toda la vista (640×360) y tiene cuatro pestañas (Q / Mayús+Q para cambi
 | **EXPEDIENTE** | Documentos y lector en papel |
 | **PERSONAJE** | El protagonista con la ropa puesta, sus 4 ranuras de ropa y la **MANO** (arma) |
 
-Textos: PT Serif para menús y descripciones, Courier Prime para datos y documentos mecanografiados, Patrick Hand para notas a mano y Pixelify Sans para los títulos (ver [fuentes](../../art/fuentes.md)). Se dibujan sin antialias para que se lean nítidos en la rejilla de 640×360.
+Textos: serifa del sistema para menús, descripciones y títulos; máquina de escribir para datos y documentos mecanografiados; letra a mano para notas (ver [fuentes](../../art/fuentes.md)).
 
 ## A. Bandeja de custodia
 
@@ -72,7 +72,7 @@ Aparecen en el panel de detalles y en el menú contextual (solo las que tienen s
 ## D. Expediente personal
 
 - Documentos, fotografías, planos, etiquetas: **no ocupan sitio** en la bandeja.
-- Lista a la izquierda (• = sin leer) y lector en papel a la derecha. Cada tipo tiene su aspecto: mecanografiado (Courier Prime), a mano (Patrick Hand) o ficha. También admite imagen y sello en rojo.
+- Lista a la izquierda (• = sin leer) y lector en papel a la derecha. Cada tipo tiene su aspecto: mecanografiado (máquina de escribir), a mano (letra manuscrita) o ficha. También admite imagen y sello en rojo.
 - Leer algo en el mundo lo añade y abre el lector directamente.
 
 ## E. Personaje: ropa y arma

@@ -3,14 +3,12 @@ extends RefCounted
 ## Identidad visual de la interfaz: oscura, industrial y médica.
 ## Colores de la guía estética (docs/art/guia-estetica.md).
 ##
-## Fuentes (licencia OFL, en assets/fonts/; créditos en docs/art/fuentes.md). Se importan **sin
-## antialias** ni posición subpíxel y con hinting completo (ver los .import): así se dibujan píxel a
-## píxel en la rejilla de 640x360, nítidas y con un toque pixelado, sin el borroso de antes.
-## - `ui()` / `ui_bold()`: PT Serif. Menús, caja de mensajes, descripciones y botones (la guía
-##   estética pide serifa legible para los menús).
-## - `pixel()`: Pixelify Sans, fuente pixel para títulos y rótulos grandes (a 20 px es nítida).
-## - `mono()`: Courier Prime, de máquina de escribir. Datos, fichas, pistas y documentos mecanografiados.
-## - `hand()`: Patrick Hand. Notas escritas a mano.
+## Fuentes del sistema, las de siempre (al equipo le gusta más su aspecto), con suavizado en escala
+## de grises y tamaños algo mayores que al principio para que se lean bien en la vista de 640x360:
+## - `ui()` / `ui_bold()`: serifa (Georgia en Windows). Menús, caja de mensajes, descripciones y botones.
+## - `pixel()`: la misma serifa, más gruesa, para títulos (el nombre se conserva por compatibilidad).
+## - `mono()`: máquina de escribir (Courier New). Datos, fichas, pistas y documentos mecanografiados.
+## - `hand()`: letra a mano (Segoe Print). Notas.
 ## Usa las constantes de tamaño de abajo: son las que se ven bien. `fit_size` redondea a ellas.
 
 const BONE: Color = Color("e8e1d3")
@@ -28,17 +26,16 @@ const PAPER: Color = Color("cfc6b0")
 const PAPER_DARK: Color = Color("a89f88")
 const PAPER_INK: Color = Color("2a2620")
 
-const FONT_UI: String = "res://assets/fonts/pt_serif/PTSerif-Regular.ttf"
-const FONT_UI_BOLD: String = "res://assets/fonts/pt_serif/PTSerif-Bold.ttf"
-const FONT_PIXEL: String = "res://assets/fonts/pixelify_sans/PixelifySans.ttf"
-const FONT_MONO: String = "res://assets/fonts/courier_prime/CourierPrime-Regular.ttf"
-const FONT_HAND: String = "res://assets/fonts/patrick_hand/PatrickHand-Regular.ttf"
+## Fuentes del sistema (las de siempre). Se prueban en orden.
+const SERIF_NAMES: PackedStringArray = ["Georgia", "Times New Roman", "Liberation Serif", "DejaVu Serif", "serif"]
+const MONO_NAMES: PackedStringArray = ["Courier New", "Liberation Mono", "DejaVu Sans Mono", "monospace"]
+const HAND_NAMES: PackedStringArray = ["Segoe Print", "Comic Sans MS", "Bradley Hand", "serif"]
 
 ## Tamaños de `ui()` y `ui_bold()`.
 const SIZE_SMALL: int = 11
 const SIZE_TEXT: int = 12
 const SIZE_LARGE: int = 14
-## Tamaño de `pixel()`: 20 px es su rejilla nativa (cada píxel de la letra son 2 de pantalla).
+## Tamaño de los títulos (`pixel()`).
 const SIZE_TITLE: int = 20
 ## Tamaños de `mono()`.
 const MONO_SMALL: int = 10
@@ -54,11 +51,12 @@ static var _mono: Font
 static var _hand: Font
 
 
-## Fuente de la interfaz. La primera vez la instala también como fuente por defecto
-## (tooltips, casillas de verificación y cualquier control sin estilo propio).
+## Fuente de la interfaz: la serifa del sistema de siempre (Georgia en Windows), con suavizado.
+## La primera vez la instala también como fuente por defecto (tooltips, casillas de verificación
+## y cualquier control sin estilo propio).
 static func ui() -> Font:
 	if _ui == null:
-		_ui = _load_font(FONT_UI)
+		_ui = _system_font(SERIF_NAMES)
 		ThemeDB.fallback_font = _ui
 		ThemeDB.fallback_font_size = SIZE_TEXT
 	return _ui
@@ -67,18 +65,18 @@ static func ui() -> Font:
 ## Interfaz en negrita (nombres y títulos pequeños).
 static func ui_bold() -> Font:
 	if _ui_bold == null:
-		_ui_bold = _load_font(FONT_UI_BOLD)
+		_ui_bold = _system_font(SERIF_NAMES, 700)
 	return _ui_bold
 
 
-## Fuente pixel para títulos grandes (usa SIZE_TITLE).
+## Títulos de pantalla (usa SIZE_TITLE): la misma serifa, algo más gruesa.
 static func pixel() -> Font:
 	if _pixel == null:
-		_pixel = _load_font(FONT_PIXEL)
+		_pixel = _system_font(SERIF_NAMES, 600)
 	return _pixel
 
 
-## Antes había una fuente con serifa del sistema; ahora es `ui()`. Se mantiene por compatibilidad.
+## Serifa de la interfaz (nombre antiguo, se mantiene por compatibilidad).
 static func serif() -> Font:
 	return ui()
 
@@ -86,14 +84,14 @@ static func serif() -> Font:
 ## Máquina de escribir: documentos mecanografiados, etiquetas, fichas y datos.
 static func mono() -> Font:
 	if _mono == null:
-		_mono = _load_font(FONT_MONO)
+		_mono = _system_font(MONO_NAMES)
 	return _mono
 
 
 ## Letra a mano: notas.
 static func hand() -> Font:
 	if _hand == null:
-		_hand = _load_font(FONT_HAND)
+		_hand = _system_font(HAND_NAMES)
 	return _hand
 
 
@@ -229,13 +227,15 @@ static func draw_arrow(ci: CanvasItem, center: Vector2, dir: Vector2, size: floa
 	]), color)
 
 
-static func _load_font(path: String) -> Font:
-	var f: Font = load(path) as Font
-	if f == null:
-		push_warning("Falta la fuente " + path)
-		var sys: SystemFont = SystemFont.new()
-		sys.antialiasing = TextServer.FONT_ANTIALIASING_NONE
-		return sys
+## Fuente del sistema con suavizado en escala de grises (sin subpíxel, que en la imagen ampliada
+## deja bordes de color) y un hinting ligero para que los trazos finos se lean.
+static func _system_font(names: PackedStringArray, weight: int = 400) -> SystemFont:
+	var f: SystemFont = SystemFont.new()
+	f.font_names = names
+	f.font_weight = weight
+	f.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
+	f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+	f.hinting = TextServer.HINTING_LIGHT
 	return f
 
 

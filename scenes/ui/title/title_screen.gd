@@ -20,9 +20,6 @@ const CREDITS: PackedStringArray = [
 	"",
 	"SONIDO",
 	"Efectos de Freesound.org: atribuciones pendientes.",
-	"",
-	"TIPOGRAFÍAS",
-	"Ver las licencias en assets/fonts/.",
 ]
 ## Sonidos (si aún no existe el definitivo se usa el provisional; ver docs/tech/sonidos.md).
 const SOUND_MOVE: String = "ui_move"
