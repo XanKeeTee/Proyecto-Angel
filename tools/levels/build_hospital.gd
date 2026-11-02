@@ -25,6 +25,10 @@ const DOORS_ATLAS: String = "res://assets/tilesets/hospital_doors.png"
 const DOOR_FRAME: String = "res://assets/tilesets/door_frame.png"
 ## Fotograma cerrado del marco según el estilo de pared (el abierto es el siguiente).
 const DOOR_FRAME_STYLE: Dictionary = {"ward": 0, "basement": 2, "or": 4}
+## Grosor (px) del oclusor de una puerta cerrada: el canto sur de su remate.
+const DOOR_OCCLUDER_DEPTH: float = 4.0
+## Tono de los iconos de objeto tirados por el mapa (ver _sprite).
+const ITEM_ON_FLOOR_TINT: Color = Color(0.74, 0.74, 0.72)
 
 const CAP: Vector2i = Vector2i(0, 5)
 const DOOR_CLOSED: Array[Vector2i] = [Vector2i(4, 2), Vector2i(4, 3), Vector2i(4, 4), Vector2i(0, 10)]
@@ -533,9 +537,12 @@ func _finish_door_passage(door: Door, base: Vector2i, style: String) -> void:
 	shape.shape = rect
 	shape.position = Vector2(0, (top + bottom) / 2.0)
 	_add(body, shape)
-	# Con la puerta cerrada, la casilla del remate vuelve a tapar la luz.
+	# Con la puerta cerrada, el canto sur del remate (donde está la hoja) vuelve a tapar la luz.
+	# Solo el canto: el resto del remate es el hueco visto desde arriba (tiles_doors.py) y la
+	# linterna lo alumbra desde el otro lado del muro, así la puerta se adivina desde el pasillo.
+	var occ_top: float = top + T - DOOR_OCCLUDER_DEPTH
 	var occ: OccluderPolygon2D = OccluderPolygon2D.new()
-	occ.polygon = PackedVector2Array([Vector2(-T / 2.0, top), Vector2(T / 2.0, top), Vector2(T / 2.0, top + T), Vector2(-T / 2.0, top + T)])
+	occ.polygon = PackedVector2Array([Vector2(-T / 2.0, occ_top), Vector2(T / 2.0, occ_top), Vector2(T / 2.0, top + T), Vector2(-T / 2.0, top + T)])
 	var occluder: LightOccluder2D = LightOccluder2D.new()
 	occluder.name = "Occluder"
 	occluder.occluder = occ
@@ -768,6 +775,9 @@ func _sprite(key: String) -> Sprite2D:
 		var def: ItemDef = _item(key.trim_prefix("item:"))
 		sprite.texture = def.icon
 		sprite.offset = Vector2(0, 4)
+		# El icono está pensado para la bandeja (claro y nítido): en el suelo se apaga para
+		# no destacar como una pegatina. Lo que se puede coger lo señalan el foco y el destello.
+		sprite.self_modulate = ITEM_ON_FLOOR_TINT
 		return sprite
 	var m: Dictionary = meta[key]
 	sprite.texture = _canvas(m["path"])

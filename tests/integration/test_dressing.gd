@@ -117,3 +117,35 @@ func test_cajon_vacio_solo_abierto() -> void:
 	await world.on_interacted(mesita, &"close", result)
 	check_eq(sprite.frame, 0, "cerrada otra vez vuelve al fotograma cerrado")
 	await _teardown()
+
+
+## Las puertas de las salas al sur del pasillo solo enseñan su remate desde el pasillo: el
+## remate es el hueco visto desde arriba y la linterna lo alumbra (la puerta cerrada solo
+## tapa la luz con el canto sur), y delante hay desgaste del suelo en vez de sombra de pared.
+func test_puertas_se_adivinan_desde_el_otro_lado() -> void:
+	await _setup()
+	var doorway: Dictionary = {}
+	for node: Node in world.find_children("doorway_*", "Sprite2D", true, false):
+		var s: Sprite2D = node as Sprite2D
+		doorway[Vector2i((s.global_position / 32.0).floor())] = s.rotation
+	var lower: int = 0
+	for node: Node in world.find_children("*", "Door", true, false):
+		var door: Door = node as Door
+		if door.always_open:
+			continue
+		var base: Vector2i = door.base_cell()
+		check(doorway.has(base + Vector2i(0, 1)), "%s: desgaste del suelo al pie de la puerta" % door.object_id)
+		check(doorway.has(base + Vector2i(0, -4)), "%s: desgaste del suelo al otro lado del remate" % door.object_id)
+		var poly: PackedVector2Array = (door.get_node("Occluder") as LightOccluder2D).occluder.polygon
+		var top: float = INF
+		var bottom: float = -INF
+		for p: Vector2 in poly:
+			top = minf(top, p.y)
+			bottom = maxf(bottom, p.y)
+		check(bottom - top <= 8.0, "%s: la puerta cerrada solo tapa la luz con el canto del remate" % door.object_id)
+		check_eq(bottom, -2.5 * 32.0, "%s: el canto tapa en el borde sur del remate" % door.object_id)
+		if String(door.object_id) in ["puerta_hab09", "puerta_hab12", "puerta_almacen", "puerta_banos", "puerta_control",
+				"puerta_quirofano", "puerta_recepcion", "b_puerta_morgue", "b_puerta_calderas", "b_puerta_taller"]:
+			lower += 1
+	check_eq(lower, 10, "las diez puertas al sur de los pasillos")
+	await _teardown()

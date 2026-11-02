@@ -175,13 +175,34 @@ func _big_decal(name: String, pos: Vector2) -> void:
 	_decal("decals_big", name, pos, float(rng.randi_range(0, 3)) * PI / 2.0, rng.randf() < 0.5)
 
 
+## Casillas de suelo pegadas a una puerta que se cruza andando → giro de la calcomanía
+## `doorway` (0 = la puerta queda arriba, PI = abajo).
+func _door_fronts() -> Dictionary:
+	var fronts: Dictionary = {}
+	var world: Node = b.get("world")
+	for node: Node in world.get_children():
+		var door: Door = node as Door
+		if door == null or door.always_open:
+			continue
+		var base: Vector2i = Vector2i(floori(door.position.x / T), floori(door.position.y / T))
+		fronts[base + Vector2i(0, 1)] = 0.0
+		fronts[base + Vector2i(0, -4)] = PI
+	return fronts
+
+
 func _room_floor(id: String) -> void:
 	var r: Rect2i = _rect(id)
 	var kind: String = _rooms()[id]["floor"]
-	# Sombra al pie de las paredes y en los rincones.
+	var fronts: Dictionary = _door_fronts()
+	# Sombra al pie de las paredes y en los rincones. Delante de cada puerta, en su lugar, el
+	# desgaste del paso: así se adivina la puerta aunque desde ese lado solo se vea el remate.
 	for x: int in range(r.position.x, r.end.x):
-		_decal("decals", "wallbase", _center(Vector2i(x, r.position.y)), 0.0, x % 2 == 0)
-		_decal("decals", "wallbase", _center(Vector2i(x, r.end.y - 1)), PI, x % 2 == 0)
+		for c: Vector2i in [Vector2i(x, r.position.y), Vector2i(x, r.end.y - 1)]:
+			var rot: float = 0.0 if c.y == r.position.y else PI
+			if fronts.has(c) and is_equal_approx(float(fronts[c]), rot):
+				_decal("decals", "doorway", _center(c), rot)
+			else:
+				_decal("decals", "wallbase", _center(c), rot, x % 2 == 0)
 	for y: int in range(r.position.y, r.end.y):
 		_decal("decals", "wallbase", _center(Vector2i(r.position.x, y)), -PI / 2.0, y % 2 == 0)
 		_decal("decals", "wallbase", _center(Vector2i(r.end.x - 1, y)), PI / 2.0, y % 2 == 0)

@@ -83,7 +83,7 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 - **Movimiento realista**: rodilla que se dobla al adelantar la pierna, peso que pasa de un pie a otro, brazos en contrapeso y una **ligera cojera** (la pierna derecha da el paso más corto). En reposo, el pecho y los hombros suben y bajan.
 - **La linterna se sujeta con la mano derecha**, codo pegado al cuerpo y antebrazo al frente, a la altura del pecho. La lente es emisiva (capa `*_glow.png`). De espaldas queda tapada por el cuerpo.
 - Postura encorvada, zancada corta. Ojos hundidos (cuencas oscuras, sin pupila visible a esta escala).
-- Contorno de color: el tono más oscuro del material, mezclado con `#0E0A12`. Nunca negro puro.
+- Contorno de color: el tono más oscuro del material, mezclado con `#0E0A12`. Nunca negro puro. (Solo personajes: los objetos del mapa no llevan contorno, ver *Escenarios*.)
 - Cada sprite lleva **mapa de normales** (`*_n.png`), para que la linterna revele el volumen.
 - **Rasgos propios del protagonista** (lo que lo hace nuestro):
   - cabeza rapada con una cicatriz cosida en el cráneo;
@@ -107,6 +107,16 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 - Los objetos se ven en vista oblicua: la tapa se ve desde arriba y el frente de cara, como en RPG Maker, pero con volumen real y desgaste (óxido, abolladuras, manchas).
 - Suciedad que se acumula donde se acumularía de verdad: juntas, rincones, la parte baja de las paredes y el bajo de las telas.
 - Lo que emite luz (pantallas, pilotos) lleva una capa `*_glow.png` que se dibuja sin sombra.
+- **Los objetos del mapa se funden con el escenario**: sin contorno (el borde lo da el sombreado del propio
+  material, como en los tiles), luces comprimidas para que el blanco hueso de un mueble no pase mucho del tramo
+  más claro de las paredes, y saturación algo más baja que la del modelo (`tools/art/shadow.py::blend_in`).
+  Lo emisivo no se toca. Qué se puede usar lo dice el juego (contorno de foco y destello), nunca el dibujo:
+  un mueble interactuable y uno de decorado se pintan igual. Los iconos de objeto tirados por el suelo se apagan
+  en la escena (`ITEM_ON_FLOOR_TINT` en `build_hospital.gd`).
+- **Puertas vistas desde atrás del muro** (las salas al sur del pasillo): desde ese lado solo se ve el remate,
+  así que el remate de la puerta es el hueco visto desde arriba (cabezas de las jambas, suelo del paso en penumbra,
+  canto de la hoja y umbral) y la linterna lo alumbra; delante, en el suelo, desgaste de paso (`doorway`) en lugar
+  de la sombra al pie de la pared. Nada de carteles: se adivina, no se señala.
 - **Nada flota**: todo objeto apoyado lleva sombra de contacto (horneada en el sprite) y lo que cuelga de la pared,
   una sombra arrojada de 1-2 px sobre el muro. Los objetos sueltos del suelo llevan una sombra suave debajo.
 - **Cada sala cuenta algo** con su decorado (abandono precipitado, algo que pasó), sin explicarlo: papeles hasta la
@@ -119,7 +129,7 @@ Todo el arte actual se genera con `python -I tools/art/build_all.py`, con un ren
 - **Mapas** (ref_06): vista cenital RPG Maker, personajes **de proporciones realistas** (ver abajo) de 4 direcciones y 3 frames. Texturas densas y "sucias", no limpias. Iluminación con máscara de oscuridad alrededor del jugador.
 - **Combate** (ref_05): enemigo grande de frente en el centro, grupo del jugador de espaldas en primer plano, escenario con perspectiva. Los enemigos deben tener **partes del cuerpo distinguibles a simple vista**, porque son objetivos de combate.
 - **Retratos y escenas ilustradas** (ref_02, ref_04): pueden tener más detalle, estilo pintado o anime oscuro, siempre con la paleta del juego. Útiles para momentos clave y finales.
-- Contorno oscuro de color (azul o granate muy oscuro), no negro puro.
+- Contorno oscuro de color (azul o granate muy oscuro), no negro puro, en personajes y combate; los objetos del mapa van sin contorno.
 
 ## Interfaz
 

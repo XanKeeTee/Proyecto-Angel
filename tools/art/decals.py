@@ -9,6 +9,8 @@ variedad y desgaste sin tocar el atlas.
   usaba la escena) y desgaste y basura: grietas, baldosa rota, mugre, moho, charcos,
   rodadas, óxido, aceite, polvo, pastillas, cables, gasas, jeringa, cinta, tornillos,
   pelo, colillas, rejilla de desagüe y sombras de rincón (`wallbase`, `corner`).
+  `doorway`: el desgaste del suelo delante de una puerta (la puerta queda arriba): rozado
+  claro donde se pisa, rodadas de camilla que entran y rozaduras. Indica una puerta sin cartel.
 - `floor_big` (64x64): charco, cerco de humedad, sangre seca, aceite, mugre, moho,
   quemadura, cerco de óxido y sábana tirada.
 - `wall` (32x96, la columna entera de pared): humedad, moho, pintura levantada, grieta,
@@ -41,7 +43,7 @@ ramp("web", [(70, 72, 70), (100, 102, 98), (130, 132, 126)])
 FLOOR = ["footprints", "papers", "glass", "drops", "drag",
          "crack", "crack_b", "tile_broken", "grime", "mold", "puddle", "tracks", "rust", "oil", "dust",
          "pills", "cables", "gauze", "syringe", "tape", "screws", "hair", "butts", "drain", "wallbase", "corner",
-         "smear", "bandage", "leaflets", "contact"]
+         "smear", "bandage", "leaflets", "contact", "doorway"]
 FLOOR_BIG = ["puddle_big", "damp_big", "blood_big", "oil_big", "grime_big", "mold_big", "scorch", "rust_big", "sheet"]
 WALL = ["damp", "mold_top", "peel", "crack_w", "socket", "switch", "pipe_v", "pipes_v2", "conduit", "junction",
         "poster", "cobweb", "grime_low", "scrapes", "hand_low", "oxygen", "call", "exit", "drip_rust", "pipe_h"]
@@ -272,6 +274,27 @@ def floor_decal(name: str) -> Canvas:
                 d = math.hypot((x + 0.5 - 16) / 10.5, (y + 0.5 - 16) / 4.5)
                 if d < 1.0 and _hash2(x, y, 2901) < (1.15 - d) * 1.1:
                     c.set(x, y, "grime", 0.05 + 0.2 * d, -0.1)
+    elif name == "doorway":
+        # Desgaste delante de la puerta (arriba): más fuerte junto al umbral, se pierde hacia abajo.
+        for y in range(30):
+            fade = 1.0 - y / 30
+            half = 11 - 4 * (y / 30)
+            for x in range(32):
+                if abs(x + 0.5 - 16) > half:
+                    continue
+                n = pnoise(x, y, 3, 3001, 0, 0) * 0.6 + pnoise(x, y, 1.5, 3002, 0, 0) * 0.4
+                if n < 0.1 + 0.6 * fade and _hash2(x, y, 3007) < 0.75:
+                    c.set(x, y, "dust", 0.04 + 0.12 * fade * _hash2(x, y, 3003), -0.05)
+        for lane in (10, 22):  # rodadas de camilla que cruzan la puerta
+            for y in range(26):
+                if pnoise(lane, y, 2, 3004 + lane, 0, 0) < 0.8 - y / 40:
+                    c.set(lane + int(math.sin(y * 0.2 + lane) * 0.8), y, "grime", 0.3 + 0.2 * _hash2(lane, y, 3005), -0.1)
+        for _ in range(5):  # rozaduras de suela junto al umbral
+            x, y = rng.uniform(7, 22), rng.uniform(2, 9)
+            c.line([(x, y), (x + rng.uniform(2, 5), y + rng.uniform(-0.6, 0.6))], "grime", 0.25, -0.1)
+        for x in range(6, 27):  # sombra corta del umbral
+            if _hash2(x, 0, 3006) < 0.85:
+                c.set(x, 0, "grime", 0.08, -0.3)
     elif name == "smear":
         for i in range(24):
             t = i / 23
