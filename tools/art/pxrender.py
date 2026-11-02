@@ -508,6 +508,9 @@ class View:
     ambient: float = 0.38
     dither: float = 0.55
     ss: int = 3
+    # Contorno de color alrededor de la silueta (personajes). Los objetos del mapa lo
+    # desactivan: un borde oscuro los recorta del suelo y parecen pegatinas.
+    outline: bool = True
 
 
 @dataclass
@@ -749,7 +752,8 @@ def _shade(prims: list[Prim], best_t: list, best_i: list, best_n: list, best_p: 
             normal_img.putpixel((px_, py), (int((ns[0] * 0.5 + 0.5) * 255), int((ns[1] * 0.5 + 0.5) * 255),
                                             int((max(ns[2], 0.0) * 0.5 + 0.5) * 255), 255))
 
-    _outline(color, normal_img, cells, width, height)
+    if view.outline:
+        _outline(color, normal_img, cells, width, height)
     return RenderResult(color, normal_img, cells)
 
 
