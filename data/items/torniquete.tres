@@ -8,13 +8,9 @@
 
 [sub_resource type="Resource" id="Resource_w0pld"]
 script = ExtResource("5_4c3ol")
-body = 0
-mind = 0
 stops_bleeding = true
 requires_bleeding = true
-contaminated_penalty = 6
 message = "Aprietas el nudo por encima de la herida hasta que duele. Deja de sangrar."
-contaminated_message = ""
 
 [resource]
 script = ExtResource("3_wf4sr")

@@ -47,12 +47,12 @@ func test_giro_pasa_por_intermedias() -> void:
 	check_eq(_row(p), 0, "empieza mirando abajo")
 	p.face(Vector2i.UP)
 	var rows: Array[int] = []
-	for i: int in 30:
+	for i: int in 90:
 		await host.get_tree().process_frame
 		if rows.is_empty() or rows[-1] != _row(p):
 			rows.append(_row(p))
 	check(rows.size() >= 4, "pasa por orientaciones intermedias (%s)" % str(rows))
-	check_eq(rows[-1], 4, "acaba mirando arriba")
+	check_eq(rows[-1], 8, "acaba mirando arriba (16 orientaciones)")
 	p.queue_free()
 
 
@@ -63,8 +63,7 @@ func test_luz_sale_de_la_lente() -> void:
 	for i: int in 30:
 		await host.get_tree().process_frame
 	var light: PointLight2D = p.get_node("Flashlight")
-	var col: int = _column(p)
-	var data: Variant = (p.lens_frames[_row(p)] as Array)[col]
+	var data: Variant = p._frame_data(&"lens")
 	check(data != null, "el fotograma con linterna tiene posición de lente")
 	if data != null:
 		var lens: Vector2 = Vector2(float(data[0]), float(data[1]))

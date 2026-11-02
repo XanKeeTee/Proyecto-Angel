@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mkj0425gq3wc"
-path="res://.godot/imported/protagonist_glow.png-b48f7bba345bf4208ba5ac3cf180e568.ctex"
+uid="uid://b7etjrx7np32h"
+path="res://.godot/imported/protagonist_action_flash.png-b91c3cadd8d86dbd3e2e681601fb1cd8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/characters/protagonist_glow.png"
-dest_files=["res://.godot/imported/protagonist_glow.png-b48f7bba345bf4208ba5ac3cf180e568.ctex"]
+source_file="res://assets/sprites/characters/protagonist_action_flash.png"
+dest_files=["res://.godot/imported/protagonist_action_flash.png-b91c3cadd8d86dbd3e2e681601fb1cd8.ctex"]
 
 [params]
 

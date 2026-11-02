@@ -103,7 +103,7 @@ func discard(stack: ItemStack) -> String:
 		unwield()
 	if not custody.discard(stack):
 		return ""
-	EventBus.item_discarded.emit(stack)
+	_emit(&"item_discarded", stack)
 	return "Dejas %s en el suelo." % _stack_label(stack)
 
 
@@ -126,7 +126,7 @@ func use_item(stack: ItemStack) -> String:
 				texts.append(text)
 	if not applied:
 		return ""
-	EventBus.item_used.emit(stack.def)
+	_emit(&"item_used", stack.def)
 	if stack.def.consumed_on_use:
 		custody.consume(stack)
 	return "\n".join(texts) if not texts.is_empty() else "·"
@@ -196,3 +196,12 @@ static func _stack_label(stack: ItemStack) -> String:
 	if stack.quantity > 1:
 		return "%s ×%d" % [name, stack.quantity]
 	return name
+
+
+## Emite una señal de EventBus sin nombrar el autoload, para que este script también compile en
+## las herramientas que se ejecutan con -s (sin autoloads), como tools/data/build_items.gd.
+func _emit(signal_name: StringName, value: Variant) -> void:
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	var bus: Node = tree.root.get_node_or_null(^"EventBus") if tree != null else null
+	if bus != null:
+		bus.emit_signal(signal_name, value)

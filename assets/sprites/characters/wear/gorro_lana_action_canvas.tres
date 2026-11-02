@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/gorro_lana_action.png" id="1_u7512"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/gorro_lana_action_n.png" id="2_8snyj"]
+
+[resource]
+diffuse_texture = ExtResource("1_u7512")
+normal_texture = ExtResource("2_8snyj")
+texture_filter = 1

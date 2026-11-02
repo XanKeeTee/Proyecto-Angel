@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/bata_paciente_getup.png" id="1_1qfe6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/bata_paciente_getup_n.png" id="2_kavkt"]
+
+[resource]
+diffuse_texture = ExtResource("1_1qfe6")
+normal_texture = ExtResource("2_kavkt")
+texture_filter = 1

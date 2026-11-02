@@ -240,14 +240,16 @@ func open_custody(document_id: StringName = &"") -> void:
 
 
 ## Viste al jugador con lo que lleva puesto el personaje: capas del sprite, balanceo de la
-## tela y sonido de las pisadas según el calzado.
+## tela y sonido de las pisadas según el calzado. Las hojas de la ropa se cargan aquí (solo
+## las de lo que lleva puesto) y se sueltan al quitársela.
 func apply_outfit() -> void:
 	for slot: ItemDef.EquipSlot in [ItemDef.EquipSlot.HEAD, ItemDef.EquipSlot.BODY, ItemDef.EquipSlot.LEGS, ItemDef.EquipSlot.FEET]:
 		var stack: ItemStack = character.worn(slot)
 		if stack != null:
-			player.set_outfit_layer(ItemDef.slot_layer(slot), stack.def.wear_sheet, stack.def.cloth_sway)
+			var def: ItemDef = stack.def
+			player.set_outfit(ItemDef.slot_layer(slot), def.wear_path, def.cloth_sway, def.cloth_waist, def.cloth_hem)
 		else:
-			player.set_outfit_layer(ItemDef.slot_layer(slot), null)
+			player.set_outfit(ItemDef.slot_layer(slot), "")
 	var feet: ItemStack = character.worn(ItemDef.EquipSlot.FEET)
 	var shod: bool = feet != null and feet.def.step_sound != ""
 	player.step_sound = feet.def.step_sound if shod else "step"

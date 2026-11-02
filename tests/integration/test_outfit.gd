@@ -114,7 +114,10 @@ func test_apunta_y_anda_de_espaldas() -> void:
 	check(absf(angle_difference(p.facing_angle, 0.0)) < 0.01, "mira hacia donde apunta, no hacia donde anda")
 	check(p.velocity.x < -10.0, "se mueve hacia la izquierda")
 	check(absf(p.velocity.x) <= Player.MAX_SPEED * Player.BACKWARD_SPEED + 0.5, "de espaldas va más despacio")
-	check(p._stride < 0.0, "el paso se reproduce al revés")
+	check_eq(p.gait, Player.Gait.BACK, "anda de espaldas con su propio paso")
+	var column: int = (p.get_node("Sprite2D") as Sprite2D).frame % Player.COLUMNS
+	check(column >= Player.ANIM_BACK.x and column < Player.ANIM_BACK.x + Player.ANIM_BACK.y,
+		"usa la animación de andar de espaldas (columna %d)" % column)
 	p.forced_aim = Vector2.ZERO
 	w.queue_free()
 	await host.get_tree().process_frame

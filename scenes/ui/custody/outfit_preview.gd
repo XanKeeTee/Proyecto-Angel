@@ -71,7 +71,8 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, 8.0 * SCALE, Color(0, 0, 0, 0.35))
 	draw_set_transform(Vector2.ZERO)
 	var column: int = int(_time * IDLE_FPS) % IDLE_FRAMES
-	var region: Rect2 = Rect2(Vector2(column, direction) * FRAME, FRAME)
+	# La hoja tiene 16 orientaciones; el retrato usa una de cada dos (las 8 principales).
+	var region: Rect2 = Rect2(Vector2(column, direction * 2) * FRAME, FRAME)
 	var target: Rect2 = Rect2((size - FRAME * SCALE) / 2.0, FRAME * SCALE)
 	draw_texture_rect_region(_body, target, region)
 	if character == null:

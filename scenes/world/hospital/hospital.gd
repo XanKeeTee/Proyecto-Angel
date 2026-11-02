@@ -16,6 +16,8 @@ const FLAG_IMPOSSIBLE: StringName = &"pasillo_imposible"
 const ENDING_X: int = -18
 const HEARTBEAT_PERIOD: float = 0.95
 const EMERGENCY_PERIOD: float = 1.5
+const WAKE_LIGHT_ENERGY: float = 0.9
+const WAKE_LIGHT_TEXTURE: Texture2D = preload("res://assets/sprites/lights/light_round.png")
 
 @export var intro_lines: PackedStringArray = [
 	"Frío.",
@@ -52,11 +54,16 @@ func _ready() -> void:
 # --- inicio ------------------------------------------------------------------------------------
 
 func start_new() -> void:
-	player.place(start_cell, Vector2i.DOWN)
+	# El jugador espera invisible en la camilla (la cámara ya está ahí durante el fundido).
+	player.prepare_get_up(_stretcher.position)
 	player.visible = false
 	lock()
 	_stretcher.set_frames(STRETCHER_LYING)
 	_fade.color.a = 1.0
+	# Luz fría y tenue sobre la camilla (la que entra por la ventanilla de la puerta), para que el
+	# despertar se vea; se apaga despacio cuando ya está de pie.
+	var wake: PointLight2D = _wake_light()
+	create_tween().tween_property(wake, "energy", WAKE_LIGHT_ENERGY, 6.0)
 	await get_tree().create_timer(1.4).timeout
 	await message.stamp("Despierta.", 1.4)
 	await get_tree().create_timer(0.6).timeout
@@ -67,17 +74,32 @@ func start_new() -> void:
 	await _fade_to(0.85, 0.35)
 	await _fade_to(0.0, 1.8)
 	await message.show_lines(intro_lines)
-	_stretcher.set_frames(STRETCHER_SITTING)
-	Sfx.at(self, "bed_creak", _stretcher.position, -6.0)
-	await get_tree().create_timer(1.0).timeout
-	glitch(0.3, 0.35)
+	# Se levanta: la camilla se queda deshecha y el personaje se dibuja encima, en su sitio.
+	# El primer fotograma coincide con la camilla "tumbado", así que el cambio no se nota.
 	_stretcher.set_frames(STRETCHER_MESSY)
-	player.place(start_cell, Vector2i.DOWN)
-	player.visible = true
+	await player.play_get_up(_stretcher.position)
+	glitch(0.3, 0.35)
 	await message.show_lines(PackedStringArray(["Llevas una pulsera de plástico en la muñeca."]))
 	GameState.give_document(Registry.document(&"pulsera_09"))
 	hud.notice("WASD / flechas: moverse   ·   E: usar   ·   R: examinar   ·   Tab: custodia")
 	unlock()
+	var out: Tween = create_tween()
+	out.tween_property(wake, "energy", 0.0, 10.0).set_ease(Tween.EASE_IN)
+	out.tween_callback(wake.queue_free)
+
+
+func _wake_light() -> PointLight2D:
+	var light: PointLight2D = PointLight2D.new()
+	light.name = "WakeLight"
+	light.texture = WAKE_LIGHT_TEXTURE
+	light.texture_scale = 1.3
+	light.color = Color(0.62, 0.7, 0.86)
+	light.energy = 0.0
+	light.height = 70.0
+	light.range_item_cull_mask = 7  # suelo, jugador y muebles
+	light.position = _stretcher.position + Vector2(10.0, -12.0)
+	add_child(light)
+	return light
 
 
 func on_debug_start() -> void:

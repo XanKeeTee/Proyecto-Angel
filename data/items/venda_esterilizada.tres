@@ -9,12 +9,8 @@
 [sub_resource type="Resource" id="Resource_j6k7w"]
 script = ExtResource("5_a6c63")
 body = 18
-mind = 0
 stops_bleeding = true
-requires_bleeding = false
-contaminated_penalty = 6
 message = "Escuece como fuego. Después, por fin, algo de alivio."
-contaminated_message = ""
 
 [resource]
 script = ExtResource("3_trm6d")

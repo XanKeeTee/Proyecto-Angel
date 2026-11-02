@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/chaqueta_celador_getup.png" id="1_w2uiy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/chaqueta_celador_getup_n.png" id="2_3bgof"]
+
+[resource]
+diffuse_texture = ExtResource("1_w2uiy")
+normal_texture = ExtResource("2_3bgof")
+texture_filter = 1

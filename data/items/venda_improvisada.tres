@@ -9,7 +9,6 @@
 [sub_resource type="Resource" id="Resource_mwf8u"]
 script = ExtResource("5_0fjrt")
 body = 3
-mind = 0
 stops_bleeding = true
 requires_bleeding = true
 contaminated_penalty = 3
