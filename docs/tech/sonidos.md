@@ -40,6 +40,17 @@ Si falta un archivo, `Sfx` avisa una vez por consola y no suena nada (o suena el
 7. **Créditos**: `fetch` actualiza `docs/art/creditos-sonido.md`. Las CC BY deben aparecer también en los créditos del juego (`CREDITS` de `scenes/ui/title/title_screen.gd`; pendiente de pasar esa lista allí).
 8. **Commit**: los WAV/OGG, `sound_manifest.json` (con los `pick`, para que sea reproducible), `credits.json` y el documento de créditos.
 
+**Elecciones revisadas**: los ids escogidos a mano están en `REVIEWED_PICKS` de `tools/audio/build_manifest.py` (con el motivo) y mandan sobre lo que elija `fetch` solo. Para cambiar uno, cambia el id ahí, regenera el manifiesto y haz `fetch <nombre>`.
+
+### Desde GitHub Actions
+
+Freesound rechaza las conexiones desde algunas nubes (por ejemplo, las sesiones de Claude en la web). En ese caso, el flujo `.github/workflows/freesound.yml` lo hace en GitHub, en la rama `feat/sonidos-freesound`:
+
+- Necesita el secreto del repositorio `FREESOUND_API_KEY` (Settings → Secrets and variables → Actions).
+- Ejecuta las órdenes de `tools/audio/ci_jobs.txt` (una orden de `freesound.py` por línea: `fetch`, `fetch --missing`, `fetch door_open`…) y las búsquedas libres de `tools/audio/ci_queries.txt` (`nombre|consulta|dur_mín|dur_máx`, con etiquetas y descripción en el registro).
+- Escribe en el registro la ficha de cada sonido elegido (título, etiquetas, descripción, duración, licencia) y sube los WAV/OGG, el manifiesto y los créditos a la misma rama.
+- Se lanza al subir un cambio de esos dos archivos, del manifiesto o del flujo.
+
 `python3 -I tools/audio/test_freesound.py` prueba la herramienta sin red (manifiesto sin huecos, buscador de nombres, puntuación y proceso de audio).
 
 ## Música del menú
