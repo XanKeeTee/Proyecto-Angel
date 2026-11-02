@@ -12,12 +12,29 @@ const TILE_SIZE: int = 32
 ## Carga que gasta la linterna por segundo encendida (100 = carga completa).
 const FLASHLIGHT_DRAIN: float = 100.0 / 540.0
 const SAVE_SPECIAL: StringName = &"save"
-const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --wear=id,id --aim=grados --custody --outfit --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
+## Segundos desde que empieza un gesto hasta que la mano toca el objeto (ahí suena y cambia el
+## estado). Si el jugador tiene la señal `action_contact`, manda ella (con CONTACT_TIMEOUT de margen).
+const ACTION_CONTACT: Dictionary = {
+	&"reach_low": 0.42, &"reach_mid": 0.32, &"reach_high": 0.45, &"pickup": 0.5,
+	&"key": 0.55, &"valve": 0.7, &"lever": 0.5, &"pry": 0.8,
+}
+const CONTACT_SIGNAL: StringName = &"action_contact"
+const CONTACT_TIMEOUT: float = 1.5
+## Escaleras: andar hacia el hueco mientras funde, negro con pasos y vuelta.
+const WARP_WALK: float = 14.0
+const WARP_FADE_OUT: float = 0.45
+const WARP_HOLD: float = 0.45
+const WARP_FADE_IN: float = 0.6
+const DEBUG_ARGS_HELP: String = "--skip-intro --at=X,Y --face=dir --give=id,id --flag=f,f --wear=id,id --aim=grados --open-doors --loot-seed=N --custody --outfit --doc=id --screenshot=RUTA --screenshot-delay=S --auto-advance=S --no-vhs"
 
 ## Virado de color de la zona.
 @export var zone_tint: Color = Color(0.9, 1.0, 0.96)
 @export var start_cell: Vector2i = Vector2i.ZERO
 @export var start_facing: Vector2i = Vector2i.DOWN
+## Botín aleatorio del mapa (opcional).
+@export var loot_plan: LootPlan
+## Pensamientos / objetivo actual del protagonista (opcional; tecla T).
+@export var thoughts: ThoughtSet
 
 var player: Player
 var character: CharacterState:
@@ -37,11 +54,14 @@ var _world: Node2D
 var _fade: ColorRect
 var _interactables: Dictionary[Vector2i, Array] = {}
 var _doors: Array[Door] = []
+var _watched_doors: Dictionary[Door, bool] = {}
 var _focused: Interactable
 var _busy: bool = false
 var _warping: bool = false
 var _out_of_charge_warned: bool = false
 var _mind_noise_timer: float = 8.0
+var _all_interactables: Array[Interactable] = []
+var _last_thought: String = ""
 
 
 func _ready() -> void:
@@ -50,20 +70,24 @@ func _ready() -> void:
 	player = %Player
 	_world = %World
 	_fade = %Fade
+	LightLayers.setup_player(player)
 	_build_ui()
 	_restore_scenery()
+	_apply_loot()
 	_index_interactables()
 	player.interact_requested.connect(_on_interact)
 	player.examine_requested.connect(_on_examine)
 	player.cell_entered.connect(_on_cell_entered)
 	EventBus.item_received.connect(_on_item_received)
 	EventBus.document_received.connect(_on_document_received)
+	EventBus.flag_set.connect(_on_flag_for_hints)
 	director = get_node_or_null(^"%Events") as EventDirector
 	if director != null:
 		director.setup(self)
 	_apply_debug_state()
 	apply_outfit()
 	character.outfit_changed.connect(apply_outfit)
+	_last_thought = current_thought()
 	if _resume_from_save():
 		_fade.color.a = 1.0
 		_fade_to(0.0, 0.8)
@@ -104,6 +128,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed(InputActions.FLASHLIGHT):
 		get_viewport().set_input_as_handled()
 		toggle_flashlight()
+	elif event.is_action_pressed(InputActions.THOUGHTS):
+		get_viewport().set_input_as_handled()
+		show_thoughts()
 	else:
 		for i: int in InputActions.POCKETS.size():
 			if event.is_action_pressed(InputActions.POCKETS[i]):
@@ -274,70 +301,144 @@ func save_at_station() -> void:
 func _index_interactables() -> void:
 	_interactables.clear()
 	_doors.clear()
+	_all_interactables.clear()
 	for node: Node in find_children("*", "Interactable", true, false):
 		var it: Interactable = node as Interactable
+		_all_interactables.append(it)
 		var door: Door = it as Door
 		if door != null:
 			door.tile_layer = _map
 			door._apply_visuals()
 			_doors.append(door)
+			if not _watched_doors.has(door):
+				_watched_doors[door] = true
+				door.state_changed.connect(_on_door_changed.bind(door))
 		for c: Vector2i in it.cells():
 			if not _interactables.has(c):
 				_interactables[c] = []
 			_interactables[c].append(it)
+	_refresh_glints()
 
 
-func _target(cells: Array[Vector2i]) -> Interactable:
-	for c: Vector2i in cells:
-		for node: Variant in _interactables.get(c, []):
-			var it: Interactable = node as Interactable
-			if it != null and it.is_active():
-				return it
-	return null
+## Objetos cercanos al protagonista (sus casillas a dos o menos de distancia).
+func _candidates() -> Array[Interactable]:
+	var result: Array[Interactable] = []
+	var here: Vector2i = player.cell
+	for dy: int in range(-2, 3):
+		for dx: int in range(-2, 3):
+			for node: Variant in _interactables.get(here + Vector2i(dx, dy), []):
+				var it: Interactable = node as Interactable
+				if it != null and not result.has(it):
+					result.append(it)
+	return result
+
+
+## El objeto con el que se interactuaría ahora (por cercanía y por hacia dónde mira).
+func pick_target() -> Interactable:
+	return InteractionPicker.pick(_candidates(), player.position, player.facing_angle)
+
+
+## Acciones que se ofrecen ahora para un objeto (sin cerrar una puerta con el jugador dentro).
+func actions_for(it: Interactable) -> Array[Dictionary]:
+	var actions: Array[Dictionary] = it.get_actions(character)
+	var door: Door = it as Door
+	if door != null and door.passage_cells().has(player.cell):
+		actions = actions.filter(func(a: Dictionary) -> bool: return a["id"] != Interactable.ACT_CLOSE)
+	return actions
 
 
 func _update_focus() -> void:
 	if not player.input_enabled:
+		_set_focus(null)
 		hud.set_prompt("", [])
 		return
-	var it: Interactable = _target(player.probe_cells())
-	_focused = it
+	var it: Interactable = pick_target()
+	_set_focus(it)
 	if it == null:
 		hud.set_prompt("", [])
 		return
 	var keys: Array[String] = []
-	var primary: Dictionary = it.primary_action(character)
-	if not primary.is_empty():
-		keys.append("[E] " + primary["label"])
+	var labels: PackedStringArray = []
+	for action: Dictionary in actions_for(it):
+		labels.append(action["label"])
+	if not labels.is_empty():
+		keys.append("[E] " + " / ".join(labels))
 	keys.append("[R] Examinar")
-	hud.set_prompt(it.display_name, keys)
+	var state: String = it.prompt_state()
+	hud.set_prompt(it.display_name + ("  · " + state if state != "" else ""), keys)
 
 
-func _on_interact(cells: Array[Vector2i]) -> void:
-	var it: Interactable = _target(cells)
-	if it == null or _busy:
+## Cambia el objeto enfocado y su contorno.
+func _set_focus(it: Interactable) -> void:
+	if it == _focused:
 		return
-	var primary: Dictionary = it.primary_action(character)
-	if primary.is_empty():
-		_on_examine(cells)
+	if _focused != null and is_instance_valid(_focused):
+		FocusOutline.detach(_focused.get_node_or_null(^"Sprite2D") as Sprite2D)
+	_focused = it
+	if it != null:
+		var sprite: Sprite2D = it.get_node_or_null(^"Sprite2D") as Sprite2D
+		if sprite != null:
+			FocusOutline.attach(sprite)
+
+
+func _on_interact(_cells: Array[Vector2i] = []) -> void:
+	if _busy:
 		return
-	await _perform(it, primary["id"])
+	var it: Interactable = pick_target()
+	if it == null:
+		return
+	var actions: Array[Dictionary] = actions_for(it)
+	if actions.is_empty():
+		await _perform(it, Interactable.ACT_EXAMINE)
+		return
+	if actions.size() == 1:
+		await _perform(it, actions[0]["id"])
+		return
+	# Varias acciones: se elige (la última opción cancela).
+	_busy = true
+	lock()
+	var labels: PackedStringArray = []
+	for action: Dictionary in actions:
+		labels.append(action["label"])
+	labels.append("Nada")
+	var choice: int = await message.ask(it.display_name + ":", labels)
+	_busy = false
+	if choice < 0 or choice >= actions.size():
+		unlock()
+		return
+	await _perform(it, actions[choice]["id"])
 
 
-func _on_examine(cells: Array[Vector2i]) -> void:
-	var it: Interactable = _target(cells)
-	if it == null or _busy:
+func _on_examine(_cells: Array[Vector2i] = []) -> void:
+	if _busy:
+		return
+	var it: Interactable = pick_target()
+	if it == null:
 		return
 	await _perform(it, Interactable.ACT_EXAMINE)
 
 
+## Ejecuta una acción sobre un objeto: el protagonista hace el gesto (si lo tiene), y el cambio de
+## estado y el sonido llegan cuando la mano toca el objeto; luego el texto y lo que venga después.
 func _perform(it: Interactable, action: StringName) -> void:
 	_busy = true
 	lock()
+	var anim: StringName = it.anim_for(action)
+	var gesture: Dictionary = {"done": true}
+	if anim != &"" and player.has_method(&"play_action"):
+		gesture["done"] = false
+		var target: Vector2 = _contact_point(it)
+		var run: Callable = func() -> void:
+			await player.call(&"play_action", anim, target)
+			gesture["done"] = true
+		run.call()
+		await _wait_contact(anim, gesture)
 	var result: InteractionResult = it.perform(action, character)
 	if result.sound != null:
 		Sfx.at(self, result.sound, it.position, -4.0)
 	await on_interacted(it, action, result)
+	while not gesture["done"]:
+		await get_tree().process_frame
 	if result.inspect_sheet != null:
 		inspector.show_item(result.inspect_title, "\n".join(result.lines), result.inspect_sheet, result.inspect_views)
 		await inspector.closed
@@ -355,8 +456,41 @@ func _perform(it: Interactable, action: StringName) -> void:
 	elif result.special != &"":
 		await on_special(result.special, it)
 	hud.refresh_pockets()
+	_refresh_glints()
+	_check_thoughts()
 	_busy = false
 	unlock()
+
+
+## Punto del objeto hacia el que se gira la mano: el centro de su casilla más cercana.
+func _contact_point(it: Interactable) -> Vector2:
+	var best: Vector2 = it.position
+	var best_d: float = INF
+	for c: Vector2i in it.cells():
+		var p: Vector2 = cell_center(c)
+		var d: float = p.distance_squared_to(player.position)
+		if d < best_d:
+			best_d = d
+			best = p
+	return best
+
+
+## Espera a que la mano llegue: la señal `action_contact` del jugador si existe, si no el
+## tiempo de ACTION_CONTACT. Nunca más que lo que dure el gesto.
+func _wait_contact(anim: StringName, gesture: Dictionary) -> void:
+	var touched: Array[bool] = [false]
+	var on_touch: Callable = func(_a: Variant = null, _b: Variant = null) -> void:
+		touched[0] = true
+	var by_signal: bool = player.has_signal(CONTACT_SIGNAL)
+	if by_signal:
+		player.connect(CONTACT_SIGNAL, on_touch, CONNECT_ONE_SHOT)
+	var limit: float = CONTACT_TIMEOUT if by_signal else float(ACTION_CONTACT.get(anim, 0.35))
+	var waited: float = 0.0
+	while not touched[0] and not gesture["done"] and waited < limit:
+		await get_tree().process_frame
+		waited += get_process_delta_time()
+	if by_signal and player.is_connected(CONTACT_SIGNAL, on_touch):
+		player.disconnect(CONTACT_SIGNAL, on_touch)
 
 
 ## Gancho para las escenas: algo ha pasado con un objeto (antes de mostrar el texto).
@@ -367,6 +501,23 @@ func on_interacted(_it: Interactable, _action: StringName, _result: InteractionR
 ## Gancho para las escenas: dispositivo con evento especial (teléfono, generador…).
 func on_special(_id: StringName, _it: Interactable) -> void:
 	pass
+
+
+## Una puerta se ha cerrado (también sola, por un evento) con el jugador dentro del hueco:
+## sale hacia el lado más cercano para no quedar atrapado en la colisión.
+func _on_door_changed(door: Door) -> void:
+	_refresh_glints()
+	if door.is_open or not door.is_active():
+		return
+	var passage: Array[Vector2i] = door.passage_cells()
+	if not passage.has(player.cell):
+		return
+	var base: Vector2i = door.base_cell()
+	var middle: float = cell_center(base).y - 1.5 * TILE_SIZE
+	if player.position.y >= middle:
+		player.place(base + Vector2i.DOWN, Vector2i.UP)
+	else:
+		player.place(base + Vector2i(0, -4), Vector2i.DOWN)
 
 
 func _on_cell_entered(cell: Vector2i) -> void:
@@ -385,15 +536,20 @@ func on_cell_entered(_cell: Vector2i) -> void:
 	pass
 
 
+## Cambio de planta (escaleras): sigue andando hacia el hueco mientras funde a negro, con pasos.
 func _warp(target: Vector2i, facing: Vector2i, door: Door) -> void:
 	_warping = true
 	lock()
-	if door.sound_open != null:
-		Sfx.at(self, door.sound_open, door.position, -6.0)
-	await _fade_to(1.0, 0.22)
+	var ahead: Vector2 = (door.position - player.position).normalized() * WARP_WALK
+	var walk: Tween = create_tween()
+	walk.tween_property(player, "position", player.position + ahead, WARP_FADE_OUT)
+	Sfx.at(self, "%s_%d" % [player.step_sound, 1], player.position, player.step_volume_db)
+	await _fade_to(1.0, WARP_FADE_OUT)
 	player.place(target, facing)
-	await get_tree().create_timer(0.12).timeout
-	await _fade_to(0.0, 0.3)
+	for i: int in 3:
+		Sfx.at(self, "%s_%d" % [player.step_sound, 2 + i], player.position, player.step_volume_db - 2.0 * i)
+		await get_tree().create_timer(WARP_HOLD / 3.0).timeout
+	await _fade_to(0.0, WARP_FADE_IN)
 	_warping = false
 	unlock()
 
@@ -401,6 +557,98 @@ func _warp(target: Vector2i, facing: Vector2i, door: Door) -> void:
 func _on_item_received(item: ItemDef, amount: int) -> void:
 	hud.notice("Custodia: " + item.display_name + (" ×%d" % amount if amount > 1 else ""))
 	hud.poke()
+	_refresh_glints()
+
+
+# --- pistas: destellos y pensamientos ---------------------------------------------------------------
+
+## Pone o quita el destello de los objetos que deben llamar la atención (Interactable.wants_attention).
+func _refresh_glints() -> void:
+	if player == null:
+		return
+	for it: Interactable in _all_interactables:
+		if not is_instance_valid(it):
+			continue
+		var want: bool = it.wants_attention(character)
+		var glint: Glint = it.get_node_or_null(NodePath(String(Glint.NODE_NAME))) as Glint
+		if want and glint == null:
+			glint = Glint.attach(it, _glint_point(it))
+			glint.watcher = player
+		elif glint != null:
+			glint.visible = want
+
+
+## Dónde brilla: arriba a la derecha del dibujo del objeto (o sobre su casilla si no tiene).
+func _glint_point(it: Interactable) -> Vector2:
+	var sprite: Sprite2D = it.get_node_or_null(^"Sprite2D") as Sprite2D
+	if sprite == null:
+		return Vector2(4, -10)
+	var rect: Rect2 = sprite.get_rect()
+	return sprite.position + Vector2(rect.position.x + rect.size.x * 0.68, rect.position.y + rect.size.y * 0.3)
+
+
+## Lo que el protagonista sabe que tiene que hacer ahora (tecla T).
+func current_thought() -> String:
+	if thoughts == null:
+		return ""
+	return thoughts.current_text(GameState.has_flag, character.custody.has)
+
+
+func show_thoughts() -> void:
+	if thoughts == null:
+		return
+	var lines: PackedStringArray = []
+	if character.vitals.bleeding and thoughts.bleeding_text != "":
+		lines.append(thoughts.bleeding_text)
+	var text: String = current_thought()
+	if text != "":
+		lines.append(text)
+	_last_thought = text
+	await show_lines(lines)
+
+
+## Avisa (sin interrumpir) cuando cambia lo que el protagonista tiene en la cabeza.
+func _check_thoughts() -> void:
+	var text: String = current_thought()
+	if text == _last_thought:
+		return
+	if _last_thought != "" and text != "":
+		hud.notice("T: pensar")
+	_last_thought = text
+
+
+func _on_flag_for_hints(_flag: StringName) -> void:
+	_refresh_glints()
+	_check_thoughts.call_deferred()
+
+
+# --- botín aleatorio ---------------------------------------------------------------------------------
+
+## Tira el botín del mapa con la semilla de la partida (nueva al empezar, guardada después).
+## Las partidas guardadas antes de existir el botín aleatorio conservan el contenido original.
+func _apply_loot() -> void:
+	if loot_plan == null:
+		return
+	var state: Dictionary = GameState.object_state(LootRoller.STATE_KEY)
+	var seed_value: int = LootRoller.LEGACY_SEED
+	if state.is_empty():
+		if GameState.objects.is_empty():
+			seed_value = int(debug["loot-seed"]) if debug.has("loot-seed") else LootRoller.new_seed()
+		GameState.save_object_state(LootRoller.STATE_KEY, {"seed": seed_value})
+	else:
+		seed_value = int(state.get("seed", LootRoller.LEGACY_SEED))
+	if seed_value == LootRoller.LEGACY_SEED:
+		return
+	var rolled: Dictionary = LootRoller.roll(loot_plan, seed_value)
+	for id: Variant in rolled:
+		var it: Interactable = find_object(StringName(id))
+		if it == null:
+			push_warning("Botín: no existe el objeto " + str(id))
+			continue
+		var slot: LootSlot = loot_plan.slot(StringName(id))
+		if slot != null and slot.override_search:
+			it.search_text = slot.search_text
+		it.replace_contents(loot_plan.keeps, LootRoller.to_entries(rolled[id]))
 
 
 func _on_document_received(doc: DocumentDef) -> void:
@@ -517,6 +765,9 @@ func _apply_debug_state() -> void:
 			if item != null and item.is_wearable():
 				GameState.give_item(item)
 				character.equip(character.custody.find_first(item.id))
+	if debug.has("open-doors"):
+		for node: Node in find_children("*", "Door", true, false):
+			(node as Door).force_state(true, false)
 	if debug.has("auto-advance"):
 		message.auto_advance = debug["auto-advance"].to_float()
 	vhs.set_enabled(not debug.has("no-vhs"))

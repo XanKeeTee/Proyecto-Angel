@@ -1,13 +1,18 @@
 class_name Door
 extends Interactable
-## Puerta del mapa. Cambia sus tiles al abrirse o cerrarse (los tiles abiertos no tienen
-## colisión) y, si se indica, lleva al otro lado de un muro alto con un fundido.
+## Puerta del mapa. Se cruza andando: el hueco del muro (remate + 3 tramos de pared) es suelo
+## transitable y la puerta pone o quita su propia colisión y su oclusor de luz al cerrarse o
+## abrirse. El marco, el dintel y la hoja son un sprite (hijo «Sprite2D») que se ordena por la
+## línea del pie del muro: si el jugador está dentro del hueco, el marco se dibuja por encima.
 ##
-## Las puertas de la pared norte de una sala (3 casillas de alto) llevan a la sala de arriba:
-## la casilla base es la parte baja de la puerta; `warp_front_to` es adónde llegas al cruzarla.
-## Desde el otro lado se entra por el hueco del muro (`back_cell`), que lleva a `warp_back_to`.
+## La casilla base es la parte baja de la puerta (el tramo de pared que toca el suelo del lado
+## de delante). `footprint` cubre las cuatro casillas del hueco, de la base hacia arriba.
+##
+## Las escaleras usan el modo antiguo: siempre abiertas, sin colisión propia, y al pisar la
+## casilla base llevan a otra planta (`warp_front_to`) con un fundido corto.
 
-## Casillas de tile que cambian, relativas a la base, con su tile cerrado y abierto (coordenadas de atlas).
+## Casillas de tile que cambian, relativas a la base, con su tile cerrado y abierto (coordenadas de
+## atlas). Solo para pasos dibujados con tiles (escaleras); las puertas normales usan el sprite.
 @export var tile_cells: Array[Vector2i] = []
 @export var closed_tiles: Array[Vector2i] = []
 @export var open_tiles: Array[Vector2i] = []
@@ -18,13 +23,16 @@ extends Interactable
 @export var always_open: bool = false
 
 @export_group("Paso al otro lado")
-## Si es >= 0, entrar en la casilla base estando abierta lleva a esta casilla.
+## Si es >= 0, entrar en la casilla base estando abierta lleva a esta casilla (escaleras).
 @export var warp_front_to: Vector2i = Vector2i(-1, -1)
 @export var warp_front_facing: Vector2i = Vector2i.UP
-## Casilla (relativa) del hueco por el otro lado y adónde lleva.
+## Casilla (relativa) del hueco por el otro lado y adónde lleva (modo antiguo; sin uso en las
+## puertas que se cruzan andando).
 @export var back_cell: Vector2i = Vector2i(0, -999)
 @export var warp_back_to: Vector2i = Vector2i(-1, -1)
 @export var warp_back_facing: Vector2i = Vector2i.DOWN
+
+@onready var _occluder: LightOccluder2D = get_node_or_null(^"Occluder") as LightOccluder2D
 
 
 func _ready() -> void:
@@ -44,6 +52,16 @@ func warp_for(cell: Vector2i) -> Array:
 	if back_cell.y != -999 and cell == base_cell() + back_cell and warp_back_to.x >= 0:
 		return [warp_back_to, warp_back_facing]
 	return []
+
+
+## Casillas del hueco que se cruza andando (vacío en las escaleras).
+func passage_cells() -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	if warp_front_to.x >= 0:
+		return result
+	for offset: Vector2i in footprint:
+		result.append(base_cell() + offset)
+	return result
 
 
 func cells() -> Array[Vector2i]:
@@ -79,6 +97,12 @@ func _open(result: InteractionResult, character: CharacterState) -> void:
 
 func _apply_visuals() -> void:
 	super._apply_visuals()
+	var body: CollisionObject2D = get_node_or_null(^"Body") as CollisionObject2D
+	if body != null:
+		var solid: bool = visible and not is_open
+		body.process_mode = Node.PROCESS_MODE_INHERIT if solid else Node.PROCESS_MODE_DISABLED
+	if _occluder != null:
+		_occluder.visible = visible and not is_open
 	if tile_layer == null:
 		return
 	var tiles: Array[Vector2i] = open_tiles if is_open else closed_tiles

@@ -11,11 +11,20 @@ const LAYOUT: String = "res://tools/levels/hospital_layout.json"
 const META: String = "res://tools/art/sprite_meta.json"
 const OUT_SCENE: String = "res://scenes/world/hospital/hospital.tscn"
 const TILESET: String = "res://assets/tilesets/hospital_tileset.tres"
+## Botín aleatorio y pensamientos (tools/data/build_prologue_data.gd).
+const LOOT_PLAN: String = "res://data/loot/prologo.tres"
+const THOUGHTS: String = "res://data/thoughts/prologo.tres"
 
-const LAYER_WORLD: int = 1
-const LAYER_PLAYER: int = 2
-const LAYER_PROPS: int = 4
-const LAYER_ALL: int = 7
+const LAYER_WORLD: int = LightLayers.WORLD
+const LAYER_PLAYER: int = LightLayers.PLAYER
+const LAYER_PROPS: int = LightLayers.PROPS
+const LAYER_ALL: int = LightLayers.ALL_ITEMS
+## Atlas del suelo de los pasos de puerta (tools/art/tiles_doors.py) y hoja del marco.
+const SRC_DOORS: int = 1
+const DOORS_ATLAS: String = "res://assets/tilesets/hospital_doors.png"
+const DOOR_FRAME: String = "res://assets/tilesets/door_frame.png"
+## Fotograma cerrado del marco según el estilo de pared (el abierto es el siguiente).
+const DOOR_FRAME_STYLE: Dictionary = {"ward": 0, "basement": 2, "or": 4}
 
 const CAP: Vector2i = Vector2i(0, 5)
 const DOOR_CLOSED: Array[Vector2i] = [Vector2i(4, 2), Vector2i(4, 3), Vector2i(4, 4), Vector2i(0, 10)]
@@ -75,6 +84,7 @@ func _build_tileset() -> TileSet:
 	ts.set_custom_data_layer_name(0, "solid")
 	ts.set_custom_data_layer_type(0, TYPE_BOOL)
 	ts.add_occlusion_layer()
+	ts.set_occlusion_layer_light_mask(0, LightLayers.WALL_OCCLUDERS)
 	ts.add_physics_layer()
 	ts.set_physics_layer_collision_layer(0, 1)
 	ts.set_physics_layer_collision_mask(0, 0)
@@ -108,6 +118,15 @@ func _build_tileset() -> TileSet:
 				poly.polygon = occ
 				data.set_occluder_polygons_count(0, 1)
 				data.set_occluder_polygon(0, 0, poly)
+	# Suelo del paso de las puertas: transitable, sin colisión ni oclusor (los pone la puerta).
+	var doors_src: TileSetAtlasSource = TileSetAtlasSource.new()
+	doors_src.texture = _canvas(DOORS_ATLAS)
+	doors_src.texture_region_size = Vector2i(T, T)
+	ts.add_source(doors_src, SRC_DOORS)
+	for col: int in 2:
+		for row: int in 4:
+			doors_src.create_tile(Vector2i(col, row))
+			doors_src.get_tile_data(Vector2i(col, row), 0).set_custom_data("solid", false)
 	ResourceSaver.save(ts, TILESET)
 	return load(TILESET)
 
@@ -135,6 +154,10 @@ func _build_scene() -> void:
 	scene_root.set_script(load("res://scenes/world/hospital/hospital.gd"))
 	scene_root.set("start_cell", Vector2i(3, 23))
 	scene_root.set("zone_tint", Color(0.9, 1.0, 0.96))
+	if ResourceLoader.exists(LOOT_PLAN):
+		scene_root.set("loot_plan", load(LOOT_PLAN))
+	if ResourceLoader.exists(THOUGHTS):
+		scene_root.set("thoughts", load(THOUGHTS))
 
 	var dark: CanvasModulate = CanvasModulate.new()
 	dark.name = "Darkness"
@@ -175,6 +198,8 @@ func _build_scene() -> void:
 	_build_impossible_content()
 	_build_lights()
 	_build_decals()
+	_configure_lighting()
+	_setup_draw_order()
 
 	var player: Node2D = load("res://scenes/world/player/player.tscn").instantiate()
 	player.name = "Player"
@@ -212,6 +237,106 @@ func _add(parent: Node, child: Node, unique: bool = false) -> void:
 	child.owner = scene_root
 	if unique:
 		child.unique_name_in_owner = true
+
+
+# --- luz y orden de dibujo (pasadas generales sobre lo construido) ---------------------------------
+
+## Máscaras de luz y sombra de todo lo construido (ver LightLayers): las luces fijas reciben
+## sombra solo de muros; los oclusores de los muebles proyectan solo con la linterna.
+func _configure_lighting() -> void:
+	for node: Node in scene_root.find_children("*", "Light2D", true, false):
+		var light: Light2D = node as Light2D
+		if light.shadow_enabled:
+			light.shadow_item_cull_mask = LightLayers.FIXED_LIGHT_SHADOWS
+	for node: Node in world.find_children("*", "LightOccluder2D", true, false):
+		var occ: LightOccluder2D = node as LightOccluder2D
+		if not occ.get_parent() is Door:
+			occ.occluder_light_mask = LightLayers.PROP_OCCLUDERS
+
+
+## Orden de dibujo. Capas (z): mapa -2; suelo pintado, objetos en el suelo y apliques de pared -1;
+## todo lo que tiene altura 0, ordenado por Y en World. Cada objeto con colisión se ordena por el
+## borde de atrás (norte) de su huella: el jugador queda detrás solo si sus pies están por detrás
+## del mueble; delante o a los lados, por delante. Los objetos sin colisión que están encima de
+## otro (teléfono, ordenador) se ordenan justo después de él.
+func _setup_draw_order() -> void:
+	map.z_index = -2
+	(scene_root.get_node("Impossible") as CanvasItem).z_index = -2
+	decals.z_index = -1
+	var passages: Array[Vector2i] = []
+	for node: Node in world.get_children():
+		if node is Door:
+			passages.append_array((node as Door).passage_cells())
+	for node: Node in lights.find_children("*", "Sprite2D", true, false):
+		var sprite: Sprite2D = node as Sprite2D
+		if sprite.get_parent() is Sprite2D:
+			continue
+		sprite.z_index = -1
+		# Un aplique que caiga en el hueco de una puerta se cuelga en la pared de al lado.
+		var at: Vector2 = (sprite.get_parent() as Node2D).position + sprite.position
+		if Vector2i((at / T).floor()) in passages:
+			sprite.position.x += T * 0.75
+	var keys: Dictionary = {}
+	for child: Node in world.get_children():
+		var node: Node2D = child as Node2D
+		if node == null or node is Door:
+			continue
+		var top: float = _body_top(node)
+		if not is_nan(top):
+			keys[node] = top
+	for child: Node in world.get_children():
+		var node: Node2D = child as Node2D
+		if node == null or node is Door or not node.has_node("Sprite2D"):
+			continue
+		var sprite: Sprite2D = node.get_node("Sprite2D") as Sprite2D
+		if keys.has(node):
+			_set_sort_key(node, sprite, keys[node])
+			continue
+		var it: Interactable = node as Interactable
+		var flat: bool = sprite.light_mask == LAYER_WORLD or (it != null and it.kind in [Interactable.Kind.PICKUP, Interactable.Kind.READABLE])
+		if flat:
+			sprite.z_index = -1
+			continue
+		# Encima de otro objeto con colisión que ocupa su casilla.
+		var cell: Vector2i = Vector2i((node.position / T).floor())
+		for other: Node2D in keys:
+			var host: Interactable = other as Interactable
+			if host != null and cell in host.cells() + _footprint_cells(host):
+				_set_sort_key(node, sprite, keys[other] + 1.0 + other.position.y - node.position.y)
+				break
+
+
+func _footprint_cells(it: Interactable) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	for f: Vector2i in it.footprint:
+		result.append(it.base_cell() + f)
+	return result
+
+
+## Borde superior (norte) de la colisión, relativo al nodo, o NAN si no tiene.
+func _body_top(node: Node2D) -> float:
+	var body: Node = node.get_node_or_null("Body")
+	if body == null:
+		return NAN
+	var top: float = INF
+	for shape_node: Node in body.get_children():
+		var shape: CollisionShape2D = shape_node as CollisionShape2D
+		var rect: RectangleShape2D = shape.shape as RectangleShape2D if shape != null else null
+		if rect != null:
+			top = minf(top, shape.position.y - rect.size.y / 2.0)
+	return top if top != INF else NAN
+
+
+## Mueve el punto de orden del sprite a `key` (relativo al nodo) sin moverlo en pantalla.
+func _set_sort_key(node: Node2D, sprite: Sprite2D, key: float) -> void:
+	node.y_sort_enabled = true
+	var shift: float = key - sprite.position.y
+	sprite.position.y += shift
+	sprite.offset.y -= shift
+	for child: Node in sprite.get_children():
+		var glow: Sprite2D = child as Sprite2D
+		if glow != null:
+			glow.offset = sprite.offset
 
 
 # --- suelos y paredes ---------------------------------------------------------------------------------
@@ -317,16 +442,11 @@ func _build_doors() -> void:
 		door.object_id = StringName(d["id"])
 		door.display_name = DOOR_NAMES.get(d["room"], "Puerta")
 		door.position = _center(base)
-		door.footprint = [Vector2i.ZERO]
+		# El hueco: base (tramo bajo), tramos medio y alto, y la casilla del remate.
+		door.footprint = [Vector2i.ZERO, Vector2i(0, -1), Vector2i(0, -2), Vector2i(0, -3)]
 		door.blocks = false
-		door.tile_cells = [Vector2i(0, -2), Vector2i(0, -1), Vector2i(0, 0), Vector2i(0, -3)]
-		door.closed_tiles = DOOR_CLOSED
-		door.open_tiles = DOOR_OPEN
-		door.back_cell = Vector2i(0, -3)
-		door.warp_front_to = base + Vector2i(0, -4)
-		door.warp_front_facing = Vector2i.UP
-		door.warp_back_to = base + Vector2i(0, 1)
-		door.warp_back_facing = Vector2i.DOWN
+		var lower_id: String = d["from"] if room.position.y < corridor.position.y else d["room"]
+		var style: String = rooms[lower_id]["walls"]
 		door.examine_text = "Una puerta de hospital, de metal pintado. La pintura está levantada a la altura de las manos."
 		door.sound_open = load("res://assets/audio/sfx/door_open.wav")
 		door.sound_close = load("res://assets/audio/sfx/door_close.wav")
@@ -347,10 +467,15 @@ func _build_doors() -> void:
 			use.consumes_item = true
 			use.sets_flag = &"quirofano_abierto"
 			use.text = "Metes la palanca en la ranura y empujas con todo el cuerpo. La puerta cede con un chasquido.\nLa palanca se queda encajada en el marco."
+			use.anim = StringName(ITEM_USE_ANIMS["palanca"])
 			door.item_uses = [use]
+		var tweak: Dictionary = DOOR_TWEAKS.get(String(d["id"]), {})
+		if tweak.has("locked_text"):
+			door.locked_text = tweak["locked_text"]
+		door.flag_on_open = StringName(tweak.get("flag_open", ""))
+		door.flag_on_blocked = StringName(tweak.get("flag_blocked", ""))
 		_add(world, door)
-		for i: int in door.tile_cells.size():
-			map.set_cell(base + door.tile_cells[i], SRC, DOOR_CLOSED[i])
+		_finish_door_passage(door, base, style)
 	for s: Dictionary in layout["stairs"]:
 		var r: Rect2i = _rect(s["room"])
 		var base: Vector2i = Vector2i(int(s["x"]), r.position.y - 1)
@@ -374,6 +499,49 @@ func _build_doors() -> void:
 			map.set_cell(base + stairs.tile_cells[i], SRC, STAIRS[i])
 
 
+## Hueco de una puerta que se cruza andando: suelo de paso en las cuatro casillas del muro,
+## marco y hoja como sprite (ordenado por el pie del muro, para quedar por encima del jugador
+## cuando está dentro del hueco), colisión y oclusor que la puerta activa al cerrarse.
+func _finish_door_passage(door: Door, base: Vector2i, style: String) -> void:
+	var floor_col: int = 1 if style == "basement" else 0
+	for k: int in 4:
+		map.set_cell(base + Vector2i(0, -3 + k), SRC_DOORS, Vector2i(floor_col, k))
+	door.y_sort_enabled = true
+	var frame: Sprite2D = Sprite2D.new()
+	frame.name = "Sprite2D"
+	frame.texture = _canvas(DOOR_FRAME)
+	frame.hframes = 6
+	frame.light_mask = LAYER_WORLD
+	# El nodo del sprite está en el pie del muro (borde inferior de la casilla base).
+	frame.position = Vector2(0, T / 2.0)
+	frame.offset = Vector2(0, -2.0 * T)
+	door.frame_closed = int(DOOR_FRAME_STYLE.get(style, 0))
+	door.frame_open = door.frame_closed + 1
+	frame.frame = door.frame_closed
+	_add(door, frame)
+	var top: float = -3.5 * T
+	var bottom: float = T / 2.0
+	var body: StaticBody2D = StaticBody2D.new()
+	body.name = "Body"
+	body.collision_layer = 1
+	body.collision_mask = 0
+	_add(door, body)
+	var shape: CollisionShape2D = CollisionShape2D.new()
+	var rect: RectangleShape2D = RectangleShape2D.new()
+	rect.size = Vector2(T, bottom - top)
+	shape.shape = rect
+	shape.position = Vector2(0, (top + bottom) / 2.0)
+	_add(body, shape)
+	# Con la puerta cerrada, la casilla del remate vuelve a tapar la luz.
+	var occ: OccluderPolygon2D = OccluderPolygon2D.new()
+	occ.polygon = PackedVector2Array([Vector2(-T / 2.0, top), Vector2(T / 2.0, top), Vector2(T / 2.0, top + T), Vector2(-T / 2.0, top + T)])
+	var occluder: LightOccluder2D = LightOccluder2D.new()
+	occluder.name = "Occluder"
+	occluder.occluder = occ
+	occluder.occluder_light_mask = LightLayers.WALL_OCCLUDERS
+	_add(door, occluder)
+
+
 func _center(c: Vector2i) -> Vector2:
 	return Vector2(c * T) + Vector2(T / 2.0, T / 2.0)
 
@@ -392,8 +560,63 @@ func _snd(name: String) -> AudioStream:
 	return load("res://assets/audio/sfx/%s.wav" % name)
 
 
+## Pistas y gestos por object_id `[PROPUESTA]`: se aplican encima de lo que define cada sala
+## (las claves sustituyen a las de la sala). Así las salas no se tocan para ajustar los puzles.
+## glint: destello mientras le quede algo; glint_after: bandera que lo activa; flag_blocked:
+## bandera al intentar abrirlo sin poder; anim: gesto del protagonista.
+const OBJECT_TWEAKS: Dictionary = {
+	"mesita_09": {"glint": true},
+	"taquilla_almacen": {"glint": true, "glint_after": "quirofano_atascado",
+		"examine": "Un armario metálico de limpieza. Por la rendija se ve algo largo de hierro apoyado en el fondo."},
+	"bandeja_quirofano": {"glint": true},
+	"cama_11": {"glint": true, "glint_after": "oyo_crujido"},
+	"botiquin_enfermeria": {"flag_blocked": "botiquin_cerrado"},
+	"estanteria_archivo": {"glint": true},
+	"escritorio_archivo": {"glint": true},
+	"archivador_archivo_3": {"glint": true},
+	"estanteria_taller": {"glint": true, "anim": "reach_low",
+		"examine": "Piezas y herramientas rotas. Una etiqueta en la balda de abajo: «GRUPO ELECTRÓGENO · RECAMBIOS»."},
+	"cuadro_electrico": {"glint": true},
+	"generador": {"glint": true, "flag_blocked": "generador_sin_valvula",
+		"examine": "El grupo electrógeno. Huele a gasóleo y a algo dulce. En el lateral, un hueco con rosca: le falta una pieza."},
+	"salida_principal": {"flag_blocked": "salida_cerrada"},
+	"ascensor": {"flag_blocked": "ascensor_sin_corriente"},
+}
+## Lo mismo para las puertas (por id de puerta del layout).
+const DOOR_TWEAKS: Dictionary = {
+	"puerta_quirofano": {"flag_blocked": "quirofano_atascado",
+		"locked_text": "No está cerrada con llave: algo la atasca por dentro. Cede un dedo y vuelve.\nCon algo largo y fuerte metido en la ranura, quizá cediera."},
+	"puerta_archivo": {"flag_open": "archivo_abierto", "flag_blocked": "archivo_cerrado",
+		"locked_text": "Cerrada con llave. En el cristal esmerilado, una pegatina: «ARCHIVO MÉDICO · Llave: enfermería»."},
+	"puerta_escalera": {"flag_open": "escalera_abierta", "flag_blocked": "escalera_cerrada",
+		"locked_text": "Cerrada con llave. Una placa: «ESCALERA DE SERVICIO · SÓTANO · Solo mantenimiento»."},
+	"puerta_hab10": {"locked_text": "Cerrada con llave. Alguien ha rayado el número de la placa con algo de metal."},
+}
+## Gesto según el sprite del objeto (si la sala no dice otro).
+const SPRITE_ANIMS: Dictionary = {
+	"nightstand": "reach_low", "desk": "reach_low", "trash_bin": "reach_low", "stretcher": "reach_low",
+	"counter": "reach_low", "mop_bucket": "reach_low", "crates": "reach_low",
+	"locker": "reach_mid", "med_cabinet": "reach_mid", "elec_panel": "reach_mid", "filing_cabinet": "reach_mid",
+	"morgue": "reach_mid", "tray": "reach_mid", "phone": "reach_mid", "computer": "reach_mid",
+	"tape_recorder": "reach_mid", "laundry_cart": "reach_mid", "sink": "reach_mid", "op_table": "reach_mid",
+	"shelf": "reach_high", "generator": "lever",
+}
+## Gesto al usar un objeto de la custodia sobre algo del mundo (por id del objeto usado).
+const ITEM_USE_ANIMS: Dictionary = {
+	"palanca": "pry", "valvula_reparada": "valve", "valvula_averiada": "valve",
+	"destornillador": "reach_mid", "fusible": "reach_mid",
+}
+
+
+func _default_anim(sprite_key: String) -> String:
+	if sprite_key.begins_with("decal:") or sprite_key.begins_with("item:"):
+		return "pickup"
+	return SPRITE_ANIMS.get(sprite_key, "")
+
+
 ## Crea un Interactable a partir de un diccionario (ver claves abajo).
-func obj(s: Dictionary) -> Interactable:
+func obj(spec: Dictionary) -> Interactable:
+	var s: Dictionary = spec.merged(OBJECT_TWEAKS.get(String(spec["id"]), {}), true)
 	var it: Interactable = Interactable.new()
 	var cell: Vector2i = Vector2i(s["cell"][0], s["cell"][1])
 	it.name = s.get("node", s["id"])
@@ -451,6 +674,7 @@ func obj(s: Dictionary) -> Interactable:
 		use.sets_flag = StringName(u.get("flag", ""))
 		use.text = u.get("text", "")
 		use.frame_after = u.get("frame", -1)
+		use.anim = StringName(u.get("anim", ITEM_USE_ANIMS.get(String(u["item"]), "")))
 		var req: Array[StringName] = []
 		for f: String in u.get("requires", []):
 			req.append(StringName(f))
@@ -464,6 +688,10 @@ func obj(s: Dictionary) -> Interactable:
 	it.flag_on_open = StringName(s.get("flag_open", ""))
 	it.flag_on_search = StringName(s.get("flag_search", ""))
 	it.flag_on_examine = StringName(s.get("flag_examine", ""))
+	it.flag_on_blocked = StringName(s.get("flag_blocked", ""))
+	it.interact_anim = StringName(s.get("anim", _default_anim(String(s.get("sprite", "")))))
+	it.glint = s.get("glint", false)
+	it.glint_after = StringName(s.get("glint_after", ""))
 	it.frame_closed = s.get("frame", 0)
 	it.frame_open = s.get("frame_open", 1 if it.openable else s.get("frame", 0))
 	it.frame_empty = s.get("frame_empty", -1)

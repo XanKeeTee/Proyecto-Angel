@@ -31,6 +31,15 @@ const ACT_READ: StringName = &"read"
 const ACT_UNLOCK: StringName = &"unlock"
 const ACT_DEVICE: StringName = &"device"
 const ACT_ITEM_PREFIX: String = "item:"
+## Animaciones de interacción del protagonista (Player.play_action).
+const ANIM_REACH_LOW: StringName = &"reach_low"
+const ANIM_REACH_MID: StringName = &"reach_mid"
+const ANIM_REACH_HIGH: StringName = &"reach_high"
+const ANIM_PICKUP: StringName = &"pickup"
+const ANIM_KEY: StringName = &"key"
+const ANIM_VALVE: StringName = &"valve"
+const ANIM_LEVER: StringName = &"lever"
+const ANIM_PRY: StringName = &"pry"
 
 ## Identificador único y estable: es la clave del guardado. No lo cambies una vez publicado.
 @export var object_id: StringName = &""
@@ -93,6 +102,18 @@ const ACT_ITEM_PREFIX: String = "item:"
 @export var flag_on_open: StringName = &""
 @export var flag_on_search: StringName = &""
 @export var flag_on_examine: StringName = &""
+## Se activa al intentar abrirlo o accionarlo sin poder (cerrado, atascado, sin corriente…).
+## Sirve para que los pensamientos sepan qué ha intentado el jugador.
+@export var flag_on_blocked: StringName = &""
+
+@export_group("Animación")
+## Gesto del protagonista al abrir, registrar, coger o accionar (ANIM_*). Vacío = según el tipo.
+## Las llaves usan ANIM_KEY y cada ItemUse puede llevar el suyo.
+@export var interact_anim: StringName = &""
+## Destello sutil para llamar la atención mientras tenga algo dentro (objetos clave).
+@export var glint: bool = false
+## Bandera necesaria para que brille (p. ej. haber oído el ruido que lleva hasta él).
+@export var glint_after: StringName = &""
 
 @export_group("Inspección")
 ## Vistas giradas para examinar desde varios ángulos (opcional).
@@ -222,6 +243,78 @@ func primary_action(character: CharacterState) -> Dictionary:
 	return actions[0] if not actions.is_empty() else {}
 
 
+## Gesto del protagonista para una acción (vacío = ninguno; examinar no mueve las manos).
+func anim_for(action: StringName) -> StringName:
+	var text: String = String(action)
+	if text.begins_with(ACT_ITEM_PREFIX):
+		var index: int = int(text.trim_prefix(ACT_ITEM_PREFIX))
+		if index >= 0 and index < item_uses.size():
+			var use: ItemUse = item_uses[index]
+			if use.anim != &"":
+				return use.anim
+			if use.item != null and use.item.category == ItemDef.Category.KEY:
+				return ANIM_KEY
+		return interact_anim if interact_anim != &"" else ANIM_REACH_MID
+	match action:
+		ACT_EXAMINE:
+			return &""
+		ACT_UNLOCK:
+			return ANIM_KEY
+		ACT_READ:
+			return interact_anim
+		ACT_TAKE:
+			return interact_anim if interact_anim != &"" else ANIM_PICKUP
+	if interact_anim != &"":
+		return interact_anim
+	return ANIM_PICKUP if kind == Kind.PICKUP else ANIM_REACH_MID
+
+
+## Estado breve para el indicador («con llave», «ya registrado»…). Vacío si no hay nada que decir.
+func prompt_state() -> String:
+	if not is_active():
+		return ""
+	if is_locked:
+		return "con llave" if key_item != null else "no cede"
+	if kind == Kind.CONTAINER and searched and is_empty() and not (openable and is_open and self is Door):
+		return "ya registrado"
+	return ""
+
+
+## Si debe llamar la atención: tiene `glint` y le queda algo dentro, o el jugador lleva lo que
+## le falta (su llave, o un objeto que se puede usar sobre él ahora).
+func wants_attention(character: CharacterState) -> bool:
+	if not is_active():
+		return false
+	if glint and (not searched or not is_empty()) and not (kind == Kind.DEVICE and device_used) and _flags_ok([glint_after]):
+		return true
+	if is_locked and key_item != null and character.custody.has(key_item.id):
+		return true
+	for i: int in item_uses.size():
+		var use: ItemUse = item_uses[i]
+		if uses_done.has(i) or use.item == null or not use.consumes_item and not use.opens and not use.uses_durability:
+			continue
+		if character.custody.has(use.item.id) and _flags_ok(use.requires_flags):
+			return true
+	return false
+
+
+## Cambia el contenido (botín aleatorio): deja las entradas que cumplen `keep` y añade `extra`.
+## Vuelve a leer el estado guardado, así que debe llamarse con el mismo resultado al cargar.
+func replace_contents(keep: Callable, extra: Array[LootEntry]) -> void:
+	var entries: Array[LootEntry] = []
+	for entry: LootEntry in contents:
+		if keep.call(entry):
+			entries.append(entry)
+	entries.append_array(extra)
+	contents = entries
+	remaining.clear()
+	for entry: LootEntry in contents:
+		remaining.append(entry.quantity if entry.item != null else 1)
+	searched = false
+	_load_state()
+	_apply_visuals()
+
+
 # --- acciones ---------------------------------------------------------------------------------
 
 func perform(action: StringName, character: CharacterState) -> InteractionResult:
@@ -299,10 +392,12 @@ func _open(result: InteractionResult, character: CharacterState) -> void:
 	if is_locked:
 		result.add(locked_text)
 		result.sound = sound_locked
+		_set_flag(flag_on_blocked)
 		return
 	if not _flags_ok([requires_flag]):
 		result.add(blocked_text if blocked_text != "" else locked_text)
 		result.sound = sound_locked
+		_set_flag(flag_on_blocked)
 		return
 	is_open = true
 	result.sound = sound_open
@@ -375,6 +470,7 @@ func _device(result: InteractionResult) -> void:
 	if not _flags_ok([requires_flag]):
 		result.add(blocked_text)
 		result.sound = sound_locked
+		_set_flag(flag_on_blocked)
 		return
 	device_used = true
 	result.add(device_text)
