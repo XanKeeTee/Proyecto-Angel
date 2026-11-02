@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_oqx0l"]
+
+[resource]
+script = ExtResource("1_oqx0l")
+id = &"head"
+display_name = "Cabeza"
+integrity_fraction = 0.25
+hit_mod = -25
+body_mult = 2.0
+vital = true
+amputable = true
+broken_text = "La máscara se raja de arriba abajo. Por la grieta gotea algo oscuro."
+amputated_text = "La cabeza rueda con la máscara puesta. La mascarilla cosida sigue moviéndose un momento."

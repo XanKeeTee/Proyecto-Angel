@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_hcjuu"]
+
+[resource]
+script = ExtResource("1_hcjuu")
+id = &"leg_l"
+display_name = "Pierna izq."
+integrity_fraction = 0.35
+body_mult = 0.6
+amputable = true
+broken_text = "La rodilla se dobla hacia atrás. Cojea, pero sigue viniendo."
+amputated_text = "La pierna se queda en el suelo. El resto sigue arrastrándose."

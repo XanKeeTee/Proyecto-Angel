@@ -1,0 +1,146 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_7uuj2"]
+[ext_resource type="Resource" path="res://data/statuses/agarre.tres" id="2_qi8nj"]
+[ext_resource type="Resource" path="res://data/statuses/sedacion.tres" id="3_3fi52"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="4_3wje8"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_head.tres" id="5_a5fni"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_torso.tres" id="6_e4qk1"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_l.tres" id="7_srs77"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_r.tres" id="8_ppvgm"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_l.tres" id="9_4wyfp"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_r.tres" id="10_vsryd"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="11_wuqal"]
+
+[sub_resource type="Resource" id="Resource_4uvoe"]
+script = ExtResource("1_7uuj2")
+display_name = "Tajo"
+telegraph = "Levanta el brazo de bisturíes por encima de la máscara."
+power = 13
+accuracy = 72
+required_part = &"arm_r"
+weight = 3.0
+requires_standing = true
+sound_windup = "enfermero_growl"
+sound_hit = "combat_scalpel_slash"
+
+[sub_resource type="Resource" id="Resource_r0qv7"]
+script = ExtResource("1_7uuj2")
+display_name = "Agarrar"
+telegraph = "Abre la mano izquierda y se inclina hacia ti."
+power = 3
+accuracy = 70
+damage_type = 1
+target_part = &"any_arm"
+required_part = &"arm_l"
+weight = 1.6
+cooldown = 3
+requires_standing = true
+inflicts_status = ExtResource("2_qi8nj")
+sound_windup = "enfermero_breath"
+sound_hit = "enfermero_growl"
+
+[sub_resource type="Resource" id="Resource_hv5fp"]
+script = ExtResource("1_7uuj2")
+display_name = "Serrar"
+telegraph = "Te sujeta y apoya la sierra de hueso en el brazo."
+power = 15
+accuracy = 82
+target_part = &"any_arm"
+required_part = &"arm_r"
+weight = 9.0
+requires_target_status = &"agarre"
+sound_windup = "combat_saw"
+sound_hit = "combat_saw"
+
+[sub_resource type="Resource" id="Resource_l7x0e"]
+script = ExtResource("1_7uuj2")
+display_name = "Pinchazo"
+telegraph = "Sacude la jeringa. El líquido oscuro burbujea dentro."
+power = 4
+accuracy = 76
+damage_type = 2
+mind_damage = 10
+target_part = &"torso"
+required_part = &"arm_l"
+weight = 1.8
+cooldown = 1
+inflicts_status = ExtResource("3_3fi52")
+status_chance = 0.7
+sound_windup = "enfermero_breath"
+sound_hit = "combat_syringe"
+
+[sub_resource type="Resource" id="Resource_fuko5"]
+script = ExtResource("1_7uuj2")
+display_name = "Chillido"
+telegraph = "Se encoge. Algo se hincha detrás de la mascarilla cosida."
+power = 0
+accuracy = 100
+damage_type = 3
+mind_damage = 14
+required_part = &"head"
+weight = 0.0
+reaction = true
+anim = &"stagger"
+sound_windup = "enfermero_scream"
+sound_hit = "enfermero_scream"
+
+[sub_resource type="Resource" id="Resource_j2quo"]
+script = ExtResource("1_7uuj2")
+display_name = "Embestida"
+telegraph = "Baja la cabeza y carga con el hombro."
+power = 5
+accuracy = 65
+damage_type = 1
+weight = 0.6
+requires_standing = true
+sound_windup = "enfermero_drag_steps"
+sound_hit = "combat_pipe_flesh"
+
+[sub_resource type="Resource" id="Resource_845ka"]
+script = ExtResource("1_7uuj2")
+display_name = "Zarpazo"
+telegraph = "Se arrastra hacia tus tobillos con los bisturíes por delante."
+power = 9
+accuracy = 68
+target_part = &"any_leg"
+required_part = &"arm_r"
+weight = 3.0
+crawl_only = true
+sound_windup = "enfermero_drag_steps"
+sound_hit = "combat_scalpel_slash"
+
+[sub_resource type="Resource" id="Resource_o2swa"]
+script = ExtResource("1_7uuj2")
+display_name = "Agarrar el tobillo"
+telegraph = "Estira la mano desde el suelo hacia tu pierna."
+power = 3
+accuracy = 66
+damage_type = 1
+target_part = &"any_leg"
+required_part = &"arm_l"
+weight = 1.5
+cooldown = 3
+crawl_only = true
+inflicts_status = ExtResource("2_qi8nj")
+sound_windup = "enfermero_breath"
+sound_hit = "enfermero_growl"
+
+[resource]
+script = ExtResource("11_wuqal")
+display_name = "ENFERMERO"
+body_max = 115
+has_mind = false
+strength = 10
+dexterity = 9
+agility = 7
+willpower = 6
+resilience = 6
+armor = 1
+parts = Array[ExtResource("4_3wje8")]([ExtResource("5_a5fni"), ExtResource("6_e4qk1"), ExtResource("7_srs77"), ExtResource("8_ppvgm"), ExtResource("9_4wyfp"), ExtResource("10_vsryd")])
+attacks = Array[ExtResource("1_7uuj2")]([SubResource("Resource_4uvoe"), SubResource("Resource_r0qv7"), SubResource("Resource_hv5fp"), SubResource("Resource_l7x0e"), SubResource("Resource_fuko5"), SubResource("Resource_j2quo"), SubResource("Resource_845ka"), SubResource("Resource_o2swa")])
+intro_text = "Un enfermero. Lo que queda de uno."
+sprite_key = "enemy_enfermero"
+sound_idle = "enfermero_breath"
+sound_hurt = "enfermero_scream"
+sound_death = "enfermero_death"
