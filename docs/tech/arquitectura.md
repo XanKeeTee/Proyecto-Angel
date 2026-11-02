@@ -45,7 +45,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scenes/ui/hud/` | Indicador de interacción, bolsillos y batería |
 | `scenes/ui/` | Caja de texto, inspector de objetos, lector de documentos, menús |
 | `scenes/ui/status_fx/` | `StatusFx`: efectos de pantalla de herida, sangrado, Mente baja y cura (shader `shaders/status_fx.gdshader`) |
-| `scenes/ui/title/` | Pantalla de título: fondo animado (`TitleBackground`), rótulos de vídeo (`TapeOsd`), paneles de Cargar y Créditos (`TitlePanel`) |
+| `scenes/ui/title/` | Pantalla de título: fondo animado (`TitleBackground`: la escena del hospital sin su script de `WorldController`, sin jugador, eventos ni ambiente, en un `SubViewport` con cámara fija en la Habitación 09), rótulos de vídeo (`TapeOsd`), paneles de Cargar y Créditos (`TitlePanel`) |
 | `scenes/world/hospital/` | El hospital (una sola escena) y su guion |
 
 ## Flujo de una interacción

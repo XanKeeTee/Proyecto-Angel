@@ -91,7 +91,6 @@ El generador del hospital y el de datos del prólogo se ejecutan como escena (no
 
 Aparte (no los llama `build_all.py`):
 - `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
-- `python -I tools/art/title_bg.py`: la ilustración del título (`assets/sprites/title/`, ~30 s).
 
 Sonidos que faltan y qué buscar en Freesound: [sonidos.md](sonidos.md).
 
