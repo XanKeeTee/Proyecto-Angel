@@ -9,7 +9,7 @@ from px2d import ramp
 # --- piel ---
 ramp("skin", ["#2b1f22", "#56444a", "#837068", "#a6958a", "#c1b3a2"])  # paciente: pálido, cetrino
 ramp("scalp", ["#2a2224", "#4b3f3f", "#6f625c", "#8f8277", "#a89a8b"])  # rapado: piel con sombra de pelo
-ramp("skin_grey", ["#14151c", "#272a35", "#41464f", "#5f6569", "#7d827f"])  # enfermero: gris azulado
+ramp("skin_grey", ["#1a1b22", "#33363f", "#50555b", "#71777a", "#949a97"])  # enfermero: gris azulado
 ramp("vein", ["#141420", "#232236", "#363349"])
 ramp("socket", ["#0d080b", "#1f1317", "#352227"])
 ramp("lips", ["#2c1a1d", "#4a2b2d", "#6a4040"])
