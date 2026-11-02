@@ -114,8 +114,14 @@ func test_no_aparece_en_una_sala_iluminada() -> void:
 	check(lit != null, "hay luces con corriente")
 	check(not director.is_lit(lit.global_position), "sin corriente, la sala está a oscuras")
 	GameState.set_flag(GameState.FLAG_POWER)
-	await host.get_tree().create_timer(2.6).timeout
-	check(director.is_lit(lit.global_position), "con corriente, junto a la luz está iluminado")
+	# El fluorescente arranca con retraso y parpadeos al azar: se espera a verlo encendido.
+	var seen_lit: bool = false
+	for i: int in 50:
+		await host.get_tree().create_timer(0.1).timeout
+		if director.is_lit(lit.global_position):
+			seen_lit = true
+			break
+	check(seen_lit, "con corriente, junto a la luz está iluminado")
 	await _teardown()
 
 
