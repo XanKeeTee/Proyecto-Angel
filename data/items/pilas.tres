@@ -24,3 +24,5 @@ max_stack = 4
 usable = true
 use_effects = Array[ExtResource("4_xurls")]([SubResource("Resource_sik0v")])
 use_verb = "Cargar la linterna"
+sound_material = 9
+use_sound = "use_battery_insert"

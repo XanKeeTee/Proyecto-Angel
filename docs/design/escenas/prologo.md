@@ -110,6 +110,9 @@ Datos: `data/loot/prologo.tres` (de `tools/data/build_prologue_data.gd`).
 
 La medicación sigue igual de escasa: analgésicos (2 garantizados + tablas); jeringas y ampollas, que combinadas dan **sedante**. El **desinfectante** limpia vendas usadas y esteriliza vendas.
 
+- `[PROPUESTA]` **Tela**: rasgando ropa que no se lleva puesta (las batas dan 3 tiras). Con ella se fabrican vendas improvisadas (sucias hasta desinfectarlas), torniquetes y el mango envuelto del tubo. Ver [custodia](../sistemas/custodia.md).
+- `[PROPUESTA]` **Armas improvisadas** (el prólogo no tiene combate; se pueden empuñar desde PERSONAJE › MANO): la palanca ya sirve; un **bisturí** en el quirófano y un **tubo de hierro** en el taller o la sala de calderas.
+
 ## Ropa
 
 Desde la pestaña **PERSONAJE** de la Custodia se ve al protagonista con lo que lleva y se cambia la ropa como en un RPG: cuatro ranuras (cabeza, cuerpo, piernas, pies). La ropa puesta no ocupa sitio en la bandeja; lo que se quita vuelve a ella (si no cabe, no se cambia). Desde la bandeja también se puede usar «Ponerse» (E).

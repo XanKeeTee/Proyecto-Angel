@@ -8,18 +8,16 @@ signal _advanced
 
 const BONE: Color = Color("e8e1d3")
 const BONE_DIM: Color = Color("bfb6a3")
-const BOX_BG: Color = Color(0.04, 0.035, 0.07, 0.88)
-## Fuente con serifa del sistema mientras no haya una fuente pixel definitiva en assets/fonts/.
-const SERIF_NAMES: PackedStringArray = ["Georgia", "Times New Roman", "Liberation Serif", "DejaVu Serif", "serif"]
+const BOX_BG: Color = Color(0.04, 0.035, 0.07, 0.9)
 
 ## Si es > 0, cada línea avanza sola tras esos segundos (solo para pruebas).
 var auto_advance: float = 0.0
 
-var _font: SystemFont
+var _font: Font
 var _auto_timer: float = 0.0
 var _panel: PanelContainer
 var _label: Label
-var _arrow: Label
+var _arrow: Control
 var _stamp: Label
 var _hint: Label
 var _typed: float = 0.0
@@ -36,8 +34,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	_font = SystemFont.new()
-	_font.font_names = SERIF_NAMES
+	_font = UiStyle.ui()
 	_build_box()
 	_build_stamp()
 	_build_hint()
@@ -121,7 +118,7 @@ func ask(question: String, options: PackedStringArray) -> int:
 func _update_choice() -> void:
 	var parts: PackedStringArray = []
 	for i: int in _choices.size():
-		parts.append(("▸ " if i == _choice_index else "   ") + _choices[i])
+		parts.append(("> " if i == _choice_index else "   ") + _choices[i])
 	_choice_label.text = "      ".join(parts)
 
 
@@ -180,9 +177,9 @@ func _build_box() -> void:
 	style.content_margin_left = 14
 	_panel = PanelContainer.new()
 	_panel.add_theme_stylebox_override("panel", style)
-	_panel.position = Vector2(20, 280)
-	_panel.custom_minimum_size = Vector2(600, 64)
-	_panel.size = Vector2(600, 64)
+	_panel.position = Vector2(16, 270)
+	_panel.custom_minimum_size = Vector2(608, 82)
+	_panel.size = Vector2(608, 82)
 	_panel.visible = false
 	add_child(_panel)
 
@@ -190,23 +187,26 @@ func _build_box() -> void:
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	_label.add_theme_font_override("font", _font)
-	_label.add_theme_font_size_override("font_size", 14)
+	_label.add_theme_font_size_override("font_size", UiStyle.SIZE_LARGE)
 	_label.add_theme_color_override("font_color", BONE)
+	_label.add_theme_constant_override("line_spacing", 2)
 	_panel.add_child(_label)
 
 	_choice_label = Label.new()
-	_choice_label.add_theme_font_override("font", _font)
-	_choice_label.add_theme_font_size_override("font_size", 12)
+	_choice_label.add_theme_font_override("font", UiStyle.ui_bold())
+	_choice_label.add_theme_font_size_override("font_size", UiStyle.SIZE_TEXT)
 	_choice_label.add_theme_color_override("font_color", BONE)
-	_choice_label.position = Vector2(40, 322)
+	_choice_label.position = Vector2(40, 328)
 	add_child(_choice_label)
 
-	_arrow = Label.new()
-	_arrow.text = "▼"
-	_arrow.add_theme_font_size_override("font_size", 8)
-	_arrow.add_theme_color_override("font_color", BONE_DIM)
-	_arrow.position = Vector2(604, 330)
+	# Flecha de «sigue» (las fuentes no traen ▼: se dibuja).
+	_arrow = Control.new()
+	_arrow.position = Vector2(608, 342)
+	_arrow.size = Vector2(8, 6)
+	_arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_arrow.visible = false
+	_arrow.draw.connect(func() -> void:
+		_arrow.draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(8, 0), Vector2(4, 5)]), BONE_DIM))
 	add_child(_arrow)
 
 
@@ -215,8 +215,8 @@ func _build_stamp() -> void:
 	_stamp.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_stamp.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_stamp.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_stamp.add_theme_font_override("font", _font)
-	_stamp.add_theme_font_size_override("font_size", 18)
+	_stamp.add_theme_font_override("font", UiStyle.ui_bold())
+	_stamp.add_theme_font_size_override("font_size", UiStyle.SIZE_LARGE)
 	_stamp.add_theme_color_override("font_color", BONE)
 	_stamp.modulate.a = 0.0
 	add_child(_stamp)
@@ -230,7 +230,8 @@ func _build_hint() -> void:
 	_hint.offset_bottom = -22
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.add_theme_font_override("font", _font)
-	_hint.add_theme_font_size_override("font_size", 11)
+	_hint.add_theme_font_size_override("font_size", UiStyle.SIZE_SMALL)
 	_hint.add_theme_color_override("font_color", BONE)
+	UiStyle.add_shadow(_hint)
 	_hint.modulate.a = 0.0
 	add_child(_hint)

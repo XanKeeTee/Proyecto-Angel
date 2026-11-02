@@ -16,3 +16,4 @@ inspect_sheet = ExtResource("2_uvv46")
 inspect_views = 8
 size = Vector2i(1, 2)
 key_item = true
+sound_material = 12

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/barra_hierro.png" id="1_x47pb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/barra_hierro_inspect.png" id="2_r16p3"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_htnq3"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_g8bem"]
+[ext_resource type="Resource" path="res://data/weapons/iron_bar.tres" id="5_7s15y"]
+
+[resource]
+script = ExtResource("3_htnq3")
+id = &"barra_hierro"
+display_name = "Barra de hierro"
+description = "Hierro corrugado de obra, oxidado. Pesa lo suficiente para hacer daño."
+category = 8
+icon = ExtResource("1_x47pb")
+inspect_sheet = ExtResource("2_r16p3")
+inspect_views = 8
+size = Vector2i(1, 3)
+use_verb = "Empuñar"
+weapon = ExtResource("5_7s15y")
+sound_material = 1

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="RecipeDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="1_awi6g"]
+[ext_resource type="Resource" path="res://data/items/tela.tres" id="2_uva42"]
+[ext_resource type="Resource" path="res://data/items/venda_improvisada.tres" id="3_qp6yn"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="4_r5k1o"]
+
+[sub_resource type="Resource" id="Resource_e8lc7"]
+script = ExtResource("1_awi6g")
+item = ExtResource("2_uva42")
+amount = 2
+
+[resource]
+script = ExtResource("4_r5k1o")
+id = &"venda_improvisada"
+display_name = "Venda improvisada"
+mode = 2
+result = ExtResource("3_qp6yn")
+message = "Enrollas dos tiras bien apretadas. No es una venda de verdad, pero tapa."
+sound = "craft_cloth"
+ingredients = Array[ExtResource("1_awi6g")]([SubResource("Resource_e8lc7")])

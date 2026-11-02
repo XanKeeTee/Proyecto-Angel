@@ -9,7 +9,7 @@
 [ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_np403"]
 [ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_xh68q"]
 [ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_jjty0"]
-[ext_resource type="Resource" path="res://data/items/iron_bar.tres" id="10_3c6ud"]
+[ext_resource type="Resource" path="res://data/weapons/iron_bar.tres" id="10_3c6ud"]
 
 [resource]
 script = ExtResource("9_jjty0")

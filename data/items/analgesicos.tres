@@ -9,7 +9,12 @@
 [sub_resource type="Resource" id="Resource_7yyk4"]
 script = ExtResource("5_l2syj")
 body = 12
+mind = 0
+stops_bleeding = false
+requires_bleeding = false
+contaminated_penalty = 6
 message = "Los tragas en seco. El dolor se aleja un poco."
+contaminated_message = ""
 
 [resource]
 script = ExtResource("3_eo63x")
@@ -24,3 +29,5 @@ max_stack = 6
 usable = true
 use_effects = Array[ExtResource("4_vlaha")]([SubResource("Resource_7yyk4")])
 use_verb = "Tomar"
+sound_material = 8
+use_sound = "use_pills_swallow"

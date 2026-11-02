@@ -53,22 +53,13 @@ Con argumentos tras `--`, el título salta directamente al hospital:
 | `--give=id,id` | Da objetos (montón completo) |
 | `--flag=f,f` | Activa banderas (p. ej. `power_on`, `pasillo_imposible`) |
 | `--custody` / `--doc=id` | Abre la custodia (o el expediente en ese documento) |
+| `--custody-tab=craft\|combine\|dossier\|character\|hand` | Con `--custody`: abre esa pestaña (o modo) |
+| `--custody-drag=id` / `--custody-menu=id` / `--custody-wield=id` | Con `--custody`: deja ese objeto agarrado con el ratón / abre su menú contextual / lo empuña |
+| `--drop=id,id` | Deja esos objetos en el suelo junto al jugador |
 | `--auto-advance=S` | Los textos avanzan solos |
 | `--screenshot=RUTA` y `--screenshot-delay=S` | Captura y cierra. **Abre una ventana** |
 | `--no-vhs` | Sin filtro |
-<<<<<<< HEAD
-| `--open-doors` | Abre todas las puertas (para comprobar los pasos) |
-| `--loot-seed=N` | Semilla del botín aleatorio en partida nueva (misma semilla, mismo botín) |
-=======
-| `--stalker` / `--scare=id` | La entidad aparece a la espalda / lanza un susto pequeño (ver [terror-ambiental.md](../design/sistemas/terror-ambiental.md)) |
-| `--body=N` `--mind=N` `--bleed` `--use=id@S` | Constantes al empezar y usar un objeto a los S segundos (efectos de estado) |
-
-El título acepta sus propios argumentos sin saltar al hospital: `--screenshot=RUTA --screenshot-delay=S --title-panel=credits|load`.
-
-```bash
-"$GODOT_BIN" --path . res://scenes/ui/title/title_screen.tscn -- --screenshot=titulo.png --screenshot-delay=2.5
-```
->>>>>>> worktree-agent-a1912f82f34729dfb
+3. `build_items` crea los objetos, las armas (`data/weapons/`) y las recetas, `build_documents` los documentos, `build_prologue_data` el plan de botín (`data/loot/prologo.tres`) y los pensamientos (`data/thoughts/prologo.tres`), `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
 ### Regenerar contenido
 
@@ -91,7 +82,7 @@ python -I tools/art/tiles_doors.py
    - `build_wear` crea los objetos de ropa (`data/items/`) y la textura con normales de cada prenda puesta.
    - `tiles_doors.py` genera el marco y la hoja de las puertas (`assets/tilesets/door_frame.png`) y el suelo de los pasos (`hospital_doors.png`).
 2. `--import` hace que Godot importe todo eso.
-3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_prologue_data` el plan de botín (`data/loot/prologo.tres`) y los pensamientos (`data/thoughts/prologo.tres`), `build_player` la escena del protagonista y `build_hospital` la del hospital.
+3. `build_items` crea los objetos, las armas (`data/weapons/`) y las recetas, `build_documents` los documentos, `build_prologue_data` el plan de botín (`data/loot/prologo.tres`) y los pensamientos (`data/thoughts/prologo.tres`), `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
 El generador del hospital y el de datos del prólogo se ejecutan como escena (no con `-s`) porque necesitan los autoloads.
 
@@ -131,7 +122,8 @@ Sonidos que faltan y qué buscar en Freesound: [sonidos.md](sonidos.md).
 - **Apuntar**: el jugador mira hacia el ratón (o el stick derecho) desde la altura del pecho; si no hay ninguno, hacia donde camina. De lado va al 85 % y de espaldas al 62 %, con el paso al revés. `Player.forced_aim` fija la dirección para pruebas y escenas guionizadas. `AimReticle` dibuja el punto de mira y oculta el cursor del sistema solo mientras se explora.
 - **Ropa por capas**: el cuerpo (`protagonist.png`, con ropa interior) y una hoja por prenda (`characters/wear/<id>.png`), todas con el mismo formato de 64×8 fotogramas. Cada prenda se renderiza con el cuerpo como "tapa" invisible, así que solo pinta lo que queda por delante. En el jugador son 4 `Sprite2D` hijos (`Feet`, `Legs`, `Body`, `Head`) que copian el fotograma del cuerpo.
 - **Física de la tela**: un muelle amortiguado en `Player._update_cloth` (se queda atrás al andar, sigue de largo al frenar, ondea con el paso y sale despedido al girar). El shader `shaders/cloth_sway.gdshader` desplaza los píxeles de la prenda según su altura (nada en la cintura, todo en el bajo) y lee las normales en el mismo sitio. `ItemDef.cloth_sway` dice cuánto se mueve cada prenda.
-- **Iconos**: miden `casillas × 30 − 4` px y el modelo se encuadra solo. `pxrender` admite un cuarto valor en los materiales: brillo especular.
+- **Iconos**: miden `casillas × 40 − 4` px (`ItemDef.ICON_CELL`) y el modelo se encuadra solo. `pxrender` admite un cuarto valor en los materiales: brillo especular. Si cambia el tamaño de casilla, hay que rehacer los iconos (`items.py`) y luego `build_wear` y `build_items` para que los `.tres` apunten a ellos.
+- **Fuentes**: sin antialias ni posición subpíxel, con hinting completo (ver [fuentes](../art/fuentes.md)). Usa siempre `UiStyle` y sus tamaños.
 - **Mandos**: algunos (visto con un DualSense) mandan valores falsos en los primeros fotogramas; por eso el control llega 0,5 s después en el arranque de depuración.
 
 ## Prototipo de combate

@@ -15,3 +15,4 @@ icon = ExtResource("1_m7m6p")
 inspect_sheet = ExtResource("2_7r1bu")
 inspect_views = 8
 max_stack = 3
+sound_material = 6

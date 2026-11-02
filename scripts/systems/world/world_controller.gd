@@ -855,3 +855,4 @@ func _build_ui() -> void:
 			get_tree().paused = false)
 	pause_menu = PauseMenu.new()
 	add_child(pause_menu)
+	add_child(CustodyWorldLink.create(self))  # objetos descartados, arma en la mano y sonidos de uso

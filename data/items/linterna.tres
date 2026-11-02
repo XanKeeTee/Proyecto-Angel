@@ -26,3 +26,4 @@ consumed_on_use = false
 use_effects = Array[ExtResource("4_p7ujg")]([SubResource("Resource_eoxsh")])
 use_verb = "Encender / apagar"
 key_item = true
+sound_material = 2

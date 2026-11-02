@@ -33,21 +33,22 @@ func _ready() -> void:
 	add_child(dim)
 	_image = TextureRect.new()
 	_image.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED  # 2x exacto
 	_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_image.position = Vector2(170, 30)
-	_image.size = Vector2(300, 220)
+	# 112 px por vista, a escala 2 (entera: el pixel art no se deforma).
+	_image.position = Vector2(208, 18)
+	_image.size = Vector2(224, 224)
 	add_child(_image)
-	_title = UiStyle.label("", 14, UiStyle.BONE)
-	_title.position = Vector2(40, 254)
+	_title = UiStyle.label("", UiStyle.SIZE_LARGE, UiStyle.BONE, UiStyle.ui_bold())
+	_title.position = Vector2(40, 248)
 	add_child(_title)
-	_text = UiStyle.label("", 10, UiStyle.BONE_DIM)
+	_text = UiStyle.label("", UiStyle.SIZE_TEXT, UiStyle.BONE_DIM)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text.position = Vector2(40, 274)
-	_text.size = Vector2(560, 60)
+	_text.position = Vector2(40, 270)
+	_text.size = Vector2(560, 64)
 	add_child(_text)
-	_hint = UiStyle.label("← → girar  ·  Esc cerrar", 8, UiStyle.ASH, UiStyle.mono())
-	_hint.position = Vector2(480, 340)
+	_hint = UiStyle.label("Flechas o arrastrar: girar · Esc: cerrar", UiStyle.MONO_SMALL, UiStyle.ASH, UiStyle.mono())
+	_hint.position = Vector2(352, 340)
 	add_child(_hint)
 
 

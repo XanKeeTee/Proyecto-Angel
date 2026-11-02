@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="WeaponDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_mnlwe"]
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_p0i6k"]
 
 [resource]
-script = ExtResource("1_mnlwe")
+script = ExtResource("1_p0i6k")
 display_name = "Punzón"
 accuracy = 80
 damage_type = 2

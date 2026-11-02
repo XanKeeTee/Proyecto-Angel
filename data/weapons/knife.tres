@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="WeaponDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_qpmi0"]
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_tymx8"]
 
 [resource]
-script = ExtResource("1_qpmi0")
+script = ExtResource("1_tymx8")
 display_name = "Cuchilla"
 power = 12
