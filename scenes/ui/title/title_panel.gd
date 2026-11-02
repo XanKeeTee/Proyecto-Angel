@@ -5,9 +5,13 @@ extends Control
 
 signal closed
 
+## Píxeles que se desplaza el contenido con arriba/abajo cuando no hay nada elegible (créditos).
+const SCROLL_STEP: int = 12
+
 var body: VBoxContainer
 
 var _heading: Label
+var _scroll: ScrollContainer
 
 
 func _init(heading: String) -> void:
@@ -27,11 +31,17 @@ func _init(heading: String) -> void:
 	rule.position = Vector2(14, 28)
 	rule.size = Vector2(342, 1)
 	add_child(rule)
+	# El contenido se desplaza si no cabe (los créditos crecerán con las atribuciones de sonido).
+	_scroll = ScrollContainer.new()
+	_scroll.position = Vector2(14, 36)
+	_scroll.size = Vector2(342, 148)
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.follow_focus = true
+	add_child(_scroll)
 	body = VBoxContainer.new()
-	body.position = Vector2(14, 36)
-	body.size = Vector2(342, 148)
-	body.add_theme_constant_override("separation", 3)
-	add_child(body)
+	body.custom_minimum_size = Vector2(330, 0)
+	body.add_theme_constant_override("separation", 1)
+	_scroll.add_child(body)
 	var back: Label = UiStyle.label("Esc: volver", 8, UiStyle.ASH, UiStyle.mono())
 	back.position = Vector2(14, 190)
 	add_child(back)
@@ -54,6 +64,13 @@ func close() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed(&"ui_cancel"):
+	if not visible:
+		return
+	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		close()
+	elif get_viewport().gui_get_focus_owner() == null or not is_ancestor_of(get_viewport().gui_get_focus_owner()):
+		if event.is_action_pressed(&"ui_down"):
+			_scroll.scroll_vertical += SCROLL_STEP
+		elif event.is_action_pressed(&"ui_up"):
+			_scroll.scroll_vertical -= SCROLL_STEP

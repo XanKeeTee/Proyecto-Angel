@@ -14,7 +14,6 @@ const TITLE_ARGS: PackedStringArray = ["screenshot", "screenshot-delay", "title-
 ## Créditos. Aquí irá también la atribución de cada sonido de Freesound (autor, título, licencia).
 const CREDITS: PackedStringArray = [
 	"LA NOVENA VIGILIA — PRÓLOGO",
-	"",
 	"Guion, diseño, código y arte: el equipo de Proyecto-Angel.",
 	"Hecho con Godot Engine (godotengine.org), licencia MIT.",
 	"Arte provisional generado con las herramientas de tools/art/.",
@@ -168,7 +167,7 @@ func _build_panels() -> void:
 		var l: Label = UiStyle.label(line, 10 if heading else 9, UiStyle.BONE if heading else UiStyle.BONE_DIM,
 			null if heading else UiStyle.mono())
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		l.custom_minimum_size = Vector2(340, 0)
+		l.custom_minimum_size = Vector2(326, 0)
 		_credits_panel.body.add_child(l)
 	_credits_panel.closed.connect(_on_panel_closed)
 
