@@ -14,7 +14,18 @@ Código: `scripts/systems/horror/` (director, planificador, entidad) y `scenes/u
 
 ## La entidad
 
-Una figura humanoide de humo, alta y encorvada, con brazos demasiado largos y una máscara pálida y agrietada con las cuencas vacías. De cintura para abajo se deshace en humo.
+Una sombra humanoide **más negra que el negro**, muy alta (casi el doble que el protagonista) y deforme: cuello largo y torcido, la cabeza alargada caída hacia un lado, un hombro más alto que otro, el brazo izquierdo tan largo que casi roza el suelo, el derecho doblado hacia fuera, piernas finas que se deshacen en humo. Sin máscara ni nada que brille.
+
+**Casi no se ve**, y así tiene que ser:
+
+- En la oscuridad solo se **intuye**: el fondo de detrás tiembla un poco (como aire caliente) y se oscurece; los bordes sueltan un humo apenas más claro que el negro. Donde hay algo de luz detrás (una luz de emergencia, el suelo que alumbra la linterna), recorta una silueta negra.
+- **Se nota más con el rabillo del ojo que de frente**: mirándola de reojo o a la espalda pinta su negro entero; si el jugador la mira de frente (dentro del cono de la linterna y hasta 55° más allá) se borra casi del todo y solo queda el temblor del fondo (`Stalker.set_gaze`, `HorrorDirector.gaze_at`).
+- **Ojos**: a ratos (cada 2,5–7 s, durante 0,4–1,1 s) dos puntos pálidos y tenues, uno más bajo que el otro. Nunca de frente.
+- **Aparición**: primero solo tiembla el aire (0,5 s); luego la sombra se condensa a saltos, por manchas, como una imagen que no acaba de sintonizar, y se asienta estirada hacia abajo (1,6 s en total). A veces da un tirón de lado y se salta un fotograma; el fotograma 5 de la hoja es un tirón de la cabeza.
+- **Disolución con el haz**: se queda negra entera un instante, se estira hacia arriba como humo que se lleva una corriente, suelta humo negro y unas motas de estática apagadas, y la cinta salta (0,5 s).
+- **Si se va sola** (te alcanza, se cansa): se hunde un poco y se apaga a saltos; el temblor del aire es lo último en irse.
+
+Arte: `tools/art/entity.py` genera `assets/sprites/horror/entity.png`, que no es una imagen sino un mapa de datos (densidad, humo y ojos) que interpreta `shaders/entity_shade.gdshader` (lee la pantalla para deformar el fondo). La sombra que cruza (`PassingShadow`) usa lo mismo, sin ojos.
 
 | Regla | Valor (en `prologo.tres`) |
 |---|---|
@@ -25,7 +36,7 @@ Una figura humanoide de humo, alta y encorvada, con brazos demasiado largos y un
 | Dónde aparece | **detrás**, a 120–170 px sobre el camino que acaba de recorrer el jugador, fuera del cono de la linterna (con 40° de margen) |
 | Nunca | en una sala iluminada (cerca de un fluorescente encendido), en paredes, a la vista del haz |
 | Cómo se mueve | sigue el **mismo camino** que el jugador (no atraviesa paredes); mantiene unos 70 px mientras andas, acelera si se queda atrás y se acerca despacio si te paras |
-| Si el haz la toca | se deshace en estática (0,5 s), chispas, fallo de cinta, sonido; −1 Mente |
+| Si el haz la toca | se estira y se deshace en humo (0,5 s), motas de estática, fallo de cinta, sonido; −1 Mente |
 | Si te alcanza sin mirarla | susurro, fallo de cinta, −3 Mente; se desvanece |
 | Si cruzas una puerta, se abre un texto o salta un evento | se desvanece |
 | Si nada de eso pasa | se cansa a los 14–22 s |
@@ -70,7 +81,8 @@ Overlay entre el mundo y la interfaz (no tapa el HUD ni los textos). Se reduce c
 
 | Argumento (tras `--`) | Qué hace |
 |---|---|
-| `--stalker` | La entidad aparece enseguida a la espalda y sigue al jugador aunque esté quieto (para capturas); con `--aim=` hacia ella se deshace |
+| `--stalker` | La entidad aparece enseguida a la espalda y sigue al jugador aunque esté quieto (para capturas); con `--aim=` hacia ella se deshace. `--stalker=0` la fija «de reojo» y `--stalker=1` «de frente» (para comparar) |
+| `--stalker-eyes` | Con `--stalker`: los ojos siempre encendidos (para capturas) |
 | `--scare=id` | Lanza ese susto al segundo de empezar |
 | `--body=N` / `--mind=N` / `--bleed` | Fija las constantes al empezar |
 | `--use=id@S` | Usa ese objeto de la custodia a los S segundos (con `--give=venda`) |

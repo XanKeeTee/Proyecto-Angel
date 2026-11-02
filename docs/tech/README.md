@@ -31,7 +31,7 @@ Arquitectura del código: [arquitectura.md](arquitectura.md). Diseño: [prologo.
 
 - **Escena principal**: `res://scenes/ui/title/title_screen.tscn` (título → Nueva partida / Continuar).
 - **El hospital**: `res://scenes/world/hospital/hospital.tscn` + `hospital.gd` (guion), que hereda de `WorldController`.
-- **Opciones** (`autoload/settings.gd`, menú en `scenes/ui/options_menu.gd`): volúmenes por canal de audio (`Ambiente`, `Música`, `Efectos` e `Interfaz`, que van al `Master`, con un limitador), brillo (gamma en el shader VHS), intensidad del filtro, pantalla completa y velocidad del texto. Se guardan en `user://settings.cfg`.
+- **Opciones** (`autoload/settings.gd`, menú en `scenes/ui/options_menu.gd`): volúmenes por canal de audio (`Ambiente`, `Música`, `Efectos` e `Interfaz`; los buses y sus efectos, en `AudioBuses`: ver [sonidos.md](sonidos.md)), «Eco de las salas» (encendido/apagado), brillo (gamma en el shader VHS), intensidad del filtro, pantalla completa y velocidad del texto. Se guardan en `user://settings.cfg`.
 - **Guardado**: en las grabadoras de cinta (control de enfermería y sala eléctrica), en `user://saves/slot_0.json`.
 
 ### Depuración
@@ -90,7 +90,7 @@ python -I tools/art/tiles_doors.py
 El generador del hospital y el de datos del prólogo se ejecutan como escena (no con `-s`) porque necesitan los autoloads.
 
 Aparte (no los llama `build_all.py`):
-- `python -I tools/art/entity.py`: la entidad del terror ambiental y el fotograma de cara (`assets/sprites/horror/`).
+- `python -I tools/art/entity.py`: la entidad del terror ambiental (un mapa de datos para `shaders/entity_shade.gdshader`, no una imagen) y el fotograma de cara (`assets/sprites/horror/`).
 
 Sonido y música de Freesound (`python3 -I tools/audio/freesound.py check|fetch`): [sonidos.md](sonidos.md). `sounds.py` solo crea los WAV provisionales que falten.
 
