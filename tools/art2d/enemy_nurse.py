@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import palette  # noqa: E402,F401
 from pen import Pen  # noqa: E402
-from px2d import Part, compose, lerp, rotsprite  # noqa: E402
+from px2d import Part, compose, lerp, rotsprite, sheet  # noqa: E402
 
 W, H = 200, 260
 ORIGIN = (100, 252)
@@ -80,13 +80,10 @@ def _arm_flesh(pen: Pen, sh, el, wr, upper, fore, shadow_side: str = "l"):
     pen.limb(sh, el, upper, "skin_grey", 2)
     pen.limb(el, wr, fore, "skin_grey", 2)
     other = "r" if shadow_side == "l" else "l"
-    lit_u = [(t, a * 0.45, b * 0.45) for t, a, b in _half(upper, other, -0.35)]
-    lit_f = [(t, a * 0.45, b * 0.45) for t, a, b in _half(fore, other, -0.35)]
     pen.limb(sh, el, _half(upper, shadow_side, -0.25), "skin_grey", 1, inside=True)
     pen.limb(el, wr, _half(fore, shadow_side, -0.25), "skin_grey", 1, inside=True)
     pen.limb(sh, el, _half(upper, other, -0.55), "skin_grey", 3, inside=True)
     pen.limb(el, wr, _half(fore, other, -0.55), "skin_grey", 3, inside=True)
-    _ = (lit_u, lit_f)
     ux, uy = _unit(sh, el)
     nx, ny = uy, -ux                                  # normal izquierda (como en px2d.limb)
     sgn = 1 if shadow_side == "l" else -1
@@ -390,7 +387,7 @@ def arm_l(pose: dict, breath: float = 0.0) -> Part:
     return pen.part
 
 
-def head(breath: float = 0.0, tilt: float = 0.0) -> Part:
+def head(breath: float = 0.0) -> Part:
     """Cabeza: máscara de porcelana agrietada sobre los ojos y mascarilla cosida a la cara."""
     pen = Pen(Part(W, H, "head"), dy=breath)
     cx = 100
@@ -452,11 +449,7 @@ def head(breath: float = 0.0, tilt: float = 0.0) -> Part:
     pen.px(100, 72, "blood", 1)
     pen.px(100, 74, "blood", 2)
     pen.part.rim(0, 1, 1, delta=-1)
-    part = pen.part
-    if tilt:
-        im = compose([part], (W, H), outline=False)
-        _ = im  # la inclinación se aplica en el montaje sobre la imagen ya contorneada
-    return part
+    return pen.part
 
 
 def stump_arm_r(pose: dict) -> Part:
@@ -545,8 +538,7 @@ def parts_sheet() -> Image.Image:
     """Las piezas por separado (como las usaría el sistema de mutilaciones)."""
     p = pose_idle(0)
     items = [leg(-1, p), leg(1, p), body(p), arm_r(p), arm_l(p), head(), stump_arm_r(p)]
-    return Image.merge("RGBA", compose([items[0]], (W, H)).split()) if False else \
-        __import__("px2d").sheet([[compose([it], (W, H)) for it in items]], bg=(24, 22, 26), gap=4)
+    return sheet([[compose([it], (W, H)) for it in items]], bg=(24, 22, 26), gap=4)
 
 
 if __name__ == "__main__":
