@@ -129,3 +129,14 @@ Se piden con `Sfx.at` en fotogramas concretos (`motion.GETUP_SOUNDS`). Mientras 
 | `bare_feet_floor` | Pies descalzos que se apoyan en suelo de baldosa, peso que cae con cuidado, 0,5–1 s. |
 
 `bed_creak` ya existe (crujido de la camilla).
+
+## Depuración
+
+Además de las opciones de `WorldController.DEBUG_ARGS_HELP`, el jugador lee:
+`--walk=grados` (anda sin parar hacia ese ángulo de pantalla; con `--aim=` se prueba el paso de
+espaldas o el lateral), `--act=acción` (repite una acción) y `--weapon=id` (pone en la mano el
+icono de ese objeto). Ejemplo:
+
+```bash
+"$GODOT_BIN" --path . res://scenes/world/hospital/hospital.tscn -- --skip-intro --at=30,15 --aim=90 --walk=0 --give=linterna,pilas
+```
