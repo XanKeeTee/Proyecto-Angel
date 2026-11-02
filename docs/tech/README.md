@@ -55,6 +55,8 @@ Con argumentos tras `--`, el título salta directamente al hospital:
 | `--auto-advance=S` | Los textos avanzan solos |
 | `--screenshot=RUTA` y `--screenshot-delay=S` | Captura y cierra. **Abre una ventana** |
 | `--no-vhs` | Sin filtro |
+| `--open-doors` | Abre todas las puertas (para comprobar los pasos) |
+| `--loot-seed=N` | Semilla del botín aleatorio en partida nueva (misma semilla, mismo botín) |
 
 ### Regenerar contenido
 
@@ -62,10 +64,12 @@ Cada generador recrea sus archivos desde cero. Si se ha retocado algo a mano en 
 
 ```bash
 python -I tools/art/build_all.py
+python -I tools/art/tiles_doors.py
 "$GODOT_BIN" --headless --path . --import
 "$GODOT_BIN" --headless --path . res://tools/levels/build_wear.tscn
 "$GODOT_BIN" --headless --path . -s tools/data/build_items.gd
 "$GODOT_BIN" --headless --path . -s tools/data/build_documents.gd
+"$GODOT_BIN" --headless --path . res://tools/data/build_prologue_data.tscn
 "$GODOT_BIN" --headless --path . res://tools/levels/build_player.tscn
 "$GODOT_BIN" --headless --path . res://tools/levels/build_hospital.tscn
 ```
@@ -73,10 +77,11 @@ python -I tools/art/build_all.py
 1. `build_all.py` genera el arte (tiles, personaje, objetos, iconos), los sonidos y las imágenes de documentos.
    - Por partes: `python -I tools/art/character.py [capa ...]` rehace el cuerpo y las prendas (unos 4 min, usa todos los núcleos); `python -I tools/art/items.py [id ...]` rehace iconos y vistas del inspector.
    - `build_wear` crea los objetos de ropa (`data/items/`) y la textura con normales de cada prenda puesta.
+   - `tiles_doors.py` genera el marco y la hoja de las puertas (`assets/tilesets/door_frame.png`) y el suelo de los pasos (`hospital_doors.png`).
 2. `--import` hace que Godot importe todo eso.
-3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_player` la escena del protagonista y `build_hospital` la del hospital.
+3. `build_items` crea los objetos y recetas, `build_documents` los documentos, `build_prologue_data` el plan de botín (`data/loot/prologo.tres`) y los pensamientos (`data/thoughts/prologo.tres`), `build_player` la escena del protagonista y `build_hospital` la del hospital.
 
-El generador del hospital se ejecuta como escena (no con `-s`) porque necesita los autoloads.
+El generador del hospital y el de datos del prólogo se ejecutan como escena (no con `-s`) porque necesitan los autoloads.
 
 ### Notas
 
@@ -84,16 +89,25 @@ El generador del hospital se ejecuta como escena (no con `-s`) porque necesita l
   - los tiles con `solid = true` tienen polígono de colisión en la capa de física del tileset;
   - los muebles con `Interactable.blocks` tienen un `StaticBody2D` llamado `Body` con la huella de su `footprint`.
 - **Casillas de interacción**: `Interactable.interact_cells`, si está, sustituye a `footprint` para interactuar (p. ej. un escritorio con el ordenador en una casilla y los cajones en la otra).
-- **Puertas entre salas**: las de la pared norte cambian sus 4 tiles (3 de puerta y el umbral del otro lado) y llevan al otro lado con un fundido (`Door.warp_*`).
-- **Sombras**: solo las tapas de muro, el umbral cerrado y una franja de la puerta cerrada tienen oclusor; los muebles llevan un `LightOccluder2D` llamado `Shadow`.
+- **Puertas entre salas**: se cruzan andando. Entre una sala y el pasillo hay 4 casillas de muro (remate + 3 tramos de pared); en la columna de la puerta esas 4 casillas son suelo de paso (`hospital_doors.png`, sin colisión). La `Door` lleva:
+  - `Sprite2D`: marco, dintel, remate y hoja (`door_frame.png`, fotograma cerrado/abierto según el estilo de pared). Su nodo está en el **pie del muro** y la puerta tiene `y_sort_enabled`, así que si los pies del jugador están dentro del hueco el marco se dibuja por encima: parece que pasa por debajo del dintel;
+  - `Body`: colisión de las 4 casillas, activa solo con la puerta cerrada;
+  - `Occluder`: tapa la luz en la casilla del remate, solo con la puerta cerrada.
+  Si una puerta se cierra (o la cierra un evento) con el jugador dentro del hueco, sale al lado más cercano; desde dentro no se ofrece «Cerrar». Las **escaleras** siguen cambiando de planta con `Door.warp_front_to`: el jugador sigue andando hacia el hueco mientras funde a negro, se oyen pasos y vuelve la imagen.
+- **Sombras**: los tiles de remate tienen oclusor completo (capa de oclusión con máscara `LightLayers.WALL_OCCLUDERS`); las caras de la pared no, para que la luz las ilumine desde delante. Los muebles llevan un `LightOccluder2D` llamado `Shadow` con máscara `LightLayers.PROP_OCCLUDERS`. Ver `scripts/systems/lighting/light_layers.gd`.
 - **Mapas de normales**: cada sprite y el tileset usan un `CanvasTexture` (`*_canvas.tres`). Las luces llevan `height` alto (70–110).
-- **Capas de luz** (`light_mask`):
+- **Capas de luz** (`light_mask`, constantes en `LightLayers`). En Godot 2D, `shadow_item_cull_mask` elige a la vez qué oclusores usa una luz y qué objetos reciben su sombra; por eso los muros y los muebles ocluyen en capas distintas:
 
-  | Capa | Qué | La linterna lo ilumina | Recibe sombras |
-  |---|---|---|---|
-  | 1 | Suelo, paredes, calcomanías, polvo | Sí | Sí |
-  | 2 | Protagonista | No (la lleva él) | No |
-  | 4 | Muebles | Sí | No |
+  | Capa | Qué | La linterna lo ilumina | Recibe sombra de muros | Recibe sombra de muebles |
+  |---|---|---|---|---|
+  | 1 | Suelo, paredes, marcos de puerta, calcomanías | Sí (luz principal) | Sí | Sí (linterna) |
+  | 2 | Protagonista | No (la lleva él) | No | No |
+  | 4 | Muebles | Sí (luz gemela `FlashlightProps`) | Sí | No (un mueble no se oscurece a sí mismo) |
+  | 8 | Solo oclusores de muebles | — | — | — |
+
+  La linterna son dos luces: la principal (capa 1, sombras de muros y muebles) y una gemela hija (`LightMirror`, capa 4, sombras solo de muros). La luz rebotada no puede quedar al otro lado de un muro: `BounceClamp` la acerca hasta el obstáculo con un rayo por el suelo. Las luces fijas (techo, emergencia, monitor) y el halo usan sombras de muros sobre suelo y muebles. `LightLayers.setup_player()` lo prepara al cargar el mapa (no hace falta regenerar el jugador).
+- **Orden de dibujo** (`build_hospital._setup_draw_order`): el mapa va en z −2; calcomanías, papeles en el suelo y apliques de pared en z −1; el resto, ordenado por Y en `World`. Cada mueble con colisión se ordena por el **borde norte de su colisión** (el sprite se mueve a ese punto y su `offset` lo compensa): el jugador queda detrás solo si sus pies están por detrás del mueble; delante y a los lados, por delante. Lo que está encima de otro mueble (teléfono, ordenador) va justo después de él. Vale para cualquier nodo de `World` con `Sprite2D` y `Body` (también el decorado).
+- **Interacción**: `InteractionPicker` elige el objeto por cercanía (pies → borde de la casilla, máx. 26 px) y por ángulo con la mirada (máx. 80°). El enfocado lleva un contorno tenue (`FocusOutline`, `shaders/focus_outline.gdshader`). Con varias acciones, E abre una elección. Los objetos clave destellan (`Glint`) mientras tienen algo dentro o cuando llevas lo que les falta (`Interactable.wants_attention`). Cada acción tiene un gesto (`Interactable.anim_for`, `interact_anim`, `ItemUse.anim`): el cambio de estado y el sonido llegan cuando la mano toca el objeto (`WorldController.ACTION_CONTACT`, o la señal `action_contact` del jugador si existe).
 
 - **Animación del protagonista**: 64 columnas × 8 orientaciones (ver la guía estética). El paso avanza con la distancia recorrida de verdad; los giros pasan por las orientaciones intermedias; tras un rato quieto, un gesto. La luz de la linterna sale de la lente: `Player.lens_frames` guarda su posición en cada fotograma. El origen de la linterna por orientación sale de `sprite_meta.json` (`lens`).
 - **Apuntar**: el jugador mira hacia el ratón (o el stick derecho) desde la altura del pecho; si no hay ninguno, hacia donde camina. De lado va al 85 % y de espaldas al 62 %, con el paso al revés. `Player.forced_aim` fija la dirección para pruebas y escenas guionizadas. `AimReticle` dibuja el punto de mira y oculta el cursor del sistema solo mientras se explora.

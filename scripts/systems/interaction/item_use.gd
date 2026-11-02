@@ -19,6 +19,8 @@ extends Resource
 @export_multiline var text: String = ""
 ## Fotograma del sprite tras usarlo (-1 = sin cambio).
 @export var frame_after: int = -1
+## Gesto del protagonista (Interactable.ANIM_*). Vacío = el del objeto (o llave, si es una llave).
+@export var anim: StringName = &""
 
 
 func action_label() -> String:

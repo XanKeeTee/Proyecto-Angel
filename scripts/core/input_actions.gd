@@ -12,6 +12,8 @@ const EXAMINE: StringName = &"examine"
 const FLASHLIGHT: StringName = &"flashlight"
 const CUSTODY: StringName = &"custody"
 const PAUSE: StringName = &"pause"
+## Pensar: lo que el protagonista sabe que tiene que hacer ahora.
+const THOUGHTS: StringName = &"thoughts"
 const POCKETS: Array[StringName] = [&"pocket_1", &"pocket_2", &"pocket_3", &"pocket_4", &"pocket_5"]
 
 
@@ -25,6 +27,7 @@ static func setup() -> void:
 	_action(FLASHLIGHT, [KEY_F], [JOY_BUTTON_Y])
 	_action(CUSTODY, [KEY_TAB, KEY_I], [JOY_BUTTON_BACK])
 	_action(PAUSE, [KEY_ESCAPE], [JOY_BUTTON_START])
+	_action(THOUGHTS, [KEY_T], [JOY_BUTTON_LEFT_SHOULDER])
 	var keys: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]
 	for i: int in POCKETS.size():
 		_action(POCKETS[i], [keys[i]], [])

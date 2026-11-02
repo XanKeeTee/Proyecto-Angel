@@ -163,3 +163,128 @@ func test_todo_es_alcanzable() -> void:
 			unreachable.append(String(it.object_id))
 	check(unreachable.is_empty(), "objetos inalcanzables: " + ", ".join(unreachable))
 	await _teardown()
+
+
+## Mantiene pulsada una acción de movimiento hasta llegar a la fila `row` (o agotar el tiempo).
+func _walk(action: StringName, row: int, seconds: float) -> void:
+	Input.action_press(action)
+	var waited: float = 0.0
+	while waited < seconds and world.player.cell.y != row:
+		await host.get_tree().physics_frame
+		waited += 1.0 / Engine.physics_ticks_per_second
+	Input.action_release(action)
+	for i: int in 6:
+		await host.get_tree().physics_frame
+
+
+func test_puertas_se_cruzan_andando() -> void:
+	await _setup()
+	var door: Door = world.find_object(&"puerta_hab09") as Door
+	var body: CollisionObject2D = door.get_node("Body") as CollisionObject2D
+	var occluder: LightOccluder2D = door.get_node("Occluder") as LightOccluder2D
+	check(not door.is_open and body.process_mode != Node.PROCESS_MODE_DISABLED and occluder.visible, "cerrada: choca y tapa la luz")
+	var frame: Sprite2D = door.get_node("Sprite2D") as Sprite2D
+	check_eq(frame.global_position.y, float((door.base_cell().y + 1) * 32), "el marco se ordena por el pie del muro")
+	world.player.place(Vector2i(4, 21), Vector2i.UP)
+	world.player.input_enabled = true
+	await _walk(InputActions.MOVE_UP, 16, 1.5)
+	check_eq(world.player.cell.y, 21, "con la puerta cerrada no se pasa")
+	door.perform(Interactable.ACT_OPEN, GameState.character)
+	check(body.process_mode == Node.PROCESS_MODE_DISABLED and not occluder.visible, "abierta: ni choca ni tapa la luz")
+	await _walk(InputActions.MOVE_UP, 16, 4.0)
+	check_eq(world.player.cell, Vector2i(4, 16), "se cruza andando hasta el pasillo, sin fundido")
+	await _walk(InputActions.MOVE_DOWN, 22, 4.0)
+	check_eq(world.player.cell, Vector2i(4, 22), "y se vuelve andando a la habitación")
+	# Si se cierra sola con el jugador dentro del hueco, sale hacia el lado más cercano.
+	world.player.place(Vector2i(4, 19), Vector2i.UP)
+	check(world.actions_for(door).all(func(a: Dictionary) -> bool: return a["id"] != Interactable.ACT_CLOSE), "no se ofrece cerrar desde dentro")
+	door.force_state(false)
+	check(not door.passage_cells().has(world.player.cell), "una puerta que se cierra no atrapa al jugador")
+	await _teardown()
+
+
+func test_botin_fijo_y_semilla_guardada() -> void:
+	await _setup()
+	var state: Dictionary = GameState.object_state(LootRoller.STATE_KEY)
+	check(state.has("seed") and int(state["seed"]) >= 0, "la semilla se guarda en la partida")
+	var expect: Dictionary = {"mesita_09": "linterna", "taquilla_almacen": "palanca", "bandeja_quirofano": "destornillador",
+		"cama_11": "llave_botiquin", "botiquin_enfermeria": "llave_archivo", "estanteria_archivo": "fusible",
+		"escritorio_archivo": "llave_sotano", "estanteria_taller": "valvula_averiada"}
+	for id: String in expect:
+		var found: bool = false
+		for e: LootEntry in world.find_object(StringName(id)).contents:
+			if e.item != null and e.item.id == StringName(expect[id]):
+				found = true
+		check(found, "%s sigue teniendo %s" % [id, expect[id]])
+	var bed: Interactable = world.find_object(&"cama_09")
+	for e: LootEntry in bed.contents:
+		check(e.document != null, "debajo de tu cama ya no hay ropa fija")
+	# Misma semilla al recargar: mismo contenido.
+	var before: PackedStringArray = _contents(["taquilla_07", "carro_lavanderia_2", "mesita_12"])
+	world.queue_free()
+	await host.get_tree().process_frame
+	world = load(SCENE).instantiate()
+	host.add_child(world)
+	await host.get_tree().process_frame
+	check_eq(_contents(["taquilla_07", "carro_lavanderia_2", "mesita_12"]), before, "al volver a cargar el mapa sale el mismo botín")
+	check(world.find_object(&"mesita_09").has_node("Glint"), "la mesita de la linterna destella")
+	var sprite: Sprite2D = world.find_object(&"cama_09").get_node("Sprite2D") as Sprite2D
+	check(is_equal_approx(sprite.global_position.y, world.find_object(&"cama_09").position.y - 32 - 12), "la cama se ordena por el borde de atrás")
+	await _teardown()
+
+
+func test_gestos_por_tipo_de_objeto() -> void:
+	await _setup()
+	var expect: Array = [
+		["mesita_09", Interactable.ACT_OPEN, Interactable.ANIM_REACH_LOW],
+		["taquilla_almacen", Interactable.ACT_OPEN, Interactable.ANIM_REACH_MID],
+		["estanteria_archivo", Interactable.ACT_SEARCH, Interactable.ANIM_REACH_HIGH],
+		["estanteria_taller", Interactable.ACT_SEARCH, Interactable.ANIM_REACH_LOW],
+		["parte_control", Interactable.ACT_READ, Interactable.ANIM_PICKUP],
+		["puerta_hab09", Interactable.ACT_OPEN, Interactable.ANIM_REACH_MID],
+		["puerta_archivo", Interactable.ACT_UNLOCK, Interactable.ANIM_KEY],
+		["puerta_quirofano", &"item:0", Interactable.ANIM_PRY],
+		["generador", Interactable.ACT_DEVICE, Interactable.ANIM_LEVER],
+		["generador", &"item:0", Interactable.ANIM_VALVE],
+		["cuadro_electrico", &"item:1", Interactable.ANIM_REACH_MID],
+		["mesita_09", Interactable.ACT_EXAMINE, &""],
+	]
+	for row: Array in expect:
+		check_eq(world.find_object(StringName(row[0])).anim_for(row[1]), row[2], "gesto de %s · %s" % [row[0], row[1]])
+	await _teardown()
+
+
+## Con un protagonista que tiene `play_action` (contrato con el agente del personaje), el cambio
+## de estado llega cuando la mano toca el objeto, no antes.
+func test_el_cambio_llega_al_tocar() -> void:
+	GameState.new_game()
+	world = load(SCENE).instantiate()
+	var fake: GDScript = GDScript.new()
+	fake.source_code = "extends \"res://scenes/world/player/player.gd\"\nsignal action_contact\nvar gestures: Array = []\n" \
+		+ "func play_action(action: StringName, _target: Vector2) -> void:\n\tgestures.append(action)\n" \
+		+ "\tawait get_tree().create_timer(0.3).timeout\n\taction_contact.emit()\n\tawait get_tree().create_timer(0.3).timeout\n"
+	fake.reload()
+	var player: Node = world.find_child("Player", true, false)
+	player.set_script(fake)
+	host.add_child(world)
+	world.message.auto_advance = 0.01
+	await host.get_tree().process_frame
+	var drawer: Interactable = world.find_object(&"mesita_09")
+	world.player.place(Vector2i(3, 23), Vector2i.UP)
+	var run: Callable = func() -> void: await world._perform(drawer, Interactable.ACT_OPEN)
+	run.call()
+	await host.get_tree().create_timer(0.15).timeout
+	check(not drawer.is_open, "antes de tocar, el cajón sigue cerrado")
+	await host.get_tree().create_timer(0.3).timeout
+	check(drawer.is_open, "al tocar, se abre")
+	check_eq(world.player.get("gestures"), [&"reach_low"], "gesto de cajón bajo")
+	await host.get_tree().create_timer(1.0).timeout
+	await _teardown()
+
+
+func _contents(ids: Array) -> PackedStringArray:
+	var result: PackedStringArray = []
+	for id: String in ids:
+		for e: LootEntry in world.find_object(StringName(id)).contents:
+			result.append("%s:%s" % [id, e.item.id if e.item != null else &"doc"])
+	return result
