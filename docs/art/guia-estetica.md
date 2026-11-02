@@ -95,7 +95,7 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 
 ### Iconos de objetos
 
-- Miden lo mismo que sus casillas en la bandeja (`casillas × 30 − 4` px) y el objeto llena el recuadro.
+- Miden `size × 36 − 4` px según la forma del objeto (`ItemDef.ICON_CELL`) y el objeto llena el recuadro. Las listas de la custodia los reducen a miniaturas (`ItemThumbs`); el panel de detalles usa la primera vista del inspector.
 - Detalle a escala real: moleteado, estrías, roscas, etiquetas con líneas de texto, graduaciones, tornillería, dientes de llave, pintura desconchada.
 - Metal, cristal y plástico llevan brillo especular. Tramado suave (menos que en el mapa).
 - La ropa se dibuja con el mismo modelo que lleva puesto el personaje, sin cuerpo.

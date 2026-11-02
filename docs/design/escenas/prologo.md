@@ -115,7 +115,7 @@ La medicación sigue igual de escasa: analgésicos (2 garantizados + tablas); je
 
 ## Ropa
 
-Desde la pestaña **PERSONAJE** de la Custodia se ve al protagonista con lo que lleva y se cambia la ropa como en un RPG: cuatro ranuras (cabeza, cuerpo, piernas, pies). La ropa puesta no ocupa sitio en la bandeja; lo que se quita vuelve a ella (si no cabe, no se cambia). Desde la bandeja también se puede usar «Ponerse» (E).
+Desde la pestaña **EQUIPO** de la Custodia se ve al protagonista con lo que lleva y se cambia la ropa y las armas como en un RPG (al estilo de *Fear & Hunger*): manos derecha e izquierda, cabeza, cuerpo, piernas y pies, con sus estadísticas. La ropa puesta sale de la lista; lo que se quita vuelve a ella. Desde OBJETOS › Armaduras también se puede usar «Ponerse» (E).
 
 Empieza con la bata de paciente, descalzo. Prendas del prólogo `[PROPUESTA]`:
 
@@ -135,7 +135,7 @@ Por ahora el efecto es visual y de sonido; no cambian estadísticas.
 
 ## Supervivencia en el prólogo
 
-- **Linterna**: batería limitada. Con poca carga amarillea, se debilita y parpadea. Indicador en el HUD. Se enciende con F o con su bolsillo.
+- **Linterna**: batería limitada. Con poca carga amarillea, se debilita y parpadea. Indicador en el HUD. Se enciende con F o con su atajo (1-5).
 - **Sangrado**: al bajar al sótano «se abren los puntos». El Cuerpo baja poco a poco hasta que se venda. Una venda contaminada corta la hemorragia, pero resta Cuerpo y Mente.
 - **Cuerpo bajo**: caminas más despacio y la imagen se enrojece.
 - **Mente**: baja con los sucesos. Con la Mente baja se oyen susurros, pasos y golpes que no existen, y hay más distorsión de cinta. Se recupera con sedante.

@@ -30,7 +30,7 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scripts/core/registry.gd` | Carga por id todo lo que hay en `data/items`, `data/documents` y `data/recipes` |
 | `scripts/ui/ui_style.gd` | Colores, fuentes (`ui`, `ui_bold`, `pixel`, `mono`, `hand`) y tamaños de la interfaz |
 | `scripts/core/input_actions.gd` | Acciones de teclado y mando |
-| `scripts/systems/inventory/` | `Custody` (bandeja 5×4, bolsillos, expediente, descartar, recetas descubiertas), `Crafting` (fabricar y rasgar) e `ItemSounds` (sonidos de los objetos por material) |
+| `scripts/systems/inventory/` | `Custody` (lista de objetos por categorías sin límite, atajos 1-5, expediente, descartar, recetas descubiertas; lee partidas antiguas con bandeja), `Crafting` (fabricar y rasgar) e `ItemSounds` (sonidos de los objetos por material) |
 | `scripts/systems/world/` | `WorldController`, `CustodyWorldLink` (objetos descartados al suelo, arma en la mano y sonidos de uso) y `DroppedItem` (objeto suelto recogible) |
 | `scripts/systems/survival/` | `Vitals`: Cuerpo, Mente y sangrado |
 | `scripts/systems/interaction/` | `Interactable`, `Door` (puertas que se cruzan andando), `LootEntry`, `ItemUse`, `InteractionPicker` (qué objeto se enfoca), `FocusOutline` y `Glint` (contorno y destello) |
@@ -40,9 +40,10 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 | `scripts/systems/horror/` | Terror ambiental aleatorio: `HorrorDirector` (se crea con una línea desde el mapa), `ScarePlanner` + `ScareDef` (sustos pequeños como datos, en `data/horror/`), `Stalker` (la entidad que sigue al jugador) y `PassingShadow`. Ver [terror-ambiental.md](../design/sistemas/terror-ambiental.md) |
 | `scripts/systems/lighting/` | Luces con corriente y parpadeo (`PoweredLight`); capas de luz y sombra (`LightLayers`), luz gemela (`LightMirror`) y rebote que no cruza muros (`BounceClamp`) |
 | `scripts/systems/audio/` | `Sfx` (sonidos posicionales y de interfaz), `MusicPlayer` (música en bucle con fundidos, bus `Música`) y `Soundscape` (paisaje sonoro por datos: `SoundscapeDef`/`AmbientSoundDef` en `data/audio/`) |
-| `scripts/systems/character/` | `CharacterState`: custodia, constantes, linterna, ropa puesta (`equip`, `unequip`, `worn`), arma (`wield`, `unwield`, `wielded`) y `discard` |
-| `scenes/ui/custody/` | Pantalla del Sistema de Custodia (bandeja, fabricar, expediente y personaje) |
-| `scenes/ui/hud/` | Indicador de interacción, bolsillos y batería |
+| `scripts/systems/character/` | `CharacterState`: custodia, constantes, linterna, ropa puesta (`equip`, `unequip`, `worn`, `defense`), manos (`wield`/`wielded` derecha, `wield_offhand`/`offhand` izquierda) y `discard` |
+| `scenes/ui/custody/` | Pantalla del Sistema de Custodia: `CustodyScreen` (pestañas, fabricar, expediente), `ItemsPage` (lista por categorías), `EquipmentPage` (ranuras y estadísticas), `OutfitPreview` (retrato con caché) y `RowList` (lista dibujada para teclado, ratón y mando) |
+| `scripts/ui/` | `UiStyle` y `ItemThumbs` (miniaturas de los objetos, en caché) |
+| `scenes/ui/hud/` | Indicador de interacción, atajos 1-5 y batería |
 | `scenes/ui/` | Caja de texto, inspector de objetos, lector de documentos, menús |
 | `scenes/ui/status_fx/` | `StatusFx`: efectos de pantalla de herida, sangrado, Mente baja y cura (shader `shaders/status_fx.gdshader`) |
 | `scenes/ui/title/` | Pantalla de título: fondo animado (`TitleBackground`: la escena del hospital sin su script de `WorldController`, sin jugador, eventos ni ambiente, en un `SubViewport` con cámara fija en la Habitación 09), rótulos de vídeo (`TapeOsd`), paneles de Cargar y Créditos (`TitlePanel`) |
@@ -60,9 +61,9 @@ Cómo está organizado el código del prólogo y cómo se amplía. Las convencio
 
 `SaveSystem.save_game()` escribe un JSON con:
 - la posición del jugador;
-- el inventario (bandeja, bolsillos, documentos y recetas descubiertas);
+- el inventario (lista de objetos, atajos, documentos y recetas descubiertas; ver [custodia](../design/sistemas/custodia.md#guardado));
 - las constantes vitales y la carga de la linterna;
-- la ropa puesta (ranura → id de objeto) y el arma empuñada (id y bolsillo o casilla);
+- la ropa puesta (ranura → id de objeto) y lo que lleva en cada mano (id y posición en la lista);
 - los objetos descartados en el suelo (`objects["dropped_items"]`: escena, posición y estado del montón);
 - el estado de cada objeto del mundo (por `object_id`);
 - las banderas de eventos;

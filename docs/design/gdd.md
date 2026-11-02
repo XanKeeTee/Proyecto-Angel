@@ -69,8 +69,8 @@ Vista cenital estilo RPG Maker con paredes de 3 casillas y proporciones realista
 
 ## 9. Interfaz
 
-- **Sistema de Custodia** (inventario): bandeja 5×4 con tamaños, bolsillos de acceso rápido y expediente personal. Ver [sistemas/custodia.md](sistemas/custodia.md).
-- HUD mínimo: indicador de interacción, bolsillos, batería y avisos breves; se esconde solo.
+- **Sistema de Custodia** (inventario, al estilo de *Fear & Hunger*): lista por categorías sin límite de espacio, pantalla de equipo con ranuras y estadísticas, atajos 1-5 y expediente personal. Ver [sistemas/custodia.md](sistemas/custodia.md).
+- HUD mínimo: indicador de interacción, atajos, batería y avisos breves; se esconde solo.
 
 ## 10. Alcance y prioridades
 
