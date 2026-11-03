@@ -9,3 +9,4 @@ power = 13
 accuracy = 65
 damage_type = 1
 two_handed = true
+reach = 2

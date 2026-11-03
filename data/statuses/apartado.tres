@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_qoo8c"]
+
+[resource]
+script = ExtResource("1_qoo8c")
+id = &"apartado"
+display_name = "Apartado"
+description = "Lo han apartado de un empujón: si aún no había actuado, pierde su golpe."
+rounds = 1
+loses_next_action = true
+skip_text = "%s recupera el equilibrio y vuelve a acercarse."
+breaks_holds = true
+apply_text = "%s sale despedido hacia atrás."

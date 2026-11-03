@@ -31,6 +31,8 @@ extends Resource
 @export var crawl_only: bool = false
 ## Reacción: lo elige con prioridad la ronda siguiente a perder (romper o amputar) una parte.
 @export var reaction: bool = false
+## Tácticas: peso extra cuando se cumple una condición (el objetivo sangra, está en el suelo…).
+@export var bonuses: Array[AttackBonus] = []
 
 @export_group("Efectos")
 ## Estado que aplica si acierta (o siempre, si es de horror).

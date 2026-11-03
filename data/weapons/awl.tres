@@ -8,3 +8,4 @@ display_name = "Punzón"
 accuracy = 80
 damage_type = 2
 crit_mod = 5
+reach = 0

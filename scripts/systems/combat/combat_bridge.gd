@@ -10,8 +10,11 @@ extends RefCounted
 ## - Heridas: `Vitals.wounds` guarda el estado de cada parte que no está Sana. Al entrar, una parte
 ##   Herida empieza al 50 % de integridad y una Rota a 0; al salir, se guarda el estado de cada parte.
 ##   Las sanas recuperan su integridad entera fuera del combate (cuerpo-y-heridas.md).
-## - Arma: la empuñada (`CharacterState.wielded()`); sin ninguna, Forcejear.
-## - Objetos: los de la custodia que curan (HealEffect); se usan con sus efectos de siempre.
+## - Sangrado: en el combate va por partes; el del mapa entra en el torso (los puntos de la espalda).
+## - Arma: la empuñada (`CharacterState.wielded()`) y la de la mano izquierda (`offhand()`); sin
+##   ninguna, Forcejear.
+## - Objetos: los de la custodia que curan. Si tienen tratamiento de combate (TreatmentDef, por
+##   partes: vendar un brazo, torniquete…) se usa ese; si no, sus efectos de siempre.
 ## Enemigo (Combatant ↔ diccionario del guardado): Cuerpo, sangrado y estado de cada parte, para
 ## que si el jugador huye vuelva con las mismas heridas.
 
@@ -22,6 +25,8 @@ static func build_battle(encounter: EncounterDef, character: CharacterState, ene
 	var party_def: CombatantDef = encounter.party_base.duplicate()
 	var held: ItemStack = character.wielded()
 	party_def.weapon = held.def.weapon if held != null and held.def.weapon != null else null
+	var left: ItemStack = character.offhand()
+	party_def.offhand_weapon = left.def.weapon if left != null and left.def.weapon != null else null
 	var party_defs: Array[CombatantDef] = [party_def]
 	var enemy_defs: Array[CombatantDef] = [encounter.enemy]
 	var battle: Battle = Battle.new(party_defs, enemy_defs, seed_value)
@@ -31,8 +36,26 @@ static func build_battle(encounter: EncounterDef, character: CharacterState, ene
 		apply_enemy_state(battle.enemies[0], enemy_state)
 	battle.item_user = func(actor: Combatant, item: Variant) -> String:
 		return use_item(actor, character, item as ItemStack)
+	battle.item_source = func() -> Array:
+		var stacks: Array = []
+		stacks.assign(combat_items(character))
+		return stacks
+	battle.item_consumer = func(item: Variant) -> void:
+		consume(character, item as ItemStack)
 	battle.bandages = 0
 	return battle
+
+
+## Gasta una unidad de un objeto en combate (tratamiento) y avisa con `EventBus.item_used`.
+static func consume(character: CharacterState, stack: ItemStack) -> void:
+	if stack == null or not character.custody.contains(stack):
+		return
+	var def: ItemDef = stack.def
+	character.custody.consume(stack)
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	var bus: Node = tree.root.get_node_or_null(^"EventBus") if tree != null else null
+	if bus != null:
+		bus.emit_signal(&"item_used", def)
 
 
 ## Vitals → combatiente.
@@ -113,14 +136,20 @@ static func lost_parts(state: Dictionary) -> Array[StringName]:
 	return result
 
 
-## Objetos de la custodia que sirven en combate: los que curan (vendas, analgésicos, sedante…).
+## Objetos de la custodia que sirven en combate: los que tienen tratamiento de combate
+## (TreatmentDef) y los que curan (vendas, analgésicos, sedante…).
 static func combat_items(character: CharacterState) -> Array[ItemStack]:
 	var result: Array[ItemStack] = []
 	var seen: Array[ItemStack] = []
 	for stack: ItemStack in character.custody.items:
-		if stack == null or seen.has(stack) or not stack.def.usable:
+		if stack == null or seen.has(stack):
 			continue
 		seen.append(stack)
+		if CombatCatalog.treatment_for(stack.def.id) != null:
+			result.append(stack)
+			continue
+		if not stack.def.usable:
+			continue
 		for effect: ItemEffect in stack.def.use_effects:
 			if effect is HealEffect:
 				result.append(stack)

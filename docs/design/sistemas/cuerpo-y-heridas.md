@@ -35,7 +35,7 @@ Una parte **Rota** sigue pudiendo recibir golpes: no pierde más integridad, per
 
 ### Amputación
 
-Solo con daño **cortante** y en partes **amputables**. Se amputa si se cumple una de estas condiciones:
+Solo con daño **cortante** y en partes **amputables** (y, a golpes, en las partes `severable_by_blunt` ya Rotas). Se amputa si se cumple una de estas condiciones:
 
 1. El golpe deja la parte a 0 y el **exceso** de daño es ≥ 25 % de su integridad máxima.
 2. La parte ya estaba **Rota** y el golpe hace ≥ 25 % de su integridad máxima.
@@ -49,15 +49,15 @@ Tras una amputación, los ataques dirigidos a esa parte se **redirigen al torso*
 
 | Parte | Herida | Rota | Amputada |
 |---|---|---|---|
-| **Brazo dominante** | −10 acierto con su arma | No puede usar armas de una mano; solo **Forcejear** o armas del otro brazo | Igual que Rota, permanente |
+| **Brazo dominante** | −10 acierto y −15 % de daño con su arma | El arma de una mano pasa a la otra (**mano torpe**: −15 acierto, −25 % daño), o usa la de la otra mano | El arma **se cae**: Forcejear o la de la otra mano; permanente |
 | **Brazo no dominante** | −5 acierto con armas a dos manos | No puede usar armas a dos manos | Igual que Rota, permanente |
 | **Ambos brazos** Rotos/Amputados | — | Solo Forcejear; **no puede usar Objetos** (un aliado sí puede usarlos en él) | Igual, permanente |
-| **Pierna** (una) | AGI −20 % | AGI −50 % | AGI −50 %, permanente |
-| **Ambas piernas** Rotas/Amputadas | — | AGI cuenta como 0; no puede huir | Igual, permanente |
-| **Cabeza** | −10 acierto | −25 acierto; ve las intenciones enemigas como `???`; **Aturdido** 1 ronda al romperse | Solo enemigos: muerte |
+| **Pierna** (una) | AGI −20 %; −5 a huir | AGI −50 %; −15 a huir | AGI −50 %, −15 a huir, permanente |
+| **Ambas piernas** Rotas/Amputadas | — | AGI cuenta como 0; no puede huir; está en el suelo (se le puede rematar) | Igual, permanente |
+| **Cabeza** | −10 acierto; −2 Mente por ronda | −25 acierto; −5 Mente por ronda; ve las intenciones enemigas como `???`; **Aturdido** al romperse | Solo enemigos: muerte |
 | **Torso** | Sangrado: +20 % de probabilidad al recibir golpes | Cada acción propia cuesta 3 de Cuerpo | No amputable |
 
-Los penalizadores se suman. AGI nunca baja de 0.
+Los penalizadores se suman. AGI nunca baja de 0. Los **analgésicos** los anulan mientras duran. Detalle de empuñar con heridas, sangrado por partes y cómo se tratan en combate: [combate.md](combate.md#empuñar-con-heridas-combatantgrip). `[PROPUESTA]`
 
 ## Después del combate (heridas mixtas)
 

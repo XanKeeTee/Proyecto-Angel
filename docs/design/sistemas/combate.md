@@ -3,7 +3,9 @@
 > Estado: `[PROPUESTA]` salvo las decisiones marcadas como **aprobadas**.
 > Relacionado: [cuerpo-y-heridas.md](cuerpo-y-heridas.md) · [el enfermero](../enemigos/enfermero.md) (primer enemigo) · equipamiento (pendiente)
 >
-> Código: reglas en `scripts/systems/combat/` (`Battle`, `Combatant`, `EnemyAI`, `CombatRules`, `CombatBridge`, `EncounterDirector`), datos en `scripts/core/*def.gd` y `data/{enemies,party,body_parts,weapons,statuses}/`, pantalla en `scenes/battle/`.
+> Código: reglas en `scripts/systems/combat/` (`Battle`, `Combatant`, `EnemyAI`, `CombatRules`, `CombatBridge`, `EncounterDirector`; opciones del menú en `BattleMenu` y `BattlePreview`), datos en `scripts/core/*def.gd`, `scripts/core/combat/` (`SkillDef`, `TreatmentDef`, `DamageTypeDef`, `AttackBonus`) y `data/{enemies,party,body_parts,weapons,statuses,skills,treatments,damage_types}/`, pantalla en `scenes/battle/`.
+>
+> Generadores: `tools/data/build_combat_rules.gd` (estados, tipos de daño, habilidades y tratamientos) y después `tools/data/build_enemies.gd` (enfermero, paciente 09, encuentro). Balance: `tools/balance/sim_enfermero.gd`.
 
 ## Decisiones aprobadas
 
@@ -57,7 +59,7 @@ Valores base: **Cuerpo 100**, **Mente 100** para el grupo del jugador. Los enemi
 iniciativa = AGI × 2 + aleatorio_entero(0, AGI) + mod_accion + mods_estados
 ```
 
-- `mod_accion`: Guardia +10, Objeto +5, ataque con arma pesada −5. El resto, 0.
+- `mod_accion`: Objeto +5, ataque con arma de dos manos −5, y el de cada habilidad (Empujón +12, Golpe a la rodilla −10). El resto, 0. La Guardia no tira: va siempre antes que todo.
 - Empate: primero el jugador, luego por orden de la lista del grupo.
 - Las intenciones enemigas se fijan en el paso 1; la iniciativa se tira en el paso 3.
 
@@ -66,16 +68,17 @@ iniciativa = AGI × 2 + aleatorio_entero(0, AGI) + mod_accion + mods_estados
 | Acción | Efecto |
 |---|---|
 | **Atacar** | Elegir enemigo → elegir **parte del cuerpo** → ataque con el arma equipada |
-| **Habilidad** | Técnica de arma, ritual u otra; puede costar Cuerpo, Mente u objetos (no hay barra de magia aparte) |
+| **Habilidad** | Técnica de arma o recurso del cuerpo (ver Habilidades); cuesta Cuerpo o Mente (no hay barra aparte) |
 | **Guardia** | Elegir una **parte propia** o a un **aliado** que cubrir (ver Guardia) |
-| **Objeto** | Usar un objeto consumible (vendas, calmantes…) |
-| **Respirar** | Recupera `10 + VOL` de Mente. Ocupa la acción |
+| **Objeto** | Tratar una herida o tomar algo (ver Tratar heridas en combate) |
+| **Respirar** | (Habilidad) Recupera `10 + VOL` de Mente. Ocupa la acción |
+| **Levantarse / Recobrarse** | Lo único que queda si está **derribado** o **aturdido**: pierde la acción (derribado aún puede **encogerse**: Guardia) |
 | **Zafarse** | Solo si le **sujetan** (estado Agarrado). Ver Estados `[PROPUESTA]` |
 | **Huir** | Intento de huida de todo el grupo (ver Huida) |
 
-En el juego, **Objeto** usa lo que lleva el personaje en la Custodia que cura (vendas, analgésicos, sedante…) con sus efectos de siempre (`CombatBridge.use_item`). El prototipo sin mapa usa vendas genéricas.
+En el juego, **Objeto** usa lo que lleva el personaje en la Custodia. Si el objeto tiene tratamiento de combate (`TreatmentDef`) se aplica **por partes**; si no, con sus efectos de siempre (`CombatBridge.use_item`). El prototipo sin mapa y el simulador usan un inventario de prueba (`Battle.supplies`).
 
-Si un personaje no puede usar su arma (ver brazos en cuerpo-y-heridas), siempre le queda **Forcejear**: ataque débil sin arma (poder 4, contundente) con la parte que le quede.
+Si un personaje no puede usar su arma (ver Empuñar con heridas), siempre le queda **Forcejear**: ataque débil sin arma (poder 4, contundente) con la parte que le quede.
 
 ## Fórmulas
 
@@ -110,20 +113,93 @@ prob_critico% = DES / 2 + mod_arma_critico
 
 Se tira solo si el ataque acierta. Crítico: daño × 1.5 y la herida resultante **empeora un escalón** extra (ver cuerpo-y-heridas).
 
-### Tipos de daño
+### Tipos de daño `[PROPUESTA]`
 
-| Tipo | Efecto especial |
-|---|---|
-| **Cortante** | Puede **amputar** |
-| **Contundente** | Rompe (fractura) pero **nunca amputa**; 25 % de **Aturdir** si golpea la cabeza |
-| **Perforante** | Ignora la mitad de la armadura; 40 % de **Sangrado** |
-| **Horror** | Daña la **Mente**, no el Cuerpo |
+Cada tipo hace algo distinto según **dónde** golpea (`DamageTypeDef`, `data/damage_types/`). El multiplicador de integridad solo cambia cuánto se rompe la parte, no el daño al Cuerpo.
+
+| Tipo | Integridad (extremidad / cabeza / torso) | Armadura | Sangrado por golpe | Efecto por parte |
+|---|---|---|---|---|
+| **Contundente** | ×1,25 / ×1,2 / ×1 | entera | — | **Rompe huesos**. Cabeza: 25 % de **aturdir** (y siempre al romperla). Pierna que se rompe: 60 % de **derribar**. **Nunca amputa** (salvo partes `severable_by_blunt`) |
+| **Cortante** | ×1 / ×1 / ×0,9 | entera | 30 % | **Sangra** y **amputa** lo que ya está roto. Pierna que se rompe o se amputa: 30 % de derribar |
+| **Punzante** | ×0,75 / ×0,85 / ×0,8 | **mitad** | 30 % (si hace ≥ 7) | Rompe poco. **Torso**: 25 % de **alcanzar un órgano** (si hace ≥ 7): daño al Cuerpo ×1,6 y una acumulación más de sangrado |
+| **Horror** | — | — | — | Daña la **Mente**, no el Cuerpo |
+
+Con el torso Herido o Roto, los golpes cortantes y punzantes tienen +20 % de hacer sangrar.
 
 Un ataque físico enemigo puede restar también Mente si acierta (`EnemyAttackDef.mind_damage`, reducido en VOL/2). `[PROPUESTA]`
 
-**Amputación que sangra** `[PROPUESTA]`: perder un miembro (no vital) añade 2 acumulaciones de **Sangrado** (máx. 3).
+**Amputación que sangra** `[PROPUESTA]`: perder un miembro (no vital) deja el **muñón** con 2 acumulaciones de **Sangrado**.
+
+### Sangrado por partes `[PROPUESTA]`
+
+El sangrado va **por parte** (`BodyPartState.bleeding`, máx. 3 acumulaciones cada una). Al final de cada ronda:
+
+- cada acumulación resta **3 de Cuerpo**;
+- cada parte que sangra puede **coagular** (pierde una acumulación) con `35 % + 2,5 % × RES` (RES 8: 55 %); **Rota**, la mitad; un **muñón** (Amputada) **nunca**: hace falta torniquete o venda.
+
+Los enemigos huelen la sangre (ver IA). Al volver al mapa, si alguna parte sangra, el personaje sale sangrando (`Vitals.bleeding`); el sangrado del mapa entra en el combate en el torso (los puntos de la espalda).
 
 **Partes que se arrancan a golpes** `[PROPUESTA]`: una parte marcada `severable_by_blunt` (carne fundida con metal, tejido muerto) se amputa con daño contundente si ya estaba **Rota** y el golpe hace ≥ 25 % de su integridad (con la misma tirada de Resistencia). Solo la tiene el brazo de instrumental del enfermero.
+
+## Armas `[PROPUESTA]`
+
+Un arma (`WeaponDef`) tiene poder, precisión, crítico, **tipo de daño**, **manos** (una o dos) y **alcance** (corto, medio, largo). El tipo decide qué hace en cada parte; el alcance y las manos, qué **habilidades** permite.
+
+| Arma | Poder · precisión · crítico | Tipo | Manos | Alcance |
+|---|---|---|---|---|
+| Tubo de hierro | 12 · 70 · +0 | Contundente | Una | Medio |
+| Tubo con mango envuelto | 12 · 78 · +2 | Contundente | Una | Medio |
+| Barra | 14 · 70 · +0 | Contundente | Dos | Largo |
+| Palanca | 13 · 65 · +0 | Contundente | Dos | Largo |
+| Cuchilla | 12 · 75 · +0 | Cortante | Una | Corto |
+| Bisturí | 8 · 85 · +10 | Cortante | Una | Corto |
+| Punzón | 10 · 80 · +5 | Punzante | Una | Corto |
+| (sin arma) Forcejear | 4 · 70 · +0 | Contundente | — | Corto |
+
+**Mano izquierda** (`CharacterState.wield_offhand`, `CombatantDef.offhand_weapon`): un arma de una mano en la mano no dominante. Da una segunda forma de atacar (−10 acierto) y sus habilidades (con el tubo en la derecha y el bisturí en la izquierda se puede **clavar**).
+
+### Empuñar con heridas (`Combatant.grip()`)
+
+| Situación | Qué pasa |
+|---|---|
+| Brazo que sostiene el arma **Herido** | −10 acierto y −15 % de daño |
+| Brazo de apoyo Herido (arma de dos manos) | −5 acierto |
+| Brazo dominante **Roto** | Un arma de una mano pasa a la otra mano: **mano torpe**, −15 acierto y −25 % de daño. Si lleva otra arma en la izquierda, pelea con esa |
+| Brazo dominante **Amputado** | El arma **se cae**: queda la de la izquierda o Forcejear |
+| Arma de **dos manos** con un brazo inútil | No puede: Forcejear |
+| Los dos brazos inútiles | Forcejear (con lo que quede) y Morder; no puede usar objetos |
+
+Las demás mutilaciones del protagonista: **pierna** Herida −20 % AGI y −5 a huir; Rota o Amputada −50 % AGI y **−15 a huir** (las dos: no huye ni se mantiene en pie); **cabeza** Herida −10 acierto y **−2 Mente por ronda**, Rota −25 acierto, −5 Mente por ronda y no lee intenciones; **torso** Roto, cada acción cuesta 3 de Cuerpo. Los **analgésicos** anulan los penalizadores de heridas mientras duran.
+
+## Habilidades `[PROPUESTA]`
+
+Datos en `data/skills/` (`SkillDef`): coste en **Cuerpo** (esfuerzo) o **Mente** (nervio), recarga, requisitos (arma de cierto alcance y tipo, brazos útiles, cabeza útil, estar de pie, estado del objetivo) y efectos (golpe con el arma o propio, partes permitidas, estado que aplica, sangrado extra, órgano, iniciativa). El menú solo enseña las que permite el arma que se lleva; las que no se pueden usar por una herida, el coste o la recarga salen apagadas **con su motivo**.
+
+| Habilidad | Requisitos | Coste · recarga | Efecto |
+|---|---|---|---|
+| **Golpe a la rodilla** | Arma contundente de alcance medio o largo, de pie | 2 Mente · 1 | Solo piernas. Poder ×1,3. **Lento** (−10 iniciativa). 50 % de **derribar** si acierta (+30 % si la pierna ya estaba herida). Como suele llegar después de su golpe, el derribado pierde la acción **de la ronda siguiente** y queda a merced de un remate |
+| **Barrido** | Arma contundente media o larga, de pie | 3 Cuerpo · 2 | Golpea **las dos piernas** (poder ×0,55, −10 acierto); 50 % de derribar si entran los dos golpes (la mitad si entra uno) |
+| **Empujón** | Arma media o larga, **los dos brazos**, de pie; el objetivo de pie | 2 Cuerpo · 2 | No hace daño. **Rápido** (+12 iniciativa). Acierto 80 + 3 × (FUE propia − FUE ajena). Aplica **Apartado**: si aún no había actuado, **pierde su golpe**; y suelta a quien sujetaba |
+| **Rematar** | El objetivo **en el suelo** (derribado o arrastrándose), de pie | 6 Mente · — | Cabeza o torso. Poder ×1,5, +10 acierto, +20 crítico. «Es atroz, y lo sabes» |
+| **Forcejear** | Mano libre o arma corta, un brazo útil | 2 Cuerpo · 1 | Poder 2. Acierto 70 + 3 × diferencia de FUE. Le **agarras** (Agarrado: esquiva la mitad y se le acierta +20). Si te tenía agarrado, **le das la vuelta** |
+| **Morder** | Cabeza útil (sin manos) | 4 Mente · — | Punzante, poder 6, acierto 60 (+25 si uno sujeta al otro). Una acumulación de sangrado extra |
+| **Clavar** | Arma corta cortante o punzante | 3 Mente · 1 | Punzante con el filo: poder ×1,3, −10 acierto, sangrado extra y +20 % de alcanzar un órgano |
+| **Respirar** | Tener Mente | — | +`10 + VOL` Mente |
+
+## Tratar heridas en combate `[PROPUESTA]`
+
+La acción **Objeto** aplica el tratamiento del objeto (`TreatmentDef`, `data/treatments/`) **sobre una parte**, propia o de un aliado, y gasta una unidad de la custodia (`EventBus.item_used`). Los objetos son los de siempre; esto solo dice qué hacen en la pelea.
+
+| Tratamiento | Objetos | Parte | Efecto |
+|---|---|---|---|
+| **Vendar** | Venda | Herida o que sangra | −2 sangrado en esa parte, +25 % de integridad (una Herida puede **cerrarse**), +4 Cuerpo |
+| **Vendar con gasa limpia** | Venda esterilizada | Herida o que sangra | −3 sangrado, +40 % integridad, +12 Cuerpo |
+| **Vendar con tela sucia** | Venda usada, venda improvisada | Herida o que sangra | −2 sangrado, +15 % integridad, +2 Cuerpo; si está sucia, −3 Cuerpo y −3 Mente |
+| **Torniquete** | Torniquete | Brazo o pierna que sangra | Corta **todo** el sangrado de esa extremidad, también un **muñón**, y ya no vuelve a sangrar en el combate |
+| **Analgésicos** | Analgésicos | — | +6 Cuerpo y **Analgesia** 3 rondas |
+| **Sedante** | Sedante preparado | — | +25 Mente, quita **Aterrado** y aplica **Sedación** 2 rondas (embota: es el precio) |
+
+Una parte **Rota** no se arregla en combate (férula o cirugía, fuera). Los objetos de cura sin tratamiento propio siguen funcionando con sus efectos de siempre.
 
 ## Guardia
 
@@ -211,18 +287,36 @@ Aprobado:
 
 ## Estados `[PROPUESTA]`
 
-Temporales, como datos (`CombatStatusDef`, en `data/statuses/`). Duran unas rondas contando la ronda en que se aplican y se descuentan al final de cada ronda. Los aplica un ataque que acierta (`inflicts_status`, con su probabilidad).
+Temporales, como datos (`CombatStatusDef`, en `data/statuses/`). Duran unas rondas contando la ronda en que se aplican y se descuentan al final de cada ronda. Los aplican ataques enemigos (`inflicts_status`), habilidades, tratamientos y las propias reglas.
 
 | Campo | Qué hace |
 |---|---|
 | `agility_mult` | Multiplica la AGI efectiva (iniciativa, evasión, huida) |
 | `accuracy_mod` | Suma al acierto de quien lo sufre |
 | `incoming_hit_mod` | Suma al acierto de quien le ataca |
-| `skip_chance` | Probabilidad de perder la acción |
+| `skip_chance` | Probabilidad de perder la acción, cada vez |
+| `loses_next_action` | Pierde **su siguiente acción**, una vez; después dura solo hasta el final de esa ronda. Perder una acción cumple a la vez todos los estados así (no se encadenan) |
+| `allows_guard` | Aun así puede cubrirse (derribado: se encoge) |
 | `blocks_flee` | No puede huir |
-| `breakable` | Se rompe con **Zafarse**: `45 + 5 × (FUE propia − FUE de quien sujeta)` %, entre 15 y 90. También se suelta si a quien sujeta se le rompe la parte con la que sujeta, cae o muere |
+| `breakable` | Se rompe con **Zafarse**: `45 + 5 × (FUE propia − FUE de quien sujeta)` %, entre 15 y 90. También se suelta si a quien sujeta se le rompe la parte con la que sujeta, cae, muere o le tiran al suelo |
+| `breaks_holds` | Al aplicarse, quien lo sufre suelta a quien sujetaba |
+| `ignores_wound_penalties` | Sin penalizadores por heridas (analgesia) |
+| `suppresses` / `removes` | Anula los efectos de otros estados mientras dura / los quita al aplicarse |
 
-Estados actuales: **Agarrado** y **Sedación** (ver [el enfermero](../enemigos/enfermero.md#estados)). Se ven como iconos en la fila del personaje (y sobre el enemigo), en su ventanita de heridas y en la ventana de mensajes.
+| Estado | Rondas | Efecto | Lo aplica |
+|---|---|---|---|
+| **Agarrado** | 2 | No huye; AGI ×0,5; se le acierta +20. Se rompe con Zafarse | Agarrar del enfermero; Forcejear |
+| **Sedación** | 2 | AGI ×0,6; −10 acierto; 15 % de perder la acción; **embota el terror** | Pinchazo; el sedante |
+| **Aturdido** | 2 | Pierde su siguiente acción; se le acierta +10 | Romper la cabeza; contundente en la cabeza (25 %) |
+| **Derribado** | 2 | Pierde su siguiente acción **levantándose**; AGI ×0,5; se le acierta +20; no huye; suelta lo que sujetaba; **se le puede rematar**. Aún puede encogerse (Guardia) | Golpe a la rodilla, Barrido, Embestida (30 %), romper una pierna |
+| **Apartado** | 1 | Si aún no había actuado esta ronda, **pierde su golpe**; suelta lo que sujetaba | Empujón |
+| **Aterrado** | mientras dure | 25 % de perder la acción. Se pasa al subir la Mente del 25 % | La Mente por debajo del 25 % |
+| **Analgesia** | 3 | Sin penalizadores por heridas: el torso roto no cuesta y la cabeza no resta Mente | Analgésicos |
+| **Sangrado** (por parte) | — | Ver Sangrado por partes | Cortante, punzante, amputaciones |
+
+Arrastrándose (las dos piernas inútiles) ya está en el suelo: no se le derriba, pero **se le puede rematar**.
+
+Para la interfaz: `Combatant.status_entries()` (estados con sus rondas y el sangrado de cada parte) y las señales `status_added`, `status_removed`, `bleeding_changed` y `status_changed` de `Battle`.
 
 ## Intenciones ocultas
 
@@ -231,6 +325,8 @@ Para variar la lectura, un enemigo puede ocultar parte del telegrafiado:
 - `???  → [personaje]`: se sabe a quién, no qué ni dónde.
 - `TAJO → ???`: se sabe qué, no a quién.
 - Personajes con la cabeza Rota ven todas las intenciones como `???`.
+- Un enemigo que va a perder la acción (derribado, aturdido) lo enseña: `DERRIBADO: PIERDE EL TURNO`.
+- Cada intención puede llevar **su razón** (`Battle.intent_reason`): «Huele tu sangre», «Sin bisturíes, embiste», «Reacciona al dolor».
 
 ## Redirección
 
@@ -247,9 +343,10 @@ Si al resolverse una acción su objetivo ya no es válido:
 - Patrones: secuencia fija, condicional (por Cuerpo, por partes perdidas, por número de aliados) o mezcla. Un patrón debe poder aprenderse en 2–3 rondas.
 - Hasta **4 enemigos** a la vez en pantalla.
 - Los enemigos **mueren** al llegar a Cuerpo 0 (no pasan por Caído). `[PROPUESTA]`
-- Comportamiento base (prototipo) `[PROPUESTA]`:
-  - 50 % de las veces van a por el aliado con menos Cuerpo;
-  - 65 % de las veces vuelven a golpear una parte ya Herida o Rota ("huelen la sangre"), lo que hace útil la Guardia.
+- Comportamiento base `[PROPUESTA]` (`EnemyAI`):
+  - si alguien **sangra o está en el suelo**, va a por él el 75 % de las veces; si no, 50 % al aliado con menos Cuerpo;
+  - 70 % de las veces apunta a la **parte que sangra**; si no, 65 % a una parte ya Herida o Rota ("huelen la sangre"), lo que hace útil la Guardia;
+  - **tácticas** (`EnemyAttackDef.bonuses`, `AttackBonus`): un ataque pesa más si el objetivo sangra, está en el suelo o ha perdido el arma, o si al enemigo le falta una parte o está malherido. La táctica que decide se enseña como razón de la intención.
 
 ## Presentación `[PROPUESTA]`
 
@@ -288,31 +385,55 @@ Fuera del combate, por ahora las heridas por parte solo se guardan (no ralentiza
 
 Los encuentros del mapa son datos (`EncounterDef`) y los lleva `EncounterDirector` (una línea en el guion del mapa). Ver [el enfermero § En el mapa](../enemigos/enfermero.md#en-el-mapa).
 
+## API de opciones (contrato con la interfaz)
+
+La interfaz no conoce las reglas: pregunta a `Battle` qué se puede hacer (código en `BattleMenu` y `BattlePreview`).
+
+```gdscript
+func action_menu(actor: Combatant) -> Array[ActionOption]
+func targets_for(actor: Combatant, option: ActionOption) -> Array[TargetOption]
+func preview(actor: Combatant, option: ActionOption, target: Combatant, part_id: StringName) -> ActionPreview
+func make_order(actor: Combatant, option: ActionOption, target: Combatant, part_id: StringName) -> CombatAction
+```
+
+- `ActionOption`: `id` (`attack`, `attack_offhand`, id de la habilidad, `guard`, `item:<id del objeto>`, `bandage`, `break_free`, `flee_solo`, `flee`, `recover`), `category` (`attack`, `skill`, `guard`, `item`, `other`), `label`, `description`, `icon_key`, `enabled`, `disabled_reason`, `cost_body`, `cost_mind`, `needs_target`, `needs_part`, `item`, `skill`. Añadidos: `action_type`, `treatment`, `use_offhand`, `value_text` (lo de la derecha del menú: «−2 M», «×2», «45%», «+19 Mente») y `target_side` (`enemy`, `ally` o vacío).
+- `TargetOption`: `combatant`, `parts`; añadidos `enabled`, `disabled_reason` (rematar a quien no está en el suelo). `PartOption`: `id`, `label`, `state`, `hit_chance`, `enabled`, `disabled_reason`; añadido `bleeding`.
+- `ActionPreview`: `hit_chance`, `damage_min`/`damage_max` (Cuerpo, sin crítico), `damage_type`, `lines`, `risk_lines`, `amputation_chance`, `status_chances` (`derribado`, `aturdido`, `sangrado`, `organo`, `apartado`…; 0–100, ya con el acierto). Añadidos: `break_chance`, `act_first_chance` (probabilidad de actuar antes que lo que prepara el enemigo) y `part_damage_min`/`max`.
+- La vista previa es **honesta**: recorre las tiradas posibles (azar de daño × crítico) con las mismas reglas que la resolución (la prueba `test_la_vista_previa_es_honesta` lo compara con 400 golpes reales).
+- Señales de `Battle`: `logged`, `impact`, `struck` (con `organ`, `knocked_down`, `bled`, `skill`), `status_changed`, `status_added`, `status_removed`, `bleeding_changed`, `action_started`, `finished`, `intent_changed(enemy)` (al fijar la intención y cuando la pierde por un estado) y `turn_order_changed()` (`turn_order()` da la cola que queda).
+
 ## Recursos de datos (para implementación)
 
 | Recurso | Campos principales |
 |---|---|
 | `CombatantStats` | cuerpo_max, mente_max, fue, des, agi, vol, res, tiene_mente |
 | `BodyPartDef` | id, nombre, fraccion_integridad, mod_acierto, mult_cuerpo, vital, amputable, efectos por estado |
-| `WeaponDef` | poder, precision, tipo_daño, manos (1/2), mod_critico, habilidades |
+| `WeaponDef` | poder, precision, tipo_daño, manos (1/2), mod_critico, alcance |
+| `DamageTypeDef` | por tipo de daño: armadura, integridad por parte, sangrado, aturdir, derribar, órgano, amputar, textos |
+| `SkillDef` | coste, recarga, requisitos (arma, brazos, cabeza, de pie, objetivo en el suelo), golpe, estado, textos |
+| `TreatmentDef` | objetos que lo dan, partes que admite, sangrado, integridad, Cuerpo, Mente, estados |
+| `AttackBonus` | táctica de la IA: condición, peso extra y razón legible |
 | `ArmorDef` | armadura por parte |
 | `EnemyDef` | stats, partes (`Array[BodyPartDef]`), ataques, patrón, rasgos (`remata`, …) |
-| `EnemyAttackDef` | tipo, poder, parte_objetivo, parte_requerida, visibilidad del telegrafiado, aviso, peso, recarga, estado que aplica, condiciones (de pie, arrastrándose, estado del objetivo, reacción), animación y sonidos |
-| `CombatStatusDef` | rondas, multiplicador de AGI, acierto propio y ajeno, perder la acción, impide huir, se rompe con Zafarse |
+| `EnemyAttackDef` | tipo, poder, parte_objetivo, parte_requerida, visibilidad del telegrafiado, aviso, peso, recarga, estado que aplica, condiciones (de pie, arrastrándose, estado del objetivo, reacción), tácticas, animación y sonidos |
+| `CombatStatusDef` | rondas, multiplicador de AGI, acierto propio y ajeno, perder la acción (al azar o la siguiente), impide huir, se rompe con Zafarse, suelta agarres, ignora heridas, anula y quita otros, textos |
 | `EnemySpriteDef` | rejilla, origen, capa por parte, muñones, orden, animaciones y anclas de cada parte |
 | `EncounterDef` | enemigo, protagonista base, objeto y bandera que lo disparan, zonas, textos, música |
 
-Todos en `scripts/core/`; instancias `.tres` en `data/`.
+En `scripts/core/` y `scripts/core/combat/`; instancias `.tres` en `data/`.
 
 ## Balance de referencia
 
-Ver la simulación en [cuerpo-y-heridas.md § Balance](cuerpo-y-heridas.md#balance-de-referencia).
+- Fórmulas de base: [cuerpo-y-heridas.md § Balance](cuerpo-y-heridas.md#balance-de-referencia) (simulación antigua, sin las reglas por tipo de daño).
+- El primer combate real, con el código del juego: [el enfermero § Balance](../enemigos/enfermero.md#balance) (`tools/balance/sim_enfermero.gd`).
 
 ## Preguntas abiertas
 
-1. ¿Las habilidades cuestan Cuerpo/Mente/objetos, o añadimos un tercer recurso? Propuesta: sin tercer recurso.
+1. ¿Las habilidades cuestan Cuerpo/Mente/objetos, o añadimos un tercer recurso? Propuesta: sin tercer recurso (implementado así: las de esfuerzo cuestan Cuerpo; las de nervio o las atroces, Mente).
 2. ¿Se ve la integridad exacta de las partes enemigas o solo su estado (Sana / Herida / Rota)? Propuesta: solo el estado.
-3. ¿El orden de iniciativa de la ronda se muestra antes de confirmar órdenes?
+3. ¿El orden de iniciativa de la ronda se muestra antes de confirmar órdenes? Propuesta: no exacto; la vista previa da la probabilidad de actuar antes (`act_first_chance`) y, durante la resolución, `turn_order()`.
+4. ¿Se aprenden habilidades nuevas (con armas, documentos, rituales) o cada personaje tiene las suyas fijas?
+5. ¿Cuántas acumulaciones de sangrado aguanta una parte, y debería el sangrado del mapa recordar en qué parte estaba?
 
 ### Resueltas
 

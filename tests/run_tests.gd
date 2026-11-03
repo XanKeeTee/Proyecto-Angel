@@ -2,6 +2,7 @@ extends Node
 ## Ejecuta todas las pruebas de tests/unit y tests/integration sin ventana.
 ## Uso: "$GODOT_BIN" --headless --path . res://tests/run_tests.tscn
 ## Sale con código 0 si todo pasa y 1 si algo falla.
+## Solo algunos archivos: `-- --only=test_combat` (los que empiezan por ese texto).
 
 const DIRS: Array[String] = ["res://tests/unit", "res://tests/integration"]
 
@@ -14,9 +15,15 @@ func _run() -> void:
 	await get_tree().process_frame
 	var total: int = 0
 	var failed: PackedStringArray = []
+	var only: String = ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.trim_prefix("--only=")
 	for dir: String in DIRS:
 		for file: String in ResourceLoader.list_directory(dir):
 			if not (file.begins_with("test_") and file.ends_with(".gd")):
+				continue
+			if only != "" and not file.begins_with(only):
 				continue
 			var script: GDScript = load(dir.path_join(file))
 			var case: TestCase = script.new()

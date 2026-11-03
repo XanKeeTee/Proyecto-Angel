@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="1_4uwre"]
+
+[resource]
+script = ExtResource("1_4uwre")
+id = &"vendar_esteril"
+display_name = "Vendar con gasa limpia"
+description = "Gasa esterilizada sobre la herida: corta el sangrado, la cierra mejor y escuece como fuego."
+icon_key = &"treat_vendar_esteril"
+item_ids = Array[StringName]([&"venda_esterilizada"])
+part_rule = 1
+stops_bleed = 3
+restores_integrity = 0.4
+body = 12
+use_text = "%s venda con gasa limpia: %s."

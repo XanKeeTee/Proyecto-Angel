@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/sedacion.tres" id="1_flnn5"]
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="2_ambfc"]
+
+[resource]
+script = ExtResource("2_ambfc")
+id = &"sedante"
+display_name = "Sedante"
+description = "Frío por las venas: devuelve Mente y aleja el terror, pero embota (sedación 2 rondas)."
+icon_key = &"treat_sedante"
+item_ids = Array[StringName]([&"sedante"])
+mind = 25
+applies_status = ExtResource("1_flnn5")
+removes_statuses = Array[StringName]([&"aterrado"])
+use_text = "%s se clava el sedante en el brazo."

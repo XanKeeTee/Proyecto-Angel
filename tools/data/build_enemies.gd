@@ -1,13 +1,18 @@
 extends SceneTree
-## Genera los datos de combate del prólogo: el enfermero transfigurado (enemigo, partes del cuerpo y
-## ataques), sus estados (sedación, agarre), el protagonista del prólogo y el encuentro del mapa.
-## Uso: "$GODOT_BIN" --headless --path . -s tools/data/build_enemies.gd
+## Genera los datos de combate del prólogo: el enfermero transfigurado (enemigo, partes del cuerpo,
+## ataques y tácticas), el protagonista del prólogo (con sus habilidades) y el encuentro del mapa.
+## Los estados, tipos de daño, habilidades y tratamientos salen de tools/data/build_combat_rules.gd:
+## ejecútalo antes. Uso: "$GODOT_BIN" --headless --path . -s tools/data/build_enemies.gd
 ## Si existen las hojas del arte (tools/art/sprite_meta.json → enemy_enfermero), las hornea también
 ## en data/enemies/enfermero_sprites.tres. Volver a ejecutarlo sobrescribe los .tres.
 ## Diseño y balance: docs/design/enemigos/enfermero.md. Textos y nombres: `[PROPUESTA]`.
 
 const PARTS: String = "res://data/body_parts/"
 const STATUSES: String = "res://data/statuses/"
+const SKILLS: String = "res://data/skills/"
+## Habilidades del paciente 09 (cada una pide su arma; el menú enseña las que sirven).
+const PATIENT_SKILLS: Array[String] = ["golpe_rodilla", "barrido", "empujon", "rematar", "forcejear", "morder",
+	"clavar", "respirar"]
 const ENEMIES: String = "res://data/enemies/"
 const PARTY: String = "res://data/party/"
 const META: String = "res://tools/art/sprite_meta.json"
@@ -15,11 +20,14 @@ const SPRITE_KEY: String = "enemy_enfermero"
 
 
 func _init() -> void:
-	var sedation: CombatStatusDef = _status("sedacion", "Sedación", 2, 0.6, -10, 0, 0.15, false, false,
-		"El líquido entra frío. A %s le pesan los párpados.", "%s se despeja un poco.")
-	var grab: CombatStatusDef = _status("agarre", "Agarrado", 2, 0.5, 0, 20, 0.0, true, true,
-		"Una mano gris se cierra sobre %s. No suelta.", "%s se suelta de la mano.")
-	var nurse: CombatantDef = _nurse(sedation, grab)
+	var sedation: CombatStatusDef = load(STATUSES + "sedacion.tres")
+	var grab: CombatStatusDef = load(STATUSES + "agarre.tres")
+	var down: CombatStatusDef = load(STATUSES + "derribado.tres")
+	if sedation == null or grab == null or down == null:
+		push_error("Faltan los estados: ejecuta antes tools/data/build_combat_rules.gd")
+		quit(1)
+		return
+	var nurse: CombatantDef = _nurse(sedation, grab, down)
 	_save(nurse, ENEMIES + "enfermero.tres")
 	_save(_patient(), PARTY + "paciente_09.tres")
 	var encounter: EncounterDef = _encounter(load(ENEMIES + "enfermero.tres"), load(PARTY + "paciente_09.tres"))
@@ -35,26 +43,6 @@ func _init() -> void:
 		print("Sin hojas del enfermero: se usará el marcador provisional.")
 	print("Enfermero, paciente 09 y encuentro generados.")
 	quit()
-
-
-# --- estados -------------------------------------------------------------------------------------
-
-func _status(id: String, display: String, rounds: int, agility: float, accuracy: int, incoming: int, skip: float,
-		blocks_flee: bool, breakable: bool, apply_text: String, end_text: String) -> CombatStatusDef:
-	var s: CombatStatusDef = CombatStatusDef.new()
-	s.id = StringName(id)
-	s.display_name = display
-	s.rounds = rounds
-	s.agility_mult = agility
-	s.accuracy_mod = accuracy
-	s.incoming_hit_mod = incoming
-	s.skip_chance = skip
-	s.blocks_flee = blocks_flee
-	s.breakable = breakable
-	s.apply_text = apply_text
-	s.end_text = end_text
-	_save(s, STATUSES + id + ".tres")
-	return load(STATUSES + id + ".tres")
 
 
 # --- partes ----------------------------------------------------------------------------------------
@@ -91,11 +79,20 @@ func _attack(display: String, telegraph: String, power: int, accuracy: int, type
 	return a
 
 
-func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef) -> CombatantDef:
+func _bonus(condition: AttackBonus.Condition, weight: float, reason: String, part: StringName = &"") -> AttackBonus:
+	var b: AttackBonus = AttackBonus.new()
+	b.condition = condition
+	b.weight = weight
+	b.reason = reason
+	b.part = part
+	return b
+
+
+func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef, down: CombatStatusDef) -> CombatantDef:
 	var d: CombatantDef = CombatantDef.new()
 	d.display_name = "ENFERMERO"
 	d.intro_text = "Un enfermero. Lo que queda de uno."
-	d.body_max = 115
+	d.body_max = 105
 	d.has_mind = false
 	d.strength = 10
 	d.dexterity = 9
@@ -127,14 +124,16 @@ func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef) -> CombatantDef:
 			"La pierna se queda en el suelo. El resto sigue arrastrándose."),
 	]
 	d.attacks = [
-		# Tajo: el ataque principal. Corta: puede amputar.
+		# Tajo: el ataque principal. Corta: hace sangrar y puede amputar. Si sangras, va a por ti.
 		_attack("Tajo", "Levanta el brazo de bisturíes por encima de la máscara.", 13, 72, CombatTypes.DamageType.CUT,
 			{"required_part": CombatTypes.ARM_R, "weight": 3.0, "requires_standing": true,
+			"bonuses": [_bonus(AttackBonus.Condition.TARGET_BLEEDING, 1.5, "Huele tu sangre")] as Array[AttackBonus],
 			"sound_windup": "enfermero_growl", "sound_hit": "combat_scalpel_slash"}),
 		# Agarrar: prepara el serrado de la ronda siguiente.
 		_attack("Agarrar", "Abre la mano izquierda y se inclina hacia ti.", 3, 70, CombatTypes.DamageType.BLUNT,
 			{"target_part": CombatTypes.ANY_ARM, "required_part": CombatTypes.ARM_L, "weight": 1.6, "cooldown": 3,
 			"requires_standing": true, "inflicts_status": grab, "status_chance": 1.0,
+			"bonuses": [_bonus(AttackBonus.Condition.TARGET_DISARMED, 2.0, "Ya no te teme")] as Array[AttackBonus],
 			"sound_windup": "enfermero_breath", "sound_hit": "enfermero_growl"}),
 		# Serrar: solo a quien está agarrado. Muy certero; la Guardia en esa parte lo para.
 		_attack("Serrar", "Te sujeta y apoya la sierra de hueso en el brazo.", 15, 82, CombatTypes.DamageType.CUT,
@@ -144,15 +143,31 @@ func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef) -> CombatantDef:
 		_attack("Pinchazo", "Sacude la jeringa. El líquido oscuro burbujea dentro.", 4, 76, CombatTypes.DamageType.PIERCE,
 			{"required_part": CombatTypes.ARM_L, "weight": 1.8, "cooldown": 1, "mind_damage": 10,
 			"inflicts_status": sedation, "status_chance": 0.7, "target_part": CombatTypes.TORSO,
+			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 0.6, "Sin bisturíes, quiere dormirte",
+				CombatTypes.ARM_R)] as Array[AttackBonus],
 			"sound_windup": "enfermero_breath", "sound_hit": "combat_syringe"}),
 		# Chillido: reacción al perder una parte. Solo Mente.
 		_attack("Chillido", "Se encoge. Algo se hincha detrás de la mascarilla cosida.", 0, 100,
 			CombatTypes.DamageType.HORROR, {"mind_damage": 14, "required_part": CombatTypes.HEAD, "reaction": true,
 			"weight": 0.0, "anim": &"stagger", "sound_windup": "enfermero_scream", "sound_hit": "enfermero_scream"}),
-		# Sin brazo de instrumental (y de pie): embiste con el hombro.
+		# Embestida: carga con el hombro y puede tirarte al suelo. Sin bisturíes, embiste más.
 		_attack("Embestida", "Baja la cabeza y carga con el hombro.", 5, 65, CombatTypes.DamageType.BLUNT,
-			{"requires_standing": true, "weight": 0.6, "sound_windup": "enfermero_drag_steps",
-			"sound_hit": "combat_pipe_flesh"}),
+			{"requires_standing": true, "weight": 0.6, "target_part": CombatTypes.TORSO, "inflicts_status": down,
+			"status_chance": 0.3,
+			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 1.0, "Sin bisturíes, embiste", CombatTypes.ARM_R),
+				_bonus(AttackBonus.Condition.SELF_HURT, 0.4, "Herido, quiere tirarte")] as Array[AttackBonus],
+			"sound_windup": "enfermero_drag_steps", "sound_hit": "combat_pipe_flesh"}),
+		# Ensartar: a quien está en el suelo. Remata con los bisturíes.
+		_attack("Ensartar", "Se inclina sobre ti con los bisturíes hacia abajo.", 12, 80, CombatTypes.DamageType.PIERCE,
+			{"target_part": CombatTypes.TORSO, "required_part": CombatTypes.ARM_R, "weight": 8.0,
+			"requires_target_status": CombatTypes.STATUS_DOWN, "requires_standing": true,
+			"sound_windup": "enfermero_growl", "sound_hit": "combat_scalpel_slash"}),
+		# Pisotón: a quien está en el suelo, si ya no tiene bisturíes.
+		_attack("Pisotón", "Levanta el pie descalzo sobre tu pecho.", 10, 80, CombatTypes.DamageType.BLUNT,
+			{"target_part": CombatTypes.TORSO, "weight": 4.0, "requires_target_status": CombatTypes.STATUS_DOWN,
+			"requires_standing": true,
+			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 4.0, "Va a rematarte", CombatTypes.ARM_R)] as Array[AttackBonus],
+			"sound_windup": "enfermero_drag_steps", "sound_hit": "combat_pipe_flesh"}),
 		# Arrastrándose: va a por los tobillos.
 		_attack("Zarpazo", "Se arrastra hacia tus tobillos con los bisturíes por delante.", 9, 68,
 			CombatTypes.DamageType.CUT, {"target_part": CombatTypes.ANY_LEG, "required_part": CombatTypes.ARM_R,
@@ -182,6 +197,12 @@ func _patient() -> CombatantDef:
 	d.armor = 0
 	d.parts = [load(PARTS + "head.tres"), load(PARTS + "torso.tres"), load(PARTS + "arm_l.tres"),
 		load(PARTS + "arm_r.tres"), load(PARTS + "leg_l.tres"), load(PARTS + "leg_r.tres")]
+	var skills: Array[SkillDef] = []
+	for id: String in PATIENT_SKILLS:
+		var skill: SkillDef = load(SKILLS + id + ".tres")
+		if skill != null:
+			skills.append(skill)
+	d.skills = skills
 	return d
 
 

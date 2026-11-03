@@ -19,6 +19,12 @@ extends Resource
 
 @export_group("Equipo y cuerpo")
 @export var weapon: WeaponDef
+## Arma de una mano en la mano no dominante (CharacterState.wield_offhand). Si el brazo dominante
+## queda inútil, se pelea con ella.
+@export var offhand_weapon: WeaponDef
+## Habilidades que conoce. Cada una pide su arma y sus partes (SkillDef); el menú enseña las que
+## tienen sentido con lo que lleva.
+@export var skills: Array[SkillDef] = []
 ## Armadura igual en todas las partes. Provisional hasta tener armaduras por parte.
 @export_range(0, 20) var armor: int = 0
 @export var dominant_arm: StringName = CombatTypes.ARM_R

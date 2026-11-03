@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/derribado.tres" id="1_bgbh8"]
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="2_rah10"]
+
+[resource]
+script = ExtResource("2_rah10")
+id = &"barrido"
+display_name = "Barrido"
+description = "Un golpe bajo y ancho a las dos piernas. Pega menos, pero cuesta seguir en pie."
+choose_part = false
+allowed_parts = Array[StringName]([&"leg_l", &"leg_r"])
+hits_all_parts = true
+cost_body = 3
+cooldown = 2
+needs_weapon = true
+min_reach = 1
+weapon_damage_types = Array[int]([1])
+needs_standing = true
+power_mult = 0.55
+accuracy_mod = -10
+inflicts_status = ExtResource("1_bgbh8")
+status_chance = 0.5
+preview_lines = PackedStringArray("Golpea las dos piernas; si entran los dos, es más fácil que caiga.")
+risk_lines = PackedStringArray()

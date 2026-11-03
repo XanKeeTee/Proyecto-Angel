@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_f4w8u"]
+
+[resource]
+script = ExtResource("1_f4w8u")
+id = &"sangrado"
+display_name = "Sangrado"
+description = "Cada acumulación resta 3 de Cuerpo al final de la ronda. Una herida pequeña coagula sola; un hueso roto o un muñón, no sin tratarlo."
+rounds = 1

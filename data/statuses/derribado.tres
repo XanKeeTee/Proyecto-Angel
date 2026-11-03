@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_1tte4"]
+
+[resource]
+script = ExtResource("1_1tte4")
+id = &"derribado"
+display_name = "Derribado"
+description = "En el suelo: gasta su siguiente acción en levantarse, le aciertan más y se le puede rematar."
+agility_mult = 0.5
+incoming_hit_mod = 20
+loses_next_action = true
+skip_text = "%s se levanta del suelo como puede."
+blocks_flee = true
+allows_guard = true
+breaks_holds = true
+apply_text = "%s cae al suelo."

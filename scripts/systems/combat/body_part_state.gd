@@ -1,11 +1,18 @@
 class_name BodyPartState
 extends RefCounted
-## Estado en combate de una parte del cuerpo: Sana → Herida → Rota → Amputada.
+## Estado en combate de una parte del cuerpo: Sana → Herida → Rota → Amputada, y su sangrado.
+
+## Acumulaciones de sangrado que admite una parte.
+const MAX_BLEED: int = 3
 
 var def: BodyPartDef
 var max_integrity: int = 1
 var integrity: int = 1
 var state: CombatTypes.PartState = CombatTypes.PartState.HEALTHY
+## Acumulaciones de sangrado de esta parte (cada una resta Cuerpo al final de la ronda).
+var bleeding: int = 0
+## Torniquete: ya no puede sangrar en este combate.
+var sealed: bool = false
 
 
 func _init(p_def: BodyPartDef, body_max: int) -> void:
@@ -49,6 +56,32 @@ func worsen() -> void:
 func amputate() -> void:
 	integrity = 0
 	state = CombatTypes.PartState.AMPUTATED
+
+
+## Añade sangrado (sin pasar del máximo). Devuelve las acumulaciones añadidas.
+func add_bleed(stacks: int) -> int:
+	if sealed or stacks <= 0:
+		return 0
+	var before: int = bleeding
+	bleeding = mini(MAX_BLEED, bleeding + stacks)
+	return bleeding - before
+
+
+## Quita sangrado. Devuelve las acumulaciones quitadas.
+func stop_bleed(stacks: int) -> int:
+	var removed: int = mini(bleeding, stacks)
+	bleeding -= removed
+	return removed
+
+
+## Devuelve integridad (en fracción del máximo). Una parte Rota o Amputada no se arregla así.
+func restore(fraction: float) -> int:
+	if is_disabled() or fraction <= 0.0:
+		return 0
+	var before: int = integrity
+	integrity = mini(max_integrity, integrity + maxi(1, roundi(max_integrity * fraction)))
+	_refresh_state()
+	return integrity - before
 
 
 func _refresh_state() -> void:

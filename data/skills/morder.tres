@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="1_ymdm0"]
+
+[resource]
+script = ExtResource("1_ymdm0")
+id = &"morder"
+display_name = "Morder"
+description = "Hundir los dientes donde se pueda. No hacen falta manos. Cuerpo a cuerpo es más fácil."
+cost_mind = 4
+needs_head = true
+uses_weapon = false
+power = 6
+accuracy = 60
+damage_type = 2
+grapple_accuracy_bonus = 25
+extra_bleed = 1
+preview_lines = PackedStringArray()
+risk_lines = PackedStringArray("Es algo de animal: cuesta Mente.")

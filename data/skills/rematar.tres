@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="1_ui8rd"]
+
+[resource]
+script = ExtResource("1_ui8rd")
+id = &"rematar"
+display_name = "Rematar"
+description = "Golpear con todo a quien está en el suelo. Es atroz, y lo sabes."
+allowed_parts = Array[StringName]([&"head", &"torso"])
+cost_mind = 6
+needs_standing = true
+target_must_be_down = true
+power_mult = 1.5
+accuracy_mod = 10
+crit_bonus = 20
+preview_lines = PackedStringArray()
+risk_lines = PackedStringArray("Hacerlo pesa: cuesta Mente.")

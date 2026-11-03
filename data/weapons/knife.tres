@@ -6,3 +6,4 @@
 script = ExtResource("1_tymx8")
 display_name = "Cuchilla"
 power = 12
+reach = 0

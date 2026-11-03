@@ -183,7 +183,7 @@ Ya no es la escena principal: abre `res://scenes/battle/battle_scene.tscn` y pul
 
 Qué incluye: rondas con telegrafiado, ataque por partes, Guardia, Respirar, Vendas, huida individual y en grupo, amputación, fracturas, sangrado, aturdimiento, Mente (Inquietud, Pánico, Quiebre), Caídos y rematar, fin de partida por muerte del protagonista.
 
-Qué falta: habilidades, cargar con un aliado al huir, armaduras por parte, prótesis, curación fuera de combate, sonido y arte.
+Qué falta: cargar con un aliado al huir, armaduras por parte, prótesis, curación fuera de combate, sonido y arte. Las habilidades, los tipos de daño por parte, el sangrado por partes y los tratamientos ya están en las reglas (ver [combate.md](../design/sistemas/combate.md)).
 
 ### Código
 

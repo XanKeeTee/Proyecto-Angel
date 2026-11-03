@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_pooou"]
+
+[resource]
+script = ExtResource("1_pooou")
+id = &"aterrado"
+display_name = "Aterrado"
+description = "El miedo le paraliza: 25 % de perder la acción. Se pasa al recuperar Mente."
+rounds = 99
+skip_chance = 0.25
+apply_text = "A %s le tiemblan las manos. No consigue pensar."
+end_text = "%s recupera algo de control."
