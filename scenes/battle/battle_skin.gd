@@ -73,7 +73,8 @@ static func order_icon(key: StringName) -> Texture2D:
 
 
 ## Icono de estado (12×12): &"bleed", &"wound", &"broken", &"amputated", &"grabbed", &"sedated",
-## &"stunned", &"guard", &"panic". Los ids de los estados de datos se traducen (agarre → grabbed).
+## &"stunned", &"guard", &"panic", &"down", &"pushed", &"terror", &"analgesia". Los ids de los
+## estados de datos se traducen (agarre → grabbed, derribado → down…).
 static func status_icon(key: StringName) -> Texture2D:
 	return texture("icons/status_" + String(status_key(key)))
 
@@ -85,8 +86,18 @@ static func status_key(key: StringName) -> StringName:
 			return &"grabbed"
 		&"sedacion", &"sedation", &"sedated":
 			return &"sedated"
-		&"stun", &"stunned":
+		&"aturdido", &"stun", &"stunned":
 			return &"stunned"
+		&"derribado", &"down":
+			return &"down"
+		&"apartado", &"pushed":
+			return &"pushed"
+		&"aterrado", &"terror":
+			return &"terror"
+		&"analgesia":
+			return &"analgesia"
+		&"sangrado":
+			return &"bleed"
 	return key
 
 

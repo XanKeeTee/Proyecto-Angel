@@ -64,18 +64,25 @@ static func part_icon(state: CombatTypes.PartState) -> StringName:
 	return &""
 
 
-## Iconos de los estados de un combatiente: [{kind, letter, label}].
+## Iconos de los estados de un combatiente: [{kind, letter, label}]. El sangrado de todas las partes
+## va junto; los estados apagados (la analgesia tapa el dolor) salen entre paréntesis.
 static func status_icons(member: Combatant) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	if member.bleeding > 0:
-		result.append({"kind": ICON_BLEED, "letter": "", "label": "Sangrado ×%d" % member.bleeding})
-	if member.stunned > 0:
-		result.append({"kind": ICON_STUN, "letter": "", "label": "Aturdimiento"})
+	var bleed: int = 0
+	for entry: Dictionary in member.status_entries():
+		if StringName(entry["id"]) == CombatTypes.STATUS_BLEED:
+			bleed += int(entry["stacks"])
+			continue
+		var label: String = String(entry["name"])
+		if int(entry["rounds"]) > 0:
+			label += " (%d)" % int(entry["rounds"])
+		if bool(entry["suppressed"]):
+			label = "(%s)" % label
+		result.append({"kind": StringName(entry["icon"]), "letter": String(entry["name"]), "label": label})
+	if bleed > 0:
+		result.insert(0, {"kind": ICON_BLEED, "letter": "", "label": "Sangrado ×%d" % bleed})
 	if member.guarded_part != &"":
 		result.append({"kind": ICON_GUARD, "letter": "", "label": "Se cubre"})
-	for id: StringName in member.statuses:
-		result.append({"kind": id, "letter": member.status_defs[id].display_name,
-			"label": "%s (%d)" % [member.status_defs[id].display_name, member.statuses[id]]})
-	if member.is_panicking():
+	if member.is_panicking() and not member.has_status(CombatTypes.STATUS_TERROR):
 		result.append({"kind": ICON_PANIC, "letter": "", "label": "Pánico"})
 	return result

@@ -17,7 +17,7 @@ Piezas (las de «9 cortes» se estiran con StyleBoxTexture / NinePatchRect; los 
 - `rule.png`          línea de tinta trazada a mano (separadores).
 - `tube.png`          tubo de vidrio con tapones (Cuerpo y Mente como líquido).
 - `stamp_*.png`       sellos de caucho: AUTORIZADO y los rótulos de impacto (FRACTURA, AMPUTACIÓN…).
-- `icons/order_*.png` iconos de órdenes 16×16; `icons/status_*.png` iconos de estado 12×12.
+- `icons/order_*.png` iconos de órdenes y habilidades 16×16; `icons/status_*.png` iconos de estado 12×12.
 - `diagram/plate.png` lámina anatómica (vista anterior) y `diagram/<parte>.png` la máscara de cada parte;
   `diagram/mini_*.png` la silueta pequeña para el mapa de heridas de la ficha.
 - `cursor.png`        puntero (a 2×: el cursor del sistema no se escala con la vista).
@@ -401,10 +401,92 @@ def ic_attack(d, k):
     ic_fist(d, k)
 
 
+def ic_kick(d, k):
+    # pierna doblada y la rodilla del otro, con la marca del golpe
+    d.line(P([(2, 3), (7, 9), (4, 14)], k), fill=(96, 104, 110, 255), width=int(3 * k), joint="curve")
+    d.polygon(P([(2.5, 13), (7, 13), (7, 15.5), (2, 15.5)], k), fill=(60, 52, 46, 255))
+    d.ellipse(P([(9.5, 6), (13.5, 10)], k), fill=SKIN)
+    for a in (0, 1.6, 3.2, 4.8):
+        x, y = 11.5 + math.cos(a) * 3.6, 8 + math.sin(a) * 3.6
+        d.line(P([(11.5 + math.cos(a) * 2.4, 8 + math.sin(a) * 2.4), (x, y)], k), fill=BLOOD_LIGHT, width=int(0.8 * k))
+
+
+def ic_sweep(d, k):
+    # tubo que barre a ras de suelo, con su arco
+    d.arc(P([(1, 4), (15, 18)], k), start=200, end=340, fill=BONE_DARK, width=int(1 * k))
+    d.line(P([(2, 13.5), (14, 11.5)], k), fill=STEEL, width=int(2.6 * k))
+    d.line(P([(1, 15.5), (15, 15.5)], k), fill=(70, 62, 54, 255), width=int(1 * k))
+    d.polygon(P([(12, 2), (15, 4.5), (12, 7)], k), fill=BLOOD_LIGHT)
+
+
+def ic_push(d, k):
+    # palma abierta que empuja
+    d.rounded_rectangle(P([(3, 6), (11, 14)], k), radius=2 * k, fill=SKIN)
+    for i, x in enumerate((3.6, 5.8, 8, 10.2)):
+        d.rounded_rectangle(P([(x, 1.5 + (i % 2)), (x + 1.8, 7)], k), radius=0.9 * k, fill=SKIN)
+    d.line(P([(1, 11), (1, 14)], k), fill=BONE_DARK, width=int(0.8 * k))
+    for y in (3.5, 8.5, 13):
+        d.line(P([(12.5, y), (15.5, y)], k), fill=BONE, width=int(0.9 * k))
+
+
+def ic_finish(d, k):
+    # tubo que baja sobre un cuerpo tendido
+    d.line(P([(9, 1.5), (13, 9)], k), fill=STEEL, width=int(2.6 * k))
+    d.ellipse(P([(1.5, 11), (5, 14.5)], k), fill=SKIN)
+    d.rounded_rectangle(P([(4.5, 11.5), (15, 14.5)], k), radius=1.4 * k, fill=(150, 156, 160, 255))
+    d.line(P([(10, 9.5), (14.5, 8)], k), fill=BLOOD_LIGHT, width=int(0.8 * k))
+
+
+def ic_grapple(d, k):
+    # dos manos que se agarran
+    d.rounded_rectangle(P([(1, 5), (8.5, 11)], k), radius=1.6 * k, fill=SKIN)
+    d.rounded_rectangle(P([(7.5, 5), (15, 11)], k), radius=1.6 * k, fill=(150, 124, 100, 255))
+    for x in (8.5, 10.5, 12.5):
+        d.line(P([(x, 5.4), (x - 1.2, 10.4)], k), fill=(100, 76, 62, 255), width=int(0.7 * k))
+    d.line(P([(3, 12.5), (13, 12.5)], k), fill=BLOOD_LIGHT, width=int(0.7 * k))
+
+
+def ic_bite(d, k):
+    # dientes que se cierran
+    d.polygon(P([(1.5, 4), (14.5, 4), (13, 7.5), (3, 7.5)], k), fill=(110, 40, 40, 255))
+    d.polygon(P([(1.5, 12), (14.5, 12), (13, 8.5), (3, 8.5)], k), fill=(110, 40, 40, 255))
+    for i in range(5):
+        x = 3 + i * 2.5
+        d.polygon(P([(x, 5), (x + 2, 5), (x + 1, 8)], k), fill=BONE)
+        d.polygon(P([(x, 11), (x + 2, 11), (x + 1, 8.2)], k), fill=BONE)
+
+
+def ic_stab(d, k):
+    # hoja que entra hacia abajo, con una gota
+    d.polygon(P([(7, 1), (9, 1), (9, 3), (7, 3)], k), fill=STEEL_DARK)
+    d.rectangle(P([(5, 3), (11, 4.2)], k), fill=STEEL)
+    d.polygon(P([(7, 4.2), (9, 4.2), (8.4, 12), (8, 13.5), (7.6, 12)], k), fill=(206, 210, 204, 255))
+    d.ellipse(P([(9.6, 12), (12, 14.8)], k), fill=BLOOD_LIGHT)
+
+
+def ic_recover(d, k):
+    # figura que se incorpora y la flecha hacia arriba
+    d.ellipse(P([(3, 3), (6.6, 6.6)], k), fill=SKIN)
+    d.line(P([(4.8, 6.6), (6, 11), (2, 14.5)], k), fill=(130, 140, 140, 255), width=int(2.2 * k), joint="curve")
+    d.line(P([(6, 11), (10, 14.5)], k), fill=(130, 140, 140, 255), width=int(2 * k))
+    d.line(P([(12.5, 14), (12.5, 3.5)], k), fill=BONE, width=int(1.4 * k))
+    d.polygon(P([(10, 5.5), (15, 5.5), (12.5, 1.5)], k), fill=BONE)
+
+
+def ic_tourniquet(d, k):
+    # cincha con hebilla y la varilla para apretar
+    d.rounded_rectangle(P([(1.5, 6), (14.5, 10)], k), radius=1 * k, fill=(150, 116, 80, 255))
+    d.rectangle(P([(9, 4.6), (12.6, 11.4)], k), outline=STEEL, width=int(1.1 * k))
+    d.line(P([(3, 2), (8, 14)], k), fill=STEEL_DARK, width=int(1.4 * k))
+    d.line(P([(2, 8), (8.5, 8)], k), fill=BLOOD_LIGHT, width=int(0.6 * k))
+
+
 ORDER_ICONS = {
     "pipe": ic_pipe, "fist": ic_fist, "blade": ic_blade, "guard": ic_guard, "bandage": ic_bandage,
     "pills": ic_pills, "syringe": ic_syringe, "lungs": ic_lungs, "door": ic_door, "flee_solo": ic_flee_solo,
     "break_free": ic_break_free, "back": ic_back, "skill": ic_skill, "item": ic_item, "attack": ic_attack,
+    "kick": ic_kick, "sweep": ic_sweep, "push": ic_push, "finish": ic_finish, "grapple": ic_grapple, "bite": ic_bite,
+    "stab": ic_stab, "recover": ic_recover, "tourniquet": ic_tourniquet,
 }
 
 
@@ -472,9 +554,40 @@ def st_panic(d, k):
         d.line(P([(x, 2.8), (x, 0.6)], k), fill=BLOOD_LIGHT, width=int(0.8 * k))
 
 
+def st_down(d, k):
+    # figura tendida en el suelo
+    d.line(P([(0.5, 10.5), (11.5, 10.5)], k), fill=(70, 62, 54, 255), width=int(0.8 * k))
+    d.ellipse(P([(0.8, 6.6), (3.6, 9.4)], k), fill=SKIN)
+    d.rounded_rectangle(P([(3.4, 7), (11, 9.6)], k), radius=1 * k, fill=(150, 156, 160, 255))
+    d.polygon(P([(6, 2), (8, 2), (7, 5)], k), fill=BLOOD_LIGHT)
+
+
+def st_pushed(d, k):
+    # flecha que sale y la marca de la distancia
+    d.line(P([(1, 6), (8, 6)], k), fill=BONE, width=int(1.6 * k))
+    d.polygon(P([(7.5, 2.6), (11.5, 6), (7.5, 9.4)], k), fill=BONE)
+    d.line(P([(1, 2), (1, 10)], k), fill=BLOOD_LIGHT, width=int(0.8 * k))
+
+
+def st_terror(d, k):
+    # ojo muy abierto con la pupila mínima y lágrimas oscuras
+    d.ellipse(P([(0.6, 2), (11.4, 9)], k), fill=BONE)
+    d.ellipse(P([(5.2, 4.7), (6.8, 6.3)], k), fill=INK)
+    d.line(P([(3, 8.6), (2.6, 11.6)], k), fill=(60, 40, 70, 255), width=int(0.8 * k))
+    d.line(P([(9, 8.6), (9.4, 11.6)], k), fill=(60, 40, 70, 255), width=int(0.8 * k))
+
+
+def st_analgesia(d, k):
+    # pastilla partida con una cruz: el dolor apagado
+    d.ellipse(P([(1, 2), (11, 10)], k), fill=(200, 196, 180, 255))
+    d.line(P([(6, 2.2), (6, 9.8)], k), fill=BONE_DARK, width=int(0.7 * k))
+    d.line(P([(2.5, 11.4), (9.5, 11.4)], k), fill=(90, 130, 120, 255), width=int(0.9 * k))
+
+
 STATUS_ICONS = {
     "bleed": st_bleed, "wound": st_wound, "broken": st_broken, "amputated": st_amputated, "grabbed": st_grabbed,
-    "sedated": st_sedated, "stunned": st_stunned, "guard": st_guard, "panic": st_panic,
+    "sedated": st_sedated, "stunned": st_stunned, "guard": st_guard, "panic": st_panic, "down": st_down,
+    "pushed": st_pushed, "terror": st_terror, "analgesia": st_analgesia,
 }
 
 

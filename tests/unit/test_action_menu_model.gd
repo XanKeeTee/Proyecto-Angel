@@ -1,81 +1,70 @@
 extends TestCase
-## Adaptador provisional de la API de opciones (`ActionMenuModel`): lo que enseña la interfaz sale
-## de las reglas de `Battle`, sin inventar números.
+## Puente de la interfaz con la API de opciones (`ActionMenuModel`): lo que enseña sale de las
+## reglas de `Battle` tal cual; la interfaz solo añade reservas de objetos e iconos.
 
 const PARTY: CombatantDef = preload("res://data/party/paciente_09.tres")
 const ENEMY: CombatantDef = preload("res://data/enemies/enfermero.tres")
 const PIPE: WeaponDef = preload("res://data/weapons/pipe.tres")
 
 
-func test_opciones_por_categoria() -> void:
+func test_las_opciones_son_las_de_las_reglas() -> void:
 	var battle: Battle = _battle()
 	var model: ActionMenuModel = ActionMenuModel.new(battle)
 	var hero: Combatant = battle.protagonist()
-	var options: Array[ActionOption] = model.action_menu(hero)
-	var attack: ActionOption = ActionMenuModel.of_category(options, ActionMenuModel.ATTACK)[0]
-	check(attack.needs_target and attack.needs_part, "atacar pide objetivo y parte")
-	check_eq(attack.icon_key, &"pipe", "el tubo, con su icono")
-	var guard: ActionOption = ActionMenuModel.of_category(options, ActionMenuModel.GUARD)[0]
-	check(guard.needs_part and not guard.needs_target, "la Guardia pide una parte propia")
-	var breathe: ActionOption = ActionMenuModel.of_category(options, ActionMenuModel.SKILL)[0]
-	check(not breathe.enabled and breathe.disabled_reason != "", "con la Mente entera, Respirar no, y dice por qué")
-	hero.mind -= 30
-	breathe = ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.SKILL)[0]
-	check(breathe.enabled, "con la Mente baja, sí")
-	battle.can_flee = false
-	var flee: ActionOption = ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.OTHER)[0]
-	check(not flee.enabled and flee.disabled_reason.contains("salida"), "sin huida, Huir está desactivado con motivo")
+	var mine: Array[ActionOption] = model.action_menu(hero)
+	var rules: Array[ActionOption] = battle.action_menu(hero)
+	check_eq(mine.size(), rules.size(), "las mismas opciones")
+	for i: int in mine.size():
+		check(mine[i].id == rules[i].id and mine[i].enabled == rules[i].enabled
+			and mine[i].disabled_reason == rules[i].disabled_reason, "igual que las reglas: %s" % mine[i].id)
+	var preview: ActionPreview = model.preview(hero, mine[0], battle.enemies[0], CombatTypes.ARM_R)
+	var real: ActionPreview = battle.preview(hero, rules[0], battle.enemies[0], CombatTypes.ARM_R)
+	check(preview.hit_chance == real.hit_chance and preview.damage_max == real.damage_max, "la vista previa, también")
+	var targets: Array[TargetOption] = model.targets_for(hero, mine[0])
+	check_eq(targets.size(), battle.targets_for(hero, rules[0]).size(), "y los objetivos")
 
 
-func test_objetivos_y_vista_previa_salen_de_las_reglas() -> void:
+func test_cada_opcion_tiene_su_icono() -> void:
 	var battle: Battle = _battle()
+	battle.supplies = {&"venda": 2, &"torniquete": 1, &"analgesicos": 1}
 	var model: ActionMenuModel = ActionMenuModel.new(battle)
 	var hero: Combatant = battle.protagonist()
-	var enemy: Combatant = battle.enemies[0]
-	var attack: ActionOption = model.action_menu(hero)[0]
-	enemy.parts[CombatTypes.LEG_L].amputate()
-	var targets: Array[TargetOption] = model.targets_for(hero, attack)
-	check_eq(targets.size(), 1, "un enemigo")
-	check_eq(targets[0].parts.size(), enemy.part_order.size(), "todas sus partes")
-	for part: PartOption in targets[0].parts:
-		if part.id == CombatTypes.LEG_L:
-			check(not part.enabled and part.disabled_reason != "", "la amputada no se elige")
-		else:
-			check_eq(part.hit_chance, battle.preview_hit_chance(hero, enemy, part.id), "acierto de las reglas")
-	var preview: ActionPreview = model.preview(hero, attack, enemy, CombatTypes.ARM_R)
-	var damage: Vector2i = battle.preview_damage(hero, enemy, CombatTypes.ARM_R)["body"]
-	check_eq(Vector2i(preview.damage_min, preview.damage_max), damage, "daño de las reglas")
-	var sin_tajo: bool = false
-	for line: String in preview.lines:
-		sin_tajo = sin_tajo or line.contains("TAJO")
-	check(sin_tajo, "dice qué ataque pierde si se rompe")
-	# Brazo de instrumental roto: el tubo puede arrancarlo.
-	enemy.parts[CombatTypes.ARM_R].worsen()
-	enemy.parts[CombatTypes.ARM_R].worsen()
-	preview = model.preview(hero, attack, enemy, CombatTypes.ARM_R)
-	check(preview.amputation_chance > 0, "roto, se puede arrancar a golpes")
-	preview = model.preview(hero, attack, enemy, CombatTypes.HEAD)
-	check_eq(int(preview.status_chances.get(&"stun", 0)), ActionMenuModel.STUN_HEAD_BLUNT, "en la cabeza, puede aturdir")
+	for option: ActionOption in model.action_menu(hero):
+		check(model.icon_for(hero, option) != null, "icono para %s" % option.id)
+		if option.category == ActionMenuModel.ATTACK:
+			check_eq(model.icon_key_for(hero, option), &"pipe", "atacar con el tubo: el icono del tubo")
+		if option.skill != null:
+			check(ActionMenuModel.SKILL_ICONS.has(option.skill.id), "cada habilidad tiene su dibujo: %s" % option.skill.id)
+	check_eq(ActionMenuModel.item_icon_key(&"torniquete"), &"tourniquet", "el torniquete, su cincha")
+	check_eq(ActionMenuModel.item_icon_key(&"venda_esterilizada"), &"bandage", "las vendas, la venda")
 
 
-func test_orden_y_reservas() -> void:
+func test_reservas_de_objetos() -> void:
 	var battle: Battle = _battle()
-	battle.bandages = 1
+	battle.supplies = {&"analgesicos": 1, &"venda": 2}
 	var model: ActionMenuModel = ActionMenuModel.new(battle)
 	var hero: Combatant = battle.protagonist()
-	var items: Array[ActionOption] = ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.ITEM)
-	check_eq(items.size(), 1, "una venda")
-	var order: CombatAction = model.make_order(hero, items[0], null, &"")
+	var pills: ActionOption = _option(model.action_menu(hero), &"item:analgesicos")
+	check(pills != null, "hay analgésicos")
+	var order: CombatAction = model.make_order(hero, pills, hero, &"")
 	check_eq(order.type, CombatTypes.ActionType.ITEM, "orden de objeto")
 	model.reserve(order)
-	check(ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.ITEM).is_empty(),
-		"reservada, no se ofrece otra vez")
+	check(_option(model.action_menu(hero), &"item:analgesicos") == null, "reservados, no se ofrecen otra vez")
 	model.release(order)
-	check_eq(ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.ITEM).size(), 1, "al volver atrás, sí")
-	var guard: ActionOption = ActionMenuModel.of_category(model.action_menu(hero), ActionMenuModel.GUARD)[0]
-	order = model.make_order(hero, guard, null, CombatTypes.ARM_L)
-	check(order.type == CombatTypes.ActionType.GUARD and order.target == hero and order.part_id == CombatTypes.ARM_L,
-		"la Guardia cubre una parte propia")
+	check(_option(model.action_menu(hero), &"item:analgesicos") != null, "al volver atrás, sí")
+	var bandage: ActionOption = _option(model.action_menu(hero), &"item:venda")
+	check_eq(bandage.quantity, 2, "dos vendas")
+	model.reserve(model.make_order(hero, bandage, hero, CombatTypes.ARM_L))
+	check_eq(_option(model.action_menu(hero), &"item:venda").quantity, 1, "una reservada: queda una")
+	model.clear_reservations()
+	check_eq(_option(model.action_menu(hero), &"item:venda").quantity, 2, "ronda nueva: las dos")
+
+
+func _option(options: Array[ActionOption], id: StringName) -> ActionOption:
+	for option: ActionOption in options:
+		if option.id == id:
+			return option
+	return null
 
 
 func _battle() -> Battle:

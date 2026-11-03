@@ -30,6 +30,8 @@ var selected: StringName = &"":
 	set(value):
 		selected = value
 		_sync()
+## Enseña el acierto en los rótulos (apuntar a un enemigo); en el cuerpo propio, el estado.
+var show_chance: bool = true
 ## Parte que amenaza el enemigo (Guardia), con un aviso que parpadea; &"" = ninguna.
 var threat_part: StringName = &""
 
@@ -178,7 +180,12 @@ func _draw_labels() -> void:
 		var color: Color = BattleSkin.STATE_INK[option.state]
 		if option.state == CombatTypes.PartState.AMPUTATED:
 			text = "—"
-		elif option.hit_chance > 0:
+		elif option.bleeding > 0:
+			text = "×%d" % option.bleeding
+			color = BattleSkin.INK_RED
+		elif not option.enabled:
+			text = "—"
+		elif show_chance and option.hit_chance > 0:
 			text = "%d" % option.hit_chance
 			color = BattleSkin.INK if option.state == CombatTypes.PartState.HEALTHY else color
 		else:
@@ -191,6 +198,8 @@ func _draw_labels() -> void:
 		_labels.draw_string(font, Vector2(box.position.x + 2, at.y + 3.5), text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 			font_size, BattleSkin.PAPER if chosen else color)
 		var icon: StringName = BattleFrame.part_icon(option.state as CombatTypes.PartState)
+		if option.bleeding > 0:
+			icon = BattleFrame.ICON_BLEED
 		if icon != &"":
 			var side: float = -1.0 if at.x > size.x * 0.5 else 1.0
 			BattleFrame.draw_icon(_labels, icon, at + Vector2(side * (w * 0.5 + 9), 0))

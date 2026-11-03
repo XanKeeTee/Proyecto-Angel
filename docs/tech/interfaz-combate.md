@@ -13,8 +13,7 @@ máquina, pestañas con cinta, sellos de caucho y una lámina anatómica.
 | Clase | Archivo | Qué es |
 |---|---|---|
 | `BattleScene` | `battle_scene.gd` | Orquesta: fases (`MAIN`, `SUBMENU`, `AIM`, `RESOLVE`, `END`), menús, efectos y señales de `Battle` |
-| `ActionMenuModel` | `action_menu_model.gd` | **Adaptador provisional** de la API de opciones (ver abajo). Lo único que habla de reglas |
-| `ActionOption`, `TargetOption`, `PartOption`, `ActionPreview` | `model/*.gd` | Estructuras del contrato (provisionales: ver «Al fusionar») |
+| `ActionMenuModel` | `action_menu_model.gd` | Puente con la API de opciones de las reglas (ver abajo): reservas de objetos e iconos. No decide reglas |
 | `BattleSkin` | `battle_skin.gd` | Carga el arte, estilos de 9 cortes (`StyleBoxTexture`), paleta, iconos, sellos y ayudas de dibujo |
 | `BattleFrame` | `battle_frame.gd` | Caja de chapa con pestaña; iconos de estado (`draw_icon`, `part_icon`, `status_icons`) |
 | `BattleOption` | `battle_option.gd` | Opción del menú: marca roja y franja granate al elegirla, icono, dato a la derecha; las desactivadas, tachadas (se pueden señalar: su ficha dice por qué) |
@@ -44,19 +43,35 @@ func preview(actor: Combatant, option: ActionOption, target: Combatant, part_id:
 func make_order(actor: Combatant, option: ActionOption, target: Combatant, part_id: StringName) -> CombatAction
 ```
 
-`ActionMenuModel` las ofrece. **Si `Battle` ya tiene un método con ese nombre, lo usa** (`has_method`); si no, construye
-las mismas estructuras con la API antigua (`preview_hit_chance`, `preview_damage`, `flee_chance_*`,
-`break_free_chance`, `intents`). Además lleva lo que la interfaz necesita y las reglas no: reservar los objetos ya
-elegidos por otro miembro en la misma ronda (`reserve`, `release`, `clear_reservations`).
+Las implementa `Battle` (`BattleMenu`, `BattlePreview`; estructuras en `scripts/systems/combat/options/`).
+`ActionMenuModel` las llama tal cual y solo añade lo que necesita la interfaz:
 
-Campo añadido a `ActionOption`: **`quantity`** (unidades que quedan; 0 = no se enseña).
+- **Reservas**: un objeto que ya ha elegido otro miembro en la misma ronda no se ofrece otra vez, o se ofrece con una
+  unidad menos (`reserve`, `release`, `clear_reservations`).
+- **Iconos**: traduce `icon_key` al arte de la interfaz (`icon_for`, `icon_key_for`). Atacar sale del **arma empuñada**
+  (tubo, bisturí o puño; la otra mano, con `use_offhand`); cada habilidad por su id (`SKILL_ICONS`: golpe a la rodilla →
+  patada, barrido, empujón, rematar, forcejear, morder, clavar, Respirar → pulmones); objetos y tratamientos por su id
+  (venda, torniquete, pastillas, jeringa) o, si el objeto tiene icono propio, ese.
 
-### Al fusionar con las reglas definitivas
+Qué usa la interfaz de cada estructura: en `ActionOption`, `category`, `label`, `description`, `enabled`,
+`disabled_reason`, `cost_body`, `cost_mind`, `skill` (recarga), `treatment`, `needs_target`, `needs_part`,
+`target_side`, `action_type` (Levantarse va primero), `use_offhand`, `value_text` (dato a la derecha) y `quantity`; en
+`TargetOption`, `enabled` y `disabled_reason`; en `PartOption`, `state`, `hit_chance`, `bleeding`, `enabled` y
+`disabled_reason`; en `ActionPreview`, `hit_chance`, `damage_min`/`damage_max`, `break_chance`, `amputation_chance`,
+`status_chances`, `act_first_chance`, `lines` y `risk_lines`.
 
-1. Si las reglas definen `ActionOption`, `TargetOption`, `PartOption` y `ActionPreview` (mismos campos), borrar
-   `scenes/battle/model/` (si no, Godot avisa de `class_name` repetido).
-2. `ActionMenuModel` ya delega en `Battle` si tiene los cuatro métodos; lo demás puede quedarse como está.
-3. Si `Battle` emite `intent_changed(enemy)` o `turn_order_changed()`, conectarlas a `_telegraph()` y `_refresh()`.
+Señales que escucha además de las de siempre: `intent_changed(enemy)` (reescribe la nota y la parte amenazada),
+`turn_order_changed()` (la tira de turno, al resolver) y `status_changed` (fichas e iconos).
+
+**Menús**: el principal tiene Levantarse o Recobrarse (si está en el suelo o aturdido), Atacar (directo a apuntar si solo
+hay una mano), Habilidades, Guardia, Objetos y las sueltas (Zafarse, Huir). Habilidades enseña las del arma con su coste;
+las apagadas, tachadas, con «N r.» si están en recarga y el motivo en su ficha. Objetos lista los tratamientos: los que van
+a una parte (vendas, torniquete) abren la lámina del propio cuerpo con cada parte elegible o no (y su sangrado); los que no
+(analgésicos, sedante) se dan directos (o se elige a quién).
+
+**Estados con icono**: sangrado (por parte; en el enemigo, junto a cada parte), agarrado, sedación, aturdido, derribado,
+apartado, aterrado, analgesia (entre paréntesis si está apagado), guardia y pánico. Derribado: la figura del grupo se ve
+tendida en el suelo.
 
 ## Arte (`tools/art2d/ui_battle.py`)
 
@@ -68,9 +83,10 @@ python3 -I tools/art2d/ui_battle.py --sheet hoja.png   # y una hoja de revisión
 
 Chapa (`frame_metal`, la misma función que la maqueta del menú), papel (`frame_paper`), cartulina (`frame_folder`),
 pestaña (`tab_paper`), cinta, franja y marca de selección, línea a mano, tubo de vidrio, sellos (`stamp_*`), iconos de
-órdenes 16×16 (`icons/order_*`: tubo, puño, bisturí, brazos cruzados, venda, pastillas, jeringa, pulmones, puerta,
-puerta con flecha, eslabón roto, atrás, ojo, botiquín) e iconos de estado 12×12 (`icons/status_*`: sangrado, herida,
-hueso roto, amputado, agarrado, sedado, aturdido, guardia, pánico), lámina anatómica con una máscara por parte
+órdenes 16×16 (`icons/order_*`: tubo, puño, bisturí, brazos cruzados, venda, torniquete, pastillas, jeringa, pulmones,
+puerta, puerta con flecha, eslabón roto, atrás, ojo, botiquín, levantarse y las habilidades: patada, barrido, empujón,
+rematar, forcejear, morder, clavar) e iconos de estado 12×12 (`icons/status_*`: sangrado, herida,
+hueso roto, amputado, agarrado, sedado, aturdido, guardia, pánico, derribado, apartado, aterrado, analgesia), lámina anatómica con una máscara por parte
 (`diagram/`) y la silueta pequeña del mapa de heridas (`diagram/mini_*`), y el puntero (plumilla, a 2×).
 
 **Escala**: todo se mide en píxeles de la vista (640×360) y las piezas de 9 cortes se estiran. Para 1280×720:
@@ -120,12 +136,15 @@ xvfb-run -a -s "-screen 0 1280x720x24" "$GODOT_BIN" --path . --rendering-driver 
 | Sello «AUTORIZADO» | `--battle-pick=head --battle-confirm --battle-shot-delay=0.2` |
 | Guardia sobre el propio cuerpo | `--battle-menu=guard --battle-wound=arm_l:1` |
 | Submenú de objetos | `--battle-items --battle-menu=item --battle-focus=1` |
+| Submenú de habilidades / una apagada | `--battle-menu=skill --battle-focus=0` / `--battle-focus=3` (Rematar) |
+| Vendar una parte | `--battle-items --battle-bleed=arm_l:2 --battle-menu=item --battle-choose=item:venda --battle-pick=arm_l` |
+| Protagonista derribado | `--battle-status=derribado --battle-focus=0` |
 | Golpe con amputación | `--battle-strike=arm_r --battle-shot-delay=0.3` |
 | Registro abierto | `--autoplay=3 --battle-log --battle-shot-delay=0.5` |
 
 ## Pruebas
 
-`tests/integration/test_battle_ui.gd` (menús desde `action_menu`, motivo de lo desactivado, apuntar con el ratón y la
+`tests/integration/test_battle_ui.gd` (menús desde `action_menu` con las habilidades del arma, motivo de lo desactivado, vendar una parte, derribado, apuntar con el ratón y la
 lámina, partes amputadas, registro, aviso del enemigo y parte amenazada, hasta 4 fichas, la ficha reacciona al golpe),
-`tests/unit/test_action_menu_model.gd` (el adaptador sale de las reglas) y `tests/integration/test_encounter.gd`
+`tests/unit/test_action_menu_model.gd` (las opciones son las de las reglas, iconos y reservas) y `tests/integration/test_encounter.gd`
 (`test_pantalla_de_combate`, la pantalla desde el mapa).

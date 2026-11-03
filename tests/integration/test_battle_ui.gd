@@ -39,8 +39,7 @@ func test_los_menus_se_construyen_desde_action_menu() -> void:
 	var scene: BattleScene = _open_scene()
 	await host.get_tree().process_frame
 	var hero: Combatant = scene.battle.protagonist()
-	var model: ActionMenuModel = ActionMenuModel.new(scene.battle)
-	var options: Array[ActionOption] = model.action_menu(hero)
+	var options: Array[ActionOption] = scene.battle.action_menu(hero)
 	var labels: PackedStringArray = []
 	for button: BattleOption in scene.menu_buttons():
 		labels.append(button.text)
@@ -52,13 +51,18 @@ func test_los_menus_se_construyen_desde_action_menu() -> void:
 		check(labels.has(option.label), "las opciones sueltas van en el principal: %s" % option.label)
 	for button: BattleOption in scene.menu_buttons():
 		check(button.icon_texture != null, "cada orden lleva su icono: %s" % button.text)
+	# Habilidades: las de las reglas para el arma que lleva, con su coste o motivo.
 	scene.open_category(ActionMenuModel.SKILL)
 	var skills: Array[ActionOption] = ActionMenuModel.of_category(options, ActionMenuModel.SKILL)
-	var shown: PackedStringArray = scene.menu_options()
-	check_eq(shown.size(), skills.size() + 1, "el submenú lista las habilidades del modelo y Atrás")
-	check(shown[0].begins_with(skills[0].label), "con sus nombres")
-	check(scene.menu_buttons()[0].option == skills[0] or scene.menu_buttons()[0].option.id == skills[0].id,
-		"cada botón sabe qué opción es")
+	check(skills.size() >= 3, "el tubo da varias habilidades")
+	var buttons: Array[BattleOption] = scene.menu_buttons()
+	check_eq(buttons.size(), skills.size() + 1, "el submenú lista las habilidades de las reglas y Atrás")
+	for i: int in skills.size():
+		check(buttons[i].option.id == skills[i].id and buttons[i].text == skills[i].label, "en orden: %s" % skills[i].id)
+		check_eq(buttons[i].disabled, not skills[i].enabled, "apagada si las reglas la apagan: %s" % skills[i].id)
+		check(buttons[i].icon_texture != null, "con su icono: %s" % skills[i].id)
+		if skills[i].enabled and skills[i].value_text != "":
+			check_eq(buttons[i].suffix, skills[i].value_text, "con su coste o efecto: %s" % skills[i].id)
 	check_eq(scene.menu_options()[scene.menu_options().size() - 1], "Atrás", "se puede volver atrás")
 	scene.queue_free()
 	await host.get_tree().process_frame
@@ -68,23 +72,95 @@ func test_una_opcion_desactivada_muestra_su_motivo() -> void:
 	var scene: BattleScene = _open_scene()
 	await host.get_tree().process_frame
 	scene.open_category(ActionMenuModel.SKILL)
-	var breathe: BattleOption = scene.menu_buttons()[0]
-	check(breathe.disabled, "con la Mente entera no se puede Respirar")
+	var off: BattleOption = null
+	for button: BattleOption in scene.menu_buttons():
+		if button.disabled and button.option != null:
+			off = button
+	check(off != null, "con el enemigo de pie, alguna habilidad está apagada (rematar)")
+	if off == null:
+		scene.queue_free()
+		return
 	await host.get_tree().process_frame
-	breathe.grab_focus()
+	off.grab_focus()
 	await host.get_tree().process_frame
 	var detail: PaperCard = scene.detail_card()
 	check(detail.visible, "al señalarla sale la ficha de detalle")
 	var text: String = "\n".join(detail.texts())
-	check(text.contains(breathe.option.disabled_reason) and breathe.option.disabled_reason != "",
-		"la ficha dice por qué no se puede")
+	check(off.option.disabled_reason != "" and text.contains(off.option.disabled_reason), "la ficha dice por qué no se puede")
 	check(detail.stamp_texture != null, "con el sello de denegado")
 	var event: InputEventAction = InputEventAction.new()
 	event.action = &"ui_accept"
 	event.pressed = true
-	breathe.gui_input.emit(event)
+	off.gui_input.emit(event)
 	await host.get_tree().process_frame
 	check_eq(scene._orders.size(), 0, "pulsarla no da ninguna orden")
+	scene.queue_free()
+	await host.get_tree().process_frame
+
+
+func test_tratar_una_parte_con_una_venda() -> void:
+	var scene: BattleScene = _open_scene({&"venda": 2, &"analgesicos": 1})
+	await host.get_tree().process_frame
+	var hero: Combatant = scene.battle.protagonist()
+	hero.add_bleed(CombatTypes.ARM_L, 2)
+	scene._show_main_menu()
+	scene.open_category(ActionMenuModel.ITEM)
+	var bandage: BattleOption = null
+	for button: BattleOption in scene.menu_buttons():
+		if button.option != null and button.option.id == &"item:venda":
+			bandage = button
+	check(bandage != null and not bandage.disabled, "la venda se puede usar (el brazo sangra)")
+	check(bandage.suffix.contains("2"), "con la cantidad")
+	bandage.pressed.emit()
+	check_eq(scene.phase(), BattleScene.Phase.AIM, "se elige dónde: la lámina del propio cuerpo")
+	check(scene.body_diagram().visible, "con la lámina")
+	var arm: BattleOption = scene._button_for_part(CombatTypes.ARM_L)
+	check(arm != null and not arm.disabled and arm.suffix.contains("sangra"), "el brazo que sangra, elegible")
+	var head: BattleOption = scene._button_for_part(CombatTypes.HEAD)
+	check(head != null and head.disabled, "la cabeza sana, no")
+	scene.aim_at_part(CombatTypes.ARM_L)
+	check(scene.part_card().visible and "\n".join(scene.part_card().texts()).length() > 0, "la ficha del tratamiento")
+	scene.confirm_aim()
+	check_eq(scene._orders.size(), 1, "orden dada")
+	check(scene._orders[0].type == CombatTypes.ActionType.ITEM and scene._orders[0].part_id == CombatTypes.ARM_L
+		and scene._orders[0].treatment != null, "vendar el brazo izquierdo")
+	scene.queue_free()
+	await host.get_tree().process_frame
+
+
+func test_derribado_solo_puede_levantarse() -> void:
+	var party: CombatantDef = (BattleScene.DEFAULT_PARTY as CombatantDef).duplicate()
+	party.weapon = BattleScene.DEFAULT_WEAPON
+	var battle: Battle = Battle.new([party] as Array[CombatantDef], [BattleScene.DEFAULT_ENEMY] as Array[CombatantDef], 5)
+	battle.protagonist().add_status(CombatCatalog.status(CombatTypes.STATUS_DOWN))
+	var scene: BattleScene = BattleScene.new()
+	scene.setup(battle, null, null)
+	host.add_child(scene)
+	await host.get_tree().process_frame
+	var buttons: Array[BattleOption] = scene.menu_buttons()
+	check(buttons[0].option != null and buttons[0].option.action_type == CombatTypes.ActionType.RECOVER,
+		"lo primero, levantarse")
+	check(not buttons[0].disabled, "y se puede")
+	var icons: Array[Dictionary] = BattleFrame.status_icons(battle.protagonist())
+	var down_icon: bool = false
+	for icon: Dictionary in icons:
+		down_icon = down_icon or BattleSkin.status_key(icon["kind"]) == &"down"
+	check(down_icon, "la ficha enseña el icono de derribado")
+	check(BattleSkin.status_icon(CombatTypes.STATUS_DOWN) != null, "que existe")
+	check(scene.party_battlers()[0].combatant.is_down(), "la figura está en el suelo")
+	scene.queue_free()
+	await host.get_tree().process_frame
+
+
+func test_la_nota_sigue_a_la_intencion() -> void:
+	var scene: BattleScene = _open_scene()
+	await host.get_tree().process_frame
+	var enemy: Combatant = scene.battle.enemies[0]
+	var before: String = scene.intent_note().text()
+	scene.battle.intents.erase(enemy)
+	scene.battle.intent_changed.emit(enemy)
+	check(scene.intent_note().text() != before or before == "", "la nota se reescribe cuando cambia la intención")
+	check_eq(scene.party_cards()[0].threat_part, &"", "y ya no hay parte amenazada")
 	scene.queue_free()
 	await host.get_tree().process_frame
 
@@ -243,11 +319,12 @@ func test_grupo_de_espaldas_provisional() -> void:
 	battler.queue_free()
 
 
-func _open_scene() -> BattleScene:
+func _open_scene(supplies: Dictionary[StringName, int] = {}) -> BattleScene:
 	var scene: BattleScene = BattleScene.new()
 	var party: CombatantDef = (BattleScene.DEFAULT_PARTY as CombatantDef).duplicate()
 	party.weapon = BattleScene.DEFAULT_WEAPON
 	var battle: Battle = Battle.new([party] as Array[CombatantDef], [BattleScene.DEFAULT_ENEMY] as Array[CombatantDef], 5)
+	battle.supplies = supplies
 	scene.setup(battle, null, null)
 	host.add_child(scene)
 	return scene

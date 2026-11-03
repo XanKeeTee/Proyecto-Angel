@@ -31,6 +31,9 @@ var stamp_texture: Texture2D
 var stamp_angle: float = -0.12
 ## Carpeta (cartulina) en vez de papel blanco.
 var folder: bool = false
+## Alto máximo (0 = sin límite). Si no cabe, se quitan frases desde el final: primero las de «·»,
+## luego los riesgos; lo demás (título, números, el motivo de lo desactivado) se queda.
+var max_height: float = 0.0
 
 var _rows: Array[Dictionary] = []
 var _tween: Tween
@@ -44,7 +47,14 @@ func _init() -> void:
 ## Enseña la ficha con estas filas, del ancho dado. `animate`: se desliza al aparecer.
 func show_rows(rows: Array[Dictionary], width: float, animate: bool = true) -> void:
 	var was_visible: bool = visible
-	_rows = rows
+	_rows = rows.duplicate()
+	if max_height > 0.0:
+		for kind: String in ["bullet", "risk"]:
+			var i: int = _rows.size() - 1
+			while i >= 0 and _content_height(width) > max_height:
+				if String(_rows[i].get("kind", "")) == kind and not String(_rows[i].get("text", "")).begins_with("NO DISPONIBLE"):
+					_rows.remove_at(i)
+				i -= 1
 	size = Vector2(width, _content_height(width))
 	var target: Vector2 = (anchor_point - Vector2(0, size.y) if grow_up else anchor_point).round()
 	visible = true

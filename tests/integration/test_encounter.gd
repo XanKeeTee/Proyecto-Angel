@@ -212,7 +212,10 @@ func test_pantalla_de_combate() -> void:
 		"órdenes a la izquierda, más estrecha")
 	var options: PackedStringArray = scene.menu_options()
 	check(options.size() >= 4 and options[0] == "Atacar", "las órdenes empiezan por Atacar")
-	check(options.has("Guardia") and options.has("Habilidades"), "con Guardia y Habilidades")
+	var labels: PackedStringArray = []
+	for button: BattleOption in scene.menu_buttons():
+		labels.append(button.text)
+	check(labels.has("Guardia") and labels.has("Habilidades"), "con Guardia y Habilidades")
 	check(cards[0].selected, "el que elige, resaltado")
 	check(cards[0].weapon_icon != null, "con el icono del arma empuñada")
 	# Arriba, la nota de observación con el aviso del enemigo.

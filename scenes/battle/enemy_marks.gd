@@ -24,21 +24,22 @@ func marks() -> Array[Dictionary]:
 	if view == null or combatant == null or combatant.dead:
 		return result
 	for id: StringName in combatant.part_order:
-		var kind: StringName = BattleFrame.part_icon(combatant.parts[id].state)
-		if kind == &"":
-			continue
 		var anchor: Vector2 = view.anchor(id)
 		var side: float = 1.0 if anchor.x >= 0.0 else -1.0
-		result.append({"kind": kind, "at": view.position + anchor + Vector2(side * SIDE_OFFSET, -8.0), "letter": "",
-			"part": id})
+		var at: Vector2 = view.position + anchor + Vector2(side * SIDE_OFFSET, -8.0)
+		var kind: StringName = BattleFrame.part_icon(combatant.parts[id].state)
+		if kind != &"":
+			result.append({"kind": kind, "at": at, "letter": "", "part": id})
+			at += Vector2(side * ICON_STEP, 0)
+		# Sangrado de esa parte, a su lado.
+		if combatant.parts[id].bleeding > 0:
+			result.append({"kind": BattleFrame.ICON_BLEED, "at": at, "letter": "", "part": id})
 	# Estados de todo el cuerpo, en fila sobre la cabeza.
 	var whole: Array[Dictionary] = []
-	if combatant.bleeding > 0:
-		whole.append({"kind": BattleFrame.ICON_BLEED, "letter": ""})
-	if combatant.stunned > 0:
-		whole.append({"kind": BattleFrame.ICON_STUN, "letter": ""})
-	for status_id: StringName in combatant.statuses:
-		whole.append({"kind": status_id, "letter": combatant.status_defs[status_id].display_name})
+	for entry: Dictionary in combatant.status_entries():
+		if StringName(entry["part_id"]) != &"":
+			continue
+		whole.append({"kind": StringName(entry["icon"]), "letter": String(entry["name"])})
 	var top: Vector2 = view.position + Vector2(view.anchor(CombatTypes.HEAD).x, -view.height() + 6.0)
 	if combatant.has_part(CombatTypes.HEAD) and not combatant.parts[CombatTypes.HEAD].is_amputated():
 		top.y = view.position.y + view.anchor(CombatTypes.HEAD).y - 30.0

@@ -30,12 +30,15 @@ extends Control
 ##   --screenshot=RUTA     guarda una captura (al terminar el autoplay, o al elegir órdenes) y cierra
 ##   --battle-menu=CAT     abre esa categoría (attack, skill, guard, item, other) para la captura
 ##   --battle-focus=N      señala la opción N del menú (enseña su ficha de detalle)
+##   --battle-choose=ID    elige esa opción del menú abierto (p. ej. item:venda) para la captura
 ##   --battle-pick=PARTE   apunta a PARTE (lámina y ficha de la parte)
 ##   --battle-maim=P,P     empieza con esas partes del enemigo amputadas
 ##   --battle-hurt=P:E     empieza con una parte del enemigo en un estado (1 Herida, 2 Rota)
 ##   --battle-wound=P:E    empieza con una parte propia en un estado (1 Herida, 2 Rota, 3 Amputada)
 ##   --battle-wounds       abre la hoja de lesiones del protagonista
-##   --battle-items        (sola) lleva vendas, analgésicos y sedante en la custodia
+##   --battle-items        (sola) lleva vendas, torniquete, analgésicos y sedante
+##   --battle-bleed=P:N    (sola) el protagonista sangra N por la parte P
+##   --battle-status=ID    el protagonista empieza con ese estado (derribado, aturdido, aterrado…)
 ##   --battle-log          abre el registro para la captura
 ##   --battle-confirm      confirma la parte apuntada (sello «AUTORIZADO») justo antes de la captura
 ##   --battle-seed=N       semilla fija
@@ -92,7 +95,7 @@ const DEFAULT_ENEMY: CombatantDef = preload("res://data/enemies/enfermero.tres")
 const DEFAULT_WEAPON: WeaponDef = preload("res://data/weapons/pipe.tres")
 const NOISE_SHADER: Shader = preload("res://shaders/tape_noise.gdshader")
 ## Objetos de la custodia con `--battle-items` (prototipo).
-const DEBUG_ITEMS: Array[StringName] = [&"venda", &"venda_improvisada", &"analgesicos", &"sedante"]
+const DEBUG_ITEMS: Array[StringName] = [&"venda", &"torniquete", &"analgesicos", &"sedante"]
 ## Sonidos (nombres de Sfx). Si falta el definitivo, se usa el provisional de la derecha ("" = nada).
 const SOUND_FALLBACK: Dictionary[String, String] = {
 	"combat_pipe_flesh": "metal_bang", "combat_pipe_bone": "metal_bang", "combat_bone_break": "metal_bang",
@@ -211,6 +214,9 @@ func _ready() -> void:
 	battle.finished.connect(_on_finished)
 	battle.action_started.connect(func(action: CombatAction) -> void: _events.append({"type": &"action", "action": action}))
 	battle.struck.connect(func(info: Dictionary) -> void: _events.append({"type": &"struck", "info": info}))
+	battle.intent_changed.connect(func(_enemy: Combatant) -> void: _update_intent())
+	battle.turn_order_changed.connect(_on_turn_order_changed)
+	battle.status_changed.connect(func(_who: Combatant) -> void: _refresh_marks())
 	_vhs = vhs
 	if _vhs == null and not _embedded:
 		_vhs = VhsOverlay.new()
@@ -428,12 +434,46 @@ func _telegraph() -> void:
 		_enemy_views[index].play(&"windup")
 		if intent.attack != null and intent.attack.sound_windup != "":
 			_sound(intent.attack.sound_windup, -6.0)
+	_update_intent()
+
+
+## La nota del enemigo y la parte amenazada en las fichas (al empezar la ronda y cada vez que una
+## intención cambia: `Battle.intent_changed`).
+func _update_intent() -> void:
+	if _intent == null or battle.outcome != Battle.Outcome.ONGOING:
+		return
+	for card: PatientCard in _cards:
+		card.threat_part = &""
+	for enemy: Combatant in battle.enemies:
+		var intent: CombatAction = battle.intents.get(enemy)
+		if intent == null or not enemy.is_active():
+			continue
 		var threat: StringName = _threat_part(intent)
 		var target_index: int = battle.party.find(intent.target)
 		if threat != &"" and target_index >= 0 and target_index < _cards.size():
 			_cards[target_index].threat_part = threat
+	if _phase == Phase.RESOLVE:
+		return
 	_intent.write(_intent_lines())
 	_intent.position = INTENT_AT
+
+
+## Orden de la cola de resolución (`Battle.turn_order_changed`): la tira enseña lo que queda.
+func _on_turn_order_changed() -> void:
+	if _phase != Phase.RESOLVE:
+		return
+	var order: Array[Combatant] = []
+	for action: CombatAction in battle.turn_order():
+		if not order.has(action.actor):
+			order.append(action.actor)
+	_turns.set_order(battle.round_number, order, _turns.active, false)
+
+
+func _refresh_marks() -> void:
+	for card: PatientCard in _cards:
+		card.refresh()
+	for battler: PartyBattler in _battlers:
+		battler.queue_redraw()
 
 
 ## Parte que se ve amenazada por una intención (o &"" si no se sabe).
@@ -565,6 +605,11 @@ func _show_main_menu() -> void:
 	_command_box.tab = "ÓRDENES · %s" % member.display_name().to_upper()
 	_set_menu_width(MENU_W)
 	var options: Array[ActionOption] = _model.action_menu(member)
+	var others: Array[ActionOption] = ActionMenuModel.of_category(options, ActionMenuModel.OTHER)
+	# Levantarse / Recobrarse va lo primero: es lo único que se puede hacer.
+	for option: ActionOption in others:
+		if option.action_type == CombatTypes.ActionType.RECOVER:
+			_add_direct(member, option)
 	for category: StringName in [ActionMenuModel.ATTACK, ActionMenuModel.SKILL, ActionMenuModel.GUARD, ActionMenuModel.ITEM]:
 		var group: Array[ActionOption] = ActionMenuModel.of_category(options, category)
 		if group.is_empty() and category != ActionMenuModel.ITEM:
@@ -574,27 +619,35 @@ func _show_main_menu() -> void:
 		for option: ActionOption in group:
 			enabled = enabled or option.enabled
 			amount += maxi(1, option.quantity) if category == ActionMenuModel.ITEM else 0
-		var icon_key: StringName = group[0].icon_key if category == ActionMenuModel.ATTACK and not group.is_empty() \
-				else ActionMenuModel.CATEGORY_ICONS[category]
+		var icon: Texture2D = _model.icon_for(member, group[0]) if category == ActionMenuModel.ATTACK \
+				else BattleSkin.order_icon(ActionMenuModel.CATEGORY_ICONS[category])
+		var suffix: String = "×%d" % amount if amount > 0 else ""
+		if category == ActionMenuModel.SKILL:
+			suffix = str(group.size())
 		var button: BattleOption = _add_option(ActionMenuModel.CATEGORY_LABELS[category], _open_category.bind(category),
-			enabled, "×%d" % amount if amount > 0 else "", BattleSkin.order_icon(icon_key))
+			enabled, suffix, icon)
 		button.category = category
-	for option: ActionOption in ActionMenuModel.of_category(options, ActionMenuModel.OTHER):
-		var chance: int = _model.preview(member, option, null, &"").hit_chance
-		var button: BattleOption = _add_option(option.label, _confirm.bind(option, null, &""), option.enabled,
-			"%d%%" % chance if chance >= 0 else "", BattleSkin.order_icon(option.icon_key))
-		button.option = option
+	for option: ActionOption in others:
+		if option.action_type != CombatTypes.ActionType.RECOVER:
+			_add_direct(member, option)
 	if not _orders.is_empty():
 		_add_option("Atrás", _go_back, true, "", BattleSkin.order_icon(&"back"))
 	_focus_first()
 
 
-## Abre una categoría: Atacar y Guardia van directas a apuntar (si solo hay una forma); el resto,
-## a un submenú con iconos, cantidades y su ficha.
+## Opción suelta del menú principal (Zafarse, Huir, Levantarse…).
+func _add_direct(member: Combatant, option: ActionOption) -> void:
+	var button: BattleOption = _add_option(option.label, _choose.bind(option), option.enabled, option.value_text,
+		_model.icon_for(member, option))
+	button.option = option
+
+
+## Abre una categoría: si solo hay una forma de atacar o de cubrirse, va directa a apuntar; si no,
+## a un submenú con iconos, cantidad o coste y su ficha.
 func _open_category(category: StringName) -> void:
 	var member: Combatant = _current()
 	var group: Array[ActionOption] = ActionMenuModel.of_category(_model.action_menu(member), category)
-	if group.size() == 1 and group[0].needs_part:
+	if group.size() == 1 and group[0].needs_part and group[0].enabled:
 		_begin_aim(group[0])
 		return
 	_phase = Phase.SUBMENU
@@ -602,18 +655,8 @@ func _open_category(category: StringName) -> void:
 	_clear_menu()
 	_command_box.tab = ActionMenuModel.CATEGORY_LABELS[category].to_upper()
 	for option: ActionOption in group:
-		var suffix: String = ""
-		if option.quantity > 0:
-			suffix = "×%d" % option.quantity
-		elif option.cost_body > 0 or option.cost_mind > 0:
-			suffix = _cost_text(option)
-		elif option.id == &"breathe":
-			suffix = "+%d M" % (Battle.BREATHE_BASE + member.def.willpower)
-		var icon: Texture2D = BattleSkin.order_icon(option.icon_key)
-		var stack: ItemStack = option.item as ItemStack
-		if stack != null and stack.def.icon != null:
-			icon = stack.def.icon
-		var button: BattleOption = _add_option(option.label, _choose.bind(option), option.enabled, suffix, icon)
+		var button: BattleOption = _add_option(option.label, _choose.bind(option), option.enabled,
+			option.value_text if option.enabled else _short_reason(option.disabled_reason), _model.icon_for(member, option))
 		button.option = option
 	if group.is_empty():
 		var empty: BattleOption = _add_option("Nada que sirva", Callable(), false)
@@ -623,25 +666,46 @@ func _open_category(category: StringName) -> void:
 	_focus_first()
 
 
+## Dato corto a la derecha de una opción apagada («2 r.» si está en recarga).
+static func _short_reason(reason: String) -> String:
+	if reason.begins_with("Aún no"):
+		return "%d r." % reason.get_slice("(", 1).to_int()
+	return ""
+
+
 func _choose(option: ActionOption) -> void:
 	if not option.enabled:
 		_deny(option.disabled_reason)
 	elif option.needs_part:
 		_begin_aim(option)
 	elif option.needs_target:
-		_show_target_menu(option)
+		_begin_target(option)
 	else:
 		_confirm(option, null, &"")
 
 
-## A quién (objetos con varios miembros, o varios enemigos).
-func _show_target_menu(option: ActionOption) -> void:
+## Opción con objetivo pero sin parte (analgésicos, sedante…): si solo hay uno, directo.
+func _begin_target(option: ActionOption) -> void:
+	var targets: Array[TargetOption] = _model.targets_for(_current(), option)
+	if targets.size() == 1:
+		if targets[0].enabled:
+			_confirm(option, targets[0].combatant, &"")
+		else:
+			_deny(targets[0].disabled_reason)
+		return
+	_show_target_menu(option, targets)
+
+
+## A quién (varios miembros, o varios enemigos).
+func _show_target_menu(option: ActionOption, targets: Array[TargetOption]) -> void:
 	_phase = Phase.SUBMENU
 	_clear_menu()
 	_command_box.tab = "¿A QUIÉN?"
-	for target: TargetOption in _model.targets_for(_current(), option):
+	for target: TargetOption in targets:
 		var callback: Callable = _aim.bind(option, target) if option.needs_part else _confirm.bind(option, target.combatant, &"")
-		_add_option(target.combatant.display_name(), callback, target.combatant.is_present())
+		var button: BattleOption = _add_option(target.combatant.display_name(), callback, target.enabled,
+			"" if target.enabled else "—")
+		button.option = option
 	_add_option("Atrás", _show_main_menu, true, "", BattleSkin.order_icon(&"back"))
 	_fit_menu_width()
 	_focus_first()
@@ -653,33 +717,42 @@ func _begin_aim(option: ActionOption) -> void:
 		_deny("No hay a quién.")
 		return
 	if targets.size() > 1:
-		_show_target_menu(option)
+		_show_target_menu(option, targets)
+		return
+	if not targets[0].enabled:
+		_deny(targets[0].disabled_reason)
 		return
 	_aim(option, targets[0])
 
 
-## Apuntar: la lista de partes (con acierto o estado), la lámina, la ficha de la parte y el foco
-## sobre el enemigo.
+## Apuntar: la lista de partes (con acierto, estado o sangrado), la lámina, la ficha de la parte y
+## el foco sobre el enemigo. Sirve también para cubrirse y para tratar una parte propia.
 func _aim(option: ActionOption, target: TargetOption) -> void:
 	_phase = Phase.AIM
 	_aim_option = option
 	_aim_target = target
 	_close_papers()
 	_clear_menu()
-	var own: bool = target.combatant == _current()
-	_command_box.tab = "CUBRIR" if own else "APUNTAR"
+	var own: bool = not target.combatant.is_enemy
+	_command_box.tab = _aim_tab(option)
 	var first: BattleOption = null
 	var wanted: StringName = StringName(debug.get("battle-pick", ""))
 	for part: PartOption in target.parts:
 		var suffix: String
+		var icon: Texture2D = BattleSkin.status_icon(BattleFrame.part_icon(part.state as CombatTypes.PartState))
+		if part.bleeding > 0:
+			icon = BattleSkin.status_icon(BattleFrame.ICON_BLEED)
 		if not part.enabled:
 			suffix = "—"
 		elif own:
-			suffix = "" if part.state == CombatTypes.PartState.HEALTHY else CombatTypes.PART_STATE_NAMES[part.state]
+			if part.bleeding > 0:
+				suffix = "sangra ×%d" % part.bleeding
+			else:
+				suffix = "" if part.state == CombatTypes.PartState.HEALTHY else CombatTypes.PART_STATE_NAMES[part.state]
 		else:
 			suffix = "%d%%" % part.hit_chance
 		var button: BattleOption = _add_option(part.label, _confirm.bind(option, target.combatant, part.id),
-			part.enabled, suffix, BattleSkin.status_icon(BattleFrame.part_icon(part.state as CombatTypes.PartState)))
+			part.enabled, suffix, icon)
 		button.part_id = part.id
 		button.option = option
 		button.focus_entered.connect(_aim_at_part.bind(part.id))
@@ -694,12 +767,22 @@ func _aim(option: ActionOption, target: TargetOption) -> void:
 			if intent != null and intent.target == target.combatant:
 				threat = _threat_part(intent)
 	_diagram.position = DIAGRAM_AT
+	_diagram.show_chance = not own
 	_diagram.show_parts("LÁMINA · %s" % target.combatant.display_name().to_upper(), target.parts,
 		first.part_id if first != null else &"", threat)
 	_sound("ui_paper_slide", -14.0)
 	if first != null:
 		_aim_at_part(first.part_id)
 		_grab_focus_later(first)
+
+
+func _aim_tab(option: ActionOption) -> String:
+	match option.category:
+		ActionMenuModel.GUARD:
+			return "CUBRIR"
+		ActionMenuModel.ITEM:
+			return "TRATAR"
+	return "APUNTAR"
 
 
 ## Señala una parte: foco en el enemigo, lámina y ficha de la parte.
@@ -719,8 +802,12 @@ func _aim_at_part(part_id: StringName) -> void:
 	if _member_index < 0:
 		return
 	var preview: ActionPreview = _model.preview(_current(), _aim_option, target, part_id)
-	_part_card.tab = ("PARTE · %s" % target.display_name().to_upper()) if target.is_enemy else "GUARDIA · CUBRIR"
+	var tabs: Dictionary[StringName, String] = {ActionMenuModel.GUARD: "GUARDIA · CUBRIR",
+		ActionMenuModel.ITEM: "TRATAMIENTO · %s" % _aim_option.label.to_upper()}
+	_part_card.tab = ("PARTE · %s" % target.display_name().to_upper()) if target.is_enemy \
+			else tabs.get(_aim_option.category, "PARTE")
 	_part_card.anchor_point = PART_CARD_AT
+	_part_card.max_height = TURN_RECT.position.y - PART_CARD_AT.y - 6.0
 	_part_card.stamp_texture = null
 	_part_card.show_rows(_part_rows(target, part, preview), PART_CARD_W)
 
@@ -734,26 +821,51 @@ func _part_option(part_id: StringName) -> PartOption:
 	return null
 
 
-## Filas de la ficha de la parte: nombre, estado, acierto, daño, amputación, lo que se consigue y
-## los riesgos.
+## Filas de la ficha de la parte: nombre, estado, acierto, daño, romper, amputar, estados probables,
+## lo que se consigue y los riesgos.
 func _part_rows(target: Combatant, part: PartOption, preview: ActionPreview) -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
-	rows.append({"kind": "title", "text": part.label})
+	rows.append({"kind": "title", "text": part.label,
+		"icon": BattleSkin.status_icon(BattleFrame.ICON_BLEED) if part.bleeding > 0 else null,
+		"note": "sangra ×%d" % part.bleeding if part.bleeding > 0 else ""})
 	rows.append({"kind": "state", "text": CombatTypes.PART_STATE_NAMES[part.state],
 		"color": BattleSkin.STATE_INK[part.state], "note": part.disabled_reason})
 	if target.is_enemy and part.enabled:
-		var stats: Array = [["ACIERTO", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)],
-			["DAÑO", "%d–%d" % [preview.damage_min, preview.damage_max], BattleSkin.INK]]
+		var stats: Array = [["ACIERTO", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)]]
+		if preview.damage_max > 0:
+			stats.append(["DAÑO", "%d–%d" % [preview.damage_min, preview.damage_max], BattleSkin.INK])
 		if preview.amputation_chance > 0:
 			stats.append(["AMPUT.", "%d %%" % preview.amputation_chance, BattleSkin.INK_RED])
+		elif preview.break_chance > 0:
+			stats.append(["ROMPER", "%d %%" % preview.break_chance, BattleSkin.INK])
 		rows.append({"kind": "stats", "items": stats})
 	rows.append({"kind": "rule"})
+	for line: String in _chance_lines(preview):
+		rows.append({"kind": "bullet", "text": line})
 	for line: String in preview.lines:
 		rows.append({"kind": "bullet", "text": line})
 	for line: String in preview.risk_lines:
 		rows.append({"kind": "risk", "text": line})
 	rows.append({"kind": "text", "text": "Intro / clic: confirmar · Esc: atrás", "color": BattleSkin.INK_SOFT})
 	return rows
+
+
+## Frases de las probabilidades que no caben en los números grandes (romper si ya se enseña la
+## amputación, estados probables y actuar antes).
+func _chance_lines(preview: ActionPreview) -> PackedStringArray:
+	var result: PackedStringArray = []
+	if preview.amputation_chance > 0 and preview.break_chance > 0:
+		result.append("Romper: %d %%." % preview.break_chance)
+	for id: Variant in preview.status_chances:
+		var chance: int = int(preview.status_chances[id])
+		if chance <= 0:
+			continue
+		var status: CombatStatusDef = CombatCatalog.status(StringName(id))
+		var label: String = status.display_name if status != null else String(id).capitalize()
+		result.append("%s: %d %%." % [label, chance])
+	if preview.act_first_chance >= 0:
+		result.append("Actuar antes que el enemigo: %d %%." % preview.act_first_chance)
+	return result
 
 
 ## Ficha de detalle de lo que se señala en el menú.
@@ -772,26 +884,36 @@ func _show_detail(button: BattleOption) -> void:
 	if option == null:
 		_detail.close()
 		return
-	var target: Combatant = member if option.category != ActionMenuModel.ATTACK else null
+	var target: Combatant = member
+	if option.target_side == BattleMenu.SIDE_ENEMY:
+		var enemies: Array[Combatant] = _present_enemies()
+		target = enemies[0] if not enemies.is_empty() else null
 	var preview: ActionPreview = _model.preview(member, option, target, &"")
 	var rows: Array[Dictionary] = []
-	var icon: Texture2D = button.icon_texture
-	rows.append({"kind": "title", "text": option.label, "icon": icon,
+	rows.append({"kind": "title", "text": option.label, "icon": button.icon_texture,
 		"note": ActionMenuModel.CATEGORY_LABELS.get(option.category, "").to_upper()})
 	rows.append({"kind": "rule"})
 	if option.description != "":
-		rows.append({"kind": "text", "text": option.description, "max_lines": 3})
+		rows.append({"kind": "text", "text": option.description, "max_lines": 4})
 	var stats: Array = []
-	if preview.hit_chance >= 0:
+	if option.action_type in [CombatTypes.ActionType.BREAK_FREE, CombatTypes.ActionType.FLEE_ALL,
+			CombatTypes.ActionType.FLEE_SOLO]:
 		stats.append(["ÉXITO", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)])
 	if option.cost_body > 0 or option.cost_mind > 0:
 		stats.append(["COSTE", _cost_text(option), BattleSkin.INK_RED])
+	if option.skill != null and option.skill.cooldown > 0:
+		stats.append(["RECARGA", "%d r." % option.skill.cooldown, BattleSkin.INK])
 	if option.category == ActionMenuModel.ATTACK:
-		var weapon: WeaponDef = member.current_weapon()
-		stats.append(["PODER", str(weapon.power), BattleSkin.INK])
-		stats.append(["PRECISIÓN", str(weapon.accuracy), BattleSkin.INK])
+		var grip: WeaponGrip = member.offhand_grip() if option.use_offhand else member.grip()
+		stats.append(["PODER", str(grip.weapon.power), BattleSkin.INK])
+		stats.append(["PRECISIÓN", str(grip.weapon.accuracy + grip.accuracy_mod), BattleSkin.INK])
+	elif option.target_side == BattleMenu.SIDE_ENEMY and target != null and option.enabled:
+		stats.append(["ACIERTO*", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)])
 	if not stats.is_empty():
-		rows.append({"kind": "stats", "items": stats})
+		rows.append({"kind": "stats", "items": stats.slice(0, 3)})
+	if option.value_text != "" and option.category == ActionMenuModel.SKILL and option.cost_body == 0 \
+			and option.cost_mind == 0:
+		rows.append({"kind": "bullet", "text": option.value_text + "."})
 	for line: String in preview.lines:
 		rows.append({"kind": "bullet", "text": line})
 	for line: String in preview.risk_lines:
@@ -799,7 +921,10 @@ func _show_detail(button: BattleOption) -> void:
 	if not option.enabled:
 		rows.append({"kind": "risk", "text": "NO DISPONIBLE: " + option.disabled_reason})
 	elif option.needs_part:
-		rows.append({"kind": "text", "text": "Intro: elegir la parte.", "color": BattleSkin.INK_SOFT})
+		rows.append({"kind": "text", "text": "Intro: elegir la parte." if option.target_side == BattleMenu.SIDE_ENEMY
+			else "Intro: elegir dónde.", "color": BattleSkin.INK_SOFT})
+	elif option.target_side == BattleMenu.SIDE_ENEMY and target != null:
+		rows.append({"kind": "text", "text": "* contra el torso.", "color": BattleSkin.INK_SOFT})
 	_detail.stamp_texture = BattleSkin.stamp("denegado") if not option.enabled else null
 	_open_detail(rows)
 
@@ -811,9 +936,11 @@ func _detail_rows_for_group(button: BattleOption, group: Array[ActionOption]) ->
 	rows.append({"kind": "rule"})
 	if group.is_empty():
 		rows.append({"kind": "text", "text": "No lleva nada que sirva en un combate."})
-	for option: ActionOption in group:
-		var amount: String = " ×%d" % option.quantity if option.quantity > 0 else ""
-		rows.append({"kind": "risk" if not option.enabled else "bullet", "text": option.label + amount})
+	for option: ActionOption in group.slice(0, 8):
+		var extra: String = (" " + option.value_text) if option.value_text != "" and option.enabled else ""
+		if not option.enabled:
+			extra = " (%s)" % option.disabled_reason.to_lower()
+		rows.append({"kind": "risk" if not option.enabled else "bullet", "text": option.label + extra})
 	if not button.disabled and not group.is_empty():
 		rows.append({"kind": "text", "text": "Intro: abrir.", "color": BattleSkin.INK_SOFT})
 	else:
@@ -828,6 +955,7 @@ func _open_detail(rows: Array[Dictionary]) -> void:
 	_detail.grow_up = true
 	_detail.anchor_point = DETAIL_AT
 	_detail.tab = "FICHA"
+	_detail.max_height = DETAIL_AT.y - 86.0
 	_detail.show_rows(rows, DETAIL_W)
 	if appearing:
 		_sound("ui_paper_slide", -16.0)
@@ -1288,16 +1416,9 @@ func _prototype_battle() -> Battle:
 	var built: Battle = Battle.new(defs, enemy_defs, seed_number)
 	built.bandages = 1
 	if debug.has("battle-items"):
-		GameState.new_game()
-		character = GameState.character
-		for id: StringName in DEBUG_ITEMS:
-			var item: ItemDef = Registry.item(id)
-			if item != null:
-				character.custody.add_item(item, 2 if id == &"venda" else 1)
-		var hero: CharacterState = character
-		built.item_user = func(actor: Combatant, item: Variant) -> String:
-			return CombatBridge.use_item(actor, hero, item as ItemStack)
 		built.bandages = 0
+		for id: StringName in DEBUG_ITEMS:
+			built.supplies[id] = 2 if id == &"venda" else 1
 	return built
 
 
@@ -1722,6 +1843,16 @@ func _apply_debug_state() -> void:
 				var part: BodyPartState = enemy.parts[StringName(bits[0])]
 				for i: int in clampi(bits[1].to_int(), 0, 2):
 					part.worsen()
+	if debug.has("battle-bleed"):
+		for pair: String in debug["battle-bleed"].split(","):
+			var bits: PackedStringArray = pair.split(":")
+			if bits.size() == 2:
+				battle.protagonist().add_bleed(StringName(bits[0]), bits[1].to_int())
+	if debug.has("battle-status"):
+		for id: String in debug["battle-status"].split(","):
+			var status: CombatStatusDef = CombatCatalog.status(StringName(id))
+			if status != null:
+				battle.protagonist().add_status(status)
 	if debug.has("battle-wound"):
 		for pair: String in debug["battle-wound"].split(","):
 			var bits: PackedStringArray = pair.split(":")
@@ -1757,6 +1888,12 @@ func _take_screenshot_and_quit() -> void:
 			await get_tree().process_frame
 		elif debug.has("battle-pick") and _phase != Phase.AIM:
 			_open_category(ActionMenuModel.ATTACK)
+			await get_tree().process_frame
+		if debug.has("battle-choose"):
+			for button: BattleOption in menu_buttons():
+				if button.option != null and String(button.option.id) == debug["battle-choose"]:
+					_choose(button.option)
+					break
 			await get_tree().process_frame
 		if debug.has("battle-pick") and _phase == Phase.AIM:
 			aim_at_part(StringName(debug["battle-pick"]))

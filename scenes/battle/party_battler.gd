@@ -17,6 +17,8 @@ const MAP_SCALE: float = 2.0
 ## De espaldas a la luz: un poco más oscuro que el enemigo.
 const TINT: Color = Color(0.9, 0.88, 0.9)
 const FALLEN_TINT: Color = Color(0.3, 0.28, 0.3)
+## Derribado: cuánto sube el cuerpo tendido para que se vea por encima de las fichas.
+const DOWN_LIFT: float = 70.0
 
 ## Capas de la imagen de espaldas (la primera es el cuerpo).
 var textures: Array[Texture2D] = []
@@ -124,6 +126,12 @@ func _draw() -> void:
 	if combatant != null and (combatant.dead or combatant.fallen):
 		tint = FALLEN_TINT
 	tint = tint.lerp(Color(1.6, 0.35, 0.3), clampf(_hurt, 0.0, 1.0) * 0.7)
+	# Derribado: tendido de lado en el suelo, a la vista sobre la ficha (la cabeza a la izquierda).
+	var down: bool = combatant != null and combatant.is_present() and combatant.is_down()
+	if down:
+		draw_set_transform(Vector2(height() * 0.5, -DOWN_LIFT), -PI / 2.0 + 0.08, Vector2.ONE)
+		tint = tint.darkened(0.15)
 	for texture: Texture2D in textures:
 		var tex_size: Vector2 = texture.get_size()
 		draw_texture_rect(texture, Rect2(-origin * draw_scale, tex_size * draw_scale), false, tint)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
