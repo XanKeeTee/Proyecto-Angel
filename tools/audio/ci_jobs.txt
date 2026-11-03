@@ -1,2 +1,3 @@
 # Órdenes de tools/audio/freesound.py que ejecuta .github/workflows/freesound.yml (una por línea).
 fetch --missing
+# Reintento tras renovar el cupo: 2026-11-03

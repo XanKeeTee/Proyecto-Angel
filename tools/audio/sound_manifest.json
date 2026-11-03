@@ -5610,6 +5610,289 @@
    "pick": 150382
   },
   {
+   "name": "ui_battle_move",
+   "query": "paper clip click",
+   "alt": [
+    "paper tick",
+    "small click dry"
+   ],
+   "duration": [
+    0.02,
+    2
+   ],
+   "want": [
+    "click",
+    "paper",
+    "clip"
+   ],
+   "level": -26,
+   "avoid": [
+    "beep",
+    "electronic",
+    "digital",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.08,
+   "note": "Tic seco de papel o clip metálico, sin cola."
+  },
+  {
+   "name": "ui_battle_confirm",
+   "query": "stapler click",
+   "alt": [
+    "bakelite switch click",
+    "stapler"
+   ],
+   "duration": [
+    0.05,
+    2
+   ],
+   "want": [
+    "stapler",
+    "switch",
+    "click"
+   ],
+   "level": -22,
+   "avoid": [
+    "beep",
+    "electronic",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.2,
+   "note": "Clac de grapadora o interruptor de baquelita."
+  },
+  {
+   "name": "ui_battle_back",
+   "query": "paper sheet pull",
+   "alt": [
+    "paper swipe quick",
+    "sheet removed"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "paper",
+    "swipe",
+    "sheet"
+   ],
+   "level": -26,
+   "avoid": [
+    "tear",
+    "rip",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.3,
+   "note": "Hoja de papel que se retira deprisa."
+  },
+  {
+   "name": "ui_battle_denied",
+   "query": "drawer locked rattle",
+   "alt": [
+    "metal drawer stuck",
+    "old device error buzz"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "drawer",
+    "locked",
+    "rattle",
+    "buzz"
+   ],
+   "level": -22,
+   "avoid": [
+    "beep",
+    "game",
+    "8bit",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.3,
+   "note": "Cajón metálico que no abre o zumbido de error de aparato viejo."
+  },
+  {
+   "name": "ui_stamp",
+   "query": "rubber stamp",
+   "alt": [
+    "stamp paper desk",
+    "stamping document"
+   ],
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "stamp",
+    "rubber",
+    "paper"
+   ],
+   "level": -18,
+   "avoid": [
+    "foot",
+    "footstep",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "note": "Sello de caucho sobre papel en mesa de madera, golpe seco y grave."
+  },
+  {
+   "name": "ui_paper_slide",
+   "query": "paper slide desk",
+   "alt": [
+    "cardboard slide",
+    "paper sliding table"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "paper",
+    "slide",
+    "cardboard"
+   ],
+   "level": -26,
+   "avoid": [
+    "tear",
+    "rip",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.4,
+   "note": "Cartulina que se desliza sobre un escritorio."
+  },
+  {
+   "name": "ui_folder",
+   "query": "folder open",
+   "alt": [
+    "cardboard folder",
+    "file folder close"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "folder",
+    "paper",
+    "cardboard"
+   ],
+   "level": -24,
+   "avoid": [
+    "computer",
+    "windows",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "note": "Carpeta de cartón que se abre o se cierra con roce de hojas."
+  },
+  {
+   "name": "ui_aim_part",
+   "query": "pencil tap",
+   "alt": [
+    "pen click soft",
+    "pencil tick"
+   ],
+   "duration": [
+    0.02,
+    2
+   ],
+   "want": [
+    "pencil",
+    "pen",
+    "tap",
+    "click"
+   ],
+   "level": -28,
+   "avoid": [
+    "beep",
+    "electronic",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.06,
+   "note": "Clic muy suave de lápiz o bolígrafo."
+  },
+  {
+   "name": "ui_typewriter",
+   "query": "typewriter key",
+   "alt": [
+    "typewriter single key",
+    "typewriter typing"
+   ],
+   "duration": [
+    0.03,
+    5
+   ],
+   "want": [
+    "typewriter",
+    "key"
+   ],
+   "level": -24,
+   "avoid": [
+    "bell",
+    "ding",
+    "computer",
+    "keyboard",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.1,
+   "note": "Una tecla de máquina de escribir mecánica, sin campana."
+  },
+  {
    "name": "inv_category",
    "query": "paper click",
    "alt": [
