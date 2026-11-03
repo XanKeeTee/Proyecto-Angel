@@ -8,3 +8,4 @@ display_name = "Bisturí"
 power = 8
 accuracy = 85
 crit_mod = 10
+reach = 0

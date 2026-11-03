@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="1_hh7ul"]
+
+[resource]
+script = ExtResource("1_hh7ul")
+id = &"vendar"
+display_name = "Vendar"
+description = "Apretar una venda sobre una herida: corta el sangrado de esa parte y la alivia."
+icon_key = &"treat_vendar"
+item_ids = Array[StringName]([&"venda"])
+part_rule = 1
+stops_bleed = 2
+restores_integrity = 0.25
+body = 4
+use_text = "%s venda: %s."

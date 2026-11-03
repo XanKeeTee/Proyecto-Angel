@@ -1,20 +1,28 @@
 [gd_resource type="Resource" script_class="CombatantDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_7uuj2"]
-[ext_resource type="Resource" path="res://data/statuses/agarre.tres" id="2_qi8nj"]
-[ext_resource type="Resource" path="res://data/statuses/sedacion.tres" id="3_3fi52"]
-[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="4_3wje8"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_head.tres" id="5_a5fni"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_torso.tres" id="6_e4qk1"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_l.tres" id="7_srs77"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_r.tres" id="8_ppvgm"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_l.tres" id="9_4wyfp"]
-[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_r.tres" id="10_vsryd"]
-[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="11_wuqal"]
-[ext_resource type="Resource" path="res://data/enemies/enfermero_sprites.tres" id="12_qi8nj"]
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_3wje8"]
+[ext_resource type="Script" path="res://scripts/core/combat/attack_bonus.gd" id="2_a5fni"]
+[ext_resource type="Resource" path="res://data/statuses/agarre.tres" id="3_e4qk1"]
+[ext_resource type="Resource" path="res://data/statuses/sedacion.tres" id="4_srs77"]
+[ext_resource type="Resource" path="res://data/statuses/derribado.tres" id="5_ppvgm"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="6_4wyfp"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_head.tres" id="7_vsryd"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_torso.tres" id="8_wuqal"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_l.tres" id="9_4uvoe"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_arm_r.tres" id="10_r0qv7"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_l.tres" id="11_hv5fp"]
+[ext_resource type="Resource" path="res://data/body_parts/enfermero_leg_r.tres" id="12_l7x0e"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="13_fuko5"]
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="14_j2quo"]
+[ext_resource type="Resource" path="res://data/enemies/enfermero_sprites.tres" id="15_a5fni"]
 
-[sub_resource type="Resource" id="Resource_4uvoe"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_845ka"]
+script = ExtResource("2_a5fni")
+weight = 1.5
+reason = "Huele tu sangre"
+
+[sub_resource type="Resource" id="Resource_o2swa"]
+script = ExtResource("1_3wje8")
 display_name = "Tajo"
 telegraph = "Levanta el brazo de bisturíes por encima de la máscara."
 power = 13
@@ -22,11 +30,17 @@ accuracy = 72
 required_part = &"arm_r"
 weight = 3.0
 requires_standing = true
+bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_845ka")])
 sound_windup = "enfermero_growl"
 sound_hit = "combat_scalpel_slash"
 
-[sub_resource type="Resource" id="Resource_r0qv7"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_qqk0x"]
+script = ExtResource("2_a5fni")
+condition = 4
+reason = "Ya no te teme"
+
+[sub_resource type="Resource" id="Resource_f6fci"]
+script = ExtResource("1_3wje8")
 display_name = "Agarrar"
 telegraph = "Abre la mano izquierda y se inclina hacia ti."
 power = 3
@@ -37,12 +51,13 @@ required_part = &"arm_l"
 weight = 1.6
 cooldown = 3
 requires_standing = true
-inflicts_status = ExtResource("2_qi8nj")
+bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_qqk0x")])
+inflicts_status = ExtResource("3_e4qk1")
 sound_windup = "enfermero_breath"
 sound_hit = "enfermero_growl"
 
-[sub_resource type="Resource" id="Resource_hv5fp"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_olgpu"]
+script = ExtResource("1_3wje8")
 display_name = "Serrar"
 telegraph = "Te sujeta y apoya la sierra de hueso en el brazo."
 power = 15
@@ -54,8 +69,14 @@ requires_target_status = &"agarre"
 sound_windup = "combat_saw"
 sound_hit = "combat_saw"
 
-[sub_resource type="Resource" id="Resource_l7x0e"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_hd8mi"]
+script = ExtResource("2_a5fni")
+condition = 2
+part = &"arm_r"
+reason = "Sin bisturíes, quiere dormirte"
+
+[sub_resource type="Resource" id="Resource_5pie4"]
+script = ExtResource("1_3wje8")
 display_name = "Pinchazo"
 telegraph = "Sacude la jeringa. El líquido oscuro burbujea dentro."
 power = 4
@@ -66,13 +87,14 @@ target_part = &"torso"
 required_part = &"arm_l"
 weight = 1.8
 cooldown = 1
-inflicts_status = ExtResource("3_3fi52")
+bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_hd8mi")])
+inflicts_status = ExtResource("4_srs77")
 status_chance = 0.7
 sound_windup = "enfermero_breath"
 sound_hit = "combat_syringe"
 
-[sub_resource type="Resource" id="Resource_fuko5"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_md5wx"]
+script = ExtResource("1_3wje8")
 display_name = "Chillido"
 telegraph = "Se encoge. Algo se hincha detrás de la mascarilla cosida."
 power = 0
@@ -86,20 +108,73 @@ anim = &"stagger"
 sound_windup = "enfermero_scream"
 sound_hit = "enfermero_scream"
 
-[sub_resource type="Resource" id="Resource_j2quo"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_wv7ms"]
+script = ExtResource("2_a5fni")
+condition = 2
+part = &"arm_r"
+weight = 2.5
+reason = "Sin bisturíes, embiste"
+
+[sub_resource type="Resource" id="Resource_utxtx"]
+script = ExtResource("2_a5fni")
+condition = 3
+weight = 0.8
+reason = "Herido, quiere tirarte"
+
+[sub_resource type="Resource" id="Resource_j5l6j"]
+script = ExtResource("1_3wje8")
 display_name = "Embestida"
 telegraph = "Baja la cabeza y carga con el hombro."
 power = 5
 accuracy = 65
 damage_type = 1
+target_part = &"torso"
 weight = 0.6
 requires_standing = true
+bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_wv7ms"), SubResource("Resource_utxtx")])
+inflicts_status = ExtResource("5_ppvgm")
+status_chance = 0.4
 sound_windup = "enfermero_drag_steps"
 sound_hit = "combat_pipe_flesh"
 
-[sub_resource type="Resource" id="Resource_845ka"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_sb0v8"]
+script = ExtResource("1_3wje8")
+display_name = "Ensartar"
+telegraph = "Se inclina sobre ti con los bisturíes hacia abajo."
+power = 15
+accuracy = 85
+damage_type = 2
+target_part = &"torso"
+required_part = &"arm_r"
+weight = 8.0
+requires_target_status = &"derribado"
+requires_standing = true
+sound_windup = "enfermero_growl"
+sound_hit = "combat_scalpel_slash"
+
+[sub_resource type="Resource" id="Resource_k365n"]
+script = ExtResource("2_a5fni")
+condition = 2
+part = &"arm_r"
+weight = 4.0
+reason = "Va a rematarte"
+
+[sub_resource type="Resource" id="Resource_uxds3"]
+script = ExtResource("1_3wje8")
+display_name = "Pisotón"
+telegraph = "Levanta el pie descalzo sobre tu pecho."
+accuracy = 80
+damage_type = 1
+target_part = &"torso"
+weight = 4.0
+requires_target_status = &"derribado"
+requires_standing = true
+bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_k365n")])
+sound_windup = "enfermero_drag_steps"
+sound_hit = "combat_pipe_flesh"
+
+[sub_resource type="Resource" id="Resource_i2ygj"]
+script = ExtResource("1_3wje8")
 display_name = "Zarpazo"
 telegraph = "Se arrastra hacia tus tobillos con los bisturíes por delante."
 power = 9
@@ -111,8 +186,8 @@ crawl_only = true
 sound_windup = "enfermero_drag_steps"
 sound_hit = "combat_scalpel_slash"
 
-[sub_resource type="Resource" id="Resource_o2swa"]
-script = ExtResource("1_7uuj2")
+[sub_resource type="Resource" id="Resource_ciwc8"]
+script = ExtResource("1_3wje8")
 display_name = "Agarrar el tobillo"
 telegraph = "Estira la mano desde el suelo hacia tu pierna."
 power = 3
@@ -123,12 +198,12 @@ required_part = &"arm_l"
 weight = 1.5
 cooldown = 3
 crawl_only = true
-inflicts_status = ExtResource("2_qi8nj")
+inflicts_status = ExtResource("3_e4qk1")
 sound_windup = "enfermero_breath"
 sound_hit = "enfermero_growl"
 
 [resource]
-script = ExtResource("11_wuqal")
+script = ExtResource("13_fuko5")
 display_name = "ENFERMERO"
 body_max = 115
 has_mind = false
@@ -138,10 +213,10 @@ agility = 7
 willpower = 6
 resilience = 6
 armor = 1
-parts = Array[ExtResource("4_3wje8")]([ExtResource("5_a5fni"), ExtResource("6_e4qk1"), ExtResource("7_srs77"), ExtResource("8_ppvgm"), ExtResource("9_4wyfp"), ExtResource("10_vsryd")])
-attacks = Array[ExtResource("1_7uuj2")]([SubResource("Resource_4uvoe"), SubResource("Resource_r0qv7"), SubResource("Resource_hv5fp"), SubResource("Resource_l7x0e"), SubResource("Resource_fuko5"), SubResource("Resource_j2quo"), SubResource("Resource_845ka"), SubResource("Resource_o2swa")])
+parts = Array[ExtResource("6_4wyfp")]([ExtResource("7_vsryd"), ExtResource("8_wuqal"), ExtResource("9_4uvoe"), ExtResource("10_r0qv7"), ExtResource("11_hv5fp"), ExtResource("12_l7x0e")])
+attacks = Array[ExtResource("1_3wje8")]([SubResource("Resource_o2swa"), SubResource("Resource_f6fci"), SubResource("Resource_olgpu"), SubResource("Resource_5pie4"), SubResource("Resource_md5wx"), SubResource("Resource_j5l6j"), SubResource("Resource_sb0v8"), SubResource("Resource_uxds3"), SubResource("Resource_i2ygj"), SubResource("Resource_ciwc8")])
 intro_text = "Un enfermero. Lo que queda de uno."
-sprites = ExtResource("12_qi8nj")
+sprites = ExtResource("15_a5fni")
 sprite_key = "enemy_enfermero"
 sound_idle = "enfermero_breath"
 sound_hurt = "enfermero_scream"

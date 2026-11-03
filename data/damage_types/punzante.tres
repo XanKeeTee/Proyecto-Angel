@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DamageTypeDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/damage_type_def.gd" id="1_oygfi"]
+
+[resource]
+script = ExtResource("1_oygfi")
+type = 2
+display_name = "Punzante"
+summary = "Atraviesa media armadura. Hace sangrar y, en el torso, puede alcanzar un órgano."
+armor_factor = 0.5
+limb_integrity_mult = 0.75
+head_integrity_mult = 0.85
+torso_integrity_mult = 0.8
+bleed_chance = 0.3
+organ_chance = 0.25
+organ_body_mult = 1.6
+head_text = "Atraviesa: hace sangrar."
+torso_text = "En el torso puede alcanzar un órgano."
+limb_text = "Rompe poco, pero hace sangrar."

@@ -45,14 +45,14 @@ func _init() -> void:
 
 ## Armas (`WeaponDef`). Cuchilla, barra y punzón son del prototipo de combate (data/party las usa).
 func _build_weapons() -> void:
-	_weapon("knife", "Cuchilla", 12, 75, CombatTypes.DamageType.CUT, false, 0)
-	_weapon("iron_bar", "Barra", 14, 70, CombatTypes.DamageType.BLUNT, true, 0)
-	_weapon("awl", "Punzón", 10, 80, CombatTypes.DamageType.PIERCE, false, 5)
+	_weapon("knife", "Cuchilla", 12, 75, CombatTypes.DamageType.CUT, false, 0, CombatTypes.Reach.SHORT)
+	_weapon("iron_bar", "Barra", 14, 70, CombatTypes.DamageType.BLUNT, true, 0, CombatTypes.Reach.LONG)
+	_weapon("awl", "Punzón", 10, 80, CombatTypes.DamageType.PIERCE, false, 5, CombatTypes.Reach.SHORT)
 	# [PROPUESTA] Improvisadas del hospital.
-	_weapon("scalpel", "Bisturí", 8, 85, CombatTypes.DamageType.CUT, false, 10)
-	_weapon("pipe", "Tubo de hierro", 12, 70, CombatTypes.DamageType.BLUNT, false, 0)
-	_weapon("pipe_wrapped", "Tubo con mango envuelto", 12, 78, CombatTypes.DamageType.BLUNT, false, 2)
-	_weapon("crowbar", "Palanca", 13, 65, CombatTypes.DamageType.BLUNT, true, 0)
+	_weapon("scalpel", "Bisturí", 8, 85, CombatTypes.DamageType.CUT, false, 10, CombatTypes.Reach.SHORT)
+	_weapon("pipe", "Tubo de hierro", 12, 70, CombatTypes.DamageType.BLUNT, false, 0, CombatTypes.Reach.MEDIUM)
+	_weapon("pipe_wrapped", "Tubo con mango envuelto", 12, 78, CombatTypes.DamageType.BLUNT, false, 2, CombatTypes.Reach.MEDIUM)
+	_weapon("crowbar", "Palanca", 13, 65, CombatTypes.DamageType.BLUNT, true, 0, CombatTypes.Reach.LONG)
 
 
 func _build_items() -> void:
@@ -199,7 +199,7 @@ func _heal(body: int, mind: int, stops: bool, message: String) -> HealEffect:
 
 
 func _weapon(id: String, display: String, power: int, accuracy: int, type: CombatTypes.DamageType, two_handed: bool,
-		crit: int) -> void:
+		crit: int, reach: CombatTypes.Reach = CombatTypes.Reach.MEDIUM) -> void:
 	var w: WeaponDef = WeaponDef.new()
 	w.display_name = display
 	w.power = power
@@ -207,6 +207,7 @@ func _weapon(id: String, display: String, power: int, accuracy: int, type: Comba
 	w.damage_type = type
 	w.two_handed = two_handed
 	w.crit_mod = crit
+	w.reach = reach
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(WEAPONS))
 	ResourceSaver.save(w, WEAPONS + id + ".tres")
 	weapons[id] = load(WEAPONS + id + ".tres")

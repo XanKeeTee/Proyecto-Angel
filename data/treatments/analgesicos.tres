@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/analgesia.tres" id="1_sftoi"]
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="2_kr4nw"]
+
+[resource]
+script = ExtResource("2_kr4nw")
+id = &"analgesicos"
+display_name = "Analgésicos"
+description = "Tragarlos en seco. Durante 3 rondas las heridas no estorban."
+icon_key = &"treat_analgesicos"
+item_ids = Array[StringName]([&"analgesicos"])
+body = 6
+applies_status = ExtResource("1_sftoi")
+use_text = "%s traga los analgésicos en seco."

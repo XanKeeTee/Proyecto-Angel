@@ -16,6 +16,10 @@ extends Resource
 ## `[PROPUESTA]` Se puede arrancar a golpes: un golpe contundente fuerte sobre la parte ya Rota la
 ## amputa (carne fundida con metal, tejido muerto…). Solo para enemigos concretos.
 @export var severable_by_blunt: bool = false
+## Mente que se pierde al final de cada ronda con la parte Herida / Rota (la cabeza: zumbido,
+## visión doble). `[PROPUESTA]`
+@export_range(0, 20) var round_mind_loss_wounded: int = 0
+@export_range(0, 20) var round_mind_loss_broken: int = 0
 
 @export_group("Textos")
 ## Se muestra cuando la parte queda inútil (Rota) en combate. `%s` = nombre del combatiente.

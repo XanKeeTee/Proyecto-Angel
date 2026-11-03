@@ -13,3 +13,11 @@ var finishing: bool = false
 var initiative: int = 0
 ## Objeto que se usa (ITEM con `Battle.item_user`); en el juego, un ItemStack de la custodia.
 var item: Variant
+## Habilidad (SKILL).
+var skill: SkillDef
+## Tratamiento por partes del objeto (ITEM). Si es null, se usa `Battle.item_user`.
+var treatment: TreatmentDef
+## Ataca con el arma de la mano no dominante.
+var use_offhand: bool = false
+## Por qué lo hace (intenciones enemigas: «Huele tu sangre»). Vacío = sin razón especial.
+var reason: String = ""

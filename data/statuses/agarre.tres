@@ -6,9 +6,10 @@
 script = ExtResource("1_adyew")
 id = &"agarre"
 display_name = "Agarrado"
+description = "Le sujetan: no puede huir, esquiva la mitad y le aciertan más. Se rompe con Zafarse."
 agility_mult = 0.5
 incoming_hit_mod = 20
 blocks_flee = true
 breakable = true
-apply_text = "Una mano gris se cierra sobre %s. No suelta."
-end_text = "%s se suelta de la mano."
+apply_text = "Una mano se cierra sobre %s. No suelta."
+end_text = "%s se suelta."

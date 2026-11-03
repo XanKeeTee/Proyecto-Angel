@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/agarre.tres" id="1_r8vnj"]
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="2_5mniu"]
+
+[resource]
+script = ExtResource("2_5mniu")
+id = &"forcejear"
+display_name = "Forcejear"
+description = "Le agarras con la mano libre. Sujeto, esquiva peor y se le acierta más. Si te tenía agarrado, le das la vuelta."
+allowed_parts = Array[StringName]([&"arm_l", &"arm_r", &"torso"])
+cost_body = 2
+cooldown = 1
+max_reach = 0
+needs_arms = 1
+uses_weapon = false
+power = 2
+accuracy = 70
+strength_contest = true
+inflicts_status = ExtResource("1_r8vnj")
+frees_self = true
+preview_lines = PackedStringArray()
+risk_lines = PackedStringArray()

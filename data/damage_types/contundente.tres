@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DamageTypeDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/damage_type_def.gd" id="1_k82l8"]
+
+[resource]
+script = ExtResource("1_k82l8")
+display_name = "Contundente"
+summary = "Rompe huesos. En la cabeza aturde; si parte una pierna, derriba. No amputa."
+limb_integrity_mult = 1.25
+head_integrity_mult = 1.2
+head_stun_chance = 0.35
+leg_break_knockdown = 0.6
+head_text = "En la cabeza puede aturdir."
+torso_text = "Golpe sordo: no hace sangrar."
+limb_text = "Contundente: el hueso cede antes."
