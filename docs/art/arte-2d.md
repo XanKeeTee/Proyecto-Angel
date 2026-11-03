@@ -1,11 +1,62 @@
-# Arte 2D pintado y reducido (tercera muestra, para debatir)
+# Arte 2D: ilustración a tinta y color plano (cuarta muestra, prueba de estilo)
 
-> Estado: **muestra**. No está integrada en el juego. Imágenes en [`muestras/`](muestras/); código en
-> `tools/art2d/`. La tercera muestra usa `vec.py` (`hero_battle_v3.py`, `nurse_v3.py`, `hero_map_v3.py`,
-> `sheets_v3.py`); la segunda, `paint.py` y los `*_hd.py` (de ahí salen todavía el menú principal y el
-> escenario); la primera, `px2d.py`.
+> Estado: **prueba de estilo estática**, para validar la dirección antes de animar. No está integrada en el
+> juego. Imágenes en [`muestras/`](muestras/); código en `tools/art2d/` (`ink.py`, `palette_ink.py`,
+> `nurse_ink.py`, `hero_ink.py`, `sheets_ink.py`). Las secciones de más abajo documentan las muestras
+> anteriores (volumen pintado), que el usuario descartó.
 
-## Qué cambia en la tercera muestra
+## Por qué cambia la dirección
+
+Tras la tercera muestra el usuario dijo que las figuras parecían **modeladas en 3D, «objetos circulares
+moldeables»**. Lo que lo producía era el sombreado de volumen con degradados suaves y las formas
+redondeadas. Desde esta muestra **queda prohibido**: degradados de volumen, aerógrafo, desenfoques,
+brillos redondos, tubos y bultos redondeados, todo lo que parezca modelado.
+
+## Método (`tools/art2d/ink.py`)
+
+- **La línea lleva el dibujo.** Contorno exterior e interiores de tinta (`INK`, casi negro) con grosor
+  variable que se afila en las puntas (`line`), sin extremos redondos; contornos de polígono con esquinas
+  en inglete (`poly_line`). Trazos rectos y quebrados (`jag`).
+- **Color plano por zonas**: 2-4 tonos por material (`palette_ink.py`). Las sombras son **manchas con su
+  propia silueta y borde duro** (`clip_fill`, `body_shadow`), del tono siguiente; las luces, igual.
+- **Pliegues a tinta** (`fold`): la línea del pliegue y, a un lado, su cuña de sombra plana.
+- **Textura por trazo**: tramas de líneas en las sombras profundas (`hatch`, también cruzada), punteado
+  (`stipple`) en el pelo rapado y la piel, rayado de la tela, sangre y mugre como manchas planas de borde
+  irregular con regueros (`splat`). Filo granate a contraluz en el enfermero.
+- **Sin antialias y sin mezclas**: se dibuja a ×3-×6 con cairo sin antialias y se reduce por bloques: si en
+  el bloque hay bastante tinta, el píxel es tinta (las líneas finas sobreviven); si no, el color más
+  frecuente del bloque. Ningún color sale de fuera de la paleta y los bordes quedan duros.
+- **Tamaño de diseño separado del tamaño final**: el enfermero se dibuja en una rejilla de 520×640 y la
+  vista (`Ink(view=…)`) lo lleva a 300×440, así se puede ajustar la escala sin redibujar.
+
+## Las tres figuras
+
+| Archivo | Tamaño | Qué tiene |
+|---|---|---|
+| [estilo_tinta_enfermero.png](muestras/estilo_tinta_enfermero.png) | 300×440 | Un hombre alto, no un jefe. Encorvado, joroba de tela tirante sobre las vértebras, cabeza colgante con máscara de porcelana agrietada (un ojo vivo con pupila y brillo), mascarilla cosida con cada punto y la piel fruncida, desgarro con esternón y costillas, tubos con la piel fruncida al entrar, sierra con dientes, bisturíes en abanico, abrazaderas atornilladas y línea de grapas, jeringa con escala y líquido, uniforme con pliegues, costuras y sangre seca |
+| [estilo_tinta_protagonista_combate.png](muestras/estilo_tinta_protagonista_combate.png) | 260×420 | De espaldas en guardia: el tubo cruza por delante del cuerpo en diagonal (asoma por encima del hombro izquierdo), cogido con las dos manos juntas a la derecha, el codo fuera; bata abierta con la incisión cosida, omóplatos, costillas, nuca, cicatriz del cráneo; pulsera y vía arrancada |
+| [estilo_tinta_protagonista_mapa.png](muestras/estilo_tinta_protagonista_mapa.png) | 112×160 | Reposo mirando abajo |
+| [maqueta_combate_tinta.png](muestras/maqueta_combate_tinta.png) | 1280×720 | El combate con el filtro de película y las dos figuras en proporción |
+
+Regenerarlas (segundos; requiere numpy, scipy, Pillow y pycairo):
+
+```bash
+python3 -I tools/art2d/sheets_ink.py docs/art/muestras
+```
+
+## Valoración de esta prueba
+
+- Ya no parece modelado: es línea y color plano. Pero el dibujo es todavía **esquemático**: las formas se
+  construyen con polígonos de pocos puntos y se nota la geometría (el saco de la bata, la joroba del
+  enfermero, piernas casi rectas). Falta el trazo nervioso y la anatomía de un ilustrador.
+- A estas resoluciones de sprite, la trama y el punteado apenas se ven; la textura tiene que ir en manchas
+  y líneas más gruesas.
+- Mi recomendación honesta: si la dirección a tinta convence, el arte final debería **dibujarlo una persona**
+  (en Aseprite, Krita o a mano y escaneado) siguiendo estas reglas, y el código quedarse para lo repetitivo
+  (escala, paleta, reducción, separar piezas para las mutilaciones, variantes de escenario). Desde código se
+  puede iterar más, pero cada mejora de anatomía cuesta mucho y el resultado sigue pareciendo construido.
+
+## Historia: la tercera muestra (volumen pintado, descartada)
 
 El usuario vio la segunda y dijo que el personaje era feo, con **las partes del cuerpo separadas**, que la
 **pose de pelea no tenía sentido** y que el enemigo era **muy básico**. El diagnóstico: cada miembro era
