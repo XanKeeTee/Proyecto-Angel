@@ -49,7 +49,7 @@ const AMPUTATION_BLEED: int = 2
 const OPEN_TORSO_BLEED_CHANCE: float = 0.2
 ## Coagulación al final de la ronda: probabilidad de que una parte pierda una acumulación.
 ## Rota: la mitad. Amputada: nunca (hace falta torniquete o venda). `[PROPUESTA]`
-const CLOT_BASE: float = 0.25
+const CLOT_BASE: float = 0.35
 const CLOT_PER_RESILIENCE: float = 0.025
 ## Zafarse: base y puntos por cada punto de FUE de diferencia con quien sujeta.
 const BREAK_FREE_BASE: int = 45
@@ -661,7 +661,8 @@ func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack
 	var organ: bool = false
 	if kind == CombatTypes.PartKind.TORSO and type_def != null:
 		var organ_chance: float = type_def.organ_chance + float(extra.get("organ_bonus", 0.0))
-		organ = organ_chance > 0.0 and not guarded and rng.randf() < organ_chance
+		organ = organ_chance > 0.0 and not guarded and part_damage >= type_def.organ_min_damage \
+				and rng.randf() < organ_chance
 	var body_damage: int = roundi(part_damage * part.def.body_mult * (type_def.organ_body_mult if organ else 1.0))
 	var integrity_hit: int = CombatRules.integrity_damage(part_damage, damage_type, part_id)
 	var was_fallen: bool = target.fallen
@@ -734,7 +735,9 @@ func _strike(attacker: Combatant, target: Combatant, part_id: StringName, attack
 			and type_def.leg_break_knockdown > 0.0 and rng.randf() < type_def.leg_break_knockdown:
 		info["knocked_down"] = _knock_down(target)
 
-	var bleed_chance: float = type_def.bleed_chance if type_def != null else 0.0
+	var bleed_chance: float = 0.0
+	if type_def != null and part_damage >= type_def.bleed_min_damage:
+		bleed_chance = type_def.bleed_chance
 	var torso_state: CombatTypes.PartState = target.part_state(CombatTypes.TORSO)
 	if bleed_chance > 0.0 and (torso_state == CombatTypes.PartState.WOUNDED or torso_state == CombatTypes.PartState.BROKEN):
 		bleed_chance += OPEN_TORSO_BLEED_CHANCE

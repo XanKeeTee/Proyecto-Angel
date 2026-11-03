@@ -155,6 +155,8 @@ static func estimate(attacker: Combatant, target: Combatant, part_id: StringName
 			and part.state == CombatTypes.PartState.BROKEN
 	var p_break: float = 0.0
 	var p_amputate: float = 0.0
+	var p_deep: float = 0.0
+	var p_bleeds: float = 0.0
 	for step: int in ROLL_STEPS:
 		var roll: float = 0.9 + 0.2 * step / float(ROLL_STEPS - 1)
 		for critical: bool in [false, true]:
@@ -163,6 +165,10 @@ static func estimate(attacker: Combatant, target: Combatant, part_id: StringName
 			if guarded:
 				damage = maxi(1, roundi(damage * 0.5))
 			var integrity_hit: int = CombatRules.integrity_damage(damage, damage_type, part_id)
+			if type_def != null and damage >= type_def.organ_min_damage:
+				p_deep += p
+			if type_def != null and damage >= type_def.bleed_min_damage:
+				p_bleeds += p
 			var breaks: bool = false
 			var amputates: bool = false
 			if not part.is_disabled():
@@ -191,8 +197,8 @@ static func estimate(attacker: Combatant, target: Combatant, part_id: StringName
 		if bleed > 0.0 and (torso == CombatTypes.PartState.WOUNDED or torso == CombatTypes.PartState.BROKEN):
 			bleed += Battle.OPEN_TORSO_BLEED_CHANCE
 		if kind == CombatTypes.PartKind.TORSO:
-			organ = clampf(type_def.organ_chance + organ_bonus, 0.0, 1.0) if type_def.organ_chance + organ_bonus > 0.0 else 0.0
-		bleed = 1.0 - (1.0 - minf(1.0, bleed)) * (1.0 - organ)
+			organ = clampf(type_def.organ_chance + organ_bonus, 0.0, 1.0) * p_deep if type_def.organ_chance + organ_bonus > 0.0 else 0.0
+		bleed = 1.0 - (1.0 - minf(1.0, bleed) * p_bleeds) * (1.0 - organ)
 	return {"break": p_break, "amputate": p_amputate, "stun": stun, "knockdown": knockdown, "bleed": bleed,
 		"organ": organ}
 

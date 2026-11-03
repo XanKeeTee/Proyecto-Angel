@@ -72,18 +72,18 @@ func _status(id: String, display: String, fields: Dictionary) -> void:
 
 func _damage_types() -> void:
 	_damage("contundente", BLUNT, "Contundente", {"limb_integrity_mult": 1.25, "head_integrity_mult": 1.2,
-		"head_stun_chance": 0.35, "leg_break_knockdown": 0.6,
+		"head_stun_chance": 0.25, "leg_break_knockdown": 0.6,
 		"summary": "Rompe huesos. En la cabeza aturde; si parte una pierna, derriba. No amputa.",
 		"head_text": "En la cabeza puede aturdir.", "torso_text": "Golpe sordo: no hace sangrar.",
 		"limb_text": "Contundente: el hueso cede antes."})
-	_damage("cortante", CUT, "Cortante", {"torso_integrity_mult": 0.9, "can_amputate": true, "bleed_chance": 0.35,
+	_damage("cortante", CUT, "Cortante", {"torso_integrity_mult": 0.9, "can_amputate": true, "bleed_chance": 0.3,
 		"leg_break_knockdown": 0.3,
 		"summary": "Abre heridas que sangran. Lo que ya está roto se puede amputar.",
 		"head_text": "Corta: hace sangrar.", "torso_text": "Abre el torso: hace sangrar.",
 		"limb_text": "Corta: hace sangrar y, si está rota, se amputa."})
 	_damage("punzante", PIERCE, "Punzante", {"armor_factor": 0.5, "limb_integrity_mult": 0.75,
 		"head_integrity_mult": 0.85, "torso_integrity_mult": 0.8, "bleed_chance": 0.3, "organ_chance": 0.25,
-		"organ_body_mult": 1.6,
+		"organ_min_damage": 7, "bleed_min_damage": 7, "organ_body_mult": 1.6,
 		"summary": "Atraviesa media armadura. Hace sangrar y, en el torso, puede alcanzar un órgano.",
 		"head_text": "Atraviesa: hace sangrar.", "torso_text": "En el torso puede alcanzar un órgano.",
 		"limb_text": "Rompe poco, pero hace sangrar."})
@@ -109,20 +109,21 @@ func _skills() -> void:
 	var blades: Array[CombatTypes.DamageType] = [CUT, PIERCE]
 	_skill("golpe_rodilla", "Golpe a la rodilla", "Un golpe seco a la articulación. Si la pierna cede, cae al suelo.", {
 		"allowed_parts": legs, "needs_weapon": true, "min_reach": CombatTypes.Reach.MEDIUM,
-		"weapon_damage_types": blunt_only, "needs_standing": true, "power_mult": 0.9, "accuracy_mod": -5,
-		"inflicts_status": down, "status_chance": 0.25, "status_bonus_hurt_part": 0.25, "cost_body": 2, "cooldown": 1,
+		"weapon_damage_types": blunt_only, "needs_standing": true, "power_mult": 1.3, "accuracy_mod": 0,
+		"inflicts_status": down, "status_chance": 0.5, "status_bonus_hurt_part": 0.3, "cost_mind": 2, "cooldown": 1,
+		"initiative_mod": -10,
 		"preview_lines": PackedStringArray(["En el suelo pierde su siguiente acción y se le puede rematar."])})
 	_skill("barrido", "Barrido", "Un golpe bajo y ancho a las dos piernas. Pega menos, pero cuesta seguir en pie.", {
 		"allowed_parts": legs, "hits_all_parts": true, "choose_part": false, "needs_weapon": true,
 		"min_reach": CombatTypes.Reach.MEDIUM, "weapon_damage_types": blunt_only, "needs_standing": true,
 		"power_mult": 0.55, "accuracy_mod": -10, "inflicts_status": down, "status_chance": 0.5,
-		"cost_body": 4, "cooldown": 2,
+		"cost_body": 3, "cooldown": 2,
 		"preview_lines": PackedStringArray(["Golpea las dos piernas; si entran los dos, es más fácil que caiga."])})
 	_skill("empujon", "Empujón", "Cruzas el arma contra su pecho y empujas con todo el cuerpo. Rápido. Si te tenía agarrado, te suelta.", {
 		"choose_part": false, "allowed_parts": [CombatTypes.TORSO] as Array[StringName], "deals_damage": false,
 		"uses_weapon": false, "accuracy": 80, "strength_contest": true, "needs_weapon": true,
 		"min_reach": CombatTypes.Reach.MEDIUM, "needs_arms": 2, "needs_standing": true, "target_must_stand": true,
-		"initiative_mod": 12, "inflicts_status": pushed, "status_chance": 1.0, "cost_body": 3, "cooldown": 2,
+		"initiative_mod": 12, "inflicts_status": pushed, "status_chance": 1.0, "cost_body": 2, "cooldown": 2,
 		"preview_lines": PackedStringArray(["No hace daño: gana distancia."])})
 	_skill("rematar", "Rematar", "Golpear con todo a quien está en el suelo. Es atroz, y lo sabes.", {
 		"target_must_be_down": true, "allowed_parts": [CombatTypes.HEAD, CombatTypes.TORSO] as Array[StringName],
@@ -140,7 +141,7 @@ func _skills() -> void:
 	_skill("clavar", "Clavar", "Hundir el filo corto hasta el fondo. Entra poco, pero hondo: sangra y, en el torso, busca algo vital.", {
 		"needs_weapon": true, "max_reach": CombatTypes.Reach.SHORT, "weapon_damage_types": blades,
 		"damage_type_override": PIERCE, "power_mult": 1.3, "accuracy_mod": -10, "extra_bleed": 1, "organ_bonus": 0.2,
-		"cost_body": 2, "cooldown": 1})
+		"cost_mind": 3, "cooldown": 1})
 	_skill("respirar", "Respirar", "Cerrar los ojos un momento y contar. Recupera Mente.", {
 		"target": SkillDef.Target.NONE, "choose_part": false, "deals_damage": false, "mind_gain": Battle.BREATHE_BASE,
 		"adds_willpower": true, "icon_key": &"breathe"})

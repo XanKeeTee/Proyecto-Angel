@@ -92,7 +92,7 @@ func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef, down: CombatStatus
 	var d: CombatantDef = CombatantDef.new()
 	d.display_name = "ENFERMERO"
 	d.intro_text = "Un enfermero. Lo que queda de uno."
-	d.body_max = 115
+	d.body_max = 105
 	d.has_mind = false
 	d.strength = 10
 	d.dexterity = 9
@@ -143,7 +143,7 @@ func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef, down: CombatStatus
 		_attack("Pinchazo", "Sacude la jeringa. El líquido oscuro burbujea dentro.", 4, 76, CombatTypes.DamageType.PIERCE,
 			{"required_part": CombatTypes.ARM_L, "weight": 1.8, "cooldown": 1, "mind_damage": 10,
 			"inflicts_status": sedation, "status_chance": 0.7, "target_part": CombatTypes.TORSO,
-			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 2.0, "Sin bisturíes, quiere dormirte",
+			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 0.6, "Sin bisturíes, quiere dormirte",
 				CombatTypes.ARM_R)] as Array[AttackBonus],
 			"sound_windup": "enfermero_breath", "sound_hit": "combat_syringe"}),
 		# Chillido: reacción al perder una parte. Solo Mente.
@@ -153,12 +153,12 @@ func _nurse(sedation: CombatStatusDef, grab: CombatStatusDef, down: CombatStatus
 		# Embestida: carga con el hombro y puede tirarte al suelo. Sin bisturíes, embiste más.
 		_attack("Embestida", "Baja la cabeza y carga con el hombro.", 5, 65, CombatTypes.DamageType.BLUNT,
 			{"requires_standing": true, "weight": 0.6, "target_part": CombatTypes.TORSO, "inflicts_status": down,
-			"status_chance": 0.4,
-			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 2.5, "Sin bisturíes, embiste", CombatTypes.ARM_R),
-				_bonus(AttackBonus.Condition.SELF_HURT, 0.8, "Herido, quiere tirarte")] as Array[AttackBonus],
+			"status_chance": 0.3,
+			"bonuses": [_bonus(AttackBonus.Condition.SELF_PART_LOST, 1.0, "Sin bisturíes, embiste", CombatTypes.ARM_R),
+				_bonus(AttackBonus.Condition.SELF_HURT, 0.4, "Herido, quiere tirarte")] as Array[AttackBonus],
 			"sound_windup": "enfermero_drag_steps", "sound_hit": "combat_pipe_flesh"}),
 		# Ensartar: a quien está en el suelo. Remata con los bisturíes.
-		_attack("Ensartar", "Se inclina sobre ti con los bisturíes hacia abajo.", 15, 85, CombatTypes.DamageType.PIERCE,
+		_attack("Ensartar", "Se inclina sobre ti con los bisturíes hacia abajo.", 12, 80, CombatTypes.DamageType.PIERCE,
 			{"target_part": CombatTypes.TORSO, "required_part": CombatTypes.ARM_R, "weight": 8.0,
 			"requires_target_status": CombatTypes.STATUS_DOWN, "requires_standing": true,
 			"sound_windup": "enfermero_growl", "sound_hit": "combat_scalpel_slash"}),

@@ -22,12 +22,16 @@ extends Resource
 @export var can_amputate: bool = false
 ## Probabilidad (0–1) de abrir una herida que sangra (una acumulación en la parte golpeada).
 @export_range(0.0, 1.0, 0.05) var bleed_chance: float = 0.0
+## Daño mínimo a la parte (tras armadura) para abrir una herida que sangre (un pinchazo leve, no).
+@export_range(0, 50) var bleed_min_damage: int = 0
 ## Probabilidad de aturdir al golpear la cabeza.
 @export_range(0.0, 1.0, 0.05) var head_stun_chance: float = 0.0
 ## Probabilidad de derribar al romper una pierna (o al amputarla, si corta).
 @export_range(0.0, 1.0, 0.05) var leg_break_knockdown: float = 0.0
 ## Probabilidad de alcanzar un órgano al golpear el torso: más daño al Cuerpo y sangrado.
 @export_range(0.0, 1.0, 0.05) var organ_chance: float = 0.0
+## Daño mínimo a la parte (tras armadura) para poder alcanzar un órgano (un pinchazo leve no llega).
+@export_range(0, 50) var organ_min_damage: int = 0
 ## Multiplicador del daño al Cuerpo si alcanza un órgano.
 @export_range(1.0, 3.0, 0.05) var organ_body_mult: float = 1.5
 

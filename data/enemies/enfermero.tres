@@ -73,6 +73,7 @@ sound_hit = "combat_saw"
 script = ExtResource("2_a5fni")
 condition = 2
 part = &"arm_r"
+weight = 0.6
 reason = "Sin bisturíes, quiere dormirte"
 
 [sub_resource type="Resource" id="Resource_5pie4"]
@@ -112,13 +113,13 @@ sound_hit = "enfermero_scream"
 script = ExtResource("2_a5fni")
 condition = 2
 part = &"arm_r"
-weight = 2.5
+weight = 1.0
 reason = "Sin bisturíes, embiste"
 
 [sub_resource type="Resource" id="Resource_utxtx"]
 script = ExtResource("2_a5fni")
 condition = 3
-weight = 0.8
+weight = 0.4
 reason = "Herido, quiere tirarte"
 
 [sub_resource type="Resource" id="Resource_j5l6j"]
@@ -133,7 +134,7 @@ weight = 0.6
 requires_standing = true
 bonuses = Array[ExtResource("2_a5fni")]([SubResource("Resource_wv7ms"), SubResource("Resource_utxtx")])
 inflicts_status = ExtResource("5_ppvgm")
-status_chance = 0.4
+status_chance = 0.3
 sound_windup = "enfermero_drag_steps"
 sound_hit = "combat_pipe_flesh"
 
@@ -141,8 +142,8 @@ sound_hit = "combat_pipe_flesh"
 script = ExtResource("1_3wje8")
 display_name = "Ensartar"
 telegraph = "Se inclina sobre ti con los bisturíes hacia abajo."
-power = 15
-accuracy = 85
+power = 12
+accuracy = 80
 damage_type = 2
 target_part = &"torso"
 required_part = &"arm_r"
@@ -205,7 +206,7 @@ sound_hit = "enfermero_growl"
 [resource]
 script = ExtResource("13_fuko5")
 display_name = "ENFERMERO"
-body_max = 115
+body_max = 105
 has_mind = false
 strength = 10
 dexterity = 9

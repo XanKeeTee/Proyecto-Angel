@@ -639,3 +639,16 @@ func test_la_vista_previa_es_honesta() -> void:
 			broke += 1
 	var real: int = roundi(100.0 * broke / runs)
 	check(absi(real - expected) <= 8 and expected > 10 and expected < 90, "romper: previsto %d %%, real %d %%" % [expected, real])
+
+
+func test_un_pinchazo_leve_no_sangra_y_la_rodilla_es_lenta() -> void:
+	for seed_value: int in 40:
+		var battle: Battle = _battle(seed_value)
+		var hero: Combatant = battle.protagonist()
+		var info: Dictionary = battle._strike(battle.enemies[0], hero, CombatTypes.TORSO, "PINCHAZO", 2, 100,
+				CombatTypes.DamageType.PIERCE, 0)
+		check(not info["organ"] and hero.bleeding == 0, "un pinchazo leve no abre ni llega a un órgano")
+	var battle: Battle = _battle()
+	check_eq(CombatRules.initiative_mod(_skill_order(battle, &"golpe_rodilla", CombatTypes.LEG_L)), -10,
+		"el golpe a la rodilla es lento")
+	check_eq(CombatRules.initiative_mod(_skill_order(battle, &"empujon")), 12, "el empujón es rápido")
