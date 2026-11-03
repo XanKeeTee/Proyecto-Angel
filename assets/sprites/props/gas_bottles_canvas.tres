@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/gas_bottles.png" id="1_qumgs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/gas_bottles_n.png" id="2_qatjc"]
+
+[resource]
+diffuse_texture = ExtResource("1_qumgs")
+normal_texture = ExtResource("2_qatjc")
+texture_filter = 1

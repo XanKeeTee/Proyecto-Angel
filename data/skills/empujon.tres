@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/apartado.tres" id="1_gqale"]
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="2_ephfs"]
+
+[resource]
+script = ExtResource("2_ephfs")
+id = &"empujon"
+display_name = "Empujón"
+description = "Cruzas el arma contra su pecho y empujas con todo el cuerpo. Rápido. Si te tenía agarrado, te suelta."
+choose_part = false
+allowed_parts = Array[StringName]([&"torso"])
+cost_body = 2
+cooldown = 2
+needs_weapon = true
+min_reach = 1
+needs_arms = 2
+needs_standing = true
+target_must_stand = true
+deals_damage = false
+uses_weapon = false
+accuracy = 80
+strength_contest = true
+initiative_mod = 12
+inflicts_status = ExtResource("1_gqale")
+preview_lines = PackedStringArray("No hace daño: gana distancia.")
+risk_lines = PackedStringArray()

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tela.png" id="1_twr1h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tela_inspect.png" id="2_6rh20"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_gdiy3"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_sr3wf"]
+
+[resource]
+script = ExtResource("3_gdiy3")
+id = &"tela"
+display_name = "Tiras de tela"
+description = "Tiras arrancadas de una prenda. Sirven para atar, vendar o envolver algo."
+section = 6
+icon = ExtResource("1_twr1h")
+inspect_sheet = ExtResource("2_6rh20")
+inspect_views = 8
+max_stack = 8
+sound_material = 4

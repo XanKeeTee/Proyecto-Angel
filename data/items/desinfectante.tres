@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/desinfectante.png" id="1_okqtg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/desinfectante_inspect.png" id="2_f2ce1"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_7ipfs"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_odsoh"]
+
+[resource]
+script = ExtResource("3_7ipfs")
+id = &"desinfectante"
+display_name = "Desinfectante"
+description = "Frasco de clorhexidina medio vacío. Da para unas pocas curas.
+Solo sirve combinado con otra cosa."
+category = 2
+section = 4
+icon = ExtResource("1_okqtg")
+inspect_sheet = ExtResource("2_f2ce1")
+inspect_views = 8
+max_durability = 3
+sound_material = 6

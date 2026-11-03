@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Resource" path="res://data/enemies/enfermero.tres" id="1_giq55"]
+[ext_resource type="Resource" path="res://data/party/paciente_09.tres" id="2_ksre4"]
+[ext_resource type="Script" path="res://scripts/systems/combat/encounter_def.gd" id="3_juu3s"]
+
+[resource]
+script = ExtResource("3_juu3s")
+id = &"enfermero"
+enemy = ExtResource("1_giq55")
+party_base = ExtResource("2_ksre4")
+trigger_item = &"tubo_metal"
+trigger_flag = &"tubo_cogido"
+first_regions = Array[Rect2i]([Rect2i(1, 14, 71, 3)])
+return_regions = Array[Rect2i]([Rect2i(1, 14, 71, 3), Rect2i(1, 44, 34, 3)])
+intro_lines = PackedStringArray("Los fluorescentes del fondo se encienden solos. Zumban. Se apagan.", "Al final del pasillo hay alguien de pie. Blanco. Muy alto.", "Un uniforme de enfermero. Una máscara pálida donde debería estar la cara.", "Viene hacia ti. Arrastra un pie. Lo que lleva en el brazo derecho no es una mano.")
+return_lines = PackedStringArray("Otra vez ese pie que se arrastra.", "Ha vuelto a encontrarte.")
+flee_lines = PackedStringArray("Corres sin mirar atrás hasta que dejas de oír el pie que se arrastra.", "No ha caído. Volverá a buscarte.")
+victory_lines = PackedStringArray("Deja de moverse. La respiración detrás de la mascarilla se apaga.", "Entre sus omóplatos, bajo el uniforme roto, una incisión larga cosida sobre la columna.", "Te llevas la mano a la espalda. Tus puntos están en el mismo sitio.")
+corpse_name = "Enfermero"
+corpse_examine = "No se mueve. La máscara de porcelana está agrietada; debajo, la mascarilla quirúrgica cosida a la piel.
+Sobre la columna tiene una incisión cosida. Como la tuya."
+music = "music_combat_drone"

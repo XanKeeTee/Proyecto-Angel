@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_24r3a"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_sr6wh"]
+[ext_resource type="Resource" path="res://data/body_parts/head_severable.tres" id="3_htfou"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_mjamx"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_jn7vq"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_7i8or"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_vxqqo"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_11ydu"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_nud53"]
+
+[sub_resource type="Resource" id="Resource_0jsyb"]
+script = ExtResource("1_24r3a")
+display_name = "Tajo"
+power = 13
+target_part = &"any_arm"
+required_part = &"arm_r"
+
+[sub_resource type="Resource" id="Resource_lxo4n"]
+script = ExtResource("1_24r3a")
+display_name = "Barrido"
+accuracy = 80
+damage_type = 1
+target_part = &"any_leg"
+required_part = &"leg_r"
+
+[sub_resource type="Resource" id="Resource_bnxh4"]
+script = ExtResource("1_24r3a")
+display_name = "Mirada hueca"
+power = 0
+accuracy = 100
+damage_type = 3
+mind_damage = 20
+required_part = &"head"
+visibility = 1
+
+[resource]
+script = ExtResource("9_nud53")
+display_name = "ENEMIGO A"
+body_max = 90
+mind_max = 60
+strength = 9
+agility = 9
+willpower = 5
+resilience = 6
+armor = 1
+parts = Array[ExtResource("2_sr6wh")]([ExtResource("3_htfou"), ExtResource("4_mjamx"), ExtResource("5_jn7vq"), ExtResource("6_7i8or"), ExtResource("7_vxqqo"), ExtResource("8_11ydu")])
+attacks = Array[ExtResource("1_24r3a")]([SubResource("Resource_0jsyb"), SubResource("Resource_lxo4n"), SubResource("Resource_bnxh4")])

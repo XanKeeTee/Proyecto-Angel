@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/toolbox.png" id="1_o8i2l"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/toolbox_n.png" id="2_5p10v"]
+
+[resource]
+diffuse_texture = ExtResource("1_o8i2l")
+normal_texture = ExtResource("2_5p10v")
+texture_filter = 1

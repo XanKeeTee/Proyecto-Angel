@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_rmfvt"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_smqj1"]
+[ext_resource type="Resource" path="res://data/body_parts/head.tres" id="3_ovsic"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_8iwdd"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_03a4e"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_4h1wh"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_ahgtk"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_e7mko"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_dakkg"]
+[ext_resource type="Resource" path="res://data/weapons/awl.tres" id="10_31743"]
+
+[resource]
+script = ExtResource("9_dakkg")
+display_name = "ALIADO 2"
+strength = 6
+dexterity = 10
+agility = 10
+willpower = 12
+resilience = 6
+weapon = ExtResource("10_31743")
+parts = Array[ExtResource("2_smqj1")]([ExtResource("3_ovsic"), ExtResource("4_8iwdd"), ExtResource("5_03a4e"), ExtResource("6_4h1wh"), ExtResource("7_ahgtk"), ExtResource("8_e7mko")])

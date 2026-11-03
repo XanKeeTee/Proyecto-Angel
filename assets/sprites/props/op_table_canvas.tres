@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/op_table.png" id="1_wk46s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/op_table_n.png" id="2_lvvty"]
+
+[resource]
+diffuse_texture = ExtResource("1_wk46s")
+normal_texture = ExtResource("2_lvvty")
+texture_filter = 1

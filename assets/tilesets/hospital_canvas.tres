@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tilesets/hospital.png" id="1_3yxq5"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/hospital_n.png" id="2_cegx2"]
+
+[resource]
+diffuse_texture = ExtResource("1_3yxq5")
+normal_texture = ExtResource("2_cegx2")
+texture_filter = 1

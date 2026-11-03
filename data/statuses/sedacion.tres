@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CombatStatusDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat_status_def.gd" id="1_al5pt"]
+
+[resource]
+script = ExtResource("1_al5pt")
+id = &"sedacion"
+display_name = "Sedación"
+description = "Lento y torpe: −10 acierto, 15 % de perder la acción. Embota el terror."
+agility_mult = 0.6
+accuracy_mod = -10
+skip_chance = 0.15
+suppresses = Array[StringName]([&"aterrado"])
+apply_text = "El líquido entra frío. A %s le pesan los párpados."
+end_text = "%s se despeja un poco."

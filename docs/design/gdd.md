@@ -1,10 +1,12 @@
-# GDD — Proyecto-Angel
+# GDD — La Novena Vigilia
 
 > Esqueleto. Las secciones se rellenarán a medida que el equipo apruebe cada sistema.
 
 ## 1. Visión
 
-- **Género**: JRPG 2D por turnos, terror analógico.
+- **Título**: La Novena Vigilia.
+- **Género**: RPG 2D de terror y supervivencia, combate por turnos, terror analógico.
+- **Protagonistas**: cinco (aportado por el equipo). El prólogo usa al paciente de la Habitación 09.
 - **Motor**: Godot 4.7.2, GDScript.
 - **Estilo**: pixel art tipo RPG Maker con tratamiento VHS (ver `docs/art/guia-estetica.md`).
 - **Premisa temática (aprobada)**: la humanidad recibió un milagro y lo convirtió en herramienta de explotación, en un futuro postapocalíptico donde se juega a ser Dios con experimentos, tecnología y rituales.
@@ -19,7 +21,9 @@
 
 ## 3. Bucle de juego
 
-_Pendiente._
+Exploración a oscuras con linterna de batería limitada → registrar el entorno (todo lo que tiene sentido se puede examinar, abrir o registrar) → gestionar la custodia (espacio, combinaciones, curas) → resolver obstáculos con llaves, herramientas y piezas → leer documentos que explican a medias → sucesos que inquietan sin explicar. El combate llegará después; el prólogo no lo tiene.
+
+Primera experiencia completa: [escenas/prologo.md](escenas/prologo.md).
 
 ## 4. Protagonista personalizable
 
@@ -59,11 +63,14 @@ _Pendiente._
 
 ## 8. Exploración y mapa
 
-_Pendiente._
+**Aprobado:** tiles de **32 px**. Movimiento libre en cualquier ángulo (8 orientaciones de sprite), linterna con batería, oscuridad casi total.
+
+Vista cenital estilo RPG Maker con paredes de 3 casillas y proporciones realistas. Primera zona: [escenas/prologo.md](escenas/prologo.md).
 
 ## 9. Interfaz
 
-_Pendiente._
+- **Sistema de Custodia** (inventario, al estilo de *Fear & Hunger*): lista por categorías sin límite de espacio, pantalla de equipo con ranuras y estadísticas, atajos 1-5 y expediente personal. Ver [sistemas/custodia.md](sistemas/custodia.md).
+- HUD mínimo: indicador de interacción, atajos, batería y avisos breves; se esconde solo.
 
 ## 10. Alcance y prioridades
 

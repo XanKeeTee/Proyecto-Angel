@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/weapon_def.gd" id="1_ariwl"]
+
+[resource]
+script = ExtResource("1_ariwl")
+display_name = "Tubo de hierro"
+power = 12
+accuracy = 70
+damage_type = 1

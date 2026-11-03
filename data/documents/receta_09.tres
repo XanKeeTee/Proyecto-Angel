@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_ivvsm"]
+
+[resource]
+script = ExtResource("1_ivvsm")
+id = &"receta_09"
+title = "Pauta de tratamiento · Paciente 09"
+kind = 1
+style = 2
+body = "PACIENTE: 09     UNIDAD: VIGILIA     CICLO: IX
+
+SEDACIÓN: [b]NINGUNA[/b]. Repito: NINGUNA.
+Mantener en vigilia. Suero glucosado. Contención si fuera necesario.
+No administrar analgesia antes de la recuperación: altera el material.
+
+Firma: Dr. ████████ (Dirección)"
+stamp = "VIGILIA IX"

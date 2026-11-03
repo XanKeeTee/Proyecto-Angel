@@ -1,0 +1,164 @@
+[gd_resource type="Resource" script_class="AcousticsDef" load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/audio/acoustic_space_def.gd" id="1_space"]
+[ext_resource type="Script" path="res://scripts/systems/audio/acoustics_def.gd" id="2_acoustics"]
+
+[sub_resource type="Resource" id="Space_alicatado"]
+script = ExtResource("1_space")
+id = &"alicatado"
+regions = Array[Rect2i]([Rect2i(22, 20, 8, 9)])
+room_size = 0.36
+damping = 0.12
+spread = 0.55
+hipass = 0.25
+wet = 0.22
+dry = 1.0
+predelay_msec = 8.0
+predelay_feedback = 0.15
+eq_db = PackedFloat32Array(0.0, -1.0, 0.0, 0.0, 1.5, 2.0)
+
+[sub_resource type="Resource" id="Space_morgue"]
+script = ExtResource("1_space")
+id = &"morgue"
+regions = Array[Rect2i]([Rect2i(0, 50, 12, 9)])
+room_size = 0.48
+damping = 0.1
+spread = 0.6
+hipass = 0.3
+wet = 0.22
+dry = 1.0
+predelay_msec = 12.0
+predelay_feedback = 0.2
+eq_db = PackedFloat32Array(-1.0, -1.0, 0.0, 0.0, 1.5, 2.5)
+
+[sub_resource type="Resource" id="Space_quirofano"]
+script = ExtResource("1_space")
+id = &"quirofano"
+regions = Array[Rect2i]([Rect2i(37, 20, 17, 9)])
+room_size = 0.46
+damping = 0.18
+spread = 0.65
+hipass = 0.3
+wet = 0.2
+dry = 1.0
+predelay_msec = 14.0
+predelay_feedback = 0.2
+eq_db = PackedFloat32Array(0.0, -0.5, 0.0, 0.0, 1.0, 1.5)
+
+[sub_resource type="Resource" id="Space_escalera"]
+script = ExtResource("1_space")
+id = &"escalera"
+regions = Array[Rect2i]([Rect2i(58, 3, 7, 8), Rect2i(0, 33, 8, 8)])
+room_size = 0.74
+damping = 0.25
+spread = 0.7
+hipass = 0.2
+wet = 0.25
+dry = 1.0
+predelay_msec = 22.0
+predelay_feedback = 0.35
+eq_db = PackedFloat32Array(0.0, 0.5, 1.0, 0.0, 0.0, -1.0)
+
+[sub_resource type="Resource" id="Space_archivo"]
+script = ExtResource("1_space")
+id = &"archivo"
+regions = Array[Rect2i]([Rect2i(45, 3, 14, 8)])
+room_size = 0.3
+damping = 0.8
+spread = 0.5
+hipass = 0.25
+wet = 0.08
+dry = 1.0
+predelay_msec = 10.0
+predelay_feedback = 0.1
+eq_db = PackedFloat32Array(0.0, 0.0, 0.5, 0.0, -1.0, -2.5)
+
+[sub_resource type="Resource" id="Space_habitacion"]
+script = ExtResource("1_space")
+id = &"habitacion"
+regions = Array[Rect2i]([Rect2i(0, 3, 9, 8), Rect2i(8, 3, 9, 8), Rect2i(16, 3, 9, 8), Rect2i(24, 3, 9, 8), Rect2i(0, 20, 9, 9), Rect2i(8, 20, 9, 9), Rect2i(32, 3, 14, 8), Rect2i(29, 20, 9, 9), Rect2i(16, 20, 7, 9)])
+room_size = 0.28
+damping = 0.55
+spread = 0.55
+hipass = 0.25
+wet = 0.12
+dry = 1.0
+predelay_msec = 10.0
+predelay_feedback = 0.15
+eq_db = PackedFloat32Array(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
+
+[sub_resource type="Resource" id="Space_vestibulo"]
+script = ExtResource("1_space")
+id = &"vestibulo"
+regions = Array[Rect2i]([Rect2i(64, 3, 9, 8), Rect2i(53, 20, 20, 9)])
+room_size = 0.68
+damping = 0.35
+spread = 0.8
+hipass = 0.25
+wet = 0.22
+dry = 1.0
+predelay_msec = 30.0
+predelay_feedback = 0.25
+eq_db = PackedFloat32Array(0.0, 0.0, 0.5, 0.0, 0.0, -0.5)
+
+[sub_resource type="Resource" id="Space_pasillo_imposible"]
+script = ExtResource("1_space")
+id = &"pasillo_imposible"
+regions = Array[Rect2i]([Rect2i(-30, 13, 31, 5)])
+room_size = 0.88
+damping = 0.3
+spread = 0.9
+hipass = 0.2
+wet = 0.28
+dry = 1.0
+predelay_msec = 70.0
+predelay_feedback = 0.45
+eq_db = PackedFloat32Array(0.0, 0.5, 1.0, 0.0, -1.0, -3.0)
+
+[sub_resource type="Resource" id="Space_pasillo"]
+script = ExtResource("1_space")
+id = &"pasillo"
+regions = Array[Rect2i]([Rect2i(0, 13, 73, 5)])
+room_size = 0.6
+damping = 0.4
+spread = 0.75
+hipass = 0.25
+wet = 0.2
+dry = 1.0
+predelay_msec = 35.0
+predelay_feedback = 0.3
+eq_db = PackedFloat32Array(0.0, 0.0, 0.5, 0.0, 0.0, -1.0)
+
+[sub_resource type="Resource" id="Space_sotano"]
+script = ExtResource("1_space")
+id = &"sotano"
+regions = Array[Rect2i]([Rect2i(0, 43, 36, 5), Rect2i(7, 33, 12, 8), Rect2i(18, 33, 11, 8), Rect2i(25, 50, 11, 9), Rect2i(11, 50, 15, 9)])
+room_size = 0.8
+damping = 0.5
+spread = 0.8
+hipass = 0.15
+wet = 0.24
+dry = 1.0
+predelay_msec = 40.0
+predelay_feedback = 0.3
+eq_db = PackedFloat32Array(0.5, 1.5, 1.0, 0.0, -1.0, -3.0)
+
+[sub_resource type="Resource" id="Space_edificio"]
+script = ExtResource("1_space")
+id = &"edificio"
+regions = Array[Rect2i]([])
+room_size = 0.5
+damping = 0.4
+spread = 0.7
+hipass = 0.25
+wet = 0.16
+dry = 1.0
+predelay_msec = 25.0
+predelay_feedback = 0.25
+eq_db = PackedFloat32Array(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
+
+[resource]
+script = ExtResource("2_acoustics")
+spaces = Array[ExtResource("1_space")]([SubResource("Space_alicatado"), SubResource("Space_morgue"), SubResource("Space_quirofano"), SubResource("Space_escalera"), SubResource("Space_archivo"), SubResource("Space_habitacion"), SubResource("Space_vestibulo"), SubResource("Space_pasillo_imposible"), SubResource("Space_pasillo"), SubResource("Space_sotano")])
+fallback = SubResource("Space_edificio")
+transition = 1.2

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_6rwhv"]
+
+[resource]
+script = ExtResource("1_6rwhv")
+id = &"manual_generador"
+title = "Instrucciones del generador de emergencia"
+kind = 2
+body = "ARRANQUE MANUAL DEL GRUPO ELECTRÓGENO
+
+1. Comprobar el cuadro general (sala eléctrica). El fusible F1 debe estar colocado y las bornas apretadas.
+2. Comprobar la válvula de presión del generador. Sin válvula, el motor no arranca.
+3. Accionar la palanca de arranque y esperar a que se estabilice.
+
+En caso de corte total, la megafonía se reactiva sola."

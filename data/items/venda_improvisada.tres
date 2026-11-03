@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_improvisada.png" id="1_8wr4e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_improvisada_inspect.png" id="2_grl4e"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_vjmpd"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_l1ger"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_0fjrt"]
+
+[sub_resource type="Resource" id="Resource_mwf8u"]
+script = ExtResource("5_0fjrt")
+body = 3
+stops_bleeding = true
+requires_bleeding = true
+contaminated_penalty = 3
+message = "Enrollas las tiras sobre los puntos. Aguanta."
+contaminated_message = "La sangre se detiene, pero la tela no estaba limpia. Te pica la herida."
+
+[resource]
+script = ExtResource("3_vjmpd")
+id = &"venda_improvisada"
+display_name = "Venda improvisada"
+description = "Tiras de tela enrolladas. No están limpias: mejor pasarlas por desinfectante antes."
+category = 2
+section = 4
+icon = ExtResource("1_8wr4e")
+inspect_sheet = ExtResource("2_grl4e")
+inspect_views = 8
+max_stack = 4
+contaminated = true
+usable = true
+use_effects = Array[ExtResource("4_l1ger")]([SubResource("Resource_mwf8u")])
+use_verb = "Vendar"
+sound_material = 4
+use_sound = "use_bandage_apply"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_vysee"]
+
+[resource]
+script = ExtResource("1_vysee")
+id = &"diario_paciente"
+title = "Diario de la habitación 10"
+style = 1
+body = "Día 412 sin dormir. Ya no cuento las horas, cuento las veces que pasan con la camilla.
+
+Hoy han sacado a la 09 otra vez. Lo llevan abajo y lo vuelven a subir. Es la octava vez. Siempre vuelve con los puntos más arriba en la espalda.
+
+La enfermera mayor dice que cuando llegue a nueve se acabará. No ha dicho qué."

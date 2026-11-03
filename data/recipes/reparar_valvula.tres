@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RecipeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/items/destornillador.tres" id="1_d3fbq"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="2_xcmtn"]
+[ext_resource type="Resource" path="res://data/items/valvula_reparada.tres" id="3_lywdr"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="4_vfbhb"]
+[ext_resource type="Resource" path="res://data/items/valvula_averiada.tres" id="5_05a3u"]
+
+[resource]
+script = ExtResource("4_vfbhb")
+id = &"reparar_valvula"
+first = ExtResource("1_d3fbq")
+second = ExtResource("5_05a3u")
+result = ExtResource("3_lywdr")
+message = "Aprietas los tornillos del asiento hasta que dejan de girar. La válvula queda firme."

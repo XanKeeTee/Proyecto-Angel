@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_tysrr"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_05vva"]
+[ext_resource type="Resource" path="res://data/body_parts/head.tres" id="3_ajavi"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_ba4c6"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_ljhf8"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_f2q5k"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_o8bmi"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_nejq1"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_k55ws"]
+[ext_resource type="Script" path="res://scripts/core/combat/skill_def.gd" id="10_sccvq"]
+[ext_resource type="Resource" path="res://data/skills/golpe_rodilla.tres" id="11_kwwv6"]
+[ext_resource type="Resource" path="res://data/skills/barrido.tres" id="12_b5vum"]
+[ext_resource type="Resource" path="res://data/skills/empujon.tres" id="13_iliqa"]
+[ext_resource type="Resource" path="res://data/skills/rematar.tres" id="14_vx85i"]
+[ext_resource type="Resource" path="res://data/skills/forcejear.tres" id="15_2i5nx"]
+[ext_resource type="Resource" path="res://data/skills/morder.tres" id="16_25cu8"]
+[ext_resource type="Resource" path="res://data/skills/clavar.tres" id="17_5uhfh"]
+[ext_resource type="Resource" path="res://data/skills/respirar.tres" id="18_u2b2r"]
+
+[resource]
+script = ExtResource("9_k55ws")
+display_name = "PACIENTE 09"
+is_protagonist = true
+willpower = 9
+skills = Array[ExtResource("10_sccvq")]([ExtResource("11_kwwv6"), ExtResource("12_b5vum"), ExtResource("13_iliqa"), ExtResource("14_vx85i"), ExtResource("15_2i5nx"), ExtResource("16_25cu8"), ExtResource("17_5uhfh"), ExtResource("18_u2b2r")])
+parts = Array[ExtResource("2_05vva")]([ExtResource("3_ajavi"), ExtResource("4_ba4c6"), ExtResource("5_ljhf8"), ExtResource("6_f2q5k"), ExtResource("7_o8bmi"), ExtResource("8_nejq1")])

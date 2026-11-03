@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="1_c4y2d"]
+
+[resource]
+script = ExtResource("1_c4y2d")
+id = &"vendar_sucia"
+display_name = "Vendar con tela sucia"
+description = "Corta el sangrado de una parte. Si la tela está sucia, se paga después."
+icon_key = &"treat_vendar_sucia"
+item_ids = Array[StringName]([&"venda_sucia", &"venda_improvisada"])
+part_rule = 1
+stops_bleed = 2
+restores_integrity = 0.15
+body = 2
+contaminated_penalty = 3
+contaminated_text = "La tela no estaba limpia. La herida empieza a picar."
+use_text = "%s ata la tela: %s."

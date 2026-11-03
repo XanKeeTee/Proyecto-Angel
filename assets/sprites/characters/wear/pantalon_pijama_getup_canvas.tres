@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/pantalon_pijama_getup.png" id="1_cedag"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/pantalon_pijama_getup_n.png" id="2_wy1un"]
+
+[resource]
+diffuse_texture = ExtResource("1_cedag")
+normal_texture = ExtResource("2_wy1un")
+texture_filter = 1

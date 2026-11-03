@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RecipeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/items/jeringa.tres" id="1_nsqap"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_ingredient.gd" id="2_ikjfg"]
+[ext_resource type="Resource" path="res://data/items/sedante.tres" id="3_1qxa7"]
+[ext_resource type="Script" path="res://scripts/core/recipes/recipe_def.gd" id="4_2qjlf"]
+[ext_resource type="Resource" path="res://data/items/ampolla.tres" id="5_0opum"]
+
+[resource]
+script = ExtResource("4_2qjlf")
+id = &"sedante"
+first = ExtResource("1_nsqap")
+second = ExtResource("5_0opum")
+result = ExtResource("3_1qxa7")
+message = "Cargas la jeringa con el contenido de la ampolla."

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/bata_paciente.png" id="1_sckpi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/bata_paciente_inspect.png" id="2_h5agq"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_ghqt2"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_vuo25"]
+
+[resource]
+script = ExtResource("3_ghqt2")
+id = &"bata_paciente"
+display_name = "Bata de paciente"
+description = "La bata con la que despertaste. Tela fina, abierta por la espalda, con «09» bordado en el cuello. Huele a desinfectante y a algo más."
+category = 7
+section = 2
+icon = ExtResource("1_sckpi")
+inspect_sheet = ExtResource("2_h5agq")
+inspect_views = 8
+size = Vector2i(2, 2)
+equip_slot = 2
+wear_path = "res://assets/sprites/characters/wear/bata_paciente_canvas.tres"
+cloth_sway = 1.0
+cloth_waist = 31.0
+cloth_hem = 16.0
+step_volume_db = 0.0

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/palanca.png" id="1_16wi1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/palanca_inspect.png" id="2_e2bs4"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_iqfgv"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_xsqo3"]
+[ext_resource type="Resource" path="res://data/weapons/crowbar.tres" id="5_sa7hr"]
+
+[resource]
+script = ExtResource("3_iqfgv")
+id = &"palanca"
+display_name = "Palanca"
+description = "Una palanca de hierro, pesada. Tiene pelo pegado en un extremo."
+category = 0
+section = 5
+icon = ExtResource("1_16wi1")
+inspect_sheet = ExtResource("2_e2bs4")
+inspect_views = 8
+size = Vector2i(1, 3)
+max_durability = 6
+use_verb = "Empuñar"
+weapon = ExtResource("5_sa7hr")
+sound_material = 1

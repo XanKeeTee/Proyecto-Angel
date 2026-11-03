@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_fmdmg"]
+
+[resource]
+script = ExtResource("1_fmdmg")
+id = &"informe_quirurgico"
+title = "Informe quirúrgico"
+kind = 2
+date_text = "Ciclo VIII"
+body = "PROCEDIMIENTO: Punción dorsal (T4-T5).
+ANESTESIA: ninguna, según protocolo de vigilia.
+
+El paciente permanece consciente durante toda la intervención. No grita. Pregunta dos veces qué hora es. No se le responde.
+
+Se recupera material: 3 ml. Aspecto: [s]luminoso[/s] [i]no procede describirlo[/i].
+Se cierra con sutura continua. Próxima recuperación: ciclo IX.
+
+Observación del cirujano: «Cada vez trae menos. O cada vez trae otra cosa.»"

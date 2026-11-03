@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_el36n"]
+
+[resource]
+script = ExtResource("1_el36n")
+id = &"expediente_11"
+title = "Expediente · Habitación 11"
+kind = 1
+date_text = "Marzo"
+body = "PACIENTE: ████████
+ESTADO: Fallecido en marzo. Cama vacía desde entonces.
+
+OBSERVACIONES POSTERIORES (otra letra):
+«La cama sigue caliente por las mañanas.»
+«Las sábanas aparecen revueltas.»
+«Hoy había una llave encima del colchón. No es de nadie.»"

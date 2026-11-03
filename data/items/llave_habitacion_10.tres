@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/llave_habitacion_10.png" id="1_7nuys"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/llave_habitacion_10_inspect.png" id="2_khjrc"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_weo5o"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_omb60"]
+
+[resource]
+script = ExtResource("3_weo5o")
+id = &"llave_habitacion_10"
+display_name = "Llave de la habitación 10"
+description = "Llave con una chapa de plástico: «10». La chapa está mordida."
+category = 1
+section = 5
+icon = ExtResource("1_7nuys")
+inspect_sheet = ExtResource("2_khjrc")
+inspect_views = 8
+key_item = true

@@ -1,0 +1,9 @@
+[gd_resource type="CanvasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/gorro_quirurgico.png" id="1_k1cia"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/wear/gorro_quirurgico_n.png" id="2_q6t68"]
+
+[resource]
+diffuse_texture = ExtResource("1_k1cia")
+normal_texture = ExtResource("2_q6t68")
+texture_filter = 1

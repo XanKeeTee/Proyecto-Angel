@@ -1,0 +1,9373 @@
+{
+ "_doc": "Qué buscar en Freesound para cada sonido del juego (lo genera tools/audio/build_manifest.py; lo usa tools/audio/freesound.py). name = archivo en assets/audio/sfx (o assets/audio/music si out=music, en OGG); query/alt = búsquedas (de concreta a amplia); duration = [mín, máx] s del original; ideal = duración preferida; want/avoid = etiquetas a favor/en contra; level = volumen RMS objetivo (dBFS); max_len/fade_in/fade_out/pitch/af = recorte, fundidos, tono y filtros ffmpeg; loop = bucle sin costura (crossfade s); slices = cortar varios golpes de una misma grabación; reserved = aún sin uso en el código, a propósito; pick = id elegido (se rellena solo).",
+ "sounds": [
+  {
+   "name": "ambience_loop",
+   "query": "room tone quiet empty room",
+   "alt": [
+    "roomtone night interior quiet",
+    "empty hall room tone",
+    "air conditioning room tone quiet"
+   ],
+   "duration": [
+    30,
+    600
+   ],
+   "want": [
+    "roomtone",
+    "room-tone",
+    "room",
+    "tone",
+    "quiet",
+    "interior",
+    "empty",
+    "silence"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "hum",
+    "buzz",
+    "footsteps",
+    "wind",
+    "music",
+    "drone",
+    "horror",
+    "dark",
+    "kids",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 45,
+   "crossfade": 4.0,
+   "stereo": true,
+   "af": "highpass=f=70,lowpass=f=7000",
+   "ideal": 90,
+   "note": "Tono de sala limpio y MUY bajo, sin sucesos ni zumbido: el aire de un edificio vacío.",
+   "pick": 635727
+  },
+  {
+   "name": "hum_loop",
+   "query": "fluorescent light hum",
+   "alt": [
+    "fluorescent tube buzz",
+    "neon light hum",
+    "electrical hum light"
+   ],
+   "duration": [
+    5,
+    180
+   ],
+   "want": [
+    "fluorescent",
+    "hum",
+    "buzz",
+    "light",
+    "tube",
+    "ballast"
+   ],
+   "level": -32,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "guitar",
+    "amp",
+    "music",
+    "flicker",
+    "switch",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 14,
+   "crossfade": 1.5,
+   "af": "highpass=f=80",
+   "ideal": 30,
+   "note": "Zumbido continuo de un fluorescente (50/60 Hz con algo de agudo). Sin parpadeos ni clics.",
+   "pick": 553075
+  },
+  {
+   "name": "generator_loop",
+   "query": "diesel generator running",
+   "alt": [
+    "generator engine idle loop",
+    "industrial generator hum running",
+    "old engine idling"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "generator",
+    "engine",
+    "diesel",
+    "running",
+    "idle",
+    "motor"
+   ],
+   "level": -24,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "car",
+    "vehicle",
+    "passing",
+    "start",
+    "starting",
+    "rev",
+    "motorcycle",
+    "lawn",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 16,
+   "crossfade": 1.5,
+   "ideal": 40,
+   "note": "Generador de gasóleo en marcha, constante, sin arranques ni aceleraciones.",
+   "pick": 606933
+  },
+  {
+   "name": "generator_start",
+   "query": "diesel generator start",
+   "alt": [
+    "old engine starting sputter",
+    "generator pull start",
+    "engine start stall"
+   ],
+   "duration": [
+    2,
+    20
+   ],
+   "want": [
+    "generator",
+    "start",
+    "starting",
+    "engine",
+    "diesel"
+   ],
+   "level": -18,
+   "avoid": [
+    "car",
+    "vehicle",
+    "motorcycle",
+    "chainsaw",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 7.0,
+   "fade_out": 0.8,
+   "note": "Motor que tose y arranca (tirón, petardeo, se estabiliza).",
+   "pick": 434660
+  },
+  {
+   "name": "fluorescent_on",
+   "query": "fluorescent light turning on",
+   "alt": [
+    "fluorescent tube start flicker",
+    "neon light switch on flicker",
+    "fluorescent ballast starting"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "fluorescent",
+    "flicker",
+    "light",
+    "tube",
+    "neon"
+   ],
+   "level": -22,
+   "avoid": [
+    "guitar",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.5,
+   "note": "Tubos que arrancan: clics del cebador, parpadeo y zumbido que se asienta.",
+   "pick": 553462
+  },
+  {
+   "name": "breaker",
+   "query": "circuit breaker switch",
+   "alt": [
+    "electrical panel lever switch heavy",
+    "big switch clunk",
+    "fuse box switch"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "breaker",
+    "switch",
+    "electrical",
+    "lever",
+    "clunk"
+   ],
+   "level": -18,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "reserved": true,
+   "note": "Palanca del cuadro eléctrico: clonc metálico grave. (Aún sin uso: cuadro del sótano.)",
+   "pick": 131599
+  },
+  {
+   "name": "door_open",
+   "query": "old door open creak",
+   "alt": [
+    "hospital door opening",
+    "heavy door open squeak",
+    "metal door opening"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "door",
+    "creak",
+    "open",
+    "opening",
+    "squeak",
+    "hinge"
+   ],
+   "level": -20,
+   "avoid": [
+    "car",
+    "slam",
+    "knock",
+    "cabinet",
+    "fridge",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.3,
+   "note": "Puerta interior de hospital (madera con marco metálico) que se abre con un chirrido corto.",
+   "pick": 553250
+  },
+  {
+   "name": "door_close",
+   "query": "door close latch",
+   "alt": [
+    "interior door shut click",
+    "heavy door close",
+    "door closing"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "door",
+    "close",
+    "closing",
+    "shut",
+    "latch"
+   ],
+   "level": -19,
+   "avoid": [
+    "car",
+    "slam",
+    "fridge",
+    "cabinet",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "fade_out": 0.3,
+   "note": "Puerta que se cierra con el clic del pestillo, sin portazo.",
+   "pick": 126044
+  },
+  {
+   "name": "door_locked",
+   "query": "locked door handle rattle",
+   "alt": [
+    "door knob jiggle locked",
+    "door handle try locked",
+    "rattle door handle"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "locked",
+    "handle",
+    "rattle",
+    "knob",
+    "door"
+   ],
+   "level": -21,
+   "avoid": [
+    "knock",
+    "car",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.8,
+   "note": "Manilla que baja y choca con la cerradura: está cerrada.",
+   "pick": 321087
+  },
+  {
+   "name": "unlock",
+   "query": "key unlock door lock",
+   "alt": [
+    "key turn lock click",
+    "key in lock unlock"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "key",
+    "unlock",
+    "lock",
+    "keys"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.6,
+   "reserved": true,
+   "note": "Llave que entra y gira (aún sin uso: abrir con llave usa door_open).",
+   "pick": 146348
+  },
+  {
+   "name": "drawer_open",
+   "query": "metal drawer open",
+   "alt": [
+    "filing cabinet drawer open",
+    "drawer slide open"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "drawer",
+    "open",
+    "metal",
+    "cabinet"
+   ],
+   "level": -22,
+   "avoid": [
+    "close",
+    "slam",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.4,
+   "note": "Cajón metálico de archivador que se desliza al abrir.",
+   "pick": 151575
+  },
+  {
+   "name": "drawer_close",
+   "query": "metal drawer close",
+   "alt": [
+    "filing cabinet drawer close",
+    "drawer shut"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "drawer",
+    "close",
+    "metal",
+    "cabinet"
+   ],
+   "level": -21,
+   "avoid": [
+    "open",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Cajón metálico que se cierra con un golpe seco.",
+   "pick": 816652
+  },
+  {
+   "name": "locker_open",
+   "query": "metal locker door open",
+   "alt": [
+    "steel cabinet door open creak",
+    "gym locker open"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "locker",
+    "cabinet",
+    "metal",
+    "open"
+   ],
+   "level": -21,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Taquilla de chapa: pestillo y puerta fina que vibra.",
+   "pick": 94134
+  },
+  {
+   "name": "bed_creak",
+   "query": "hospital bed creak",
+   "alt": [
+    "metal bed springs creak",
+    "old bed frame creak"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "bed",
+    "creak",
+    "springs",
+    "metal"
+   ],
+   "level": -22,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "sex",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.6,
+   "fade_out": 0.3,
+   "note": "Somier metálico que cruje al moverse alguien.",
+   "pick": 655947
+  },
+  {
+   "name": "heavy_drag",
+   "query": "heavy furniture drag floor",
+   "alt": [
+    "dragging metal cabinet floor",
+    "drag heavy object concrete"
+   ],
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "drag",
+    "scrape",
+    "furniture",
+    "heavy"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.3,
+   "note": "Mueble pesado arrastrado un palmo sobre baldosa.",
+   "pick": 453347
+  },
+  {
+   "name": "metal_bang",
+   "query": "metal bang reverb",
+   "alt": [
+    "elevator door bang",
+    "heavy metal hit echo",
+    "metal impact distant"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "metal",
+    "bang",
+    "impact",
+    "hit",
+    "reverb"
+   ],
+   "level": -16,
+   "avoid": [
+    "music",
+    "drum",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.7,
+   "note": "Golpe metálico grande con cola (hueco del ascensor).",
+   "pick": 703248
+  },
+  {
+   "name": "knock",
+   "query": "knocking on wall",
+   "alt": [
+    "knock on door slow",
+    "three knocks wood"
+   ],
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "knock",
+    "knocking",
+    "wall",
+    "door"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "note": "Golpes de nudillos lentos, secos.",
+   "pick": 237937
+  },
+  {
+   "name": "glass",
+   "query": "glass shards crunch",
+   "alt": [
+    "broken glass step",
+    "small glass break"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "glass",
+    "shards",
+    "broken",
+    "crunch"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "note": "Cristales rotos pisados o que caen, cortos.",
+   "pick": 221536
+  },
+  {
+   "name": "drip",
+   "query": "single water drip",
+   "alt": [
+    "water drop puddle echo",
+    "drip drop cave"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "drip",
+    "drop",
+    "water",
+    "droplet"
+   ],
+   "level": -26,
+   "avoid": [
+    "tap",
+    "faucet",
+    "rain",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Una sola gota en un charco, con algo de eco.",
+   "pick": 166321
+  },
+  {
+   "name": "flashlight_click",
+   "query": "flashlight switch click",
+   "alt": [
+    "torch button click",
+    "small switch click plastic"
+   ],
+   "duration": [
+    0.05,
+    2
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "click",
+    "switch"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.4,
+   "note": "Botón de linterna: clic de plástico corto.",
+   "pick": 435845
+  },
+  {
+   "name": "monitor_beep",
+   "query": "heart monitor beep",
+   "alt": [
+    "ecg beep hospital",
+    "patient monitor beep"
+   ],
+   "duration": [
+    0.1,
+    5
+   ],
+   "want": [
+    "beep",
+    "monitor",
+    "ecg",
+    "hospital",
+    "heart"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "reserved": true,
+   "note": "Un pitido de monitor de constantes (reservado para la Habitación 09).",
+   "pick": 668978
+  },
+  {
+   "name": "pa_chime",
+   "query": "announcement chime",
+   "alt": [
+    "pa system chime ding dong",
+    "airport chime old",
+    "intercom chime"
+   ],
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "chime",
+    "announcement",
+    "pa",
+    "ding"
+   ],
+   "level": -18,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "doorbell",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.6,
+   "note": "Campanita de megafonía de dos o tres notas, antigua.",
+   "pick": 244583
+  },
+  {
+   "name": "pa_static",
+   "query": "loudspeaker static",
+   "alt": [
+    "pa speaker static noise",
+    "intercom static feedback",
+    "radio static burst"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "static",
+    "speaker",
+    "noise",
+    "pa",
+    "intercom"
+   ],
+   "level": -24,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.5,
+   "note": "Altavoces que se encienden: estática y zumbido.",
+   "pick": 696593
+  },
+  {
+   "name": "phone_ring",
+   "query": "old telephone ring bell",
+   "alt": [
+    "rotary phone ringing",
+    "vintage telephone ring"
+   ],
+   "duration": [
+    1,
+    10
+   ],
+   "want": [
+    "telephone",
+    "ring",
+    "rotary",
+    "phone",
+    "bell",
+    "vintage"
+   ],
+   "level": -18,
+   "avoid": [
+    "mobile",
+    "cellphone",
+    "ringtone",
+    "smartphone",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "note": "Timbre de campana de teléfono de disco.",
+   "pick": 663840
+  },
+  {
+   "name": "phone_static",
+   "query": "telephone line static",
+   "alt": [
+    "phone line noise interference",
+    "telephone static breathing"
+   ],
+   "duration": [
+    1,
+    15
+   ],
+   "want": [
+    "static",
+    "telephone",
+    "phone",
+    "line",
+    "noise"
+   ],
+   "level": -24,
+   "avoid": [
+    "ringtone",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 5.0,
+   "fade_out": 0.6,
+   "note": "Línea muerta con estática (sin voz clara).",
+   "pick": 567315
+  },
+  {
+   "name": "tape_save",
+   "query": "cassette recorder record button",
+   "alt": [
+    "tape recorder button click mechanical",
+    "cassette deck button press"
+   ],
+   "duration": [
+    0.3,
+    5
+   ],
+   "want": [
+    "cassette",
+    "tape",
+    "button",
+    "recorder"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Botón de grabar de una grabadora de casete: clac mecánico y motor.",
+   "pick": 204715
+  },
+  {
+   "name": "paper",
+   "query": "paper sheet handling",
+   "alt": [
+    "paper rustle short",
+    "picking up paper"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "rustle",
+    "handling"
+   ],
+   "level": -24,
+   "avoid": [
+    "crumple",
+    "tear",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Una hoja que se coge o se gira.",
+   "pick": 873835
+  },
+  {
+   "name": "pickup",
+   "query": "pick up small object foley",
+   "alt": [
+    "grab item foley",
+    "cloth rustle grab"
+   ],
+   "duration": [
+    0.2,
+    2
+   ],
+   "want": [
+    "foley",
+    "pickup",
+    "grab",
+    "handling"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.7,
+   "note": "Coger algo pequeño: roce de ropa y contacto.",
+   "pick": 216629
+  },
+  {
+   "name": "pills",
+   "query": "pill bottle shake",
+   "alt": [
+    "pills rattle bottle",
+    "medicine bottle rattle"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Bote de pastillas que se agita.",
+   "pick": 536419
+  },
+  {
+   "name": "battery",
+   "query": "battery insert",
+   "alt": [
+    "batteries click into compartment",
+    "aa battery handling"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.4,
+   "note": "Pilas que encajan (provisional de varios).",
+   "pick": 627837
+  },
+  {
+   "name": "bandage",
+   "query": "bandage wrap",
+   "alt": [
+    "medical tape tearing",
+    "cloth wrap foley"
+   ],
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "bandage",
+    "tape",
+    "cloth",
+    "wrap"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Venda que se desenrolla (provisional de varios).",
+   "pick": 718668
+  },
+  {
+   "name": "whisper",
+   "query": "whisper unintelligible",
+   "alt": [
+    "ghost whisper",
+    "creepy whispering"
+   ],
+   "duration": [
+    0.6,
+    6
+   ],
+   "want": [
+    "whisper",
+    "whispering",
+    "creepy"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "asmr",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.5,
+   "note": "Susurro sin palabras claras.",
+   "pick": 198434
+  },
+  {
+   "name": "steps_far",
+   "query": "distant footsteps corridor",
+   "alt": [
+    "footsteps hallway echo slow",
+    "footsteps reverb walking"
+   ],
+   "duration": [
+    1.5,
+    10
+   ],
+   "want": [
+    "footsteps",
+    "corridor",
+    "hallway",
+    "echo"
+   ],
+   "level": -26,
+   "avoid": [
+    "running",
+    "heels",
+    "snow",
+    "gravel",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_out": 0.6,
+   "note": "Pasos lentos lejos, con eco.",
+   "pick": 707246
+  },
+  {
+   "name": "step",
+   "query": "barefoot footsteps tile",
+   "alt": [
+    "bare feet walking hard floor",
+    "barefoot walking"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "barefoot",
+    "footsteps",
+    "feet",
+    "tile"
+   ],
+   "level": -30,
+   "avoid": [
+    "running",
+    "sand",
+    "snow",
+    "grass",
+    "water",
+    "heels",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "slices": [
+    "step_1",
+    "step_2",
+    "step_3",
+    "step_4"
+   ],
+   "slice_len": 0.32,
+   "min_gap": 0.3,
+   "note": "Pies descalzos en baldosa: varios pasos en una toma.",
+   "pick": 338106
+  },
+  {
+   "name": "step_soft",
+   "query": "slippers footsteps",
+   "alt": [
+    "soft shoes footsteps indoor",
+    "sneakers walking indoor"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "slippers",
+    "footsteps",
+    "shoes",
+    "indoor"
+   ],
+   "level": -32,
+   "avoid": [
+    "running",
+    "heels",
+    "snow",
+    "gravel",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "slices": [
+    "step_soft_1",
+    "step_soft_2",
+    "step_soft_3",
+    "step_soft_4"
+   ],
+   "slice_len": 0.32,
+   "min_gap": 0.3,
+   "note": "Calzado blando en interior.",
+   "pick": 260120
+  },
+  {
+   "name": "step_boot",
+   "query": "rubber boots footsteps",
+   "alt": [
+    "wellington boots walking",
+    "boots footsteps concrete"
+   ],
+   "duration": [
+    2,
+    40
+   ],
+   "want": [
+    "boots",
+    "footsteps",
+    "rubber",
+    "wellies"
+   ],
+   "level": -26,
+   "avoid": [
+    "running",
+    "snow",
+    "mud",
+    "gravel",
+    "heels",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "slices": [
+    "step_boot_1",
+    "step_boot_2",
+    "step_boot_3",
+    "step_boot_4"
+   ],
+   "slice_len": 0.38,
+   "min_gap": 0.3,
+   "note": "Botas de goma en suelo duro.",
+   "pick": 72030
+  },
+  {
+   "name": "breath_wake_male",
+   "query": "male gasp inhale",
+   "alt": [
+    "man waking up breath",
+    "sharp inhale breath male"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "breath",
+    "inhale",
+    "gasp",
+    "male"
+   ],
+   "level": -24,
+   "avoid": [
+    "female",
+    "woman",
+    "girl",
+    "scream",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.6,
+   "note": "Inspiración brusca de quien se despierta.",
+   "pick": 271245
+  },
+  {
+   "name": "pain_sigh_male",
+   "query": "male pain sigh",
+   "alt": [
+    "man exhale pain",
+    "male sigh tired"
+   ],
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "sigh",
+    "pain",
+    "male",
+    "exhale"
+   ],
+   "level": -22,
+   "avoid": [
+    "female",
+    "woman",
+    "girl",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Suspiro de dolor contenido.",
+   "pick": 850703
+  },
+  {
+   "name": "pain_groan_male",
+   "query": "male groan pain",
+   "alt": [
+    "man grunt effort pain",
+    "male groan closed mouth"
+   ],
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "groan",
+    "pain",
+    "male",
+    "grunt"
+   ],
+   "level": -21,
+   "avoid": [
+    "female",
+    "woman",
+    "zombie",
+    "monster",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Gruñido de dolor con la boca cerrada.",
+   "pick": 257706
+  },
+  {
+   "name": "breath_strain_male",
+   "query": "male effort breathing",
+   "alt": [
+    "man straining breath",
+    "effort grunt breathing"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "effort",
+    "breath",
+    "male",
+    "strain"
+   ],
+   "level": -23,
+   "avoid": [
+    "female",
+    "woman",
+    "running",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.2,
+   "note": "Respiración de esfuerzo entre dientes (al levantarse de la camilla).",
+   "pick": 554928
+  },
+  {
+   "name": "breath_run_male",
+   "query": "man out of breath panting",
+   "alt": [
+    "male heavy breathing after running",
+    "exhausted panting man"
+   ],
+   "duration": [
+    1.5,
+    8
+   ],
+   "want": [
+    "breathing",
+    "panting",
+    "male",
+    "exhausted"
+   ],
+   "level": -23,
+   "avoid": [
+    "female",
+    "woman",
+    "dog",
+    "cough",
+    "sex",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "fade_out": 0.5,
+   "note": "Jadeo de un hombre herido que se queda sin aliento tras correr un poco; se va calmando.",
+   "pick": 467369
+  },
+  {
+   "name": "cloth_rustle",
+   "query": "bed sheet rustle",
+   "alt": [
+    "cotton fabric rustle",
+    "blanket movement foley"
+   ],
+   "duration": [
+    0.4,
+    5
+   ],
+   "want": [
+    "cloth",
+    "rustle",
+    "sheet",
+    "fabric",
+    "bed"
+   ],
+   "level": -26,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Sábana que se mueve al incorporarse.",
+   "pick": 644490
+  },
+  {
+   "name": "bare_feet_floor",
+   "query": "barefoot step tile",
+   "alt": [
+    "bare feet on floor",
+    "foot touch floor barefoot"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "barefoot",
+    "step",
+    "feet"
+   ],
+   "level": -26,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Los pies desnudos tocan el suelo frío.",
+   "pick": 197402
+  },
+  {
+   "name": "stairs_concrete",
+   "query": "footsteps concrete stairs",
+   "alt": [
+    "walking down stairs echo",
+    "stairwell footsteps"
+   ],
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "stairs",
+    "footsteps",
+    "concrete",
+    "stairwell"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "reserved": true,
+   "note": "Bajar o subir escalera de hormigón (reservado: el cambio de planta usa las pisadas).",
+   "pick": 119911
+  },
+  {
+   "name": "amb_vent_loop",
+   "query": "ventilation air duct hum",
+   "alt": [
+    "air vent blowing loop",
+    "hvac ventilation room tone",
+    "air conditioning duct noise"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "ventilation",
+    "vent",
+    "air",
+    "duct",
+    "hvac",
+    "fan"
+   ],
+   "level": -30,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "wind",
+    "music",
+    "hairdryer",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 16,
+   "crossfade": 2.0,
+   "ideal": 40,
+   "af": "highpass=f=60",
+   "note": "Aire por un conducto: soplido sordo y continuo, sin golpeteos.",
+   "pick": 848969
+  },
+  {
+   "name": "amb_drip_loop",
+   "query": "dripping tap water",
+   "alt": [
+    "faucet dripping loop",
+    "water dripping sink",
+    "slow drips"
+   ],
+   "duration": [
+    6,
+    200
+   ],
+   "want": [
+    "drip",
+    "dripping",
+    "faucet",
+    "tap",
+    "water",
+    "sink"
+   ],
+   "level": -30,
+   "avoid": [
+    "rain",
+    "stream",
+    "river",
+    "pouring",
+    "shower",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 14,
+   "crossfade": 0.6,
+   "ideal": 30,
+   "note": "Grifo que gotea despacio en un lavabo de loza (gotas espaciadas, irregulares).",
+   "pick": 271335
+  },
+  {
+   "name": "amb_pipes_loop",
+   "query": "water pipes gurgling",
+   "alt": [
+    "pipes water flowing inside wall",
+    "boiler room pipes ambience",
+    "plumbing gurgle"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "pipes",
+    "pipe",
+    "gurgle",
+    "water",
+    "plumbing",
+    "boiler"
+   ],
+   "level": -30,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "toilet",
+    "flush",
+    "rain",
+    "river",
+    "shower",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 18,
+   "crossfade": 2.0,
+   "ideal": 40,
+   "af": "lowpass=f=4000",
+   "note": "Agua que se mueve por tuberías gruesas, gorgoteo lejano (la caldera está apagada).",
+   "pick": 194454
+  },
+  {
+   "name": "amb_fridge_loop",
+   "query": "refrigerator compressor hum",
+   "alt": [
+    "fridge hum loop",
+    "freezer motor running",
+    "cold room compressor"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "fridge",
+    "refrigerator",
+    "compressor",
+    "hum",
+    "freezer"
+   ],
+   "level": -30,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "door",
+    "open",
+    "close",
+    "ice",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 14,
+   "crossfade": 1.5,
+   "ideal": 30,
+   "af": "highpass=f=40",
+   "note": "Motor de cámara frigorífica: zumbido grave constante con algo de vibración.",
+   "pick": 98220
+  },
+  {
+   "name": "amb_electric_buzz",
+   "query": "electrical panel buzz",
+   "alt": [
+    "transformer hum buzz",
+    "electric hum high voltage",
+    "electrical cabinet hum"
+   ],
+   "duration": [
+    5,
+    200
+   ],
+   "want": [
+    "electric",
+    "electrical",
+    "buzz",
+    "hum",
+    "transformer"
+   ],
+   "level": -32,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "guitar",
+    "amp",
+    "music",
+    "spark",
+    "zap",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 12,
+   "crossfade": 1.2,
+   "ideal": 25,
+   "note": "Zumbido eléctrico seco de un cuadro con carga.",
+   "pick": 733736
+  },
+  {
+   "name": "amb_creak_building",
+   "query": "building creak",
+   "alt": [
+    "house settling creak",
+    "structure creaking old building"
+   ],
+   "duration": [
+    0.8,
+    8
+   ],
+   "want": [
+    "creak",
+    "creaking",
+    "building",
+    "house",
+    "settling",
+    "structure"
+   ],
+   "level": -24,
+   "avoid": [
+    "door",
+    "footsteps",
+    "chair",
+    "bed",
+    "ship",
+    "boat",
+    "rope",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "fade_out": 0.4,
+   "af": "lowpass=f=6000",
+   "note": "Crujido grave de la estructura del edificio, aislado.",
+   "pick": 238288
+  },
+  {
+   "name": "amb_creak_wood",
+   "query": "wood creak single",
+   "alt": [
+    "wooden floor creak",
+    "old wood creaking slow"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "creak",
+    "wood",
+    "wooden",
+    "creaking"
+   ],
+   "level": -25,
+   "avoid": [
+    "door",
+    "footsteps",
+    "chair",
+    "ship",
+    "boat",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.3,
+   "note": "Una tabla o un marco de madera que cruje solo.",
+   "pick": 502504
+  },
+  {
+   "name": "amb_creak_metal",
+   "query": "metal creak groan",
+   "alt": [
+    "metal stress groan",
+    "steel structure creak",
+    "metal pipe creak"
+   ],
+   "duration": [
+    0.8,
+    8
+   ],
+   "want": [
+    "metal",
+    "creak",
+    "groan",
+    "stress",
+    "steel"
+   ],
+   "level": -24,
+   "avoid": [
+    "door",
+    "gate",
+    "swing",
+    "ship",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.5,
+   "note": "Metal que se tensa y gime (vigas, conductos) en el sótano.",
+   "pick": 508272
+  },
+  {
+   "name": "amb_pipe_knock",
+   "query": "pipe knocking water hammer",
+   "alt": [
+    "pipes banging",
+    "radiator pipe knock",
+    "metal pipe clank"
+   ],
+   "duration": [
+    0.4,
+    6
+   ],
+   "want": [
+    "pipe",
+    "pipes",
+    "knock",
+    "bang",
+    "clank",
+    "radiator",
+    "hammer"
+   ],
+   "level": -22,
+   "avoid": [
+    "music",
+    "drum",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.4,
+   "af": "lowpass=f=5000",
+   "note": "Una tubería que golpea dentro de la pared (dos o tres golpes metálicos sordos).",
+   "pick": 104370
+  },
+  {
+   "name": "amb_water_pipes",
+   "query": "water running through pipes",
+   "alt": [
+    "water flowing in wall pipe",
+    "plumbing water flow",
+    "drain pipe water"
+   ],
+   "duration": [
+    1.5,
+    15
+   ],
+   "want": [
+    "water",
+    "pipe",
+    "pipes",
+    "plumbing",
+    "flow",
+    "drain"
+   ],
+   "level": -26,
+   "avoid": [
+    "toilet",
+    "flush",
+    "shower",
+    "river",
+    "rain",
+    "tap",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 5.0,
+   "fade_in": 0.4,
+   "fade_out": 1.0,
+   "af": "lowpass=f=3500",
+   "note": "Agua que corre un momento por una bajante, oída a través de la pared.",
+   "pick": 219372
+  },
+  {
+   "name": "amb_wind_gust",
+   "query": "wind gust through window",
+   "alt": [
+    "wind whistle broken window",
+    "wind gust interior",
+    "draft wind howl short"
+   ],
+   "duration": [
+    1.5,
+    12
+   ],
+   "want": [
+    "wind",
+    "gust",
+    "window",
+    "draft",
+    "whistle",
+    "howl"
+   ],
+   "level": -26,
+   "avoid": [
+    "storm",
+    "rain",
+    "thunder",
+    "microphone",
+    "mic",
+    "trees",
+    "leaves",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 5.0,
+   "fade_in": 0.6,
+   "fade_out": 1.2,
+   "note": "Ráfaga de viento que silba por una ventana rota, desde dentro.",
+   "pick": 67707
+  },
+  {
+   "name": "amb_monitor_far",
+   "query": "hospital monitor beeping",
+   "alt": [
+    "ecg monitor beeps",
+    "heart monitor beeping distant",
+    "patient monitor beep sequence"
+   ],
+   "duration": [
+    1.5,
+    15
+   ],
+   "want": [
+    "monitor",
+    "beep",
+    "beeping",
+    "ecg",
+    "hospital",
+    "heart"
+   ],
+   "level": -30,
+   "avoid": [
+    "flatline",
+    "alarm",
+    "music",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_in": 0.3,
+   "fade_out": 0.8,
+   "af": "lowpass=f=2200,highpass=f=300",
+   "note": "Tres o cuatro pitidos de monitor, lejanos (filtrados), en otra habitación.",
+   "pick": 668978
+  },
+  {
+   "name": "amb_elevator_cables",
+   "query": "elevator cables creak",
+   "alt": [
+    "elevator shaft creak",
+    "lift cable metal creak",
+    "elevator shaft ambience"
+   ],
+   "duration": [
+    1,
+    12
+   ],
+   "want": [
+    "elevator",
+    "lift",
+    "cable",
+    "cables",
+    "shaft",
+    "creak"
+   ],
+   "level": -24,
+   "avoid": [
+    "ding",
+    "music",
+    "voice",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_in": 0.3,
+   "fade_out": 0.8,
+   "note": "Cables tensos que crujen en el hueco del ascensor, con algo de eco.",
+   "pick": 326487
+  },
+  {
+   "name": "amb_paper_draft",
+   "query": "papers rustling wind",
+   "alt": [
+    "paper flutter draft",
+    "loose papers moving breeze"
+   ],
+   "duration": [
+    0.8,
+    8
+   ],
+   "want": [
+    "paper",
+    "papers",
+    "rustle",
+    "flutter",
+    "wind"
+   ],
+   "level": -28,
+   "avoid": [
+    "crumple",
+    "tear",
+    "book",
+    "writing",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_in": 0.2,
+   "fade_out": 0.6,
+   "note": "Hojas sueltas que se mueven con una corriente, sin manos.",
+   "pick": 389440
+  },
+  {
+   "name": "amb_spark_crackle",
+   "query": "electrical spark crackle",
+   "alt": [
+    "electric arc crackle short",
+    "sparking wire"
+   ],
+   "duration": [
+    0.3,
+    5
+   ],
+   "want": [
+    "spark",
+    "sparks",
+    "electric",
+    "crackle",
+    "arc"
+   ],
+   "level": -26,
+   "avoid": [
+    "fire",
+    "fireworks",
+    "zap",
+    "laser",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "fade_out": 0.2,
+   "note": "Chisporroteo corto de un cable o un contacto.",
+   "pick": 849772
+  },
+  {
+   "name": "amb_tone_ward",
+   "query": "empty hospital room ambience",
+   "alt": [
+    "hospital room tone night",
+    "empty patient room roomtone",
+    "quiet empty room interior building"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "hospital",
+    "room",
+    "ward",
+    "night",
+    "quiet",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Habitación de hospital vacía de noche: aire quieto y un murmullo lejano del edificio. Sin pitidos, voces ni pasos. Casi no debe oírse.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 701976
+  },
+  {
+   "name": "amb_tone_corridor",
+   "query": "empty hospital corridor ambience",
+   "alt": [
+    "long corridor room tone",
+    "empty hallway building ambience night",
+    "hospital hallway roomtone"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "hospital",
+    "corridor",
+    "hallway",
+    "hall",
+    "long",
+    "night",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -39,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Pasillo largo de hospital vacío: aire con algo de cola y un murmullo de ventilación o maquinaria al fondo. Sin anuncios, voces, carros ni pasos.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 383486
+  },
+  {
+   "name": "amb_tone_tiled",
+   "query": "bathroom room tone",
+   "alt": [
+    "tiled bathroom ambience quiet",
+    "public toilet empty ambience",
+    "shower room roomtone"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "bathroom",
+    "toilet",
+    "tiled",
+    "tiles",
+    "washroom",
+    "quiet",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "flush",
+    "shower",
+    "running",
+    "hand-dryer",
+    "dryer",
+    "pee",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Baño alicatado vacío: tono brillante y reflectante, quizá un hilo de agua muy lejos. Sin cisterna, secamanos ni ducha.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 382901
+  },
+  {
+   "name": "amb_tone_or",
+   "query": "operating room ambience empty",
+   "alt": [
+    "surgery room tone hospital",
+    "clinic treatment room ambience quiet",
+    "laboratory room tone hum"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "operating",
+    "surgery",
+    "theatre",
+    "hospital",
+    "clinic",
+    "laboratory",
+    "sterile",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "monitor",
+    "surgeon",
+    "drill",
+    "saw",
+    "dentist",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Quirófano o sala clínica vacía: aire frío y limpio con un zumbido técnico muy tenue. Sin pitidos de monitor, voces ni instrumental.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 85086
+  },
+  {
+   "name": "amb_tone_hall",
+   "query": "lobby ambience",
+   "alt": [
+    "hall room tone",
+    "large room ambience"
+   ],
+   "duration": [
+    10,
+    600
+   ],
+   "want": [
+    "lobby",
+    "hall",
+    "large",
+    "atrium",
+    "reception",
+    "reverb",
+    "night",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -39,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "announcement",
+    "shop",
+    "station",
+    "airport",
+    "mall",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Vestíbulo o recepción grande y vacía: aire amplio con cola, el edificio que respira. Sin gente, anuncios ni tiendas.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 788451
+  },
+  {
+   "name": "amb_tone_archive",
+   "query": "quiet library room tone",
+   "alt": [
+    "archive room ambience quiet",
+    "small office room tone night",
+    "storage room quiet roomtone"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "library",
+    "archive",
+    "office",
+    "storage",
+    "quiet",
+    "room",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -42,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "typing",
+    "keyboard",
+    "printer",
+    "pages",
+    "phone",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Archivo de papel: sala apagada y seca (madera, papel), casi silencio con un murmullo grave. Sin teclados, impresoras ni páginas.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 635727
+  },
+  {
+   "name": "amb_tone_stairwell",
+   "query": "stairwell ambience concrete",
+   "alt": [
+    "staircase room tone reverb",
+    "concrete stairwell air wind",
+    "emergency stairs ambience building"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "stairwell",
+    "staircase",
+    "stairs",
+    "concrete",
+    "reverb",
+    "echo",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -38,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "climbing",
+    "walking",
+    "running",
+    "steps",
+    "elevator",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Hueco de escalera de hormigón: aire que sube y baja, un silbido grave muy suave y mucha cola. Sin pasos ni puertas.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 405590
+  },
+  {
+   "name": "amb_tone_basement",
+   "query": "basement room tone",
+   "alt": [
+    "cellar ambience low rumble",
+    "underground concrete room tone",
+    "underground parking ambience quiet"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "basement",
+    "cellar",
+    "underground",
+    "concrete",
+    "rumble",
+    "low",
+    "bunker",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -37,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "cars",
+    "engine",
+    "dripping",
+    "water",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Sótano de hormigón grande: retumbo grave y constante de maquinaria lejana, aire cerrado. Sin coches, motores cerca ni goteos (los goteos van aparte).",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 683491
+  },
+  {
+   "name": "amb_tone_morgue",
+   "query": "cold room ambience",
+   "alt": [
+    "refrigerator room hum",
+    "basement room tone"
+   ],
+   "duration": [
+    10,
+    600
+   ],
+   "want": [
+    "cold",
+    "storage",
+    "freezer",
+    "room",
+    "hum",
+    "morgue",
+    "mortuary",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "ice",
+    "kitchen",
+    "restaurant",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Sala fría de azulejo y acero: siseo frío y zumbido muy bajo (la nevera grande va aparte). Sin puertas ni cocina.",
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 786004
+  },
+  {
+   "name": "amb_building_hum",
+   "query": "building electrical hum distant",
+   "alt": [
+    "mains hum building ambience low",
+    "distant machinery hum building",
+    "large building hvac rumble distant"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "hum",
+    "mains",
+    "electrical",
+    "machinery",
+    "distant",
+    "building",
+    "low",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -42,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "guitar",
+    "amp",
+    "fluorescent",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Con corriente: el edificio vivo, un zumbido grave y lejano de red eléctrica y máquinas (filtrado). Muy bajo; que se note cuando se va la luz.",
+   "af": "highpass=f=35,lowpass=f=1800",
+   "pick": 661435
+  },
+  {
+   "name": "amb_wind_building",
+   "query": "wind outside building interior",
+   "alt": [
+    "wind heard from inside house",
+    "wind against windows interior muffled",
+    "storm wind indoors muffled"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "wind",
+    "inside",
+    "indoors",
+    "interior",
+    "muffled",
+    "window",
+    "house",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "microphone",
+    "mic",
+    "trees",
+    "leaves",
+    "chimes",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Viento fuera del edificio oído desde dentro: presión sorda que sube y baja, sin silbidos agudos ni lluvia. Sin corriente se oye más (nada lo tapa).",
+   "af": "highpass=f=40,lowpass=f=2500",
+   "pick": 386451
+  },
+  {
+   "name": "amb_pa_hum",
+   "query": "speaker hum hiss",
+   "alt": [
+    "pa system idle hum",
+    "loudspeaker noise floor hiss",
+    "amplifier hum hiss idle"
+   ],
+   "duration": [
+    20,
+    900
+   ],
+   "want": [
+    "speaker",
+    "hum",
+    "hiss",
+    "pa",
+    "amplifier",
+    "idle",
+    "noise",
+    "field-recording",
+    "fieldrecording",
+    "field",
+    "recording",
+    "empty",
+    "abandoned",
+    "interior",
+    "building",
+    "roomtone",
+    "room-tone",
+    "ambience",
+    "atmosphere"
+   ],
+   "level": -46,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "horror",
+    "scary",
+    "creepy",
+    "spooky",
+    "drone",
+    "dark-ambient",
+    "designed",
+    "music",
+    "pad",
+    "game",
+    "sci-fi",
+    "scifi",
+    "spaceship",
+    "trailer",
+    "footsteps",
+    "door",
+    "kids",
+    "children",
+    "tv",
+    "radio",
+    "beep",
+    "feedback",
+    "guitar",
+    "announcement",
+    "crackle",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "ideal": 120,
+   "note": "Los altavoces de megafonía del techo encendidos sin nadie al micro: siseo y zumbido de 50 Hz mínimos. En el límite de lo audible.",
+   "af": "highpass=f=45,lowpass=f=6000",
+   "pick": 522383
+  },
+  {
+   "name": "amb_clock_tick",
+   "query": "wall clock ticking",
+   "alt": [
+    "clock tick tock loop",
+    "old clock ticking close",
+    "analog wall clock"
+   ],
+   "duration": [
+    5,
+    300
+   ],
+   "want": [
+    "clock",
+    "tick",
+    "ticking",
+    "tock",
+    "wall",
+    "analog"
+   ],
+   "level": -36,
+   "avoid": [
+    "alarm",
+    "chime",
+    "bell",
+    "cuckoo",
+    "music",
+    "watch",
+    "fast",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 12,
+   "crossfade": 0.05,
+   "ideal": 30,
+   "note": "Reloj de pared analógico: tic-tac seco y regular, sin campanadas. Bucle exacto (sin un fundido que borre un tic).",
+   "pick": 405423
+  },
+  {
+   "name": "amb_wind_window_loop",
+   "query": "wind whistling through window gap",
+   "alt": [
+    "wind whistle window loop",
+    "draft through window crack",
+    "wind howling window interior"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "wind",
+    "whistle",
+    "window",
+    "draft",
+    "gap",
+    "howl"
+   ],
+   "level": -36,
+   "avoid": [
+    "storm",
+    "rain",
+    "thunder",
+    "microphone",
+    "mic",
+    "trees",
+    "leaves",
+    "chimes",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 20,
+   "crossfade": 2.5,
+   "ideal": 60,
+   "note": "Silbido de viento por la rendija de una ventana rota, constante y suave (las ráfagas van aparte).",
+   "pick": 69512
+  },
+  {
+   "name": "amb_lamp_transformer",
+   "query": "transformer hum",
+   "alt": [
+    "electrical transformer buzz loop",
+    "lamp ballast hum",
+    "power supply hum close"
+   ],
+   "duration": [
+    5,
+    200
+   ],
+   "want": [
+    "transformer",
+    "hum",
+    "ballast",
+    "electric",
+    "electrical",
+    "buzz"
+   ],
+   "level": -36,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "guitar",
+    "amp",
+    "music",
+    "spark",
+    "zap",
+    "fluorescent",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 12,
+   "crossfade": 1.2,
+   "ideal": 25,
+   "af": "highpass=f=60",
+   "note": "Transformador de la lámpara del quirófano con corriente: zumbido de 100 Hz con armónicos, constante.",
+   "pick": 733736
+  },
+  {
+   "name": "amb_elevator_shaft",
+   "query": "elevator shaft ambience",
+   "alt": [
+    "lift shaft wind air",
+    "elevator shaft room tone",
+    "air moving in shaft hollow"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "elevator",
+    "lift",
+    "shaft",
+    "air",
+    "wind",
+    "hollow"
+   ],
+   "level": -36,
+   "avoid": [
+    "ding",
+    "music",
+    "voice",
+    "door",
+    "bell",
+    "announcement",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 20,
+   "crossfade": 2.5,
+   "ideal": 60,
+   "af": "highpass=f=35",
+   "note": "Aire que corre por el hueco vacío del ascensor: soplido hueco y grave, algún roce metálico lejano.",
+   "pick": 646874
+  },
+  {
+   "name": "amb_pump_loop",
+   "query": "water pump running",
+   "alt": [
+    "pump motor hum loop",
+    "basement water pump",
+    "circulation pump running"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "pump",
+    "motor",
+    "water",
+    "running",
+    "basement",
+    "hum"
+   ],
+   "level": -33,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "car",
+    "fuel",
+    "bicycle",
+    "start",
+    "stop",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 16,
+   "crossfade": 1.5,
+   "ideal": 40,
+   "note": "Bomba de agua del sótano en marcha (con corriente): motor eléctrico grave y el agua dentro, constante.",
+   "pick": 342414
+  },
+  {
+   "name": "amb_drip_puddle_loop",
+   "query": "water dripping puddle echo",
+   "alt": [
+    "drips in basement echo",
+    "dripping water concrete loop",
+    "slow drips cave puddle"
+   ],
+   "duration": [
+    8,
+    300
+   ],
+   "want": [
+    "drip",
+    "dripping",
+    "puddle",
+    "echo",
+    "basement",
+    "concrete",
+    "water"
+   ],
+   "level": -32,
+   "avoid": [
+    "rain",
+    "stream",
+    "river",
+    "faucet",
+    "tap",
+    "sink",
+    "shower",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 18,
+   "crossfade": 0.6,
+   "ideal": 40,
+   "note": "Gotas que caen de una tubería a un charco en suelo de hormigón, espaciadas e irregulares, con eco.",
+   "pick": 770033
+  },
+  {
+   "name": "amb_concrete_groan",
+   "query": "building creak",
+   "alt": [
+    "structure creak",
+    "wood creak low"
+   ],
+   "duration": [
+    0.5,
+    20
+   ],
+   "want": [
+    "concrete",
+    "structure",
+    "creak",
+    "groan",
+    "deep",
+    "settling",
+    "beam"
+   ],
+   "level": -24,
+   "avoid": [
+    "door",
+    "ship",
+    "boat",
+    "rope",
+    "music",
+    "monster",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_out": 0.5,
+   "af": "lowpass=f=4000",
+   "note": "El hormigón y las vigas del sótano que se asientan: crujido grave y largo, sin chirrido agudo.",
+   "pick": 796507
+  },
+  {
+   "name": "amb_drip_metal",
+   "query": "drip metal",
+   "alt": [
+    "water drop metal",
+    "drip tin"
+   ],
+   "duration": [
+    0.2,
+    20
+   ],
+   "want": [
+    "drip",
+    "drop",
+    "metal",
+    "bucket",
+    "tin",
+    "water"
+   ],
+   "level": -26,
+   "avoid": [
+    "rain",
+    "tap",
+    "faucet",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Una gota que cae sobre chapa o en un cubo metálico: tic metálico con algo de resonancia.",
+   "pick": 514404
+  },
+  {
+   "name": "amb_door_far",
+   "query": "door close distant",
+   "alt": [
+    "door slam far",
+    "door closing reverb"
+   ],
+   "duration": [
+    0.5,
+    15
+   ],
+   "want": [
+    "door",
+    "distant",
+    "far",
+    "close",
+    "closing",
+    "echo",
+    "hall"
+   ],
+   "level": -26,
+   "avoid": [
+    "car",
+    "truck",
+    "garage",
+    "doorbell",
+    "knock",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "fade_out": 0.6,
+   "note": "Una puerta que se cierra lejos, en otra parte del edificio: golpe sordo con cola. No un portazo.",
+   "pick": 478076
+  },
+  {
+   "name": "amb_door_swing_far",
+   "query": "door creaking slowly distant",
+   "alt": [
+    "old door swinging creak",
+    "door moving in draft creak",
+    "door hinge slow creak far"
+   ],
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "door",
+    "creak",
+    "hinge",
+    "swing",
+    "slow",
+    "distant"
+   ],
+   "level": -27,
+   "avoid": [
+    "slam",
+    "car",
+    "knock",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_in": 0.2,
+   "fade_out": 0.6,
+   "af": "lowpass=f=5000",
+   "note": "Una puerta que se mueve sola con la corriente, lejos: chirrido lento de bisagra, sin golpe.",
+   "pick": 432562
+  },
+  {
+   "name": "amb_steps_distant",
+   "query": "footsteps distant",
+   "alt": [
+    "footsteps corridor",
+    "footsteps echo"
+   ],
+   "duration": [
+    1,
+    30
+   ],
+   "want": [
+    "footsteps",
+    "distant",
+    "far",
+    "corridor",
+    "hallway",
+    "echo",
+    "reverb",
+    "walking"
+   ],
+   "level": -29,
+   "avoid": [
+    "running",
+    "heels",
+    "snow",
+    "gravel",
+    "grass",
+    "stairs",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.5,
+   "fade_in": 0.4,
+   "fade_out": 1.0,
+   "af": "lowpass=f=3500",
+   "note": "Tres a seis pasos lentos y lejanos en suelo duro, con eco; que no se sepa dónde. Sin tacones.",
+   "pick": 274984
+  },
+  {
+   "name": "amb_settle_thump",
+   "query": "thump wall",
+   "alt": [
+    "knock thud",
+    "bump wood"
+   ],
+   "duration": [
+    0.2,
+    10
+   ],
+   "want": [
+    "thump",
+    "thud",
+    "bump",
+    "building",
+    "low",
+    "distant",
+    "wall"
+   ],
+   "level": -25,
+   "avoid": [
+    "kick",
+    "drum",
+    "bass",
+    "music",
+    "punch",
+    "heart",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.6,
+   "af": "lowpass=f=2500",
+   "note": "Un golpe grave y sordo en algún sitio del edificio (algo pesado que se asienta), sin ataque seco.",
+   "pick": 457741
+  },
+  {
+   "name": "amb_settle_crack",
+   "query": "plaster crack wall",
+   "alt": [
+    "wall cracking",
+    "wood crack settling",
+    "ceiling crack creak"
+   ],
+   "duration": [
+    0.2,
+    4
+   ],
+   "want": [
+    "crack",
+    "plaster",
+    "wall",
+    "settling",
+    "ceiling",
+    "creak"
+   ],
+   "level": -25,
+   "avoid": [
+    "whip",
+    "gun",
+    "ice",
+    "bone",
+    "knuckles",
+    "fire",
+    "fireworks",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.8,
+   "fade_out": 0.3,
+   "note": "Un chasquido seco de yeso o madera de la estructura (cambio de temperatura). Corto.",
+   "pick": 241601
+  },
+  {
+   "name": "amb_vent_rattle",
+   "query": "vent rattle",
+   "alt": [
+    "metal rattle",
+    "grate rattle"
+   ],
+   "duration": [
+    0.3,
+    20
+   ],
+   "want": [
+    "vent",
+    "grille",
+    "grate",
+    "rattle",
+    "ventilation",
+    "metal"
+   ],
+   "level": -26,
+   "avoid": [
+    "car",
+    "engine",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.4,
+   "note": "La rejilla de ventilación que vibra y traquetea un momento con una corriente de aire.",
+   "pick": 581257
+  },
+  {
+   "name": "amb_duct_pop",
+   "query": "metal duct popping",
+   "alt": [
+    "ductwork expansion pop",
+    "hvac duct bang thermal",
+    "sheet metal pop"
+   ],
+   "duration": [
+    0.2,
+    4
+   ],
+   "want": [
+    "duct",
+    "ductwork",
+    "pop",
+    "metal",
+    "expansion",
+    "hvac",
+    "bang"
+   ],
+   "level": -25,
+   "avoid": [
+    "gun",
+    "balloon",
+    "cork",
+    "music",
+    "bubble",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.8,
+   "fade_out": 0.4,
+   "note": "Un conducto de chapa que chasquea al dilatarse: «bong» metálico, hueco y corto, dentro del techo.",
+   "pick": 686186
+  },
+  {
+   "name": "amb_ballast_tick",
+   "query": "fluorescent light ticking",
+   "alt": [
+    "fluorescent starter click",
+    "neon tube tick buzz",
+    "ballast click flicker"
+   ],
+   "duration": [
+    0.2,
+    5
+   ],
+   "want": [
+    "fluorescent",
+    "tick",
+    "click",
+    "starter",
+    "ballast",
+    "neon"
+   ],
+   "level": -30,
+   "avoid": [
+    "guitar",
+    "music",
+    "switch",
+    "clock",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "fade_out": 0.2,
+   "note": "Un tubo fluorescente que hace tic o chisporrotea un instante (cebador). Con corriente.",
+   "pick": 642197
+  },
+  {
+   "name": "amb_window_rattle",
+   "query": "window rattling wind",
+   "alt": [
+    "window pane rattle",
+    "loose window shaking",
+    "window frame rattle gust"
+   ],
+   "duration": [
+    0.5,
+    8
+   ],
+   "want": [
+    "window",
+    "rattle",
+    "pane",
+    "glass",
+    "frame",
+    "wind",
+    "shaking"
+   ],
+   "level": -26,
+   "avoid": [
+    "break",
+    "smash",
+    "rain",
+    "thunder",
+    "car",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "fade_out": 0.5,
+   "note": "El cristal flojo de una ventana que tiembla en su marco con una ráfaga. Sin romperse.",
+   "pick": 455758
+  },
+  {
+   "name": "amb_trolley_far",
+   "query": "trolley squeak",
+   "alt": [
+    "cart wheels",
+    "squeaky wheel"
+   ],
+   "duration": [
+    0.5,
+    30
+   ],
+   "want": [
+    "trolley",
+    "gurney",
+    "cart",
+    "wheels",
+    "rolling",
+    "squeak",
+    "hospital"
+   ],
+   "level": -28,
+   "avoid": [
+    "supermarket",
+    "shopping",
+    "luggage",
+    "suitcase",
+    "skate",
+    "train",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "fade_in": 0.4,
+   "fade_out": 1.0,
+   "af": "lowpass=f=3500",
+   "note": "Una camilla o un carro con una rueda que chirría, rodando lejos por un pasillo, y se para.",
+   "pick": 389687
+  },
+  {
+   "name": "amb_glass_tinkle",
+   "query": "glass bottles rattling",
+   "alt": [
+    "glass vials clinking shelf",
+    "bottles vibrating tinkle",
+    "medicine bottles clink"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottles",
+    "vials",
+    "clink",
+    "tinkle",
+    "rattle"
+   ],
+   "level": -28,
+   "avoid": [
+    "cheers",
+    "toast",
+    "break",
+    "smash",
+    "pour",
+    "beer",
+    "wine",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.6,
+   "fade_out": 0.3,
+   "note": "Frascos de cristal de un estante que tintinean un instante (vibración). Sin brindis ni roturas.",
+   "pick": 254818
+  },
+  {
+   "name": "amb_relay_click",
+   "query": "electrical relay click",
+   "alt": [
+    "relay switching clack",
+    "contactor click electrical panel",
+    "industrial relay clunk"
+   ],
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "relay",
+    "click",
+    "contactor",
+    "switch",
+    "electrical",
+    "clack"
+   ],
+   "level": -26,
+   "avoid": [
+    "mouse",
+    "keyboard",
+    "pen",
+    "camera",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.8,
+   "note": "Un relé o contactor del cuadro eléctrico que salta: clac metálico seco. Con corriente.",
+   "pick": 384698
+  },
+  {
+   "name": "amb_pipe_tick",
+   "query": "pipe ticking",
+   "alt": [
+    "metal tick",
+    "radiator ticking"
+   ],
+   "duration": [
+    0.2,
+    30
+   ],
+   "want": [
+    "pipe",
+    "pipes",
+    "tick",
+    "ticking",
+    "expansion",
+    "radiator",
+    "heating"
+   ],
+   "level": -28,
+   "avoid": [
+    "clock",
+    "music",
+    "drum",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.4,
+   "note": "Tictac irregular de una tubería metálica que se contrae: dos a cinco golpecitos.",
+   "pick": 139651
+  },
+  {
+   "name": "amb_chain_rattle",
+   "query": "hanging chain rattle",
+   "alt": [
+    "chain swinging metal",
+    "chains rattling slow",
+    "chain hoist rattle"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "chain",
+    "chains",
+    "rattle",
+    "metal",
+    "hanging",
+    "swing"
+   ],
+   "level": -26,
+   "avoid": [
+    "bicycle",
+    "dog",
+    "prisoner",
+    "music",
+    "jail",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.5,
+   "note": "Una cadena colgada (polipasto del taller) que se balancea y tintinea un poco, sin golpes fuertes.",
+   "pick": 84526
+  },
+  {
+   "name": "amb_morgue_door_creak",
+   "query": "metal cabinet door creak",
+   "alt": [
+    "fridge door creak metal",
+    "steel door creaking slowly",
+    "metal hatch creak"
+   ],
+   "duration": [
+    0.6,
+    6
+   ],
+   "want": [
+    "metal",
+    "door",
+    "creak",
+    "steel",
+    "cabinet",
+    "hatch"
+   ],
+   "level": -25,
+   "avoid": [
+    "slam",
+    "car",
+    "gate",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.8,
+   "fade_out": 0.5,
+   "note": "La puerta metálica de una cámara de la morgue que cede un poco y cruje sola.",
+   "pick": 351407
+  },
+  {
+   "name": "amb_pa_crackle",
+   "query": "speaker crackle short",
+   "alt": [
+    "loudspeaker pop crackle",
+    "pa system crackle",
+    "intercom click static short"
+   ],
+   "duration": [
+    0.1,
+    4
+   ],
+   "want": [
+    "speaker",
+    "crackle",
+    "pop",
+    "pa",
+    "intercom",
+    "static"
+   ],
+   "level": -30,
+   "avoid": [
+    "voice",
+    "announcement",
+    "feedback",
+    "music",
+    "vinyl",
+    "fire",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "fade_out": 0.2,
+   "note": "Un chasquido de estática de los altavoces del techo (con corriente). Muy corto.",
+   "pick": 427870
+  },
+  {
+   "name": "amb_rats_wall",
+   "query": "rats",
+   "alt": [
+    "mouse scratching",
+    "rodent scratching"
+   ],
+   "duration": [
+    0.5,
+    60
+   ],
+   "want": [
+    "rats",
+    "rat",
+    "mice",
+    "mouse",
+    "rodent",
+    "scratching",
+    "wall",
+    "scurry"
+   ],
+   "level": -29,
+   "avoid": [
+    "toy",
+    "cat",
+    "dog",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.5,
+   "fade_in": 0.2,
+   "fade_out": 0.6,
+   "af": "lowpass=f=6000",
+   "note": "Ratas o ratones que corretean y arañan dentro de la pared o del falso techo.",
+   "pick": 640245
+  },
+  {
+   "name": "amb_pigeon_flutter",
+   "query": "pigeon wings flapping",
+   "alt": [
+    "pigeon flutter indoor",
+    "bird wings flap building",
+    "pigeons taking off"
+   ],
+   "duration": [
+    0.5,
+    6
+   ],
+   "want": [
+    "pigeon",
+    "pigeons",
+    "wings",
+    "flap",
+    "flutter",
+    "flapping"
+   ],
+   "level": -26,
+   "avoid": [
+    "coo",
+    "song",
+    "chirp",
+    "tweet",
+    "park",
+    "city",
+    "traffic",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.5,
+   "note": "Una paloma que aletea de golpe en el alféizar o en el hueco de la escalera. Sin arrullos ni ciudad.",
+   "pick": 528250
+  },
+  {
+   "name": "amb_generator_cough",
+   "query": "engine sputter",
+   "alt": [
+    "generator misfire",
+    "diesel engine stutter",
+    "engine hiccup idle"
+   ],
+   "duration": [
+    0.4,
+    6
+   ],
+   "want": [
+    "engine",
+    "generator",
+    "sputter",
+    "misfire",
+    "stutter",
+    "diesel"
+   ],
+   "level": -22,
+   "avoid": [
+    "car",
+    "start",
+    "starting",
+    "rev",
+    "motorcycle",
+    "lawn",
+    "chainsaw",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "fade_out": 0.5,
+   "note": "El generador que tose o falla un instante y sigue en marcha. Con corriente, en el sótano.",
+   "pick": 655466
+  },
+  {
+   "name": "amb_debris_fall",
+   "query": "plaster debris falling",
+   "alt": [
+    "small debris falling floor",
+    "dust and plaster crumbling",
+    "ceiling debris fall"
+   ],
+   "duration": [
+    0.4,
+    6
+   ],
+   "want": [
+    "debris",
+    "plaster",
+    "rubble",
+    "falling",
+    "crumble",
+    "dust"
+   ],
+   "level": -27,
+   "avoid": [
+    "explosion",
+    "demolition",
+    "glass",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.2,
+   "fade_out": 0.4,
+   "note": "Trocitos de yeso que se desprenden del techo y caen al suelo, poca cosa.",
+   "pick": 89391
+  },
+  {
+   "name": "entity_breath",
+   "query": "slow raspy breathing",
+   "alt": [
+    "creepy breathing close",
+    "heavy breath monster close",
+    "wheezing breath"
+   ],
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "breathing",
+    "breath",
+    "creepy",
+    "raspy"
+   ],
+   "level": -24,
+   "avoid": [
+    "female",
+    "running",
+    "panting",
+    "asthma",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "note": "Respiración lenta y ronca, muy cerca, sin voz.",
+   "pick": 514794
+  },
+  {
+   "name": "entity_dissolve",
+   "query": "tv static burst",
+   "alt": [
+    "static noise burst short",
+    "electric crackle short",
+    "tape tear noise"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "static",
+    "noise",
+    "crackle",
+    "tv"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.8,
+   "fade_out": 0.08,
+   "note": "Ráfaga de estática que se corta en seco.",
+   "pick": 585798
+  },
+  {
+   "name": "entity_whisper",
+   "query": "multiple whispers",
+   "alt": [
+    "whispering voices layered",
+    "creepy whispers ear"
+   ],
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "whisper",
+    "whispers",
+    "whispering"
+   ],
+   "level": -24,
+   "avoid": [
+    "asmr",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.6,
+   "note": "Varios susurros superpuestos sin palabras.",
+   "pick": 446083
+  },
+  {
+   "name": "scare_door_slam",
+   "query": "distant door slam",
+   "alt": [
+    "door slam corridor reverb",
+    "door slam echo"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "slam",
+    "door",
+    "distant",
+    "reverb"
+   ],
+   "level": -18,
+   "avoid": [
+    "car",
+    "truck",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.5,
+   "note": "Portazo lejano con cola de pasillo.",
+   "pick": 478076
+  },
+  {
+   "name": "scare_fall",
+   "query": "metal tray falling floor",
+   "alt": [
+    "metal object falls floor bounce",
+    "tray drop clatter"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "tray",
+    "fall",
+    "metal",
+    "clatter",
+    "drop"
+   ],
+   "level": -19,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Bandeja metálica que cae y rebota.",
+   "pick": 438329
+  },
+  {
+   "name": "scare_glass",
+   "query": "glass jar break",
+   "alt": [
+    "glass bottle fall break",
+    "small glass smash"
+   ],
+   "duration": [
+    0.4,
+    3
+   ],
+   "want": [
+    "glass",
+    "break",
+    "smash",
+    "shatter"
+   ],
+   "level": -20,
+   "avoid": [
+    "window",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Frasco que cae y se rompe.",
+   "pick": 447699
+  },
+  {
+   "name": "scare_wall_knock",
+   "query": "knocking through wall muffled",
+   "alt": [
+    "muffled knock wall",
+    "knock other side wall"
+   ],
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "knock",
+    "wall",
+    "muffled"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.8,
+   "note": "Tres golpes apagados al otro lado del tabique.",
+   "pick": 795281
+  },
+  {
+   "name": "scare_steps_above",
+   "query": "footsteps upstairs ceiling",
+   "alt": [
+    "footsteps above floor creaking",
+    "walking on floor above"
+   ],
+   "duration": [
+    2,
+    15
+   ],
+   "want": [
+    "footsteps",
+    "ceiling",
+    "upstairs",
+    "above",
+    "creak"
+   ],
+   "level": -26,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 6.0,
+   "af": "lowpass=f=1800",
+   "note": "Pasos lentos en el piso de arriba, sin agudos.",
+   "pick": 210592
+  },
+  {
+   "name": "scare_roll",
+   "query": "can rolling floor",
+   "alt": [
+    "small bottle rolling floor",
+    "object rolling tile"
+   ],
+   "duration": [
+    1,
+    6
+   ],
+   "want": [
+    "rolling",
+    "roll",
+    "can",
+    "bottle"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "note": "Bote o linterna que rueda y se para.",
+   "pick": 235605
+  },
+  {
+   "name": "scare_wheelchair",
+   "query": "wheelchair squeak",
+   "alt": [
+    "wheelchair rolling",
+    "squeaky wheel trolley"
+   ],
+   "duration": [
+    0.5,
+    5
+   ],
+   "want": [
+    "wheelchair",
+    "squeak",
+    "wheel",
+    "trolley"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Silla de ruedas empujada un palmo, con chirrido.",
+   "pick": 559469
+  },
+  {
+   "name": "scare_door_creak",
+   "query": "slow door creak",
+   "alt": [
+    "door hinge creak long",
+    "creaking door open slow"
+   ],
+   "duration": [
+    1,
+    6
+   ],
+   "want": [
+    "creak",
+    "hinge",
+    "door",
+    "creaky"
+   ],
+   "level": -21,
+   "avoid": [
+    "slam",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 3.0,
+   "note": "Bisagra que chirría larga y lenta.",
+   "pick": 590950
+  },
+  {
+   "name": "scare_breath",
+   "query": "exhale close breath",
+   "alt": [
+    "slow exhale behind",
+    "breath out close"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "breath",
+    "exhale"
+   ],
+   "level": -24,
+   "avoid": [
+    "female",
+    "woman",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.6,
+   "note": "Exhalación justo detrás.",
+   "pick": 151920
+  },
+  {
+   "name": "scare_static_burst",
+   "query": "vhs static",
+   "alt": [
+    "tape static burst",
+    "video noise static short"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "static",
+    "vhs",
+    "tape",
+    "noise"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "note": "Ráfaga de estática de vídeo.",
+   "pick": 531279
+  },
+  {
+   "name": "scare_drip",
+   "query": "water drips pipe echo",
+   "alt": [
+    "dripping water echo",
+    "drips puddle reverb"
+   ],
+   "duration": [
+    0.8,
+    6
+   ],
+   "want": [
+    "drip",
+    "echo",
+    "water",
+    "dripping"
+   ],
+   "level": -24,
+   "avoid": [
+    "rain",
+    "tap",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.2,
+   "note": "Dos a cuatro gotas con eco de tubería.",
+   "pick": 422873
+  },
+  {
+   "name": "combat_pipe_flesh",
+   "query": "punch body",
+   "alt": [
+    "hit meat",
+    "body hit"
+   ],
+   "duration": [
+    0.1,
+    5
+   ],
+   "want": [
+    "flesh",
+    "impact",
+    "meat",
+    "body",
+    "thud"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "metal",
+    "kick"
+   ],
+   "max_len": 0.6,
+   "note": "Tubo de hierro contra carne: golpe sordo y húmedo, sin eco metálico.",
+   "pick": 157020
+  },
+  {
+   "name": "combat_pipe_bone",
+   "query": "bone hit crack impact",
+   "alt": [
+    "hit bone thud crunch",
+    "skull hit"
+   ],
+   "duration": [
+    0.15,
+    2
+   ],
+   "want": [
+    "bone",
+    "crack",
+    "impact",
+    "hit"
+   ],
+   "level": -15,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed"
+   ],
+   "max_len": 0.5,
+   "note": "Tubo contra hueso: golpe seco con crujido corto.",
+   "pick": 624163
+  },
+  {
+   "name": "combat_bone_break",
+   "query": "bone break snap",
+   "alt": [
+    "celery snap bone crack",
+    "bone crunch break"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "bone",
+    "break",
+    "snap",
+    "crack",
+    "crunch"
+   ],
+   "level": -14,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "voice"
+   ],
+   "max_len": 0.8,
+   "note": "Hueso que se parte: chasquido grave tipo apio o madera húmeda, sin voz.",
+   "pick": 134025
+  },
+  {
+   "name": "combat_amputation",
+   "query": "flesh tear gore squelch",
+   "alt": [
+    "meat tearing wet",
+    "gore rip flesh"
+   ],
+   "duration": [
+    0.5,
+    4
+   ],
+   "want": [
+    "gore",
+    "flesh",
+    "tear",
+    "squelch",
+    "wet",
+    "rip"
+   ],
+   "level": -15,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "sword",
+    "swoosh"
+   ],
+   "max_len": 1.5,
+   "note": "Desgarro de carne y tendón con chapoteo; sin espada ni silbido.",
+   "pick": 30928
+  },
+  {
+   "name": "combat_scalpel_slash",
+   "query": "knife slash flesh",
+   "alt": [
+    "blade cut cloth flesh",
+    "knife stab slice"
+   ],
+   "duration": [
+    0.15,
+    2
+   ],
+   "want": [
+    "knife",
+    "slash",
+    "cut",
+    "blade",
+    "slice"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "sword",
+    "katana"
+   ],
+   "max_len": 0.6,
+   "note": "Tajo fino y rápido sobre carne o tela con tintineo metálico.",
+   "pick": 35213
+  },
+  {
+   "name": "combat_saw",
+   "query": "hacksaw",
+   "alt": [
+    "saw cutting",
+    "hand saw"
+   ],
+   "duration": [
+    0.3,
+    20
+   ],
+   "want": [
+    "saw",
+    "cutting",
+    "hacksaw",
+    "rasp"
+   ],
+   "level": -18,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "chainsaw",
+    "electric",
+    "power"
+   ],
+   "max_len": 2.0,
+   "note": "Sierra de hueso manual: 2-3 pasadas ásperas.",
+   "pick": 267636
+  },
+  {
+   "name": "combat_syringe",
+   "query": "syringe injection",
+   "alt": [
+    "needle syringe plunger",
+    "injection medical foley"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "syringe",
+    "needle",
+    "injection"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed"
+   ],
+   "max_len": 0.6,
+   "note": "Aguja que entra, clic del émbolo y líquido.",
+   "pick": 784311
+  },
+  {
+   "name": "combat_swing_miss",
+   "query": "heavy swing whoosh metal bar",
+   "alt": [
+    "stick swing air",
+    "swing whoosh low"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "swing",
+    "whoosh",
+    "swish"
+   ],
+   "level": -18,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "sword",
+    "laser",
+    "magic"
+   ],
+   "max_len": 0.45,
+   "note": "Barra pesada que corta el aire, grave y corta.",
+   "pick": 422495
+  },
+  {
+   "name": "enfermero_breath",
+   "query": "monster breathing",
+   "alt": [
+    "creature breath",
+    "heavy breathing"
+   ],
+   "duration": [
+    1,
+    30
+   ],
+   "want": [
+    "breathing",
+    "breath",
+    "raspy",
+    "wet"
+   ],
+   "level": -22,
+   "avoid": [
+    "female",
+    "woman",
+    "sex",
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 4.0,
+   "note": "Respiración húmeda y lenta a través de una mascarilla.",
+   "pick": 567723
+  },
+  {
+   "name": "enfermero_growl",
+   "query": "zombie growl",
+   "alt": [
+    "monster growl",
+    "creature groan"
+   ],
+   "duration": [
+    0.3,
+    10
+   ],
+   "want": [
+    "growl",
+    "groan",
+    "guttural",
+    "muffled"
+   ],
+   "level": -18,
+   "avoid": [
+    "dog",
+    "lion",
+    "bear",
+    "cat",
+    "music",
+    "female",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.2,
+   "note": "Gruñido gutural ahogado, como con la boca cosida.",
+   "pick": 315847
+  },
+  {
+   "name": "enfermero_scream",
+   "query": "zombie scream",
+   "alt": [
+    "monster scream",
+    "creature shriek"
+   ],
+   "duration": [
+    0.3,
+    10
+   ],
+   "want": [
+    "scream",
+    "shriek",
+    "pain"
+   ],
+   "level": -16,
+   "avoid": [
+    "female",
+    "woman",
+    "girl",
+    "child",
+    "music",
+    "laugh",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.5,
+   "note": "Chillido de dolor ahogado tras tela, agudo y quebrado.",
+   "pick": 435651
+  },
+  {
+   "name": "enfermero_death",
+   "query": "body fall floor death groan",
+   "alt": [
+    "body drop thud",
+    "corpse fall heavy"
+   ],
+   "duration": [
+    0.8,
+    5
+   ],
+   "want": [
+    "body",
+    "fall",
+    "thud",
+    "drop"
+   ],
+   "level": -16,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "female"
+   ],
+   "max_len": 2.5,
+   "note": "Estertor y caída de un cuerpo pesado al suelo.",
+   "pick": 504626
+  },
+  {
+   "name": "enfermero_drag_steps",
+   "query": "foot drag",
+   "alt": [
+    "dragging feet",
+    "limping footsteps"
+   ],
+   "duration": [
+    0.5,
+    30
+   ],
+   "want": [
+    "drag",
+    "dragging",
+    "limp",
+    "footsteps"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music",
+    "game",
+    "punch",
+    "kung-fu",
+    "whoosh-designed",
+    "chain",
+    "furniture"
+   ],
+   "max_len": 1.6,
+   "note": "Un paso y un pie arrastrado sobre linóleo.",
+   "pick": 221650
+  },
+  {
+   "name": "combat_transition",
+   "query": "vhs glitch",
+   "alt": [
+    "tape glitch",
+    "static burst"
+   ],
+   "duration": [
+    0.2,
+    10
+   ],
+   "want": [
+    "vhs",
+    "tape",
+    "static",
+    "glitch"
+   ],
+   "level": -18,
+   "avoid": [
+    "music",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Cinta VHS que salta: chirrido de cabezal y ráfaga de estática.",
+   "pick": 264935
+  },
+  {
+   "name": "music_combat_drone",
+   "query": "industrial drone dark loop",
+   "alt": [
+    "machine drone ominous",
+    "dark industrial ambience pulse"
+   ],
+   "duration": [
+    30,
+    600
+   ],
+   "ideal": 90,
+   "want": [
+    "industrial",
+    "drone",
+    "dark",
+    "machine",
+    "ominous",
+    "loop"
+   ],
+   "avoid": [
+    "beat",
+    "drum",
+    "drums",
+    "rhythm",
+    "percussion",
+    "edm",
+    "techno",
+    "dubstep",
+    "trap",
+    "vocals",
+    "voice",
+    "singing",
+    "lyrics",
+    "pop",
+    "rock",
+    "guitar",
+    "happy",
+    "upbeat",
+    "epic",
+    "orchestral",
+    "trailer",
+    "jumpscare",
+    "scream",
+    "bass-drop",
+    "8bit",
+    "chiptune"
+   ],
+   "level": -24,
+   "loop": true,
+   "max_len": 90,
+   "crossfade": 6.0,
+   "stereo": true,
+   "out": "music",
+   "format": "ogg",
+   "af": "highpass=f=30",
+   "quality": 5,
+   "note": "Drone industrial grave con un pulso lento de máquina, sin melodía; suena durante el combate.",
+   "pick": 126323
+  },
+  {
+   "name": "status_heartbeat",
+   "query": "single heartbeat",
+   "alt": [
+    "heartbeat low muffled",
+    "heart beat thump"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "heartbeat",
+    "heart",
+    "beat",
+    "thump"
+   ],
+   "level": -20,
+   "avoid": [
+    "monitor",
+    "beep",
+    "fast",
+    "running",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.7,
+   "note": "Un latido grave, amortiguado, sin clic inicial.",
+   "pick": 485076
+  },
+  {
+   "name": "status_relief_breath",
+   "query": "relieved exhale male",
+   "alt": [
+    "long sigh relief",
+    "man exhale relief"
+   ],
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "exhale",
+    "relief",
+    "sigh"
+   ],
+   "level": -24,
+   "avoid": [
+    "female",
+    "woman",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.8,
+   "note": "Exhalación larga de alivio.",
+   "pick": 801137
+  },
+  {
+   "name": "ui_move",
+   "query": "vcr button click",
+   "alt": [
+    "remote control button click",
+    "small button click"
+   ],
+   "duration": [
+    0.03,
+    1
+   ],
+   "want": [
+    "click",
+    "button",
+    "vcr",
+    "remote"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.12,
+   "note": "Clic corto de botón de vídeo VHS.",
+   "pick": 615059
+  },
+  {
+   "name": "ui_accept",
+   "query": "vcr play button",
+   "alt": [
+    "cassette deck button press",
+    "tape player button mechanical"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "button",
+    "vcr",
+    "cassette",
+    "tape"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "note": "Botón de vídeo más firme, con el clonc de la cinta.",
+   "pick": 407720
+  },
+  {
+   "name": "ui_back",
+   "query": "soft click button",
+   "alt": [
+    "button click soft",
+    "switch click quiet"
+   ],
+   "duration": [
+    0.03,
+    1
+   ],
+   "want": [
+    "click",
+    "button"
+   ],
+   "level": -26,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.12,
+   "pitch": -3,
+   "note": "Clic suave, más grave que ui_move.",
+   "pick": 150382
+  },
+  {
+   "name": "ui_battle_move",
+   "query": "paper clip click",
+   "alt": [
+    "paper tick",
+    "small click dry"
+   ],
+   "duration": [
+    0.02,
+    2
+   ],
+   "want": [
+    "click",
+    "paper",
+    "clip"
+   ],
+   "level": -26,
+   "avoid": [
+    "beep",
+    "electronic",
+    "digital",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.08,
+   "note": "Tic seco de papel o clip metálico, sin cola.",
+   "pick": 533582
+  },
+  {
+   "name": "ui_battle_confirm",
+   "query": "stapler click",
+   "alt": [
+    "bakelite switch click",
+    "stapler"
+   ],
+   "duration": [
+    0.05,
+    2
+   ],
+   "want": [
+    "stapler",
+    "switch",
+    "click"
+   ],
+   "level": -22,
+   "avoid": [
+    "beep",
+    "electronic",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.2,
+   "note": "Clac de grapadora o interruptor de baquelita.",
+   "pick": 523087
+  },
+  {
+   "name": "ui_battle_back",
+   "query": "paper sheet pull",
+   "alt": [
+    "paper swipe quick",
+    "sheet removed"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "paper",
+    "swipe",
+    "sheet"
+   ],
+   "level": -26,
+   "avoid": [
+    "tear",
+    "rip",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.3,
+   "note": "Hoja de papel que se retira deprisa.",
+   "pick": 468134
+  },
+  {
+   "name": "ui_battle_denied",
+   "query": "drawer locked rattle",
+   "alt": [
+    "metal drawer stuck",
+    "old device error buzz"
+   ],
+   "duration": [
+    0.1,
+    2
+   ],
+   "want": [
+    "drawer",
+    "locked",
+    "rattle",
+    "buzz"
+   ],
+   "level": -22,
+   "avoid": [
+    "beep",
+    "game",
+    "8bit",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.3,
+   "note": "Cajón metálico que no abre o zumbido de error de aparato viejo."
+  },
+  {
+   "name": "ui_stamp",
+   "query": "rubber stamp",
+   "alt": [
+    "stamp paper desk",
+    "stamping document"
+   ],
+   "duration": [
+    0.05,
+    3
+   ],
+   "want": [
+    "stamp",
+    "rubber",
+    "paper"
+   ],
+   "level": -18,
+   "avoid": [
+    "foot",
+    "footstep",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "note": "Sello de caucho sobre papel en mesa de madera, golpe seco y grave.",
+   "pick": 470710
+  },
+  {
+   "name": "ui_paper_slide",
+   "query": "paper slide desk",
+   "alt": [
+    "cardboard slide",
+    "paper sliding table"
+   ],
+   "duration": [
+    0.1,
+    3
+   ],
+   "want": [
+    "paper",
+    "slide",
+    "cardboard"
+   ],
+   "level": -26,
+   "avoid": [
+    "tear",
+    "rip",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.4,
+   "note": "Cartulina que se desliza sobre un escritorio.",
+   "pick": 444431
+  },
+  {
+   "name": "ui_folder",
+   "query": "folder open",
+   "alt": [
+    "cardboard folder",
+    "file folder close"
+   ],
+   "duration": [
+    0.2,
+    3
+   ],
+   "want": [
+    "folder",
+    "paper",
+    "cardboard"
+   ],
+   "level": -24,
+   "avoid": [
+    "computer",
+    "windows",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "note": "Carpeta de cartón que se abre o se cierra con roce de hojas.",
+   "pick": 397548
+  },
+  {
+   "name": "ui_aim_part",
+   "query": "pencil tap",
+   "alt": [
+    "pen click soft",
+    "pencil tick"
+   ],
+   "duration": [
+    0.02,
+    2
+   ],
+   "want": [
+    "pencil",
+    "pen",
+    "tap",
+    "click"
+   ],
+   "level": -28,
+   "avoid": [
+    "beep",
+    "electronic",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.06,
+   "note": "Clic muy suave de lápiz o bolígrafo.",
+   "pick": 476840
+  },
+  {
+   "name": "ui_typewriter",
+   "query": "typewriter key",
+   "alt": [
+    "typewriter single key",
+    "typewriter typing"
+   ],
+   "duration": [
+    0.03,
+    5
+   ],
+   "want": [
+    "typewriter",
+    "key"
+   ],
+   "level": -24,
+   "avoid": [
+    "bell",
+    "ding",
+    "computer",
+    "keyboard",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.1,
+   "note": "Una tecla de máquina de escribir mecánica, sin campana.",
+   "pick": 160678
+  },
+  {
+   "name": "inv_category",
+   "query": "paper click",
+   "alt": [
+    "folder click",
+    "cardboard tap"
+   ],
+   "duration": [
+    0.03,
+    5
+   ],
+   "want": [
+    "click",
+    "folder",
+    "paper",
+    "office"
+   ],
+   "level": -26,
+   "avoid": [
+    "beep",
+    "electronic",
+    "digital",
+    "game",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.18,
+   "note": "Al cambiar de categoría en el inventario: clic seco de pestaña de archivador, sin pitido.",
+   "pick": 530960
+  },
+  {
+   "name": "tape_rewind",
+   "query": "vhs rewind",
+   "alt": [
+    "video tape rewind",
+    "cassette rewind stop"
+   ],
+   "duration": [
+    1,
+    8
+   ],
+   "want": [
+    "rewind",
+    "vhs",
+    "tape",
+    "cassette",
+    "video"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "fade_out": 0.15,
+   "note": "Vídeo rebobinando con chasquido de parada.",
+   "pick": 613352
+  },
+  {
+   "name": "title_ambience",
+   "query": "room tone night interior",
+   "alt": [
+    "empty building room tone",
+    "quiet room tone hum"
+   ],
+   "duration": [
+    30,
+    600
+   ],
+   "want": [
+    "roomtone",
+    "room-tone",
+    "room",
+    "tone",
+    "quiet",
+    "interior"
+   ],
+   "level": -40,
+   "avoid": [
+    "voice",
+    "talking",
+    "speech",
+    "people",
+    "crowd",
+    "traffic",
+    "birds",
+    "bird",
+    "car",
+    "street",
+    "city",
+    "rain",
+    "thunder",
+    "footsteps",
+    "music",
+    "kids",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "loop": true,
+   "max_len": 40,
+   "crossfade": 4.0,
+   "stereo": true,
+   "af": "highpass=f=70,lowpass=f=7000",
+   "note": "Bucle de fondo del título, muy bajo (la música va encima).",
+   "pick": 788451
+  },
+  {
+   "name": "title_tube_flicker",
+   "query": "fluorescent flicker buzz",
+   "alt": [
+    "fluorescent tube flicker",
+    "neon flicker buzz short"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "fluorescent",
+    "flicker",
+    "buzz",
+    "neon"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Chasquido y zumbido entrecortado de un tubo.",
+   "pick": 484157
+  },
+  {
+   "name": "music_menu_drone",
+   "query": "dark ambient drone",
+   "alt": [
+    "horror drone loop",
+    "dark atmosphere drone ominous",
+    "eerie ambient drone"
+   ],
+   "duration": [
+    60,
+    600
+   ],
+   "ideal": 180,
+   "want": [
+    "dark",
+    "ambient",
+    "drone",
+    "horror",
+    "eerie",
+    "ominous",
+    "atmosphere",
+    "dark-ambient",
+    "loop"
+   ],
+   "avoid": [
+    "beat",
+    "drum",
+    "drums",
+    "rhythm",
+    "percussion",
+    "edm",
+    "techno",
+    "dubstep",
+    "trap",
+    "vocals",
+    "voice",
+    "singing",
+    "lyrics",
+    "pop",
+    "rock",
+    "guitar",
+    "happy",
+    "upbeat",
+    "epic",
+    "orchestral",
+    "trailer",
+    "jumpscare",
+    "scream",
+    "bass-drop",
+    "8bit",
+    "chiptune"
+   ],
+   "level": -26,
+   "loop": true,
+   "max_len": 150,
+   "crossfade": 8.0,
+   "stereo": true,
+   "out": "music",
+   "format": "ogg",
+   "af": "highpass=f=28",
+   "quality": 5,
+   "note": "Dron oscuro y lento, con capas que respiran; nada de ritmo ni melodía clara.",
+   "pick": 631650
+  },
+  {
+   "name": "music_menu_piano",
+   "query": "dark piano ambient",
+   "alt": [
+    "eerie piano reverb",
+    "sad piano dark atmosphere",
+    "horror piano slow"
+   ],
+   "duration": [
+    45,
+    600
+   ],
+   "ideal": 150,
+   "want": [
+    "piano",
+    "dark",
+    "eerie",
+    "ambient",
+    "reverb",
+    "sad",
+    "slow",
+    "horror"
+   ],
+   "avoid": [
+    "beat",
+    "drum",
+    "drums",
+    "rhythm",
+    "percussion",
+    "edm",
+    "techno",
+    "dubstep",
+    "trap",
+    "vocals",
+    "voice",
+    "singing",
+    "lyrics",
+    "pop",
+    "rock",
+    "guitar",
+    "happy",
+    "upbeat",
+    "epic",
+    "orchestral",
+    "trailer",
+    "jumpscare",
+    "scream",
+    "bass-drop",
+    "8bit",
+    "chiptune",
+    "jazz",
+    "classical",
+    "cheerful"
+   ],
+   "level": -27,
+   "loop": true,
+   "max_len": 140,
+   "crossfade": 8.0,
+   "stereo": true,
+   "out": "music",
+   "format": "ogg",
+   "af": "highpass=f=28",
+   "quality": 5,
+   "note": "Piano lejano con mucha reverberación y notas sueltas, tensión sin resolver.",
+   "pick": 610640
+  },
+  {
+   "name": "music_menu_tension",
+   "query": "suspense atmosphere horror",
+   "alt": [
+    "tension ambient dark",
+    "suspense drone strings",
+    "creepy ambience music"
+   ],
+   "duration": [
+    60,
+    600
+   ],
+   "ideal": 180,
+   "want": [
+    "suspense",
+    "tension",
+    "horror",
+    "dark",
+    "atmosphere",
+    "creepy",
+    "ambient",
+    "strings"
+   ],
+   "avoid": [
+    "beat",
+    "drum",
+    "drums",
+    "rhythm",
+    "percussion",
+    "edm",
+    "techno",
+    "dubstep",
+    "trap",
+    "vocals",
+    "voice",
+    "singing",
+    "lyrics",
+    "pop",
+    "rock",
+    "guitar",
+    "happy",
+    "upbeat",
+    "epic",
+    "orchestral",
+    "trailer",
+    "jumpscare",
+    "scream",
+    "bass-drop",
+    "8bit",
+    "chiptune"
+   ],
+   "level": -26,
+   "loop": true,
+   "max_len": 150,
+   "crossfade": 8.0,
+   "stereo": true,
+   "out": "music",
+   "format": "ogg",
+   "af": "highpass=f=28",
+   "quality": 5,
+   "note": "Atmósfera de suspense (cuerdas graves, texturas), sin golpes ni sustos.",
+   "pick": 777335
+  },
+  {
+   "name": "use_battery_insert",
+   "query": "batteries insert flashlight",
+   "alt": [
+    "battery compartment close click",
+    "aa batteries handling"
+   ],
+   "duration": [
+    0.6,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "flashlight"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Abrir la tapa, pilas que encajan y clic al cerrar.",
+   "pick": 765865
+  },
+  {
+   "name": "use_bandage_apply",
+   "query": "bandage wrap",
+   "alt": [
+    "gauze unroll",
+    "wrapping bandage arm"
+   ],
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "bandage",
+    "gauze",
+    "wrap"
+   ],
+   "level": -22,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Venda que se desenrolla y se ciñe.",
+   "pick": 718668
+  },
+  {
+   "name": "use_pills_swallow",
+   "query": "pills bottle open",
+   "alt": [
+    "pill bottle cap open shake",
+    "taking pills"
+   ],
+   "duration": [
+    0.6,
+    5
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "cap",
+    "medicine"
+   ],
+   "level": -22,
+   "avoid": [
+    "female",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 2.0,
+   "note": "Abrir el bote, sacar pastillas (y tragar).",
+   "pick": 272439
+  },
+  {
+   "name": "use_syringe_inject",
+   "query": "syringe",
+   "alt": [
+    "syringe cap plunger",
+    "injection needle foley"
+   ],
+   "duration": [
+    0.3,
+    4
+   ],
+   "want": [
+    "syringe",
+    "needle",
+    "injection"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.4,
+   "note": "Capuchón de jeringuilla y émbolo.",
+   "pick": 458423
+  },
+  {
+   "name": "use_tourniquet_tighten",
+   "query": "cloth twist tighten",
+   "alt": [
+    "tightening strap",
+    "fabric pull tight"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "cloth",
+    "strap",
+    "tighten",
+    "fabric"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.4,
+   "note": "Tela que se retuerce y se aprieta.",
+   "pick": 321858
+  },
+  {
+   "name": "cloth_tear",
+   "query": "fabric tear",
+   "alt": [
+    "cloth rip",
+    "tearing cotton"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "tear",
+    "rip",
+    "fabric",
+    "cloth"
+   ],
+   "level": -20,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Tela de algodón que se rasga de un tirón.",
+   "pick": 591195
+  },
+  {
+   "name": "craft_cloth",
+   "query": "cloth handling foley",
+   "alt": [
+    "fabric folding knot",
+    "cloth movement"
+   ],
+   "duration": [
+    0.4,
+    4
+   ],
+   "want": [
+    "cloth",
+    "foley",
+    "fabric"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.4,
+   "note": "Manipular tiras de tela, hacer un nudo.",
+   "pick": 798839
+  },
+  {
+   "name": "craft_combine",
+   "query": "small objects handling",
+   "alt": [
+    "foley handling items",
+    "fiddling small objects"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Juntar dos objetos pequeños.",
+   "pick": 868825
+  },
+  {
+   "name": "craft_generic",
+   "query": "tinkering small metal parts",
+   "alt": [
+    "fiddling with tools",
+    "small mechanism handling"
+   ],
+   "duration": [
+    0.3,
+    3
+   ],
+   "want": [
+    "foley",
+    "tinker",
+    "metal",
+    "tools"
+   ],
+   "level": -24,
+   "avoid": [
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 1.0,
+   "note": "Trastear con piezas pequeñas.",
+   "pick": 459647
+  },
+  {
+   "name": "inv_metal_heavy_pick",
+   "query": "crowbar pick up",
+   "alt": [
+    "heavy metal tool pick up",
+    "crowbar grab",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 452585
+  },
+  {
+   "name": "inv_metal_heavy_place",
+   "query": "crowbar put down table",
+   "alt": [
+    "heavy metal tool put down table",
+    "crowbar set down",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 198299
+  },
+  {
+   "name": "inv_metal_heavy_rotate",
+   "query": "crowbar handling",
+   "alt": [
+    "heavy metal tool handling",
+    "crowbar foley",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 608056
+  },
+  {
+   "name": "inv_metal_heavy_equip",
+   "query": "crowbar pocket",
+   "alt": [
+    "heavy metal tool pocket",
+    "crowbar put on",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 198299
+  },
+  {
+   "name": "inv_metal_heavy_unequip",
+   "query": "crowbar take out",
+   "alt": [
+    "heavy metal tool take out",
+    "crowbar take off",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: quitárselo. Corto y seco, sin sala.",
+   "pick": 452585
+  },
+  {
+   "name": "inv_metal_heavy_drop",
+   "query": "crowbar drop floor",
+   "alt": [
+    "heavy metal tool drop floor",
+    "crowbar fall on floor",
+    "crowbar foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "heavy",
+    "iron",
+    "crowbar",
+    "wrench",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "palanca, llave inglesa, tubo: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 189221
+  },
+  {
+   "name": "inv_metal_small_pick",
+   "query": "small metal object pick up",
+   "alt": [
+    "scissors metal pick up",
+    "small metal object grab",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_metal_small_place",
+   "query": "small metal object put down table",
+   "alt": [
+    "scissors metal put down table",
+    "small metal object set down",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_metal_small_rotate",
+   "query": "small metal object handling",
+   "alt": [
+    "scissors metal handling",
+    "small metal object foley",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_metal_small_equip",
+   "query": "small metal object pocket",
+   "alt": [
+    "scissors metal pocket",
+    "small metal object put on",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_metal_small_unequip",
+   "query": "small metal object take out",
+   "alt": [
+    "scissors metal take out",
+    "small metal object take off",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: quitárselo. Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_metal_small_drop",
+   "query": "small metal object drop floor",
+   "alt": [
+    "scissors metal drop floor",
+    "small metal object fall on floor",
+    "small metal object foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "metal",
+    "small",
+    "scissors",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "bisturí, tijeras, piezas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 743260
+  },
+  {
+   "name": "inv_keys_pick",
+   "query": "keys pick up",
+   "alt": [
+    "keychain pick up",
+    "keys grab",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "llaves: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 267711
+  },
+  {
+   "name": "inv_keys_place",
+   "query": "keys put down table",
+   "alt": [
+    "keychain put down table",
+    "keys set down",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "llaves: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 453050
+  },
+  {
+   "name": "inv_keys_rotate",
+   "query": "keys handling",
+   "alt": [
+    "keychain handling",
+    "keys foley",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "llaves: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 453050
+  },
+  {
+   "name": "inv_keys_equip",
+   "query": "keys pocket",
+   "alt": [
+    "keychain pocket",
+    "keys put on",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "llaves: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 416286
+  },
+  {
+   "name": "inv_keys_unequip",
+   "query": "keys take out",
+   "alt": [
+    "keychain take out",
+    "keys take off",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "llaves: quitárselo. Corto y seco, sin sala.",
+   "pick": 453050
+  },
+  {
+   "name": "inv_keys_drop",
+   "query": "keys drop floor",
+   "alt": [
+    "keychain drop floor",
+    "keys fall on floor",
+    "keys foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "keys",
+    "key",
+    "keychain",
+    "jingle",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "car",
+    "door",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "llaves: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 152898
+  },
+  {
+   "name": "inv_cloth_pick",
+   "query": "clothes pick up",
+   "alt": [
+    "fabric cloth pick up",
+    "clothes grab",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 667271
+  },
+  {
+   "name": "inv_cloth_place",
+   "query": "clothes put down table",
+   "alt": [
+    "fabric cloth put down table",
+    "clothes set down",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 798838
+  },
+  {
+   "name": "inv_cloth_rotate",
+   "query": "clothes handling",
+   "alt": [
+    "fabric cloth handling",
+    "clothes foley",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 798838
+  },
+  {
+   "name": "inv_cloth_equip",
+   "query": "put on clothes",
+   "alt": [
+    "fabric cloth pocket",
+    "clothes put on",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 798838
+  },
+  {
+   "name": "inv_cloth_unequip",
+   "query": "take off clothes",
+   "alt": [
+    "fabric cloth take out",
+    "clothes take off",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: quitárselo. Corto y seco, sin sala.",
+   "pick": 798838
+  },
+  {
+   "name": "inv_cloth_drop",
+   "query": "clothes drop floor",
+   "alt": [
+    "fabric cloth drop floor",
+    "clothes fall on floor",
+    "clothes foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "cloth",
+    "clothes",
+    "fabric",
+    "cotton",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "ropa, tela, vendas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 798838
+  },
+  {
+   "name": "inv_paper_pick",
+   "query": "paper pick up",
+   "alt": [
+    "paper sheet pick up",
+    "paper grab",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "documentos, notas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 466350
+  },
+  {
+   "name": "inv_paper_place",
+   "query": "paper put down table",
+   "alt": [
+    "paper sheet put down table",
+    "paper set down",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "documentos, notas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 432917
+  },
+  {
+   "name": "inv_paper_rotate",
+   "query": "paper handling",
+   "alt": [
+    "paper sheet handling",
+    "paper foley",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "documentos, notas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 459429
+  },
+  {
+   "name": "inv_paper_equip",
+   "query": "paper pocket",
+   "alt": [
+    "paper sheet pocket",
+    "paper put on",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "documentos, notas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 497703
+  },
+  {
+   "name": "inv_paper_unequip",
+   "query": "paper take out",
+   "alt": [
+    "paper sheet take out",
+    "paper take off",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "documentos, notas: quitárselo. Corto y seco, sin sala.",
+   "pick": 415767
+  },
+  {
+   "name": "inv_paper_drop",
+   "query": "paper drop floor",
+   "alt": [
+    "paper sheet drop floor",
+    "paper fall on floor",
+    "paper foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "paper",
+    "sheet",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "documentos, notas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 486377
+  },
+  {
+   "name": "inv_plastic_pick",
+   "query": "plastic box pick up",
+   "alt": [
+    "plastic object pick up",
+    "plastic box grab",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 863256
+  },
+  {
+   "name": "inv_plastic_place",
+   "query": "plastic box put down table",
+   "alt": [
+    "plastic object put down table",
+    "plastic box set down",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 637747
+  },
+  {
+   "name": "inv_plastic_rotate",
+   "query": "plastic box handling",
+   "alt": [
+    "plastic object handling",
+    "plastic box foley",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 488047
+  },
+  {
+   "name": "inv_plastic_equip",
+   "query": "plastic box pocket",
+   "alt": [
+    "plastic object pocket",
+    "plastic box put on",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 513770
+  },
+  {
+   "name": "inv_plastic_unequip",
+   "query": "plastic box take out",
+   "alt": [
+    "plastic object take out",
+    "plastic box take off",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: quitárselo. Corto y seco, sin sala.",
+   "pick": 513770
+  },
+  {
+   "name": "inv_plastic_drop",
+   "query": "plastic box drop floor",
+   "alt": [
+    "plastic object drop floor",
+    "plastic box fall on floor",
+    "plastic box foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "plastic",
+    "box",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "cajas y objetos de plástico: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 321294
+  },
+  {
+   "name": "inv_glass_pick",
+   "query": "glass bottle pick up",
+   "alt": [
+    "glass vial pick up",
+    "glass bottle grab",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "frascos, viales: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 261386
+  },
+  {
+   "name": "inv_glass_place",
+   "query": "glass bottle put down table",
+   "alt": [
+    "glass vial put down table",
+    "glass bottle set down",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "frascos, viales: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 610391
+  },
+  {
+   "name": "inv_glass_rotate",
+   "query": "glass bottle handling",
+   "alt": [
+    "glass vial handling",
+    "glass bottle foley",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "frascos, viales: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 219841
+  },
+  {
+   "name": "inv_glass_equip",
+   "query": "glass bottle pocket",
+   "alt": [
+    "glass vial pocket",
+    "glass bottle put on",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "frascos, viales: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 386432
+  },
+  {
+   "name": "inv_glass_unequip",
+   "query": "glass bottle take out",
+   "alt": [
+    "glass vial take out",
+    "glass bottle take off",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "frascos, viales: quitárselo. Corto y seco, sin sala.",
+   "pick": 219841
+  },
+  {
+   "name": "inv_glass_drop",
+   "query": "glass bottle drop floor",
+   "alt": [
+    "glass vial drop floor",
+    "glass bottle fall on floor",
+    "glass bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "glass",
+    "bottle",
+    "vial",
+    "jar",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "frascos, viales: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 594443
+  },
+  {
+   "name": "inv_pills_pick",
+   "query": "pill bottle pick up",
+   "alt": [
+    "pills rattle pick up",
+    "pill bottle grab",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 536418
+  },
+  {
+   "name": "inv_pills_place",
+   "query": "pill bottle put down table",
+   "alt": [
+    "pills rattle put down table",
+    "pill bottle set down",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 460153
+  },
+  {
+   "name": "inv_pills_rotate",
+   "query": "pill bottle handling",
+   "alt": [
+    "pills rattle handling",
+    "pill bottle foley",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 460153
+  },
+  {
+   "name": "inv_pills_equip",
+   "query": "pill bottle pocket",
+   "alt": [
+    "pills rattle pocket",
+    "pill bottle put on",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 460153
+  },
+  {
+   "name": "inv_pills_unequip",
+   "query": "pill bottle take out",
+   "alt": [
+    "pills rattle take out",
+    "pill bottle take off",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: quitárselo. Corto y seco, sin sala.",
+   "pick": 460153
+  },
+  {
+   "name": "inv_pills_drop",
+   "query": "pill bottle drop floor",
+   "alt": [
+    "pills rattle drop floor",
+    "pill bottle fall on floor",
+    "pill bottle foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "pills",
+    "bottle",
+    "rattle",
+    "medicine",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "botes de pastillas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 460153
+  },
+  {
+   "name": "inv_battery_pick",
+   "query": "batteries pick up",
+   "alt": [
+    "aa battery pick up",
+    "batteries grab",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "pilas: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 627837
+  },
+  {
+   "name": "inv_battery_place",
+   "query": "batteries put down table",
+   "alt": [
+    "aa battery put down table",
+    "batteries set down",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "pilas: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 627837
+  },
+  {
+   "name": "inv_battery_rotate",
+   "query": "batteries handling",
+   "alt": [
+    "aa battery handling",
+    "batteries foley",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "pilas: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 627837
+  },
+  {
+   "name": "inv_battery_equip",
+   "query": "batteries pocket",
+   "alt": [
+    "aa battery pocket",
+    "batteries put on",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "pilas: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 627837
+  },
+  {
+   "name": "inv_battery_unequip",
+   "query": "batteries take out",
+   "alt": [
+    "aa battery take out",
+    "batteries take off",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "pilas: quitárselo. Corto y seco, sin sala.",
+   "pick": 627837
+  },
+  {
+   "name": "inv_battery_drop",
+   "query": "batteries drop floor",
+   "alt": [
+    "aa battery drop floor",
+    "batteries fall on floor",
+    "batteries foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "battery",
+    "batteries",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "pilas: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 61087
+  },
+  {
+   "name": "inv_tool_pick",
+   "query": "flashlight pick up",
+   "alt": [
+    "screwdriver pick up",
+    "flashlight grab",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 557505
+  },
+  {
+   "name": "inv_tool_place",
+   "query": "flashlight put down table",
+   "alt": [
+    "screwdriver put down table",
+    "flashlight set down",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 557505
+  },
+  {
+   "name": "inv_tool_rotate",
+   "query": "flashlight handling",
+   "alt": [
+    "screwdriver handling",
+    "flashlight foley",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 557505
+  },
+  {
+   "name": "inv_tool_equip",
+   "query": "flashlight pocket",
+   "alt": [
+    "screwdriver pocket",
+    "flashlight put on",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 435845
+  },
+  {
+   "name": "inv_tool_unequip",
+   "query": "flashlight take out",
+   "alt": [
+    "screwdriver take out",
+    "flashlight take off",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: quitárselo. Corto y seco, sin sala.",
+   "pick": 557505
+  },
+  {
+   "name": "inv_tool_drop",
+   "query": "flashlight drop floor",
+   "alt": [
+    "screwdriver drop floor",
+    "flashlight fall on floor",
+    "flashlight foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "flashlight",
+    "torch",
+    "screwdriver",
+    "tool",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "linterna, destornillador: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 533954
+  },
+  {
+   "name": "inv_rubber_pick",
+   "query": "rubber boots pick up",
+   "alt": [
+    "rubber gloves pick up",
+    "rubber boots grab",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 429404
+  },
+  {
+   "name": "inv_rubber_place",
+   "query": "rubber boots put down table",
+   "alt": [
+    "rubber gloves put down table",
+    "rubber boots set down",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 704921
+  },
+  {
+   "name": "inv_rubber_rotate",
+   "query": "rubber boots handling",
+   "alt": [
+    "rubber gloves handling",
+    "rubber boots foley",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 704921
+  },
+  {
+   "name": "inv_rubber_equip",
+   "query": "put on boots",
+   "alt": [
+    "rubber gloves pocket",
+    "rubber boots put on",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 266649
+  },
+  {
+   "name": "inv_rubber_unequip",
+   "query": "take off boots",
+   "alt": [
+    "rubber gloves take out",
+    "rubber boots take off",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: quitárselo. Corto y seco, sin sala.",
+   "pick": 631973
+  },
+  {
+   "name": "inv_rubber_drop",
+   "query": "rubber boots drop floor",
+   "alt": [
+    "rubber gloves drop floor",
+    "rubber boots fall on floor",
+    "rubber boots foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "rubber",
+    "boots",
+    "gloves",
+    "boot",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "botas, guantes de goma: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 405112
+  },
+  {
+   "name": "inv_ceramic_pick",
+   "query": "ceramic pick up",
+   "alt": [
+    "porcelain cup pick up",
+    "ceramic grab",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: cogerlo de la bandeja. Corto y seco, sin sala.",
+   "pick": 478580
+  },
+  {
+   "name": "inv_ceramic_place",
+   "query": "ceramic put down table",
+   "alt": [
+    "porcelain cup put down table",
+    "ceramic set down",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: dejarlo en la bandeja. Corto y seco, sin sala.",
+   "pick": 240782
+  },
+  {
+   "name": "inv_ceramic_rotate",
+   "query": "ceramic handling",
+   "alt": [
+    "porcelain cup handling",
+    "ceramic foley",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: girarlo en la mano (suave). Corto y seco, sin sala.",
+   "pick": 830458
+  },
+  {
+   "name": "inv_ceramic_equip",
+   "query": "ceramic pocket",
+   "alt": [
+    "porcelain cup pocket",
+    "ceramic put on",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: equiparlo (ponérselo o guardarlo a mano). Corto y seco, sin sala.",
+   "pick": 830458
+  },
+  {
+   "name": "inv_ceramic_unequip",
+   "query": "ceramic take out",
+   "alt": [
+    "porcelain cup take out",
+    "ceramic take off",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: quitárselo. Corto y seco, sin sala.",
+   "pick": 830458
+  },
+  {
+   "name": "inv_ceramic_drop",
+   "query": "ceramic drop floor",
+   "alt": [
+    "porcelain cup drop floor",
+    "ceramic fall on floor",
+    "ceramic foley"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "ceramic",
+    "porcelain",
+    "cup",
+    "foley"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "fusible cerámico, taza: tirarlo al suelo. Corto y seco, sin sala.",
+   "pick": 495645
+  },
+  {
+   "name": "inv_pick",
+   "query": "item pick up foley",
+   "alt": [
+    "object grab",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: cogerlo de la bandeja.",
+   "pick": 216629
+  },
+  {
+   "name": "inv_place",
+   "query": "item put down table foley",
+   "alt": [
+    "object set down",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.5,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: dejarlo en la bandeja.",
+   "pick": 873911
+  },
+  {
+   "name": "inv_rotate",
+   "query": "item handling foley",
+   "alt": [
+    "object foley",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -29,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.35,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: girarlo en la mano (suave).",
+   "pick": 798838
+  },
+  {
+   "name": "inv_equip",
+   "query": "item pocket foley",
+   "alt": [
+    "object put on",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: equiparlo (ponérselo o guardarlo a mano).",
+   "pick": 416286
+  },
+  {
+   "name": "inv_unequip",
+   "query": "item take out foley",
+   "alt": [
+    "object take off",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -26,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.6,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: quitárselo.",
+   "pick": 798839
+  },
+  {
+   "name": "inv_drop",
+   "query": "item drop floor foley",
+   "alt": [
+    "object fall on floor",
+    "foley handling"
+   ],
+   "duration": [
+    0.05,
+    4
+   ],
+   "want": [
+    "foley",
+    "handling"
+   ],
+   "level": -23,
+   "avoid": [
+    "music",
+    "ambience",
+    "voice",
+    "cartoon",
+    "synth",
+    "synthesized",
+    "8bit",
+    "chiptune",
+    "arcade",
+    "glitch-music"
+   ],
+   "max_len": 0.9,
+   "fade_out": 0.08,
+   "note": "Genérico para cualquier material: tirarlo al suelo.",
+   "pick": 339363
+  }
+ ]
+}

@@ -1,0 +1,1710 @@
+{
+ "ambience_loop": {
+  "id": 635727,
+  "title": "room tone medium quiet library carpeted empty with heavy building ambience +distant sounds.flac",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/635727/"
+ },
+ "hum_loop": {
+  "id": 553075,
+  "title": "Foley_Mechanism_Light_Buzz_Short_Loop_Mono_DR05.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/553075/"
+ },
+ "generator_loop": {
+  "id": 606933,
+  "title": "large diesel emergency generator is running",
+  "author": "Garuda1982",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Garuda1982/sounds/606933/"
+ },
+ "generator_start": {
+  "id": 434660,
+  "title": "StartingPowerWasher.wav",
+  "author": "CLaforet",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/CLaforet/sounds/434660/"
+ },
+ "fluorescent_on": {
+  "id": 553462,
+  "title": "small fluorescent tube flicker noise sound effect",
+  "author": "Garuda1982",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Garuda1982/sounds/553462/"
+ },
+ "breaker": {
+  "id": 131599,
+  "title": "Kill Switch (Large Breaker Switch) .WAV",
+  "author": "EchoCinematics",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/EchoCinematics/sounds/131599/"
+ },
+ "door_open": {
+  "id": 553250,
+  "title": "Opening Door squeak",
+  "author": "NachtmahrTV",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/NachtmahrTV/sounds/553250/"
+ },
+ "door_close": {
+  "id": 126044,
+  "title": "Office Door Closing",
+  "author": "mhtaylor67",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/mhtaylor67/sounds/126044/"
+ },
+ "door_locked": {
+  "id": 321087,
+  "title": "Door Locked",
+  "author": "BenjaminNelan",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/BenjaminNelan/sounds/321087/"
+ },
+ "unlock": {
+  "id": 146348,
+  "title": "Door - Metal Grate, Lock/Unlock",
+  "author": "colinpoh",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/colinpoh/sounds/146348/"
+ },
+ "drawer_open": {
+  "id": 151575,
+  "title": "Desk-Drawer-Metal-Open-01.wav",
+  "author": "DWOBoyle",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/DWOBoyle/sounds/151575/"
+ },
+ "drawer_close": {
+  "id": 816652,
+  "title": "Closing the metal drawer 006",
+  "author": "AudioPapkin",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioPapkin/sounds/816652/"
+ },
+ "locker_open": {
+  "id": 94134,
+  "title": "SqueakyClick2.wav",
+  "author": "BMacZero",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/BMacZero/sounds/94134/"
+ },
+ "metal_bang": {
+  "id": 703248,
+  "title": "Fall debris (crash)",
+  "author": "xkeril",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/xkeril/sounds/703248/"
+ },
+ "knock": {
+  "id": 237937,
+  "title": "Knock on door",
+  "author": "jankooiker",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/jankooiker/sounds/237937/"
+ },
+ "glass": {
+  "id": 221536,
+  "title": "Glass Shards 2",
+  "author": "unfa",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/unfa/sounds/221536/"
+ },
+ "drip": {
+  "id": 166321,
+  "title": "Water_drop_5.wav",
+  "author": "deleted_user_2104797",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/deleted_user_2104797/sounds/166321/"
+ },
+ "flashlight_click": {
+  "id": 435845,
+  "title": "Flashlight Click",
+  "author": "dersuperanton",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/dersuperanton/sounds/435845/"
+ },
+ "monitor_beep": {
+  "id": 668978,
+  "title": "beeps for heart monitor.wav",
+  "author": "vestibule-door",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/vestibule-door/sounds/668978/"
+ },
+ "pa_chime": {
+  "id": 244583,
+  "title": "A320 tritone chime.wav",
+  "author": "nachosose",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/nachosose/sounds/244583/"
+ },
+ "pa_static": {
+  "id": 696593,
+  "title": "Static Burst 1",
+  "author": "SilverIllusionist",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/SilverIllusionist/sounds/696593/"
+ },
+ "phone_ring": {
+  "id": 663840,
+  "title": "1970 telephone ring 1-4 seconds cycle NL.wav",
+  "author": "klankbeeld",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/663840/"
+ },
+ "phone_static": {
+  "id": 567315,
+  "title": "answering machine beeps clicks phone line hum april 95.wav",
+  "author": "TRP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/TRP/sounds/567315/"
+ },
+ "tape_save": {
+  "id": 204715,
+  "title": "Knob button Tapedeck cassette recorder mechanical",
+  "author": "michaelkoehler",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/michaelkoehler/sounds/204715/"
+ },
+ "paper": {
+  "id": 873835,
+  "title": "Straightening Sheet of Paper",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/873835/"
+ },
+ "pickup": {
+  "id": 216629,
+  "title": "Picking up small box with items inside",
+  "author": "WiesenWiesel",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/WiesenWiesel/sounds/216629/"
+ },
+ "pills": {
+  "id": 536419,
+  "title": "Pill Bottle Quick Shaking out Pills",
+  "author": "Rudmer_Rotteveel",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/536419/"
+ },
+ "battery": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "bandage": {
+  "id": 718668,
+  "title": "Wrapping cloth",
+  "author": "ChuckleNutsDev",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ChuckleNutsDev/sounds/718668/"
+ },
+ "whisper": {
+  "id": 198434,
+  "title": "Whispers.wav",
+  "author": "Augdog",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Augdog/sounds/198434/"
+ },
+ "steps_far": {
+  "id": 707246,
+  "title": "Footsteps on tiles with shoes - 3m away still steps",
+  "author": "Sadiquecat",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Sadiquecat/sounds/707246/"
+ },
+ "step_1": {
+  "id": 338106,
+  "title": "Footsteps, barefoot on wet tile.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/338106/"
+ },
+ "step_2": {
+  "id": 338106,
+  "title": "Footsteps, barefoot on wet tile.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/338106/"
+ },
+ "step_3": {
+  "id": 338106,
+  "title": "Footsteps, barefoot on wet tile.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/338106/"
+ },
+ "step_4": {
+  "id": 338106,
+  "title": "Footsteps, barefoot on wet tile.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/338106/"
+ },
+ "step_soft_1": {
+  "id": 260120,
+  "title": "01-20 Footsteps, Tile, Slippers, Slow Pace.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/260120/"
+ },
+ "step_soft_2": {
+  "id": 260120,
+  "title": "01-20 Footsteps, Tile, Slippers, Slow Pace.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/260120/"
+ },
+ "step_soft_3": {
+  "id": 260120,
+  "title": "01-20 Footsteps, Tile, Slippers, Slow Pace.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/260120/"
+ },
+ "step_soft_4": {
+  "id": 260120,
+  "title": "01-20 Footsteps, Tile, Slippers, Slow Pace.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/260120/"
+ },
+ "step_boot_1": {
+  "id": 72030,
+  "title": "FP_Footsteps_Boots_Concrete_Floor.wav",
+  "author": "cmusounddesign",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/cmusounddesign/sounds/72030/"
+ },
+ "step_boot_2": {
+  "id": 72030,
+  "title": "FP_Footsteps_Boots_Concrete_Floor.wav",
+  "author": "cmusounddesign",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/cmusounddesign/sounds/72030/"
+ },
+ "step_boot_3": {
+  "id": 72030,
+  "title": "FP_Footsteps_Boots_Concrete_Floor.wav",
+  "author": "cmusounddesign",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/cmusounddesign/sounds/72030/"
+ },
+ "step_boot_4": {
+  "id": 72030,
+  "title": "FP_Footsteps_Boots_Concrete_Floor.wav",
+  "author": "cmusounddesign",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/cmusounddesign/sounds/72030/"
+ },
+ "breath_wake_male": {
+  "id": 271245,
+  "title": "Gasp Male",
+  "author": "bertiehs",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/bertiehs/sounds/271245/"
+ },
+ "pain_sigh_male": {
+  "id": 850703,
+  "title": "Male Whisper",
+  "author": "IENBA",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/IENBA/sounds/850703/"
+ },
+ "pain_groan_male": {
+  "id": 257706,
+  "title": "GROANING.wav",
+  "author": "vmgraw",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/vmgraw/sounds/257706/"
+ },
+ "cloth_rustle": {
+  "id": 644490,
+  "title": "Rustling bed sheets",
+  "author": "Froey_",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Froey_/sounds/644490/"
+ },
+ "stairs_concrete": {
+  "id": 119911,
+  "title": "Footsteps Sandals Going Up Concrete Steps.aif",
+  "author": "ftpalad",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ftpalad/sounds/119911/"
+ },
+ "amb_vent_loop": {
+  "id": 848969,
+  "title": "Air vent (looped)",
+  "author": "lfyaudio",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/lfyaudio/sounds/848969/"
+ },
+ "amb_drip_loop": {
+  "id": 271335,
+  "title": "Water, Dripping, Medium, A.wav",
+  "author": "InspectorJ",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/InspectorJ/sounds/271335/"
+ },
+ "amb_pipes_loop": {
+  "id": 194454,
+  "title": "gurgle_water_in_pipe.flac",
+  "author": "Zabuhailo",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Zabuhailo/sounds/194454/"
+ },
+ "amb_fridge_loop": {
+  "id": 98220,
+  "title": "refrigerator motor.wav",
+  "author": "Tomlija",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/Tomlija/sounds/98220/"
+ },
+ "amb_electric_buzz": {
+  "id": 733736,
+  "title": "50Hz  electrical mains hum",
+  "author": "chungus43A",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/chungus43A/sounds/733736/"
+ },
+ "amb_creak_building": {
+  "id": 238288,
+  "title": "Quiet Creak",
+  "author": "LoafDV",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/LoafDV/sounds/238288/"
+ },
+ "amb_creak_wood": {
+  "id": 502504,
+  "title": "Wood Creak Single V2",
+  "author": "Rudmer_Rotteveel",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/502504/"
+ },
+ "amb_creak_metal": {
+  "id": 508272,
+  "title": "Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Hollow_Impact_Stress.wav",
+  "author": "dilsun",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/dilsun/sounds/508272/"
+ },
+ "amb_pipe_knock": {
+  "id": 104370,
+  "title": "Metal Radiator Tapped.aif",
+  "author": "RutgerMuller",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/RutgerMuller/sounds/104370/"
+ },
+ "amb_water_pipes": {
+  "id": 219372,
+  "title": "water going through pipping.wav",
+  "author": "bushi3593",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/bushi3593/sounds/219372/"
+ },
+ "amb_monitor_far": {
+  "id": 668978,
+  "title": "beeps for heart monitor.wav",
+  "author": "vestibule-door",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/vestibule-door/sounds/668978/"
+ },
+ "amb_paper_draft": {
+  "id": 389440,
+  "title": "Papers Flapping; Intense.wav",
+  "author": "RossBell",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/RossBell/sounds/389440/"
+ },
+ "amb_spark_crackle": {
+  "id": 849772,
+  "title": "Electric Sparks",
+  "author": "mikiko850",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/mikiko850/sounds/849772/"
+ },
+ "entity_breath": {
+  "id": 514794,
+  "title": "Wheezing",
+  "author": "calmingcrunch",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/calmingcrunch/sounds/514794/"
+ },
+ "entity_dissolve": {
+  "id": 585798,
+  "title": "Static Voice",
+  "author": "colorsCrimsonTears",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/colorsCrimsonTears/sounds/585798/"
+ },
+ "entity_whisper": {
+  "id": 446083,
+  "title": "whispers.wav",
+  "author": "SophieMezaM",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/SophieMezaM/sounds/446083/"
+ },
+ "scare_door_slam": {
+  "id": 478076,
+  "title": "door close distant 1.wav",
+  "author": "IanStarGem",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/IanStarGem/sounds/478076/"
+ },
+ "scare_glass": {
+  "id": 447699,
+  "title": "glass - baby food jar - smashed on concrete.wav",
+  "author": "Anthousai",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Anthousai/sounds/447699/"
+ },
+ "scare_roll": {
+  "id": 235605,
+  "title": "Small_GlassBottle_Roll_WoodFloor.wav",
+  "author": "tcrocker68",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/tcrocker68/sounds/235605/"
+ },
+ "scare_wheelchair": {
+  "id": 559469,
+  "title": "Foley_Mechanism_Wheel_Small_Rusty_Loop_Mono.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/559469/"
+ },
+ "scare_door_creak": {
+  "id": 590950,
+  "title": "Creaky Door Closing Slowly",
+  "author": "Rudmer_Rotteveel",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/590950/"
+ },
+ "scare_breath": {
+  "id": 151920,
+  "title": "Exhale.aif",
+  "author": "carroll27",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/carroll27/sounds/151920/"
+ },
+ "scare_static_burst": {
+  "id": 531279,
+  "title": "CRACKLE (9).wav",
+  "author": "DefySolipsis",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/DefySolipsis/sounds/531279/"
+ },
+ "scare_drip": {
+  "id": 422873,
+  "title": "Water_Dripping_Loop.wav",
+  "author": "IPaddeh",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/IPaddeh/sounds/422873/"
+ },
+ "status_heartbeat": {
+  "id": 485076,
+  "title": "Heartbeat, Regular, Single, 01-01, LOOP.wav",
+  "author": "InspectorJ",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/InspectorJ/sounds/485076/"
+ },
+ "status_relief_breath": {
+  "id": 801137,
+  "title": "Relief - Ahhh",
+  "author": "Sadiquecat",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Sadiquecat/sounds/801137/"
+ },
+ "ui_move": {
+  "id": 615059,
+  "title": "MECHClik_Plastic Button on off remote_SonicAgency.wav",
+  "author": "afectos.de.sonido",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/afectos.de.sonido/sounds/615059/"
+ },
+ "ui_accept": {
+  "id": 407720,
+  "title": "vcr_click.wav",
+  "author": "airblock",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/airblock/sounds/407720/"
+ },
+ "ui_back": {
+  "id": 150382,
+  "title": "soft sound plastic button click.mp3",
+  "author": "orginaljun",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/orginaljun/sounds/150382/"
+ },
+ "tape_rewind": {
+  "id": 613352,
+  "title": "17_REWIND STOP.wav",
+  "author": "gear_clinkz",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/gear_clinkz/sounds/613352/"
+ },
+ "title_ambience": {
+  "id": 788451,
+  "title": "room-tone empty church in village Bokhoven 357 PM 241220_0967",
+  "author": "klankbeeld",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/788451/"
+ },
+ "title_tube_flicker": {
+  "id": 484157,
+  "title": "fluorescent light flickering 1.wav",
+  "author": "TemperMode",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/TemperMode/sounds/484157/"
+ },
+ "music_menu_drone": {
+  "id": 631650,
+  "title": "Dark Myst Horror Thriller Mood Drone Atmo Atmosphere Cinematic Film Movie Surround.wav",
+  "author": "szegvari",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/szegvari/sounds/631650/"
+ },
+ "music_menu_piano": {
+  "id": 610640,
+  "title": "Dark Night - Piano Sad Mood Drama Slow Chill Thriller Cinematic Experimental Modern Atmo Music Surround.wav",
+  "author": "szegvari",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/szegvari/sounds/610640/"
+ },
+ "music_menu_tension": {
+  "id": 777335,
+  "title": "DSGNDron_Dark sci-fi ambient heavy bass drone 006_Anton Bushinskiy_AB FX",
+  "author": "pryanic",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/pryanic/sounds/777335/"
+ },
+ "use_bandage_apply": {
+  "id": 718668,
+  "title": "Wrapping cloth",
+  "author": "ChuckleNutsDev",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ChuckleNutsDev/sounds/718668/"
+ },
+ "use_pills_swallow": {
+  "id": 272439,
+  "title": "Opening Pill Bottle.wav",
+  "author": "ryanharding95",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ryanharding95/sounds/272439/"
+ },
+ "use_syringe_inject": {
+  "id": 458423,
+  "title": "Syringe single pop.m4a",
+  "author": "Coniela",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Coniela/sounds/458423/"
+ },
+ "use_tourniquet_tighten": {
+  "id": 321858,
+  "title": "Leather_Strap_Twisting_Distant 01.wav",
+  "author": "n_audioman",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/n_audioman/sounds/321858/"
+ },
+ "cloth_tear": {
+  "id": 591195,
+  "title": "Cloth Rip Fast",
+  "author": "Rudmer_Rotteveel",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/591195/"
+ },
+ "craft_cloth": {
+  "id": 798839,
+  "title": "cloth-foley-3",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798839/"
+ },
+ "craft_combine": {
+  "id": 868825,
+  "title": "Kitchen_Foley_07",
+  "author": "SignatureSoundsOrg",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SignatureSoundsOrg/sounds/868825/"
+ },
+ "craft_generic": {
+  "id": 459647,
+  "title": "slide_small_3.wav",
+  "author": "blaukreuz",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/blaukreuz/sounds/459647/"
+ },
+ "inv_metal_heavy_rotate": {
+  "id": 608056,
+  "title": "Heavy Iron Rod Scraping Against Iron Vice 4.wav",
+  "author": "F.M.Audio",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/F.M.Audio/sounds/608056/"
+ },
+ "inv_metal_small_pick": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_metal_small_place": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_metal_small_rotate": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_metal_small_equip": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_metal_small_unequip": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_metal_small_drop": {
+  "id": 743260,
+  "title": "Small Metal or Stone Item",
+  "author": "qubodup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/743260/"
+ },
+ "inv_keys_pick": {
+  "id": 267711,
+  "title": "Picking Up Keys",
+  "author": "WeeJee_vdH",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/WeeJee_vdH/sounds/267711/"
+ },
+ "inv_keys_place": {
+  "id": 453050,
+  "title": "Turning Key",
+  "author": "akelley6",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/akelley6/sounds/453050/"
+ },
+ "inv_keys_rotate": {
+  "id": 453050,
+  "title": "Turning Key",
+  "author": "akelley6",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/akelley6/sounds/453050/"
+ },
+ "inv_keys_equip": {
+  "id": 416286,
+  "title": "Rummaging through Pockets.wav",
+  "author": "Fugeni",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Fugeni/sounds/416286/"
+ },
+ "inv_keys_unequip": {
+  "id": 453050,
+  "title": "Turning Key",
+  "author": "akelley6",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/akelley6/sounds/453050/"
+ },
+ "inv_keys_drop": {
+  "id": 152898,
+  "title": "Dropping keys on the floor ",
+  "author": "davidkyoku",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/davidkyoku/sounds/152898/"
+ },
+ "inv_cloth_pick": {
+  "id": 667271,
+  "title": "Cloth Grab",
+  "author": "alegemaate",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/alegemaate/sounds/667271/"
+ },
+ "inv_cloth_place": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_cloth_rotate": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_cloth_equip": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_cloth_unequip": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_cloth_drop": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_paper_pick": {
+  "id": 466350,
+  "title": "PaperGrab.wav",
+  "author": "Harrisando",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Harrisando/sounds/466350/"
+ },
+ "inv_paper_place": {
+  "id": 432917,
+  "title": "Paper Rustle and Plop on Wooden Table",
+  "author": "djlprojects",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/djlprojects/sounds/432917/"
+ },
+ "inv_paper_rotate": {
+  "id": 459429,
+  "title": "10 Cardboard Handling.mp3",
+  "author": "Coral_Island_Studios",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Coral_Island_Studios/sounds/459429/"
+ },
+ "inv_paper_equip": {
+  "id": 497703,
+  "title": "Book Page Turn 1",
+  "author": "miksmusic",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/miksmusic/sounds/497703/"
+ },
+ "inv_paper_unequip": {
+  "id": 415767,
+  "title": "Tearing, Newspaper, A.wav",
+  "author": "InspectorJ",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/InspectorJ/sounds/415767/"
+ },
+ "inv_paper_drop": {
+  "id": 486377,
+  "title": "dropping notebook.wav",
+  "author": "an_na_ba_na_na",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/an_na_ba_na_na/sounds/486377/"
+ },
+ "inv_plastic_pick": {
+  "id": 863256,
+  "title": "Scrabble piece (SoundAction 278)",
+  "author": "alexarje",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/alexarje/sounds/863256/"
+ },
+ "inv_plastic_rotate": {
+  "id": 488047,
+  "title": "Plastic_Container_03.wav",
+  "author": "BenDrain",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/BenDrain/sounds/488047/"
+ },
+ "inv_plastic_equip": {
+  "id": 513770,
+  "title": "handling plastic.wav",
+  "author": "lartti",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/lartti/sounds/513770/"
+ },
+ "inv_plastic_unequip": {
+  "id": 513770,
+  "title": "handling plastic.wav",
+  "author": "lartti",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/lartti/sounds/513770/"
+ },
+ "inv_plastic_drop": {
+  "id": 321294,
+  "title": "plastic_boxes_fall_01.wav",
+  "author": "goldendiaphragm",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/goldendiaphragm/sounds/321294/"
+ },
+ "inv_glass_pick": {
+  "id": 261386,
+  "title": "Grabbing a glass bottle",
+  "author": "JakLocke",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/JakLocke/sounds/261386/"
+ },
+ "inv_glass_place": {
+  "id": 610391,
+  "title": "Glass on wood table - manipulation - handle - clink.wav",
+  "author": "ValentinPetiteau",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ValentinPetiteau/sounds/610391/"
+ },
+ "inv_glass_rotate": {
+  "id": 219841,
+  "title": "Glass Handling",
+  "author": "qubodup",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/219841/"
+ },
+ "inv_glass_equip": {
+  "id": 386432,
+  "title": "Water + glass bottle, sloshing 4",
+  "author": "giddster",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/giddster/sounds/386432/"
+ },
+ "inv_glass_unequip": {
+  "id": 219841,
+  "title": "Glass Handling",
+  "author": "qubodup",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/qubodup/sounds/219841/"
+ },
+ "inv_glass_drop": {
+  "id": 594443,
+  "title": "Empty Glass Bottle Drop of Floor",
+  "author": "_MC5_",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/_MC5_/sounds/594443/"
+ },
+ "inv_pills_pick": {
+  "id": 536418,
+  "title": "Pill Bottle Grab",
+  "author": "Rudmer_Rotteveel",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rudmer_Rotteveel/sounds/536418/"
+ },
+ "inv_pills_place": {
+  "id": 460153,
+  "title": "Pill Bottle, Shaking",
+  "author": "AudioWay",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioWay/sounds/460153/"
+ },
+ "inv_pills_rotate": {
+  "id": 460153,
+  "title": "Pill Bottle, Shaking",
+  "author": "AudioWay",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioWay/sounds/460153/"
+ },
+ "inv_pills_equip": {
+  "id": 460153,
+  "title": "Pill Bottle, Shaking",
+  "author": "AudioWay",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioWay/sounds/460153/"
+ },
+ "inv_pills_unequip": {
+  "id": 460153,
+  "title": "Pill Bottle, Shaking",
+  "author": "AudioWay",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioWay/sounds/460153/"
+ },
+ "inv_pills_drop": {
+  "id": 460153,
+  "title": "Pill Bottle, Shaking",
+  "author": "AudioWay",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/AudioWay/sounds/460153/"
+ },
+ "inv_battery_pick": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "inv_battery_place": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "inv_battery_rotate": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "inv_battery_equip": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "inv_battery_unequip": {
+  "id": 627837,
+  "title": "Manipuler piles.wav",
+  "author": "FrancoisTJP",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/FrancoisTJP/sounds/627837/"
+ },
+ "inv_battery_drop": {
+  "id": 61087,
+  "title": "battery_aa_01.wav",
+  "author": "andre.nascimento",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/andre.nascimento/sounds/61087/"
+ },
+ "inv_tool_pick": {
+  "id": 557505,
+  "title": "Foley_Object_Flashlight_Headlamp_SingleButton_Mono.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/557505/"
+ },
+ "inv_tool_place": {
+  "id": 557505,
+  "title": "Foley_Object_Flashlight_Headlamp_SingleButton_Mono.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/557505/"
+ },
+ "inv_tool_rotate": {
+  "id": 557505,
+  "title": "Foley_Object_Flashlight_Headlamp_SingleButton_Mono.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/557505/"
+ },
+ "inv_tool_equip": {
+  "id": 435845,
+  "title": "Flashlight Click",
+  "author": "dersuperanton",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/dersuperanton/sounds/435845/"
+ },
+ "inv_tool_unequip": {
+  "id": 557505,
+  "title": "Foley_Object_Flashlight_Headlamp_SingleButton_Mono.wav",
+  "author": "Nox_Sound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nox_Sound/sounds/557505/"
+ },
+ "inv_tool_drop": {
+  "id": 533954,
+  "title": "Droping Object.wav",
+  "author": "beticbert",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/beticbert/sounds/533954/"
+ },
+ "inv_rubber_pick": {
+  "id": 429404,
+  "title": "Latex Gloves Box Pull Glove Out",
+  "author": "leonelmail",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/leonelmail/sounds/429404/"
+ },
+ "inv_rubber_place": {
+  "id": 704921,
+  "title": "Griping_Clenching_Fist.wav",
+  "author": "WoodenBarrelGames",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/WoodenBarrelGames/sounds/704921/"
+ },
+ "inv_rubber_rotate": {
+  "id": 704921,
+  "title": "Griping_Clenching_Fist.wav",
+  "author": "WoodenBarrelGames",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/WoodenBarrelGames/sounds/704921/"
+ },
+ "inv_rubber_equip": {
+  "id": 266649,
+  "title": "putting ongloves",
+  "author": "Eelke",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Eelke/sounds/266649/"
+ },
+ "inv_rubber_unequip": {
+  "id": 631973,
+  "title": "Taking off Latex Medical Gloves.wav",
+  "author": "PDaefaul",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/PDaefaul/sounds/631973/"
+ },
+ "inv_rubber_drop": {
+  "id": 405112,
+  "title": "WoodType_1_Footstep_LeatherBoot.wav",
+  "author": "monte32",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/monte32/sounds/405112/"
+ },
+ "inv_ceramic_pick": {
+  "id": 478580,
+  "title": "Pickup and put down Mug on a dish",
+  "author": "toklant",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/toklant/sounds/478580/"
+ },
+ "inv_ceramic_place": {
+  "id": 240782,
+  "title": "Ceramic Set Down",
+  "author": "f4ngy",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/f4ngy/sounds/240782/"
+ },
+ "inv_ceramic_rotate": {
+  "id": 830458,
+  "title": "Plate place",
+  "author": "Ixwolf",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Ixwolf/sounds/830458/"
+ },
+ "inv_ceramic_equip": {
+  "id": 830458,
+  "title": "Plate place",
+  "author": "Ixwolf",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Ixwolf/sounds/830458/"
+ },
+ "inv_ceramic_unequip": {
+  "id": 830458,
+  "title": "Plate place",
+  "author": "Ixwolf",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Ixwolf/sounds/830458/"
+ },
+ "inv_ceramic_drop": {
+  "id": 495645,
+  "title": "mug_wood1.wav",
+  "author": "robbeman",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/robbeman/sounds/495645/"
+ },
+ "inv_pick": {
+  "id": 216629,
+  "title": "Picking up small box with items inside",
+  "author": "WiesenWiesel",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/WiesenWiesel/sounds/216629/"
+ },
+ "inv_place": {
+  "id": 873911,
+  "title": "Putting item on counter",
+  "author": "cb9382",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/cb9382/sounds/873911/"
+ },
+ "inv_rotate": {
+  "id": 798838,
+  "title": "cloth-foley-2",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798838/"
+ },
+ "inv_equip": {
+  "id": 416286,
+  "title": "Rummaging through Pockets.wav",
+  "author": "Fugeni",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Fugeni/sounds/416286/"
+ },
+ "inv_unequip": {
+  "id": 798839,
+  "title": "cloth-foley-3",
+  "author": "Pepossum",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Pepossum/sounds/798839/"
+ },
+ "inv_drop": {
+  "id": 339363,
+  "title": "drop07.wav",
+  "author": "newagesoup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/newagesoup/sounds/339363/"
+ },
+ "bed_creak": {
+  "id": 655947,
+  "title": "Bed Creaking FX.wav",
+  "author": "Santi171",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Santi171/sounds/655947/"
+ },
+ "heavy_drag": {
+  "id": 453347,
+  "title": "metal piece heavy drag on floor.flac",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/453347/"
+ },
+ "breath_strain_male": {
+  "id": 554928,
+  "title": "gasps effort.wav",
+  "author": "jjxmf",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/jjxmf/sounds/554928/"
+ },
+ "breath_run_male": {
+  "id": 467369,
+  "title": "Men Pant.wav",
+  "author": "nicklas3799",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/nicklas3799/sounds/467369/"
+ },
+ "bare_feet_floor": {
+  "id": 197402,
+  "title": "01-11 Footsteps, Tile, Male Barefoot, Medium Pace.wav",
+  "author": "SpliceSound",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/SpliceSound/sounds/197402/"
+ },
+ "amb_wind_gust": {
+  "id": 67707,
+  "title": "Wind_Whistling_Dorm_Window.aif",
+  "author": "SunnySideSound",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/SunnySideSound/sounds/67707/"
+ },
+ "amb_elevator_cables": {
+  "id": 326487,
+  "title": "Lift shaft.aiff",
+  "author": "notgiddy",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/notgiddy/sounds/326487/"
+ },
+ "scare_fall": {
+  "id": 438329,
+  "title": "G26-11a-Metal Tray Drop.wav",
+  "author": "craigsmith",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/craigsmith/sounds/438329/"
+ },
+ "scare_wall_knock": {
+  "id": 795281,
+  "title": "knocking on the wall from the next room",
+  "author": "spaghettiSFX",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/spaghettiSFX/sounds/795281/"
+ },
+ "scare_steps_above": {
+  "id": 210592,
+  "title": "neighbour's footsteps",
+  "author": "Yuval",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Yuval/sounds/210592/"
+ },
+ "use_battery_insert": {
+  "id": 765865,
+  "title": "Changing TV remote",
+  "author": "MattyCauldron",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/MattyCauldron/sounds/765865/"
+ },
+ "inv_metal_heavy_pick": {
+  "id": 452585,
+  "title": "crowbar grab skin slide.wav",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/452585/"
+ },
+ "inv_metal_heavy_place": {
+  "id": 198299,
+  "title": "alligator wrench  01.wav",
+  "author": "klankbeeld",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/198299/"
+ },
+ "inv_metal_heavy_equip": {
+  "id": 198299,
+  "title": "alligator wrench  01.wav",
+  "author": "klankbeeld",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/198299/"
+ },
+ "inv_metal_heavy_unequip": {
+  "id": 452585,
+  "title": "crowbar grab skin slide.wav",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/452585/"
+ },
+ "inv_metal_heavy_drop": {
+  "id": 189221,
+  "title": "Crowbar Drop 2 Rear.wav",
+  "author": "Starvolt",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Starvolt/sounds/189221/"
+ },
+ "inv_plastic_place": {
+  "id": 637747,
+  "title": "phone cordless plastic put down on table.flac",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/637747/"
+ },
+ "amb_tone_ward": {
+  "id": 701976,
+  "title": "R4_00523_FR_Modern_apartment_atmosphere_with_wall_clock.wav",
+  "author": "kevp888",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/kevp888/sounds/701976/"
+ },
+ "amb_tone_corridor": {
+  "id": 383486,
+  "title": "Fluorescent lamps in hospital 01.wav",
+  "author": "Daphne_in_Wonderland",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Daphne_in_Wonderland/sounds/383486/"
+ },
+ "amb_tone_tiled": {
+  "id": 382901,
+  "title": "Bathroom ambience, toilet leak, bug flies around.wav",
+  "author": "Daphne_in_Wonderland",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Daphne_in_Wonderland/sounds/382901/"
+ },
+ "amb_tone_or": {
+  "id": 85086,
+  "title": "room_before_paradise.mp3",
+  "author": "cormi",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/cormi/sounds/85086/"
+ },
+ "amb_tone_archive": {
+  "id": 635727,
+  "title": "room tone medium quiet library carpeted empty with heavy building ambience +distant sounds.flac",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/635727/"
+ },
+ "amb_tone_stairwell": {
+  "id": 405590,
+  "title": "Siren ( Concrete Stairwell Direct ).wav",
+  "author": "JohnLaVine333",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/JohnLaVine333/sounds/405590/"
+ },
+ "amb_tone_basement": {
+  "id": 683491,
+  "title": "basement room-tone 1635 220811_0491",
+  "author": "klankbeeld",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/683491/"
+ },
+ "amb_building_hum": {
+  "id": 661435,
+  "title": "Defensible Twister",
+  "author": "Brazilio123",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Brazilio123/sounds/661435/"
+ },
+ "amb_wind_building": {
+  "id": 386451,
+  "title": "Sheep recorded from the inside of a house",
+  "author": "felix.blume",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/felix.blume/sounds/386451/"
+ },
+ "amb_pa_hum": {
+  "id": 522383,
+  "title": "Lively_street_trumpet.flac",
+  "author": "SaaXeemQ",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/SaaXeemQ/sounds/522383/"
+ },
+ "amb_clock_tick": {
+  "id": 405423,
+  "title": "Wall Clock Ticking.wav",
+  "author": "straget",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/straget/sounds/405423/"
+ },
+ "amb_wind_window_loop": {
+  "id": 69512,
+  "title": "Winter wind whistling through window.mp3",
+  "author": "audible-edge",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/audible-edge/sounds/69512/"
+ },
+ "amb_lamp_transformer": {
+  "id": 733736,
+  "title": "50Hz  electrical mains hum",
+  "author": "chungus43A",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/chungus43A/sounds/733736/"
+ },
+ "amb_elevator_shaft": {
+  "id": 646874,
+  "title": "Burlingame howling wind.wav",
+  "author": "Andron827",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Andron827/sounds/646874/"
+ },
+ "amb_pump_loop": {
+  "id": 342414,
+  "title": "Pump_engine.wav",
+  "author": "ivolipa",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/ivolipa/sounds/342414/"
+ },
+ "amb_drip_puddle_loop": {
+  "id": 770033,
+  "title": "Water - Shallow, splash",
+  "author": "Vrymaa",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Vrymaa/sounds/770033/"
+ },
+ "amb_door_swing_far": {
+  "id": 432562,
+  "title": "DoorOpening.flac",
+  "author": "alessnox",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/alessnox/sounds/432562/"
+ },
+ "amb_settle_crack": {
+  "id": 241601,
+  "title": "Smashing a Wooden Container",
+  "author": "Kreastricon62",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Kreastricon62/sounds/241601/"
+ },
+ "amb_duct_pop": {
+  "id": 686186,
+  "title": "Staple press into paper",
+  "author": "redpanda69",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/redpanda69/sounds/686186/"
+ },
+ "amb_ballast_tick": {
+  "id": 642197,
+  "title": "JCMR - GlassImp_glass, drop, hand, foley, light on, fluorescent, tick.wav",
+  "author": "afectos.de.sonido",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/afectos.de.sonido/sounds/642197/"
+ },
+ "amb_window_rattle": {
+  "id": 455758,
+  "title": "door wood old with inlaid glass close hard rattle or window pane shutter.flac",
+  "author": "kyles",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/kyles/sounds/455758/"
+ },
+ "amb_glass_tinkle": {
+  "id": 254818,
+  "title": "rattling_glass_bottles_impact.wav",
+  "author": "kwahmah_02",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/kwahmah_02/sounds/254818/"
+ },
+ "amb_relay_click": {
+  "id": 384698,
+  "title": "A relay switch being activated.",
+  "author": "bassmosphere",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/bassmosphere/sounds/384698/"
+ },
+ "amb_chain_rattle": {
+  "id": 84526,
+  "title": "0005_Crystal Lamp with Swing Front.wav",
+  "author": "Andreas.Mustola",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Andreas.Mustola/sounds/84526/"
+ },
+ "amb_morgue_door_creak": {
+  "id": 351407,
+  "title": "HINGE-SQUEAK.wav",
+  "author": "newagesoup",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/newagesoup/sounds/351407/"
+ },
+ "amb_pa_crackle": {
+  "id": 427870,
+  "title": "mechanical menu-button press.wav",
+  "author": "Lavacoal123",
+  "license": "http://creativecommons.org/licenses/by/3.0/",
+  "url": "https://freesound.org/people/Lavacoal123/sounds/427870/"
+ },
+ "amb_pigeon_flutter": {
+  "id": 528250,
+  "title": "pigeons_fly away_ wing flaps_CsG",
+  "author": "csaszi",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/csaszi/sounds/528250/"
+ },
+ "amb_generator_cough": {
+  "id": 655466,
+  "title": "car starting sfx.mp3",
+  "author": "Rinus_Marais",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Rinus_Marais/sounds/655466/"
+ },
+ "amb_debris_fall": {
+  "id": 89391,
+  "title": "WoodSmashAndFall_04.wav",
+  "author": "zimbot",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/zimbot/sounds/89391/"
+ },
+ "combat_pipe_bone": {
+  "id": 624163,
+  "title": "ice_cracking_01.flac",
+  "author": "wwstudioswastaken",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/wwstudioswastaken/sounds/624163/"
+ },
+ "combat_bone_break": {
+  "id": 134025,
+  "title": "Necksnap_build.wav",
+  "author": "danielrutterfilms",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/danielrutterfilms/sounds/134025/"
+ },
+ "combat_amputation": {
+  "id": 30928,
+  "title": "rip_tear FLESH!!!!.wav",
+  "author": "aust_paul",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/aust_paul/sounds/30928/"
+ },
+ "combat_scalpel_slash": {
+  "id": 35213,
+  "title": "slashkut.wav",
+  "author": "Abyssmal",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Abyssmal/sounds/35213/"
+ },
+ "combat_syringe": {
+  "id": 784311,
+  "title": "silco_shimmer_syringe_attatchment_from_stapler_01062025",
+  "author": "Artninja",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Artninja/sounds/784311/"
+ },
+ "combat_swing_miss": {
+  "id": 422495,
+  "title": "Swinging staff whoosh (low) 03.wav",
+  "author": "Nightflame",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Nightflame/sounds/422495/"
+ },
+ "enfermero_death": {
+  "id": 504626,
+  "title": "BODY FALL - V HVY - DIRT",
+  "author": "leonelmail",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/leonelmail/sounds/504626/"
+ },
+ "music_combat_drone": {
+  "id": 126323,
+  "title": "horror zombie hell atmos.wav",
+  "author": "klankbeeld",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/126323/"
+ },
+ "amb_tone_hall": {
+  "id": 788451,
+  "title": "room-tone empty church in village Bokhoven 357 PM 241220_0967",
+  "author": "klankbeeld",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/klankbeeld/sounds/788451/"
+ },
+ "amb_tone_morgue": {
+  "id": 786004,
+  "title": "WIND_Winter.Midnight.Residential Area.Wind In The Trees.Cracking.Distant Gusts.Dist Noise 1_EM",
+  "author": "newlocknew",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/newlocknew/sounds/786004/"
+ },
+ "amb_concrete_groan": {
+  "id": 796507,
+  "title": "WOODFric_Wood Creak 01_KVV AUDIO_FREE",
+  "author": "KVV_Audio",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/KVV_Audio/sounds/796507/"
+ },
+ "amb_drip_metal": {
+  "id": 514404,
+  "title": "Metal water bottle SFX - dark droplet",
+  "author": "giddster",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/giddster/sounds/514404/"
+ },
+ "amb_door_far": {
+  "id": 478076,
+  "title": "door close distant 1.wav",
+  "author": "IanStarGem",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/IanStarGem/sounds/478076/"
+ },
+ "amb_steps_distant": {
+  "id": 274984,
+  "title": "footsteps down long Victorian hospital corridor",
+  "author": "odilonmarcenaro",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/odilonmarcenaro/sounds/274984/"
+ },
+ "amb_settle_thump": {
+  "id": 457741,
+  "title": "Wall Bump 1.wav",
+  "author": "Osiruswaltz",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Osiruswaltz/sounds/457741/"
+ },
+ "amb_vent_rattle": {
+  "id": 581257,
+  "title": "Metal Ripple - Gearlike",
+  "author": "exuberate",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/exuberate/sounds/581257/"
+ },
+ "amb_trolley_far": {
+  "id": 389687,
+  "title": "Squeaky Wheels.wav",
+  "author": "Shamewap",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Shamewap/sounds/389687/"
+ },
+ "amb_pipe_tick": {
+  "id": 139651,
+  "title": "button_master 065.aif",
+  "author": "gherat",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/gherat/sounds/139651/"
+ },
+ "amb_rats_wall": {
+  "id": 640245,
+  "title": "Rats Gnawing, Scratching, Squeaking and Scuttling",
+  "author": "iainmccurdy",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/iainmccurdy/sounds/640245/"
+ },
+ "combat_pipe_flesh": {
+  "id": 157020,
+  "title": "3 Bat hits",
+  "author": "Slave2theLight",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/Slave2theLight/sounds/157020/"
+ },
+ "combat_saw": {
+  "id": 267636,
+  "title": "Saw Cutting",
+  "author": "BrainClaim",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/BrainClaim/sounds/267636/"
+ },
+ "enfermero_breath": {
+  "id": 567723,
+  "title": "BORIERO_Nolwen_2020_2021_Monster breathing.wav",
+  "author": "iut_Paris8",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/iut_Paris8/sounds/567723/"
+ },
+ "enfermero_growl": {
+  "id": 315847,
+  "title": "Zombie Growling",
+  "author": "gneube",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/gneube/sounds/315847/"
+ },
+ "enfermero_scream": {
+  "id": 435651,
+  "title": "Zombie Demon Scream",
+  "author": "Wakerone",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Wakerone/sounds/435651/"
+ },
+ "enfermero_drag_steps": {
+  "id": 221650,
+  "title": "Footstep Drag Indoors .wav",
+  "author": "abbahoot",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/abbahoot/sounds/221650/"
+ },
+ "combat_transition": {
+  "id": 264935,
+  "title": "VHS Glitch",
+  "author": "Sassaby",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Sassaby/sounds/264935/"
+ },
+ "ui_battle_move": {
+  "id": 533582,
+  "title": "paper towel pull.wav",
+  "author": "Saltbearer",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Saltbearer/sounds/533582/"
+ },
+ "ui_battle_confirm": {
+  "id": 523087,
+  "title": "Gun Hammer Click",
+  "author": "magnuswaker",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/magnuswaker/sounds/523087/"
+ },
+ "ui_battle_back": {
+  "id": 468134,
+  "title": "Remove sheet.wav",
+  "author": "Aquafeniz",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/Aquafeniz/sounds/468134/"
+ },
+ "ui_stamp": {
+  "id": 470710,
+  "title": "traditional stamp.wav",
+  "author": "I.fekry",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/I.fekry/sounds/470710/"
+ },
+ "ui_paper_slide": {
+  "id": 444431,
+  "title": "Sliding Envelope.wav",
+  "author": "MTJohnson",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/MTJohnson/sounds/444431/"
+ },
+ "ui_folder": {
+  "id": 397548,
+  "title": "Page Turn 01",
+  "author": "LilMati",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/LilMati/sounds/397548/"
+ },
+ "ui_aim_part": {
+  "id": 476840,
+  "title": "Paper Scrawling",
+  "author": "jackyyang09",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/jackyyang09/sounds/476840/"
+ },
+ "ui_typewriter": {
+  "id": 160678,
+  "title": "typewriter.wav",
+  "author": "BMacZero",
+  "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://freesound.org/people/BMacZero/sounds/160678/"
+ },
+ "inv_category": {
+  "id": 530960,
+  "title": "Printer paper tray",
+  "author": "chemicalcrux",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://freesound.org/people/chemicalcrux/sounds/530960/"
+ }
+}

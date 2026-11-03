@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/torniquete.png" id="1_ixaxm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/torniquete_inspect.png" id="2_kg057"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_wf4sr"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_oxn21"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_4c3ol"]
+
+[sub_resource type="Resource" id="Resource_w0pld"]
+script = ExtResource("5_4c3ol")
+stops_bleeding = true
+requires_bleeding = true
+message = "Aprietas el nudo por encima de la herida hasta que duele. Deja de sangrar."
+
+[resource]
+script = ExtResource("3_wf4sr")
+id = &"torniquete"
+display_name = "Torniquete"
+description = "Una cinta gruesa de tela retorcida. No cura nada, pero corta la sangre sin tocar la herida."
+category = 2
+section = 4
+icon = ExtResource("1_ixaxm")
+inspect_sheet = ExtResource("2_kg057")
+inspect_views = 8
+max_stack = 2
+usable = true
+use_effects = Array[ExtResource("4_oxn21")]([SubResource("Resource_w0pld")])
+use_verb = "Apretar"
+sound_material = 4
+use_sound = "use_tourniquet_tighten"

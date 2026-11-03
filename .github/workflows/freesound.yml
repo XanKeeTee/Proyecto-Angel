@@ -1,0 +1,127 @@
+# Trae los sonidos de Freesound desde GitHub Actions y los sube a la misma rama.
+# Sirve cuando no se puede llegar a Freesound desde la máquina que trabaja (Freesound rechaza las IP
+# de algunas nubes). Necesita el secreto del repositorio FREESOUND_API_KEY.
+#
+# Qué hace lo decide tools/audio/ci_jobs.txt (una orden de freesound.py por línea, p. ej.
+# «fetch», «fetch --missing», «fetch door_open», «search amb_vent_loop»). Se lanza al subir un cambio
+# de ese archivo, del manifiesto o de este flujo a feat/sonidos-freesound.
+name: freesound
+on:
+  push:
+    branches: [feat/sonidos-freesound]
+    paths:
+      - ".github/workflows/freesound.yml"
+      - "tools/audio/ci_jobs.txt"
+      - "tools/audio/ci_queries.txt"
+      - "tools/audio/build_manifest.py"
+      - "tools/audio/freesound.py"
+      - "tools/audio/sound_manifest.json"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: freesound
+  cancel-in-progress: false
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      FREESOUND_API_KEY: ${{ secrets.FREESOUND_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Comprobar la clave
+        run: |
+          if [ -z "$FREESOUND_API_KEY" ]; then
+            echo "::error::Falta el secreto FREESOUND_API_KEY (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+      - name: Dependencias
+        run: |
+          # `python3 -I` no ve los paquetes de pip de usuario: numpy del sistema.
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg python3-numpy
+      - uses: actions/cache@v4
+        with:
+          path: tools/audio/.cache
+          key: freesound-${{ hashFiles('tools/audio/sound_manifest.json') }}
+          restore-keys: freesound-
+      - name: Órdenes de ci_jobs.txt
+        run: |
+          python3 -I tools/audio/freesound.py check
+          grep -v '^\s*\(#\|$\)' tools/audio/ci_jobs.txt | while read -r line; do
+            echo "::group::freesound.py $line"
+            python3 -I tools/audio/freesound.py $line || echo "::warning::falló: $line"
+            echo "::endgroup::"
+          done
+          # Si alguna entrada se quedó sin elegir (límites de la API, red), un segundo intento.
+          if grep -q '^\s*fetch' tools/audio/ci_jobs.txt; then
+            python3 -I tools/audio/freesound.py fetch --missing
+          fi
+      - name: Búsquedas libres (ci_queries.txt)
+        if: ${{ !cancelled() && hashFiles('tools/audio/ci_queries.txt') != '' }}
+        run: |
+          python3 -I - <<'PY'
+          import json, time, urllib.request, urllib.parse, os
+          key = os.environ["FREESOUND_API_KEY"]
+          fields = "id,name,username,license,duration,tags,description,avg_rating,num_ratings,num_downloads"
+          for line in open("tools/audio/ci_queries.txt", encoding="utf-8"):
+              line = line.strip()
+              if not line or line.startswith("#"):
+                  continue
+              name, q, lo, hi = line.split("|")
+              flt = f'license:("Creative Commons 0" OR "Attribution") duration:[{lo} TO {hi}]'
+              url = "https://freesound.org/apiv2/search/text/?" + urllib.parse.urlencode(
+                  {"query": q, "filter": flt, "fields": fields, "sort": "score", "page_size": 15, "token": key})
+              try:
+                  res = json.loads(urllib.request.urlopen(url, timeout=30).read()).get("results", [])
+              except Exception as ex:
+                  print(f"@@ {name} «{q}»: error {ex}"); continue
+              print(f"@@ {name} «{q}»: {len(res)}")
+              for s in res:
+                  lic = "BY" if "/by/" in s["license"] else "CC0"
+                  d = " ".join((s.get("description") or "").split())[:110]
+                  print(f"  {s['id']:>7} {s['duration']:6.1f}s {lic:3} ★{s.get('avg_rating') or 0:.1f}({s.get('num_ratings')}) "
+                        f"dl={s.get('num_downloads')} | {s['name'][:60]} | {' '.join(s.get('tags', [])[:10])} | {d}")
+              time.sleep(1.1)
+          PY
+      # Gasta una petición por sonido (la API de Freesound tiene un cupo diario): solo si se pide
+      # creando tools/audio/ci_review.txt.
+      - name: Ficha de cada sonido elegido (para revisarlos)
+        if: ${{ !cancelled() && hashFiles('tools/audio/ci_review.txt') != '' }}
+        run: |
+          python3 -I - <<'PY'
+          import json, time, urllib.request, urllib.parse, os
+          key = os.environ["FREESOUND_API_KEY"]
+          m = json.load(open("tools/audio/sound_manifest.json", encoding="utf-8"))["sounds"]
+          fields = "id,name,username,license,duration,tags,description,avg_rating,num_ratings,num_downloads"
+          for e in m:
+              if not e.get("pick"):
+                  print(f"## {e['name']}: SIN PICK"); continue
+              url = f"https://freesound.org/apiv2/sounds/{e['pick']}/?" + urllib.parse.urlencode({"fields": fields, "token": key})
+              try:
+                  s = json.loads(urllib.request.urlopen(url, timeout=30).read())
+              except Exception as ex:
+                  print(f"## {e['name']}: #{e['pick']} error {ex}"); continue
+              desc = " ".join((s.get("description") or "").split())[:220]
+              lic = s["license"].split("/licenses/")[-1].split("/publicdomain/")[-1]
+              print(f"## {e['name']} | #{s['id']} | {s['duration']:.1f}s | {lic} | {s['username']} | "
+                    f"★{s.get('avg_rating') or 0:.1f}({s.get('num_ratings')}) dl={s.get('num_downloads')}\n"
+                    f"   T: {s['name']}\n   tags: {' '.join(s.get('tags', [])[:14])}\n   D: {desc}")
+              time.sleep(1.1)
+          PY
+      - name: Subir los sonidos a la rama
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/audio tools/audio/sound_manifest.json tools/audio/credits.json docs/art/creditos-sonido.md
+          if git diff --cached --quiet; then echo "Nada que subir."; exit 0; fi
+          git commit -q -F - <<'MSG'
+          Trae sonidos de Freesound (GitHub Actions)
+
+          Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+          Claude-Session: https://claude.ai/code/session_01WKyERFFaLNz2p99vNDDW79
+          MSG
+          git push origin HEAD:${GITHUB_REF_NAME}

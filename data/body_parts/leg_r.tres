@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_k7be8"]
+
+[resource]
+script = ExtResource("1_k7be8")
+id = &"leg_r"
+display_name = "Pierna der."
+integrity_fraction = 0.35
+body_mult = 0.6
+amputable = true

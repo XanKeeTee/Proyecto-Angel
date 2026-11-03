@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_bopbp"]
+
+[resource]
+script = ExtResource("1_bopbp")
+id = &"nota_enfermera"
+title = "Nota para el turno de noche"
+style = 1
+body = "A quien haga la noche:
+
+No dejes que el de la 09 se despierte solo. Si abre los ojos, llama a planta 0 y sal de la habitación.
+Si te habla, no le contestes.
+Si te pregunta qué día es, NO SE LO DIGAS.
+
+Ya sé que da pena. A todos nos la dio la primera vez.
+
+— M."

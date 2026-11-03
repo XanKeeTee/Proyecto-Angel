@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/bisturi.png" id="1_8w1mu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/bisturi_inspect.png" id="2_lyj66"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_7jmbd"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_26m06"]
+[ext_resource type="Resource" path="res://data/weapons/scalpel.tres" id="5_4t12o"]
+
+[resource]
+script = ExtResource("3_7jmbd")
+id = &"bisturi"
+display_name = "Bisturí"
+description = "Bisturí de acero con una hoja curva del número 22. Todavía tiene sangre seca en el filo."
+category = 8
+section = 1
+icon = ExtResource("1_8w1mu")
+inspect_sheet = ExtResource("2_lyj66")
+inspect_views = 8
+size = Vector2i(1, 2)
+use_verb = "Empuñar"
+weapon = ExtResource("5_4t12o")
+sound_material = 2

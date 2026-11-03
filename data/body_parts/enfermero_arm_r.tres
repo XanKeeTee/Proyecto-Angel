@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BodyPartDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="1_05ac1"]
+
+[resource]
+script = ExtResource("1_05ac1")
+id = &"arm_r"
+display_name = "Brazo de instrumental"
+integrity_fraction = 0.24
+body_mult = 0.6
+amputable = true
+severable_by_blunt = true
+broken_text = "El brazo de instrumental cuelga torcido. Los bisturíes arañan el suelo."
+amputated_text = "El brazo de instrumental se desprende por la costura de metal y cae con un ruido de cubertería."

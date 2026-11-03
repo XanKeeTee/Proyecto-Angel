@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/chaqueta_celador.png" id="1_l3h3h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/chaqueta_celador_inspect.png" id="2_i2uuf"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_uqeh1"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_cyo4x"]
+
+[resource]
+script = ExtResource("3_uqeh1")
+id = &"chaqueta_celador"
+display_name = "Chaqueta de celador"
+description = "Chaqueta de trabajo verde, con cremallera. Alguien arrancó la placa con el nombre del pecho. Abriga más que la bata."
+category = 7
+section = 2
+icon = ExtResource("1_l3h3h")
+inspect_sheet = ExtResource("2_i2uuf")
+inspect_views = 8
+size = Vector2i(2, 2)
+equip_slot = 2
+wear_path = "res://assets/sprites/characters/wear/chaqueta_celador_canvas.tres"
+cloth_sway = 0.35
+cloth_waist = 35.0
+cloth_hem = 25.0
+step_volume_db = 0.0
+defense = 2

@@ -1,0 +1,139 @@
+[gd_resource type="Resource" script_class="HorrorProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/horror/horror_profile.gd" id="1_prof"]
+[ext_resource type="Script" path="res://scripts/systems/horror/scare_def.gd" id="2_scare"]
+
+[sub_resource type="Resource" id="Scare_portazo_lejano"]
+script = ExtResource("2_scare")
+id = &"portazo_lejano"
+kind = 0
+weight = 1.0
+cooldown = 150.0
+sounds = PackedStringArray("scare_door_slam")
+place = 2
+volume_db = -3.0
+
+[sub_resource type="Resource" id="Scare_algo_cae"]
+script = ExtResource("2_scare")
+id = &"algo_cae"
+kind = 0
+weight = 1.2
+cooldown = 120.0
+sounds = PackedStringArray("scare_fall", "scare_glass")
+place = 1
+volume_db = -6.0
+
+[sub_resource type="Resource" id="Scare_golpe_pared"]
+script = ExtResource("2_scare")
+id = &"golpe_pared"
+kind = 0
+weight = 0.8
+unease_bonus = 1.5
+cooldown = 140.0
+sounds = PackedStringArray("scare_wall_knock")
+place = 1
+volume_db = -5.0
+
+[sub_resource type="Resource" id="Scare_pasos_arriba"]
+script = ExtResource("2_scare")
+id = &"pasos_arriba"
+kind = 0
+weight = 0.7
+cooldown = 200.0
+sounds = PackedStringArray("scare_steps_above")
+place = 3
+volume_db = -14.0
+
+[sub_resource type="Resource" id="Scare_objeto_rueda"]
+script = ExtResource("2_scare")
+id = &"objeto_rueda"
+kind = 0
+weight = 0.8
+cooldown = 160.0
+sounds = PackedStringArray("scare_roll")
+place = 1
+volume_db = -8.0
+
+[sub_resource type="Resource" id="Scare_puerta_entornada"]
+script = ExtResource("2_scare")
+id = &"puerta_entornada"
+kind = 0
+weight = 0.8
+cooldown = 150.0
+sounds = PackedStringArray("scare_door_creak")
+place = 1
+volume_db = -8.0
+
+[sub_resource type="Resource" id="Scare_goteo"]
+script = ExtResource("2_scare")
+id = &"goteo"
+kind = 0
+weight = 0.6
+cooldown = 90.0
+sounds = PackedStringArray("scare_drip")
+place = 1
+volume_db = -10.0
+
+[sub_resource type="Resource" id="Scare_respiracion"]
+script = ExtResource("2_scare")
+id = &"respiracion"
+kind = 0
+weight = 0.5
+unease_bonus = 2.0
+min_unease = 0.15
+cooldown = 240.0
+sounds = PackedStringArray("scare_breath")
+place = 0
+volume_db = -12.0
+mind_loss = 1
+
+[sub_resource type="Resource" id="Scare_parpadeo"]
+script = ExtResource("2_scare")
+id = &"parpadeo"
+kind = 1
+weight = 1.0
+cooldown = 120.0
+duration = 0.7
+
+[sub_resource type="Resource" id="Scare_sombra_que_cruza"]
+script = ExtResource("2_scare")
+id = &"sombra_que_cruza"
+kind = 2
+weight = 0.6
+unease_bonus = 1.0
+cooldown = 240.0
+max_uses = 4
+flashlight = 1
+duration = 0.9
+mind_loss = 1
+
+[sub_resource type="Resource" id="Scare_cara_en_la_cinta"]
+script = ExtResource("2_scare")
+id = &"cara_en_la_cinta"
+kind = 3
+weight = 0.4
+unease_bonus = 1.0
+min_unease = 0.35
+cooldown = 300.0
+max_uses = 3
+duration = 0.5
+sounds = PackedStringArray("scare_static_burst")
+volume_db = -8.0
+mind_loss = 2
+
+[sub_resource type="Resource" id="Scare_silla_de_ruedas"]
+script = ExtResource("2_scare")
+id = &"silla_de_ruedas"
+kind = 4
+weight = 0.7
+cooldown = 200.0
+max_uses = 2
+sounds = PackedStringArray("scare_wheelchair")
+place = 4
+volume_db = -6.0
+props = PackedStringArray("silla_ruedas_08", "silla_ruedas_recepcion")
+prop_offset = Vector2(10, 3)
+
+[resource]
+script = ExtResource("1_prof")
+scares = Array[ExtResource("2_scare")]([SubResource("Scare_portazo_lejano"), SubResource("Scare_algo_cae"), SubResource("Scare_golpe_pared"), SubResource("Scare_pasos_arriba"), SubResource("Scare_objeto_rueda"), SubResource("Scare_puerta_entornada"), SubResource("Scare_goteo"), SubResource("Scare_respiracion"), SubResource("Scare_parpadeo"), SubResource("Scare_sombra_que_cruza"), SubResource("Scare_cara_en_la_cinta"), SubResource("Scare_silla_de_ruedas")])

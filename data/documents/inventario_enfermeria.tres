@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_o1ceh"]
+
+[resource]
+script = ExtResource("1_o1ceh")
+id = &"inventario_enfermeria"
+title = "Inventario de enfermería"
+kind = 2
+body = "Vendas estériles ........ 12  (quedan 2)
+Clorhexidina ............. 6   (queda 1)
+Sedantes (restringido) ... 30  (FALTAN 29)
+Correas de sujeción ...... 40  (quedan 0)
+Bolsas para cadáveres .... 20  (quedan 20)
+
+Nota: las bolsas no se han usado. No ha muerto nadie en planta desde el Desvelo. Eso no es una buena noticia."

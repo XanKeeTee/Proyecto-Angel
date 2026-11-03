@@ -1,0 +1,460 @@
+[gd_resource type="Resource" script_class="LootPlan" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/loot/loot_scatter.gd" id="1_5bmeg"]
+[ext_resource type="Resource" path="res://data/items/pilas.tres" id="2_5srpi"]
+[ext_resource type="Resource" path="res://data/items/venda.tres" id="3_7ct2s"]
+[ext_resource type="Resource" path="res://data/items/venda_esterilizada.tres" id="4_h2oqq"]
+[ext_resource type="Resource" path="res://data/items/analgesicos.tres" id="5_feuqy"]
+[ext_resource type="Resource" path="res://data/items/jeringa.tres" id="6_35o8f"]
+[ext_resource type="Resource" path="res://data/items/ampolla.tres" id="7_n7pig"]
+[ext_resource type="Resource" path="res://data/items/desinfectante.tres" id="8_m6mq3"]
+[ext_resource type="Resource" path="res://data/items/zapatillas.tres" id="9_m3waa"]
+[ext_resource type="Resource" path="res://data/items/gorro_lana.tres" id="10_l066x"]
+[ext_resource type="Resource" path="res://data/items/pantalon_pijama.tres" id="11_jmka8"]
+[ext_resource type="Resource" path="res://data/items/gorro_quirurgico.tres" id="12_dxrso"]
+[ext_resource type="Resource" path="res://data/items/bata_medico.tres" id="13_3ubih"]
+[ext_resource type="Resource" path="res://data/items/chaqueta_celador.tres" id="14_6mxja"]
+[ext_resource type="Resource" path="res://data/items/pantalon_celador.tres" id="15_2axlf"]
+[ext_resource type="Resource" path="res://data/items/bisturi.tres" id="16_2518m"]
+[ext_resource type="Resource" path="res://data/items/botas_goma.tres" id="17_n3iyj"]
+[ext_resource type="Script" path="res://scripts/systems/loot/loot_plan.gd" id="18_1nl7c"]
+[ext_resource type="Script" path="res://scripts/systems/loot/loot_slot.gd" id="19_6htyp"]
+[ext_resource type="Script" path="res://scripts/systems/loot/loot_table_entry.gd" id="20_f4cyu"]
+[ext_resource type="Resource" path="res://data/items/venda_sucia.tres" id="21_wcdxe"]
+[ext_resource type="Script" path="res://scripts/systems/loot/loot_table.gd" id="22_pp7vf"]
+
+[sub_resource type="Resource" id="Resource_wko4s"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("2_5srpi")
+copies = 3
+candidates = Array[StringName]([&"taquilla_07", &"mesita_08", &"mesita_10", &"mesita_11", &"mesita_12", &"taquilla_12", &"papelera_banos", &"mostrador_control", &"papelera_recepcion", &"mostrador_recepcion_2", &"papelera_vestibulo", &"estanteria_almacen"])
+
+[sub_resource type="Resource" id="Resource_qoh1q"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("2_5srpi")
+copies = 2
+candidates = Array[StringName]([&"estanteria_electrica", &"carro_lavanderia_1", &"carro_lavanderia_2", &"estanteria_lavanderia", &"morgue_2", &"banco_taller"])
+
+[sub_resource type="Resource" id="Resource_vtrgr"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("3_7ct2s")
+candidates = Array[StringName]([&"mesita_12", &"estanteria_enfermeria", &"encimera_enfermeria", &"taquilla_10", &"botiquin_banos", &"mostrador_control"])
+
+[sub_resource type="Resource" id="Resource_y0gey"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("3_7ct2s")
+candidates = Array[StringName]([&"carro_lavanderia_2", &"estanteria_lavanderia", &"banco_taller", &"estanteria_electrica"])
+
+[sub_resource type="Resource" id="Resource_rs2uu"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("4_h2oqq")
+candidates = Array[StringName]([&"encimera_quirofano", &"estanteria_enfermeria"])
+
+[sub_resource type="Resource" id="Resource_813gu"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("5_feuqy")
+copies = 2
+candidates = Array[StringName]([&"mesita_08", &"botiquin_banos", &"mostrador_control", &"taquilla_10", &"mesita_07"])
+
+[sub_resource type="Resource" id="Resource_2ci2u"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("6_35o8f")
+candidates = Array[StringName]([&"taquilla_10", &"encimera_enfermeria", &"estanteria_enfermeria", &"mostrador_control"])
+
+[sub_resource type="Resource" id="Resource_ypnrn"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("7_n7pig")
+candidates = Array[StringName]([&"taquilla_10", &"encimera_enfermeria", &"estanteria_enfermeria", &"botiquin_banos"])
+
+[sub_resource type="Resource" id="Resource_4bugo"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("8_m6mq3")
+candidates = Array[StringName]([&"estanteria_almacen", &"estanteria_enfermeria", &"encimera_enfermeria"])
+
+[sub_resource type="Resource" id="Resource_jo1fc"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("9_m3waa")
+chance = 0.7
+candidates = Array[StringName]([&"cama_07", &"cama_10", &"cama_12", &"taquilla_12", &"taquilla_10", &"camilla_pasillo"])
+
+[sub_resource type="Resource" id="Resource_ms4w1"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("10_l066x")
+chance = 0.45
+candidates = Array[StringName]([&"taquilla_07", &"taquilla_10", &"taquilla_12", &"mesita_11"])
+
+[sub_resource type="Resource" id="Resource_v3akm"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("11_jmka8")
+chance = 0.45
+candidates = Array[StringName]([&"mesita_12", &"taquilla_12", &"carro_lavanderia_1", &"carro_lavanderia_2"])
+
+[sub_resource type="Resource" id="Resource_fbhml"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("12_dxrso")
+chance = 0.55
+candidates = Array[StringName]([&"encimera_quirofano", &"encimera_enfermeria", &"mostrador_control"])
+
+[sub_resource type="Resource" id="Resource_nj3uj"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("13_3ubih")
+chance = 0.5
+candidates = Array[StringName]([&"mostrador_control", &"mostrador_recepcion_2", &"encimera_enfermeria"])
+
+[sub_resource type="Resource" id="Resource_tbe40"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("14_6mxja")
+chance = 0.55
+candidates = Array[StringName]([&"carro_lavanderia_2", &"carro_lavanderia_1", &"banco_taller", &"estanteria_lavanderia"])
+
+[sub_resource type="Resource" id="Resource_87pmc"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("15_2axlf")
+chance = 0.45
+candidates = Array[StringName]([&"carro_lavanderia_1", &"carro_lavanderia_2", &"estanteria_lavanderia"])
+
+[sub_resource type="Resource" id="Resource_v5i8h"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("16_2518m")
+chance = 0.75
+candidates = Array[StringName]([&"encimera_quirofano", &"encimera_enfermeria", &"mostrador_control"])
+
+[sub_resource type="Resource" id="Resource_48pkx"]
+script = ExtResource("1_5bmeg")
+item = ExtResource("17_n3iyj")
+chance = 0.55
+candidates = Array[StringName]([&"banco_taller", &"estanteria_electrica", &"carro_lavanderia_2"])
+
+[sub_resource type="Resource" id="Resource_b5kre"]
+script = ExtResource("19_6htyp")
+object_id = &"cama_09"
+override_search = true
+search_text = "A los pies de la cama cuelga una hoja de constantes con tu número."
+
+[sub_resource type="Resource" id="Resource_pqmww"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+
+[sub_resource type="Resource" id="Resource_dcxir"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("21_wcdxe")
+
+[sub_resource type="Resource" id="Resource_nn6ex"]
+script = ExtResource("22_pp7vf")
+id = &"cama"
+empty_chance = 0.88
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_pqmww"), SubResource("Resource_dcxir")])
+
+[sub_resource type="Resource" id="Resource_fef4r"]
+script = ExtResource("19_6htyp")
+object_id = &"cama_07"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_sbydn"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+weight = 3.0
+
+[sub_resource type="Resource" id="Resource_bvads"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("6_35o8f")
+
+[sub_resource type="Resource" id="Resource_7hdxe"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("3_7ct2s")
+
+[sub_resource type="Resource" id="Resource_01n71"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("2_5srpi")
+
+[sub_resource type="Resource" id="Resource_1406w"]
+script = ExtResource("22_pp7vf")
+id = &"cajon"
+empty_chance = 0.7
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_sbydn"), SubResource("Resource_bvads"), SubResource("Resource_7hdxe"), SubResource("Resource_01n71")])
+
+[sub_resource type="Resource" id="Resource_xjoou"]
+script = ExtResource("19_6htyp")
+object_id = &"mesita_07"
+table = SubResource("Resource_1406w")
+
+[sub_resource type="Resource" id="Resource_3ktc5"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+
+[sub_resource type="Resource" id="Resource_ebuln"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("3_7ct2s")
+
+[sub_resource type="Resource" id="Resource_bqe87"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("2_5srpi")
+
+[sub_resource type="Resource" id="Resource_flj3k"]
+script = ExtResource("22_pp7vf")
+id = &"taquilla"
+empty_chance = 0.75
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_3ktc5"), SubResource("Resource_ebuln"), SubResource("Resource_bqe87")])
+
+[sub_resource type="Resource" id="Resource_5g66d"]
+script = ExtResource("19_6htyp")
+object_id = &"taquilla_07"
+table = SubResource("Resource_flj3k")
+override_search = true
+search_text = "Rebuscas entre ropa de otra persona."
+
+[sub_resource type="Resource" id="Resource_ev63a"]
+script = ExtResource("19_6htyp")
+object_id = &"cama_08"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_bio4c"]
+script = ExtResource("19_6htyp")
+object_id = &"mesita_08"
+table = SubResource("Resource_1406w")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_r3lbk"]
+script = ExtResource("19_6htyp")
+object_id = &"cama_10"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_2a5td"]
+script = ExtResource("19_6htyp")
+object_id = &"mesita_10"
+table = SubResource("Resource_1406w")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_egind"]
+script = ExtResource("19_6htyp")
+object_id = &"taquilla_10"
+table = SubResource("Resource_flj3k")
+override_search = true
+search_text = "Rebuscas entre la ropa colgada."
+
+[sub_resource type="Resource" id="Resource_kvrlg"]
+script = ExtResource("19_6htyp")
+object_id = &"mesita_11"
+table = SubResource("Resource_1406w")
+
+[sub_resource type="Resource" id="Resource_lqno5"]
+script = ExtResource("19_6htyp")
+object_id = &"cama_12"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_cvksv"]
+script = ExtResource("19_6htyp")
+object_id = &"mesita_12"
+table = SubResource("Resource_1406w")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_3r3hw"]
+script = ExtResource("19_6htyp")
+object_id = &"taquilla_12"
+table = SubResource("Resource_flj3k")
+
+[sub_resource type="Resource" id="Resource_hwyh0"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("3_7ct2s")
+weight = 2.0
+
+[sub_resource type="Resource" id="Resource_urpeh"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("8_m6mq3")
+weight = 2.0
+
+[sub_resource type="Resource" id="Resource_akqyu"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+
+[sub_resource type="Resource" id="Resource_g4lvq"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("6_35o8f")
+
+[sub_resource type="Resource" id="Resource_rsrq7"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("7_n7pig")
+
+[sub_resource type="Resource" id="Resource_egaqi"]
+script = ExtResource("22_pp7vf")
+id = &"cura"
+empty_chance = 0.5
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_hwyh0"), SubResource("Resource_urpeh"), SubResource("Resource_akqyu"), SubResource("Resource_g4lvq"), SubResource("Resource_rsrq7")])
+
+[sub_resource type="Resource" id="Resource_fgvq8"]
+script = ExtResource("19_6htyp")
+object_id = &"estanteria_almacen"
+table = SubResource("Resource_egaqi")
+override_search = true
+search_text = "Apartas cajas de productos de limpieza."
+
+[sub_resource type="Resource" id="Resource_m5rxe"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("21_wcdxe")
+weight = 2.0
+
+[sub_resource type="Resource" id="Resource_72dbj"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+
+[sub_resource type="Resource" id="Resource_t6cch"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("2_5srpi")
+
+[sub_resource type="Resource" id="Resource_ln857"]
+script = ExtResource("22_pp7vf")
+id = &"papelera"
+empty_chance = 0.8
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_m5rxe"), SubResource("Resource_72dbj"), SubResource("Resource_t6cch")])
+
+[sub_resource type="Resource" id="Resource_wdv0k"]
+script = ExtResource("19_6htyp")
+object_id = &"papelera_banos"
+table = SubResource("Resource_ln857")
+override_search = true
+search_text = "Rebuscas entre papel mojado."
+
+[sub_resource type="Resource" id="Resource_jqy8f"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("5_feuqy")
+weight = 3.0
+
+[sub_resource type="Resource" id="Resource_qn7qn"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("7_n7pig")
+
+[sub_resource type="Resource" id="Resource_umjhn"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("6_35o8f")
+
+[sub_resource type="Resource" id="Resource_tjta5"]
+script = ExtResource("22_pp7vf")
+id = &"medicacion"
+empty_chance = 0.55
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_jqy8f"), SubResource("Resource_qn7qn"), SubResource("Resource_umjhn")])
+
+[sub_resource type="Resource" id="Resource_1gr7u"]
+script = ExtResource("19_6htyp")
+object_id = &"botiquin_banos"
+table = SubResource("Resource_tjta5")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_134o1"]
+script = ExtResource("19_6htyp")
+object_id = &"mostrador_control"
+table = SubResource("Resource_tjta5")
+override_search = true
+search_text = "Abres el armario de abajo."
+
+[sub_resource type="Resource" id="Resource_wpbed"]
+script = ExtResource("19_6htyp")
+object_id = &"estanteria_enfermeria"
+table = SubResource("Resource_egaqi")
+override_search = true
+search_text = "Buscas entre los frascos algo que todavía sirva."
+
+[sub_resource type="Resource" id="Resource_rqsgf"]
+script = ExtResource("19_6htyp")
+object_id = &"encimera_enfermeria"
+table = SubResource("Resource_egaqi")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_wdvil"]
+script = ExtResource("19_6htyp")
+object_id = &"camilla_enfermeria"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_ycw3l"]
+script = ExtResource("19_6htyp")
+object_id = &"encimera_quirofano"
+override_search = true
+search_text = "Entre el instrumental hay un formulario."
+
+[sub_resource type="Resource" id="Resource_7emyq"]
+script = ExtResource("19_6htyp")
+object_id = &"camilla_pasillo"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_v5d0u"]
+script = ExtResource("19_6htyp")
+object_id = &"papelera_vestibulo"
+table = SubResource("Resource_ln857")
+
+[sub_resource type="Resource" id="Resource_a3mum"]
+script = ExtResource("19_6htyp")
+object_id = &"mostrador_recepcion_2"
+table = SubResource("Resource_1406w")
+
+[sub_resource type="Resource" id="Resource_o5ftf"]
+script = ExtResource("19_6htyp")
+object_id = &"papelera_recepcion"
+table = SubResource("Resource_ln857")
+override_search = true
+
+[sub_resource type="Resource" id="Resource_sq0bb"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("2_5srpi")
+
+[sub_resource type="Resource" id="Resource_16vp8"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("3_7ct2s")
+
+[sub_resource type="Resource" id="Resource_0n0vl"]
+script = ExtResource("20_f4cyu")
+item = ExtResource("8_m6mq3")
+
+[sub_resource type="Resource" id="Resource_rkr68"]
+script = ExtResource("22_pp7vf")
+id = &"trastero"
+empty_chance = 0.7
+entries = Array[ExtResource("20_f4cyu")]([SubResource("Resource_sq0bb"), SubResource("Resource_16vp8"), SubResource("Resource_0n0vl")])
+
+[sub_resource type="Resource" id="Resource_y68nb"]
+script = ExtResource("19_6htyp")
+object_id = &"estanteria_electrica"
+table = SubResource("Resource_rkr68")
+override_search = true
+search_text = "Revuelves una caja de bombillas fundidas."
+
+[sub_resource type="Resource" id="Resource_b2axx"]
+script = ExtResource("19_6htyp")
+object_id = &"carro_lavanderia_1"
+table = SubResource("Resource_rkr68")
+
+[sub_resource type="Resource" id="Resource_08q40"]
+script = ExtResource("19_6htyp")
+object_id = &"carro_lavanderia_2"
+table = SubResource("Resource_rkr68")
+override_search = true
+search_text = "Revuelves la ropa del carro."
+
+[sub_resource type="Resource" id="Resource_kjmmf"]
+script = ExtResource("19_6htyp")
+object_id = &"estanteria_lavanderia"
+table = SubResource("Resource_rkr68")
+override_search = true
+search_text = "Detergente y cajas de jabón."
+
+[sub_resource type="Resource" id="Resource_3th0y"]
+script = ExtResource("19_6htyp")
+object_id = &"morgue_2"
+override_search = true
+search_text = "Abres los cajones uno a uno."
+
+[sub_resource type="Resource" id="Resource_gkxmg"]
+script = ExtResource("19_6htyp")
+object_id = &"camilla_morgue"
+table = SubResource("Resource_nn6ex")
+
+[sub_resource type="Resource" id="Resource_c2b8s"]
+script = ExtResource("19_6htyp")
+object_id = &"banco_taller"
+table = SubResource("Resource_rkr68")
+override_search = true
+search_text = "Encima, una libreta con las tapas manchadas de grasa."
+
+[resource]
+script = ExtResource("18_1nl7c")
+slots = Array[ExtResource("19_6htyp")]([SubResource("Resource_b5kre"), SubResource("Resource_fef4r"), SubResource("Resource_xjoou"), SubResource("Resource_5g66d"), SubResource("Resource_ev63a"), SubResource("Resource_bio4c"), SubResource("Resource_r3lbk"), SubResource("Resource_2a5td"), SubResource("Resource_egind"), SubResource("Resource_kvrlg"), SubResource("Resource_lqno5"), SubResource("Resource_cvksv"), SubResource("Resource_3r3hw"), SubResource("Resource_fgvq8"), SubResource("Resource_wdv0k"), SubResource("Resource_1gr7u"), SubResource("Resource_134o1"), SubResource("Resource_wpbed"), SubResource("Resource_rqsgf"), SubResource("Resource_wdvil"), SubResource("Resource_ycw3l"), SubResource("Resource_7emyq"), SubResource("Resource_v5d0u"), SubResource("Resource_a3mum"), SubResource("Resource_o5ftf"), SubResource("Resource_y68nb"), SubResource("Resource_b2axx"), SubResource("Resource_08q40"), SubResource("Resource_kjmmf"), SubResource("Resource_3th0y"), SubResource("Resource_gkxmg"), SubResource("Resource_c2b8s")])
+scatter = Array[ExtResource("1_5bmeg")]([SubResource("Resource_wko4s"), SubResource("Resource_qoh1q"), SubResource("Resource_vtrgr"), SubResource("Resource_y0gey"), SubResource("Resource_rs2uu"), SubResource("Resource_813gu"), SubResource("Resource_2ci2u"), SubResource("Resource_ypnrn"), SubResource("Resource_4bugo"), SubResource("Resource_jo1fc"), SubResource("Resource_ms4w1"), SubResource("Resource_v3akm"), SubResource("Resource_fbhml"), SubResource("Resource_nj3uj"), SubResource("Resource_tbe40"), SubResource("Resource_87pmc"), SubResource("Resource_v5i8h"), SubResource("Resource_48pkx")])
+fixed_items = Array[StringName]([&"linterna", &"palanca", &"destornillador", &"fusible", &"valvula_averiada", &"llave_botiquin", &"llave_archivo", &"llave_sotano", &"llave_habitacion_10", &"tubo_metal"])

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/documents/plano_hospital.png" id="1_1km3q"]
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="2_56ajb"]
+
+[resource]
+script = ExtResource("2_56ajb")
+id = &"plano_hospital"
+title = "Plano de evacuación · Planta 3"
+kind = 4
+style = 3
+body = "Plano de evacuación pegado junto a recepción. «Usted está aquí», con una flecha.
+
+El pasillo del ala de pacientes termina en el muro oeste, junto a la habitación 07. Al otro lado del muro no hay nada: es la fachada."
+image = ExtResource("1_1km3q")

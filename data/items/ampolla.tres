@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/ampolla.png" id="1_rs3v0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/ampolla_inspect.png" id="2_uiro0"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_35e2n"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_6mkci"]
+
+[resource]
+script = ExtResource("3_35e2n")
+id = &"ampolla"
+display_name = "Ampolla"
+description = "Ampolla de cristal. La etiqueta dice «Sedante — uso restringido. No administrar en planta 3»."
+category = 2
+section = 4
+icon = ExtResource("1_rs3v0")
+inspect_sheet = ExtResource("2_uiro0")
+inspect_views = 8
+max_stack = 3
+sound_material = 7

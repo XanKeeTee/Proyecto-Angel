@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tubo_envuelto.png" id="1_66sy6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/tubo_envuelto_inspect.png" id="2_tcmcs"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_04u7d"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_opker"]
+[ext_resource type="Resource" path="res://data/weapons/pipe_wrapped.tres" id="5_62st3"]
+
+[resource]
+script = ExtResource("3_04u7d")
+id = &"tubo_envuelto"
+display_name = "Tubo con mango envuelto"
+description = "El tubo de hierro con tiras de tela apretadas en un extremo. Ya no resbala."
+category = 8
+section = 1
+icon = ExtResource("1_66sy6")
+inspect_sheet = ExtResource("2_tcmcs")
+inspect_views = 8
+size = Vector2i(1, 3)
+use_verb = "Empuñar"
+weapon = ExtResource("5_62st3")
+sound_material = 1

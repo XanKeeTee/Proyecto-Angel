@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_3xmgj"]
+
+[resource]
+script = ExtResource("1_3xmgj")
+id = &"registro_admisiones"
+title = "Libro de admisiones"
+kind = 1
+body = "HAB. 09 — Ingreso ··· 14 de marzo [i](antes del Desvelo)[/i]
+HAB. 09 — Reingreso · ciclo II
+HAB. 09 — Reingreso · ciclo III
+HAB. 09 — Reingreso · ciclo IV
+HAB. 09 — Reingreso · ciclo V
+HAB. 09 — Reingreso · ciclo VI
+HAB. 09 — Reingreso · ciclo VII
+HAB. 09 — Reingreso · ciclo VIII
+HAB. 09 — Reingreso · ciclo IX
+
+Ninguna alta. Todos los reingresos con el mismo nombre, tachado."

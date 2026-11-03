@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TreatmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/combat/treatment_def.gd" id="1_qscg8"]
+
+[resource]
+script = ExtResource("1_qscg8")
+id = &"torniquete"
+display_name = "Torniquete"
+description = "Por encima de la herida, hasta que duela. Ese brazo o esa pierna deja de sangrar del todo, también un muñón."
+icon_key = &"treat_torniquete"
+item_ids = Array[StringName]([&"torniquete"])
+part_rule = 2
+stops_bleed = 99
+seals_part = true
+use_text = "%s aprieta el torniquete: %s."

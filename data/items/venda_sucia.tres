@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_sucia.png" id="1_4lhp5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/venda_sucia_inspect.png" id="2_2ysom"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_os8oh"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_4b4w0"]
+[ext_resource type="Script" path="res://scripts/core/items/effects/heal_effect.gd" id="5_ia5ig"]
+
+[sub_resource type="Resource" id="Resource_50qad"]
+script = ExtResource("5_ia5ig")
+body = 4
+stops_bleeding = true
+requires_bleeding = true
+message = "Aprietas la venda contra los puntos. La sangre se detiene."
+contaminated_message = "La sangre se detiene, pero la venda huele mal. Un calor febril te sube por la espalda."
+
+[resource]
+script = ExtResource("3_os8oh")
+id = &"venda_sucia"
+display_name = "Venda usada"
+description = "Una venda sacada de la papelera. Tiene manchas que no son tuyas.
+Se podría limpiar con algo."
+category = 2
+section = 4
+icon = ExtResource("1_4lhp5")
+inspect_sheet = ExtResource("2_2ysom")
+inspect_views = 8
+max_stack = 3
+contaminated = true
+usable = true
+use_effects = Array[ExtResource("4_4b4w0")]([SubResource("Resource_50qad")])
+use_verb = "Vendar"
+sound_material = 4
+use_sound = "use_bandage_apply"

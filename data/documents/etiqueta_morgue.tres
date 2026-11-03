@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DocumentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/documents/document_def.gd" id="1_dhpou"]
+
+[resource]
+script = ExtResource("1_dhpou")
+id = &"etiqueta_morgue"
+title = "Etiqueta de identificación"
+kind = 5
+style = 2
+body = "MORGUE · SAN LÁZARO
+
+N.º: [b]09[/b]
+FECHA: ██ de ███████
+CAUSA: [i]Fin de la vigilia.[/i]
+RECLAMADO POR: —
+
+El cordel está cortado. Lo que llevaba la etiqueta ya no está en el cajón."
+stamp = "09"

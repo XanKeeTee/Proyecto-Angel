@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/items/llave_botiquin.png" id="1_ebjrt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/llave_botiquin_inspect.png" id="2_koboj"]
+[ext_resource type="Script" path="res://scripts/core/items/item_def.gd" id="3_hy403"]
+[ext_resource type="Script" path="res://scripts/core/items/item_effect.gd" id="4_h2wl3"]
+
+[resource]
+script = ExtResource("3_hy403")
+id = &"llave_botiquin"
+display_name = "Llave pequeña"
+description = "Una llave diminuta y fría. La encontraste en una cama que todavía crujía."
+category = 1
+section = 5
+icon = ExtResource("1_ebjrt")
+inspect_sheet = ExtResource("2_koboj")
+inspect_views = 8
+key_item = true

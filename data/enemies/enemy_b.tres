@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="CombatantDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/enemy_attack_def.gd" id="1_ggkuo"]
+[ext_resource type="Script" path="res://scripts/core/body_part_def.gd" id="2_q7ne5"]
+[ext_resource type="Resource" path="res://data/body_parts/head_severable.tres" id="3_c7qo1"]
+[ext_resource type="Resource" path="res://data/body_parts/torso.tres" id="4_brkuk"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_l.tres" id="5_8ih0p"]
+[ext_resource type="Resource" path="res://data/body_parts/arm_r.tres" id="6_stn0a"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_l.tres" id="7_yltwk"]
+[ext_resource type="Resource" path="res://data/body_parts/leg_r.tres" id="8_oktq8"]
+[ext_resource type="Script" path="res://scripts/core/combatant_def.gd" id="9_038x1"]
+
+[sub_resource type="Resource" id="Resource_ctr1i"]
+script = ExtResource("1_ggkuo")
+display_name = "Aplastar"
+power = 16
+accuracy = 70
+damage_type = 1
+target_part = &"torso"
+required_part = &"arm_l"
+
+[sub_resource type="Resource" id="Resource_c45ta"]
+script = ExtResource("1_ggkuo")
+display_name = "Desgarrar"
+power = 14
+accuracy = 70
+required_part = &"arm_r"
+visibility = 2
+
+[sub_resource type="Resource" id="Resource_8flm3"]
+script = ExtResource("1_ggkuo")
+display_name = "Alarido"
+power = 0
+accuracy = 100
+damage_type = 3
+mind_damage = 15
+required_part = &"head"
+
+[resource]
+script = ExtResource("9_038x1")
+display_name = "ENEMIGO B"
+body_max = 150
+has_mind = false
+strength = 12
+dexterity = 6
+agility = 5
+willpower = 10
+resilience = 12
+armor = 3
+parts = Array[ExtResource("2_q7ne5")]([ExtResource("3_c7qo1"), ExtResource("4_brkuk"), ExtResource("5_8ih0p"), ExtResource("6_stn0a"), ExtResource("7_yltwk"), ExtResource("8_oktq8")])
+attacks = Array[ExtResource("1_ggkuo")]([SubResource("Resource_ctr1i"), SubResource("Resource_c45ta"), SubResource("Resource_8flm3")])
+finisher = true
