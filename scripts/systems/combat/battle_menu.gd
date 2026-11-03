@@ -54,7 +54,9 @@ static func targets_for(battle: Battle, actor: Combatant, option: ActionOption) 
 			for enemy: Combatant in _present(battle.enemies):
 				result.append(_enemy_target(battle, actor, option, enemy))
 		SIDE_ALLY:
-			var members: Array[Combatant] = [actor] if option.category == CATEGORY_GUARD else _present(battle.party)
+			var members: Array[Combatant] = [actor]
+			if option.category != CATEGORY_GUARD:
+				members = _present(battle.party)
 			for member: Combatant in members:
 				result.append(_ally_target(battle, option, member))
 	return result
