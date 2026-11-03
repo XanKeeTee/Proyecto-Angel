@@ -7,7 +7,7 @@ extends Control
 
 signal toggled(open: bool)
 
-const TAB_SIZE: Vector2 = Vector2(78, 14)
+const TAB_SIZE: Vector2 = Vector2(96, 14)
 const PANEL_SIZE: Vector2 = Vector2(250, 214)
 const PAD: Vector2 = Vector2(10, 22)
 const LINE_H: float = 10.0
@@ -157,7 +157,7 @@ func _draw() -> void:
 	draw_string(font, tab.position + Vector2(6, 10), "REGISTRO", HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, BattleSkin.INK)
 	var count_text: String = str(entries.size())
 	var cw: float = font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE).x
-	draw_string(font, Vector2(tab.end.x - cw - 12, tab.position.y + 10), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+	draw_string(font, Vector2(tab.end.x - cw - 14, tab.position.y + 10), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 		FONT_SIZE, BattleSkin.INK_RED)
 	UiStyle.draw_arrow(self, Vector2(tab.end.x - 6, tab.position.y + 7), Vector2.UP if is_open else Vector2.DOWN, 2.0,
 		BattleSkin.INK)

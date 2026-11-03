@@ -5,6 +5,7 @@ Las convenciones de código, comandos y estructura de carpetas están en [CLAUDE
 ## Documentos
 
 - [arquitectura.md](arquitectura.md) — módulos del prólogo y cómo se amplían.
+- [interfaz-combate.md](interfaz-combate.md) — pantalla de combate: piezas, contrato con las reglas (API de opciones), arte de la interfaz, controles y capturas.
 - [sonidos.md](sonidos.md) — sonido y música de Freesound: cómo traerlos, música del menú y paisaje sonoro.
 - [tests.md](tests.md) — propuesta de framework de tests (GUT, pendiente). Mientras tanto hay un ejecutor mínimo (ver CLAUDE.md).
 
@@ -175,7 +176,9 @@ Ya no es la escena principal: abre `res://scenes/battle/battle_scene.tscn` y pul
   Para capturas de la pantalla nueva: `--battle-pick=arm_r` (apuntando a una parte), `--battle-maim=arm_r`
   (empieza amputada), `--battle-hurt=head:1,leg_l:2` (partes del enemigo Herida/Rota), `--battle-strike=arm_l`
   (golpe que la arranca), `--battle-wound=arm_r:1` (herida propia), `--battle-wounds` (abre la ventanita de
-  heridas), `--battle-say=Texto_con_guiones` (mensaje arriba), `--battle-seed=N`, `--battle-shot-delay=S`.
+  heridas), `--battle-say=Texto_con_guiones` (mensaje arriba), `--battle-seed=N`, `--battle-shot-delay=S`,
+  `--battle-menu=item`, `--battle-focus=N`, `--battle-items`, `--battle-log`, `--battle-confirm`
+  (ver [interfaz-combate.md](interfaz-combate.md#depuración)).
   La lista completa está en la cabecera de `battle_scene.gd`.
 
 Qué incluye: rondas con telegrafiado, ataque por partes, Guardia, Respirar, Vendas, huida individual y en grupo, amputación, fracturas, sangrado, aturdimiento, Mente (Inquietud, Pánico, Quiebre), Caídos y rematar, fin de partida por muerte del protagonista.
@@ -190,7 +193,7 @@ Qué falta: habilidades, cargar con un aliado al huir, armaduras por parte, pró
 | `scripts/systems/combat/battle.gd` | Lógica de la ronda; sin nodos, testeable en headless |
 | `scripts/systems/combat/combat_rules.gd` | Fórmulas puras |
 | `scripts/systems/combat/enemy_ai.gd` | Intenciones enemigas |
-| `scenes/battle/` | Escena, silueta de partes (`body_diagram.gd`) |
+| `scenes/battle/` | Pantalla e interfaz (ver [interfaz-combate.md](interfaz-combate.md)) |
 | `shaders/vhs_post.gdshader` | Grano, aberración, scanlines, viñeta |
 
 ## Arquitectura prevista (sin implementar)

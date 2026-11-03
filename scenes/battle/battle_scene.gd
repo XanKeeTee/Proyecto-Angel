@@ -37,6 +37,7 @@ extends Control
 ##   --battle-wounds       abre la hoja de lesiones del protagonista
 ##   --battle-items        (sola) lleva vendas, analgésicos y sedante en la custodia
 ##   --battle-log          abre el registro para la captura
+##   --battle-confirm      confirma la parte apuntada (sello «AUTORIZADO») justo antes de la captura
 ##   --battle-seed=N       semilla fija
 ##   --battle-strike=PARTE para la captura: el protagonista arranca esa parte al enemigo
 ##   --battle-say=TEXTO    para la captura: enseña ese mensaje arriba («_» = espacio)
@@ -410,7 +411,7 @@ func _start_round() -> void:
 	if _embedded and debug.has("battle-pick") and battle.round_number == 1 and _member_index >= 0:
 		_open_category(ActionMenuModel.ATTACK)
 		aim_at_part(StringName(debug["battle-pick"]))
-	if _screenshot_path != "" and _autoplay_rounds == 0 and not debug.has("autoplay"):
+	if _screenshot_path != "" and _autoplay_rounds == 0:
 		_take_screenshot_and_quit()
 
 
@@ -519,7 +520,7 @@ func _confirm(option: ActionOption, target: Combatant, part_id: StringName) -> v
 	var paper: PaperCard = _part_card if _part_card.visible else _detail
 	var at: Vector2 = paper.position + paper.size * Vector2(0.55, 0.55) if paper.visible \
 			else _command_box.position + Vector2(_command_box.size.x * 0.5, 30)
-	var fx: StampFx = _stamp(BattleSkin.stamp("autorizado"), at, "AUTORIZADO", 0.18)
+	var fx: StampFx = _stamp(BattleSkin.stamp("autorizado"), at, "AUTORIZADO", 0.18, 1.3)
 	fx.landed.connect(func() -> void: _sound("ui_stamp", -6.0))
 	await _wait(CONFIRM_DELAY)
 	if not is_inside_tree():
@@ -1600,9 +1601,16 @@ func _update_report() -> void:
 		return
 	var lines: PackedStringArray = _log.lines()
 	var tail: PackedStringArray = []
-	for i: int in range(maxi(0, lines.size() - 6), lines.size()):
-		if not lines[i].begins_with("—"):
-			tail.append("· " + lines[i])
+	var used: int = 0
+	var fit: int = int(_report.size.y / 10.0)
+	for i: int in range(lines.size() - 1, -1, -1):
+		if lines[i].begins_with("—"):
+			continue
+		var count: int = BattleSkin.wrap_text(UiStyle.mono(), "· " + lines[i], _report.size.x - 4.0, UiStyle.MONO_SMALL).size()
+		if used + count > fit:
+			break
+		used += count
+		tail.insert(0, "· " + lines[i])
 	_report.text = "\n".join(tail)
 
 
@@ -1758,6 +1766,8 @@ func _take_screenshot_and_quit() -> void:
 			var index: int = clampi(debug["battle-focus"].to_int(), 0, buttons.size() - 1)
 			if not buttons.is_empty():
 				buttons[index].grab_focus()
+	if debug.has("battle-confirm"):
+		confirm_aim()
 	if debug.has("battle-strike"):
 		_debug_strike(StringName(debug["battle-strike"]))
 	if debug.has("battle-wounds") and not _cards.is_empty():

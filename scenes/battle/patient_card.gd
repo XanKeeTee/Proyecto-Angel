@@ -275,12 +275,22 @@ func _draw_weapon(zone: Rect2) -> void:
 	draw_string(font, Vector2(zone.position.x + 22, zone.position.y + 17), hands, HORIZONTAL_ALIGNMENT_LEFT, name_w,
 		UiStyle.MONO_SMALL, BattleSkin.INK_SOFT)
 	var icons: Array[Dictionary] = BattleFrame.status_icons(combatant)
-	var y: float = zone.position.y + (zone.size.y - 8.0 if compact() else 30.0)
 	if compact():
-		y = zone.position.y + 8.0
-	for i: int in mini(icons.size(), 6):
-		var x: float = (zone.end.x - 7.0 - i * 13.0) if compact() else (zone.position.x + 7.0 + i * 13.0)
-		BattleFrame.draw_icon(self, icons[i]["kind"], Vector2(x, y), icons[i]["letter"])
+		for i: int in mini(icons.size(), 4):
+			BattleFrame.draw_icon(self, icons[i]["kind"], Vector2(zone.end.x - 7.0 - i * 13.0, zone.position.y + 8.0),
+				icons[i]["letter"])
+		return
+	# Ancha: cada estado con su icono y su nombre, debajo del arma.
+	var y: float = zone.position.y + 30.0
+	if icons.is_empty():
+		draw_string(font, Vector2(zone.position.x, y + 4), "Sin estados.", HORIZONTAL_ALIGNMENT_LEFT, zone.size.x,
+			UiStyle.MONO_SMALL, BattleSkin.INK_SOFT)
+	for i: int in mini(icons.size(), 4):
+		var col: float = zone.position.x + (i % 2) * (zone.size.x * 0.5)
+		var row_y: float = y + floorf(i / 2.0) * 13.0
+		BattleFrame.draw_icon(self, icons[i]["kind"], Vector2(col + 6, row_y), icons[i]["letter"])
+		draw_string(font, Vector2(col + 14, row_y + 4), String(icons[i]["label"]), HORIZONTAL_ALIGNMENT_LEFT,
+			zone.size.x * 0.5 - 16, UiStyle.MONO_SMALL, BattleSkin.INK_RED)
 
 
 func _draw_stain(stain: Dictionary) -> void:
