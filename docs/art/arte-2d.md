@@ -1,4 +1,72 @@
-# Arte 2D: ilustración a tinta y color plano (cuarta muestra, prueba de estilo)
+# Arte 2D: tinta y pinceladas (quinta muestra, buscando el realismo de *Fear & Hunger*)
+
+> Estado: **prueba de estilo estática**. No está integrada en el juego. Imágenes en [`muestras/`](muestras/);
+> código en `tools/art2d/` (`brush.py`, `palette_fh.py`, `nurse_fh.py`, `hero_fh.py`, `sheets_fh.py`). Más abajo, la
+> cuarta muestra (tinta y color plano) y la historia de las anteriores.
+
+## Qué pidió el usuario
+
+Le gustó la dirección a tinta, pero pidió **mucho más detalle y realismo**, «hiperdetallado de forma realista,
+acercándose a *Fear & Hunger*», con los mismos tamaños de sprite (enfermero 300×440, protagonista 260×420 en
+combate y 112×160 en el mapa).
+
+## Método (`tools/art2d/brush.py`)
+
+1. **Formas orgánicas**: curvas suaves que pasan por muchos puntos (Catmull-Rom) con un ruido de baja
+   frecuencia en el borde (`wobble`) para el trazo nervioso. Brazos y piernas salen de perfiles anatómicos
+   medidos a mano (`limb_pts` sobre estaciones repartidas a lo largo del hueso: deltoides, brazo, codo,
+   braquiorradial, muñeca; muslo, corva, gemelos, tendón).
+2. **Valor**: luz lateral fría desde la izquierda (`light_field` de la silueta, con poca componente frontal,
+   más un gradiente lateral por forma `side`), el foco de arriba que se apaga hacia los pies (`spot`) y el
+   terminador apretado (`contrast`) para que el lado oscuro sea casi negro.
+3. **Pinceladas** (`strokes`, `paint`, `scumble`): miles de trazos cortos en forma de hoja que siguen un campo
+   de dirección (el eje del miembro, la caída de la tela) con el tono de la rampa (5-8 tonos por material) y algo
+   de variación. Manchas de sombra o de luz pintadas igual, a pinceladas, con borde semiduro.
+4. **Tinta**: contorno marrón muy oscuro con grosor variable (`outline`), líneas interiores en pliegues,
+   separaciones de músculos, costillas, tendones y nudillos (`ink`), brillos pequeños y nítidos en aristas
+   (`glint`).
+5. **Micro-detalle**: venas que se ramifican, cardenales con halo, vello, costras y rasguños; costuras con
+   puntadas, deshilachado y trama de la tela; sangre con coágulo oscuro, regueros que caen y brillo húmedo
+   (`blood`); craquelado fino y grietas con ramitas en la porcelana; arañazos, óxido y remaches en el metal;
+   menisco, escala, reflejo y burbujas en el cristal.
+6. **Reducción**: a ×4-×6 con antialias de cairo, filtro de área al tamaño final y **cuantización a la paleta**
+   del juego sin tramado; contorno exterior de 1 px y limpieza de píxeles sueltos.
+
+## Muestras
+
+| Archivo | Qué es |
+|---|---|
+| [estilo_fh_enfermero.png](muestras/estilo_fh_enfermero.png) | Enfermero 300×440, escala 1 y ×2 |
+| [estilo_fh_protagonista_combate.png](muestras/estilo_fh_protagonista_combate.png) | Protagonista en guardia 260×420, escala 1 y ×2 |
+| [estilo_fh_protagonista_mapa.png](muestras/estilo_fh_protagonista_mapa.png) | Mapa 112×160, escala 1 y ×4 |
+| [maqueta_combate_fh.png](muestras/maqueta_combate_fh.png) | Combate a 1280×720 con el filtro de película |
+
+La hoja de comparación con la referencia (`comparacion_referencia.png`) se genera **solo en local**: lleva una
+captura de *Fear & Hunger*, que es obra de terceros, y el repositorio es público (ver
+[referencias/README.md](referencias/README.md)). Para generarla: `python3 -I tools/art2d/sheets_fh.py <carpeta> <referencia.png>`.
+
+```bash
+python3 -I tools/art2d/sheets_fh.py docs/art/muestras /no-existe    # sin la referencia
+```
+
+## Valoración honesta
+
+Comparado lado a lado con la referencia ampliada:
+
+- **Lo que se acerca**: textura de pincelada, paleta sucia y desaturada, contorno marrón oscuro, lado en sombra
+  casi negro, micro-detalle de sangre, costuras, venas, grietas y metal.
+- **Lo que no llega**: el dibujo. En *Fear & Hunger* cada miembro es delgado, nudoso y expresivo, las manos tienen
+  dedos que se leen, las telas caen en pliegues amplios y la figura entera se integra en la oscuridad con valores
+  bajos. Aquí las formas siguen siendo bloques (la túnica y la joroba del enfermero, la bata del protagonista),
+  los brazos parecen tubos, los puños son masas y el conjunto es más claro y más limpio que la referencia.
+- **Conclusión**: con generación por código he llegado al límite razonable. Cada salto de calidad que queda es de
+  dibujo anatómico y composición, que es lo que mejor hace una persona. **Recomiendo** que un artista dibuje los
+  personajes y enemigos (Aseprite, Krita o papel escaneado) siguiendo estas reglas y esta paleta, y que el código
+  se quede para lo repetitivo: tamaño y paleta, reducción, separar piezas para las mutilaciones, variantes de
+  escenario y el filtro. Si se sigue por código, el siguiente paso sería una biblioteca anatómica mucho más rica
+  (perfiles de músculos por vista, manos articuladas) y varias semanas de iteración por figura.
+
+## Cuarta muestra: ilustración a tinta y color plano
 
 > Estado: **prueba de estilo estática**, para validar la dirección antes de animar. No está integrada en el
 > juego. Imágenes en [`muestras/`](muestras/); código en `tools/art2d/` (`ink.py`, `palette_ink.py`,
