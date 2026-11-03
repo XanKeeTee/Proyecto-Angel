@@ -7,7 +7,7 @@
 
 ## Concepto
 
-Un **Transfigurado** (dossier, § 5): un enfermero del propio hospital, alterado. Alto y demacrado, uniforme blanco manchado y roto, piel gris azulada con venas oscuras, la mascarilla quirúrgica **cosida a la cara** y una **máscara de porcelana** agrietada sobre los ojos; la columna arqueada y demasiado larga; el antebrazo derecho **fundido con instrumental** (bisturíes y una sierra de hueso que le salen de la carne) y una **jeringa** grande en la mano izquierda; vías que le entran en el pecho con un líquido oscuro y, entre los omóplatos, **la misma pieza metálica que lleva el protagonista** (no se explica).
+Un **Transfigurado** (dossier, § 5): un enfermero del propio hospital, alterado. Alto y demacrado, uniforme blanco manchado y roto, piel gris azulada con venas oscuras, la mascarilla quirúrgica **cosida a la cara** y una **máscara de porcelana** agrietada sobre los ojos; la columna arqueada y demasiado larga; el antebrazo derecho **fundido con instrumental** (bisturíes y una sierra de hueso que le salen de la carne) y una **jeringa** grande en la mano izquierda; vías que le entran en el pecho con un líquido oscuro y, sobre la columna, **una incisión cosida como la del protagonista** (no se explica).
 
 Es el primer combate del juego: tiene que enseñar que **dónde golpeas importa** y que el **aviso** del enemigo sirve para algo.
 

@@ -88,7 +88,6 @@ Referencia de **tono**: *Fear & Hunger*. Tomamos la idea, no sus sprites ni su i
 - **Rasgos propios del protagonista** (lo que lo hace nuestro):
   - cabeza rapada con una cicatriz cosida en el cráneo;
   - bata abierta por detrás con una incisión cosida a lo largo de la columna;
-  - una pieza metálica entre los omóplatos `[PROPUESTA]`;
   - vía arrancada con sangre en la mano izquierda;
   - pulsera de paciente;
   - pies sucios.

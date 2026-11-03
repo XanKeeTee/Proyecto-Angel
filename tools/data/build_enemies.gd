@@ -216,11 +216,11 @@ func _encounter(enemy: CombatantDef, party: CombatantDef) -> EncounterDef:
 	])
 	e.victory_lines = PackedStringArray([
 		"Deja de moverse. La respiración detrás de la mascarilla se apaga.",
-		"Entre sus omóplatos, bajo el uniforme roto, brilla una pieza de metal.",
-		"Te llevas la mano a la espalda. La tuya es igual.",
+		"Entre sus omóplatos, bajo el uniforme roto, una incisión larga cosida sobre la columna.",
+		"Te llevas la mano a la espalda. Tus puntos están en el mismo sitio.",
 	])
 	e.corpse_name = "Enfermero"
-	e.corpse_examine = "No se mueve. La máscara de porcelana está agrietada; debajo, la mascarilla quirúrgica cosida a la piel.\nEntre los omóplatos lleva una pieza de metal. Como la tuya."
+	e.corpse_examine = "No se mueve. La máscara de porcelana está agrietada; debajo, la mascarilla quirúrgica cosida a la piel.\nSobre la columna tiene una incisión cosida. Como la tuya."
 	e.music = "music_combat_drone"
 	return e
 

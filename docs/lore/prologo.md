@@ -21,8 +21,8 @@ Nada de esto es canon hasta que lo aprueben las dos personas del equipo. Está e
 - **Vigilia**: estado en el que se mantiene a ciertos pacientes, sin sedación y sin sueño profundo. Se cuenta en ciclos. El protagonista está en el **ciclo IX**, la novena vigilia.
 - **Desde el Desvelo** nadie de la planta duerme de verdad, y no ha muerto nadie en planta (el inventario dice que las bolsas para cadáveres no se han usado). No se explica qué fue el Desvelo.
 - **Protocolo de recuperación**: el término es ambiguo a propósito. Puede ser recuperar al paciente o recuperar algo del paciente:
-  - el informe quirúrgico habla de «material recuperado: 3 ml», de aspecto luminoso, extraído por un **puerto dorsal**;
-  - el protagonista tiene una pieza metálica entre los omóplatos;
+  - el informe quirúrgico habla de «material recuperado: 3 ml», de aspecto luminoso, extraído por **punción dorsal**;
+  - el protagonista tiene una incisión cosida sobre la columna (es un humano normal: sin piezas metálicas ni elementos tecnológicos, por decisión del equipo);
   - según la circular nº 9, cuando un paciente despierta solo, el personal se va y «el edificio se encarga».
 
   Encaja con la idea central (un milagro convertido en herramienta de explotación) sin aclarar qué es lo que se extrae. **Evita la premisa prohibida**: no hay ningún ángel usado como batería; es un paciente humano y no se dice qué trae de vuelta.
@@ -61,7 +61,7 @@ Nada de esto es canon. Encaja con el dossier sin rellenar sus pendientes: es un 
 
 - **Qué es**: uno de los enfermeros de la planta, transformado. Alto, demacrado, uniforme blanco manchado y roto; piel gris azulada con venas oscuras; la mascarilla quirúrgica **cosida a la cara**; una **máscara de porcelana** agrietada sobre los ojos; la columna arqueada y demasiado larga.
 - **Su cuerpo cuenta su oficio**: el antebrazo derecho se ha fundido con el instrumental (bisturíes y una sierra de hueso que le salen de la carne, con una costura de grapas donde se unen); en la mano izquierda, una jeringa grande con un líquido oscuro; vías que le entran en el pecho con ese mismo líquido.
-- **La pieza entre los omóplatos**: lleva la misma pieza metálica que el protagonista. Se ve al examinar el cuerpo y en el último texto del combate («Te llevas la mano a la espalda. La tuya es igual»). Sugiere que pasaron por el mismo procedimiento; **no se explica**. Enlaza con el «puerto dorsal» del informe quirúrgico sin afirmar nada nuevo.
+- **La incisión sobre la columna**: tiene la misma incisión cosida que el protagonista. Se ve al examinar el cuerpo y en el último texto del combate («Te llevas la mano a la espalda. Tus puntos están en el mismo sitio»). Sugiere que pasaron por el mismo procedimiento; **no se explica**. Enlaza con la «punción dorsal» del informe quirúrgico sin afirmar nada nuevo.
 - **Encaja con lo ya propuesto**: la circular nº 9 dice que, cuando un paciente despierta solo, el personal se va y «el edificio se encarga». El enfermero puede leerse como lo que queda del personal que no se fue, o como parte de «lo que se encarga». Las dos lecturas quedan abiertas.
 - **Textos**: en `tools/data/build_enemies.gd` (ataques, avisos, partes, aparición, huida, victoria y cadáver). Tono físico y concreto: lo que se ve y se oye, nunca una explicación.
 - **Muerte del protagonista**: la pantalla de muerte dice «FIN DE LA CINTA · La vigilia termina aquí». Usa la metáfora de la cinta del título; no afirma nada del mundo.
@@ -72,5 +72,5 @@ Nada de esto es canon. Encaja con el dossier sin rellenar sus pendientes: es un 
 - Que la jeringa con líquido oscuro no choque con el «material recuperado» luminoso del informe quirúrgico (aquí es oscuro a propósito: no es lo mismo).
 
 - Que «el edificio se encarga» no choque con lo que el equipo quiera hacer con el hospital después.
-- Que la extracción del puerto dorsal no se acerque demasiado a la premisa prohibida.
+- Que la extracción por punción dorsal no se acerque demasiado a la premisa prohibida.
 - Cómo encajan los otros cuatro protagonistas con la Unidad de Vigilia.

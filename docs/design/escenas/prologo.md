@@ -149,7 +149,7 @@ El único combate del prólogo, temprano y opcional en la práctica (casi todo e
 1. En la **habitación 12** hay un tubo de hierro en el suelo. Al cogerlo se empuña (si no llevabas nada en la mano).
 2. Al salir al **pasillo**, un fluorescente se enciende solo al fondo, falla, y bajo él hay alguien muy alto con uniforme de enfermero y una máscara pálida. Se le oye arrastrar un pie mientras se acerca. La cinta salta y empieza el combate.
 3. **Combate por turnos con mutilaciones** (ver [combate.md](../sistemas/combate.md) y [el enfermero](../enemigos/enfermero.md)): el enemigo arriba, el protagonista abajo. El Cuerpo, la Mente, el sangrado y las heridas pasan del mapa al combate y vuelven.
-4. **Victoria**: su cuerpo se queda en el pasillo, sin lo que perdió, y se recuerda al guardar. Al examinarlo se ve la pieza de metal entre sus omóplatos, como la del protagonista.
+4. **Victoria**: su cuerpo se queda en el pasillo, sin lo que perdió, y se recuerda al guardar. Al examinarlo se ve una incisión cosida sobre su columna, como la del protagonista.
 5. **Huida** (≈ 50 %, más si le has roto las piernas; imposible si te tiene agarrado): vuelve a buscarte más tarde (pasado algo más de un minuto, al volver al pasillo o en el del sótano), con las heridas que le hiciste.
 6. **Derrota**: pantalla de muerte (ver «Supervivencia»).
 
