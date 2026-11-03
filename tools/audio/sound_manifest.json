@@ -2654,7 +2654,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Vestíbulo o recepción grande y vacía: aire amplio con cola, el edificio que respira. Sin gente, anuncios ni tiendas.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 788451
   },
   {
    "name": "amb_tone_archive",
@@ -3011,7 +3012,8 @@
    "stereo": true,
    "ideal": 120,
    "note": "Sala fría de azulejo y acero: siseo frío y zumbido muy bajo (la nevera grande va aparte). Sin puertas ni cocina.",
-   "af": "highpass=f=45,lowpass=f=9000"
+   "af": "highpass=f=45,lowpass=f=9000",
+   "pick": 786004
   },
   {
    "name": "amb_building_hum",
@@ -3597,7 +3599,8 @@
    "max_len": 3.5,
    "fade_out": 0.5,
    "af": "lowpass=f=4000",
-   "note": "El hormigón y las vigas del sótano que se asientan: crujido grave y largo, sin chirrido agudo."
+   "note": "El hormigón y las vigas del sótano que se asientan: crujido grave y largo, sin chirrido agudo.",
+   "pick": 796507
   },
   {
    "name": "amb_drip_metal",
@@ -3633,7 +3636,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Una gota que cae sobre chapa o en un cubo metálico: tic metálico con algo de resonancia."
+   "note": "Una gota que cae sobre chapa o en un cubo metálico: tic metálico con algo de resonancia.",
+   "pick": 514404
   },
   {
    "name": "amb_door_far",
@@ -3672,7 +3676,8 @@
    ],
    "max_len": 3.0,
    "fade_out": 0.6,
-   "note": "Una puerta que se cierra lejos, en otra parte del edificio: golpe sordo con cola. No un portazo."
+   "note": "Una puerta que se cierra lejos, en otra parte del edificio: golpe sordo con cola. No un portazo.",
+   "pick": 478076
   },
   {
    "name": "amb_door_swing_far",
@@ -3755,7 +3760,8 @@
    "fade_in": 0.4,
    "fade_out": 1.0,
    "af": "lowpass=f=3500",
-   "note": "Tres a seis pasos lentos y lejanos en suelo duro, con eco; que no se sepa dónde. Sin tacones."
+   "note": "Tres a seis pasos lentos y lejanos en suelo duro, con eco; que no se sepa dónde. Sin tacones.",
+   "pick": 274984
   },
   {
    "name": "amb_settle_thump",
@@ -3796,7 +3802,8 @@
    "max_len": 2.5,
    "fade_out": 0.6,
    "af": "lowpass=f=2500",
-   "note": "Un golpe grave y sordo en algún sitio del edificio (algo pesado que se asienta), sin ataque seco."
+   "note": "Un golpe grave y sordo en algún sitio del edificio (algo pesado que se asienta), sin ataque seco.",
+   "pick": 457741
   },
   {
    "name": "amb_settle_crack",
@@ -3874,7 +3881,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.4,
-   "note": "La rejilla de ventilación que vibra y traquetea un momento con una corriente de aire."
+   "note": "La rejilla de ventilación que vibra y traquetea un momento con una corriente de aire.",
+   "pick": 581257
   },
   {
    "name": "amb_duct_pop",
@@ -4037,7 +4045,8 @@
    "fade_in": 0.4,
    "fade_out": 1.0,
    "af": "lowpass=f=3500",
-   "note": "Una camilla o un carro con una rueda que chirría, rodando lejos por un pasillo, y se para."
+   "note": "Una camilla o un carro con una rueda que chirría, rodando lejos por un pasillo, y se para.",
+   "pick": 389687
   },
   {
    "name": "amb_glass_tinkle",
@@ -4156,7 +4165,8 @@
    ],
    "max_len": 2.5,
    "fade_out": 0.4,
-   "note": "Tictac irregular de una tubería metálica que se contrae: dos a cinco golpecitos."
+   "note": "Tictac irregular de una tubería metálica que se contrae: dos a cinco golpecitos.",
+   "pick": 139651
   },
   {
    "name": "amb_chain_rattle",
@@ -4316,7 +4326,8 @@
    "fade_in": 0.2,
    "fade_out": 0.6,
    "af": "lowpass=f=6000",
-   "note": "Ratas o ratones que corretean y arañan dentro de la pared o del falso techo."
+   "note": "Ratas o ratones que corretean y arañan dentro de la pared o del falso techo.",
+   "pick": 640245
   },
   {
    "name": "amb_pigeon_flutter",
@@ -4927,7 +4938,8 @@
     "kick"
    ],
    "max_len": 0.6,
-   "note": "Tubo de hierro contra carne: golpe sordo y húmedo, sin eco metálico."
+   "note": "Tubo de hierro contra carne: golpe sordo y húmedo, sin eco metálico.",
+   "pick": 157020
   },
   {
    "name": "combat_pipe_bone",
@@ -5113,7 +5125,8 @@
     "power"
    ],
    "max_len": 2.0,
-   "note": "Sierra de hueso manual: 2-3 pasadas ásperas."
+   "note": "Sierra de hueso manual: 2-3 pasadas ásperas.",
+   "pick": 267636
   },
   {
    "name": "combat_syringe",
@@ -5214,7 +5227,8 @@
     "glitch-music"
    ],
    "max_len": 4.0,
-   "note": "Respiración húmeda y lenta a través de una mascarilla."
+   "note": "Respiración húmeda y lenta a través de una mascarilla.",
+   "pick": 567723
   },
   {
    "name": "enfermero_growl",
@@ -5250,7 +5264,8 @@
     "glitch-music"
    ],
    "max_len": 1.2,
-   "note": "Gruñido gutural ahogado, como con la boca cosida."
+   "note": "Gruñido gutural ahogado, como con la boca cosida.",
+   "pick": 315847
   },
   {
    "name": "enfermero_scream",
@@ -5285,7 +5300,8 @@
     "glitch-music"
    ],
    "max_len": 1.5,
-   "note": "Chillido de dolor ahogado tras tela, agudo y quebrado."
+   "note": "Chillido de dolor ahogado tras tela, agudo y quebrado.",
+   "pick": 435651
   },
   {
    "name": "enfermero_death",
@@ -5357,7 +5373,8 @@
     "furniture"
    ],
    "max_len": 1.6,
-   "note": "Un paso y un pie arrastrado sobre linóleo."
+   "note": "Un paso y un pie arrastrado sobre linóleo.",
+   "pick": 221650
   },
   {
    "name": "combat_transition",
@@ -5388,7 +5405,8 @@
     "glitch-music"
    ],
    "max_len": 1.0,
-   "note": "Cinta VHS que salta: chirrido de cabezal y ráfaga de estática."
+   "note": "Cinta VHS que salta: chirrido de cabezal y ráfaga de estática.",
+   "pick": 264935
   },
   {
    "name": "music_combat_drone",
@@ -5639,7 +5657,8 @@
     "glitch-music"
    ],
    "max_len": 0.08,
-   "note": "Tic seco de papel o clip metálico, sin cola."
+   "note": "Tic seco de papel o clip metálico, sin cola.",
+   "pick": 533582
   },
   {
    "name": "ui_battle_confirm",
@@ -5670,7 +5689,8 @@
     "glitch-music"
    ],
    "max_len": 0.2,
-   "note": "Clac de grapadora o interruptor de baquelita."
+   "note": "Clac de grapadora o interruptor de baquelita.",
+   "pick": 523087
   },
   {
    "name": "ui_battle_back",
@@ -5701,7 +5721,8 @@
     "glitch-music"
    ],
    "max_len": 0.3,
-   "note": "Hoja de papel que se retira deprisa."
+   "note": "Hoja de papel que se retira deprisa.",
+   "pick": 468134
   },
   {
    "name": "ui_battle_denied",
@@ -5764,7 +5785,8 @@
     "glitch-music"
    ],
    "max_len": 0.35,
-   "note": "Sello de caucho sobre papel en mesa de madera, golpe seco y grave."
+   "note": "Sello de caucho sobre papel en mesa de madera, golpe seco y grave.",
+   "pick": 470710
   },
   {
    "name": "ui_paper_slide",
@@ -5795,7 +5817,8 @@
     "glitch-music"
    ],
    "max_len": 0.4,
-   "note": "Cartulina que se desliza sobre un escritorio."
+   "note": "Cartulina que se desliza sobre un escritorio.",
+   "pick": 444431
   },
   {
    "name": "ui_folder",
@@ -5826,7 +5849,8 @@
     "glitch-music"
    ],
    "max_len": 0.6,
-   "note": "Carpeta de cartón que se abre o se cierra con roce de hojas."
+   "note": "Carpeta de cartón que se abre o se cierra con roce de hojas.",
+   "pick": 397548
   },
   {
    "name": "ui_aim_part",
@@ -5858,7 +5882,8 @@
     "glitch-music"
    ],
    "max_len": 0.06,
-   "note": "Clic muy suave de lápiz o bolígrafo."
+   "note": "Clic muy suave de lápiz o bolígrafo.",
+   "pick": 476840
   },
   {
    "name": "ui_typewriter",
@@ -5890,7 +5915,8 @@
     "glitch-music"
    ],
    "max_len": 0.1,
-   "note": "Una tecla de máquina de escribir mecánica, sin campana."
+   "note": "Una tecla de máquina de escribir mecánica, sin campana.",
+   "pick": 160678
   },
   {
    "name": "inv_category",
@@ -5924,7 +5950,8 @@
     "glitch-music"
    ],
    "max_len": 0.18,
-   "note": "Al cambiar de categoría en el inventario: clic seco de pestaña de archivador, sin pitido."
+   "note": "Al cambiar de categoría en el inventario: clic seco de pestaña de archivador, sin pitido.",
+   "pick": 530960
   },
   {
    "name": "tape_rewind",

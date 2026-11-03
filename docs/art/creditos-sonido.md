@@ -10,12 +10,15 @@ en los créditos del juego.
 | `amb_building_hum` | [Defensible Twister](https://freesound.org/people/Brazilio123/sounds/661435/) | Brazilio123 | CC0 1.0 |
 | `amb_chain_rattle` | [0005_Crystal Lamp with Swing Front.wav](https://freesound.org/people/Andreas.Mustola/sounds/84526/) | Andreas.Mustola | CC0 1.0 |
 | `amb_clock_tick` | [Wall Clock Ticking.wav](https://freesound.org/people/straget/sounds/405423/) | straget | CC BY 4.0 |
+| `amb_concrete_groan` | [WOODFric_Wood Creak 01_KVV AUDIO_FREE](https://freesound.org/people/KVV_Audio/sounds/796507/) | KVV_Audio | CC BY 4.0 |
 | `amb_creak_building` | [Quiet Creak](https://freesound.org/people/LoafDV/sounds/238288/) | LoafDV | CC0 1.0 |
 | `amb_creak_metal` | [Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Hollow_Impact_Stress.wav](https://freesound.org/people/dilsun/sounds/508272/) | dilsun | CC0 1.0 |
 | `amb_creak_wood` | [Wood Creak Single V2](https://freesound.org/people/Rudmer_Rotteveel/sounds/502504/) | Rudmer_Rotteveel | CC0 1.0 |
 | `amb_debris_fall` | [WoodSmashAndFall_04.wav](https://freesound.org/people/zimbot/sounds/89391/) | zimbot | CC BY 4.0 |
+| `amb_door_far` | [door close distant 1.wav](https://freesound.org/people/IanStarGem/sounds/478076/) | IanStarGem | CC0 1.0 |
 | `amb_door_swing_far` | [DoorOpening.flac](https://freesound.org/people/alessnox/sounds/432562/) | alessnox | CC0 1.0 |
 | `amb_drip_loop` | [Water, Dripping, Medium, A.wav](https://freesound.org/people/InspectorJ/sounds/271335/) | InspectorJ | CC BY 4.0 |
+| `amb_drip_metal` | [Metal water bottle SFX - dark droplet](https://freesound.org/people/giddster/sounds/514404/) | giddster | CC BY 4.0 |
 | `amb_drip_puddle_loop` | [Water - Shallow, splash](https://freesound.org/people/Vrymaa/sounds/770033/) | Vrymaa | CC0 1.0 |
 | `amb_duct_pop` | [Staple press into paper](https://freesound.org/people/redpanda69/sounds/686186/) | redpanda69 | CC0 1.0 |
 | `amb_electric_buzz` | [50Hz  electrical mains hum](https://freesound.org/people/chungus43A/sounds/733736/) | chungus43A | CC0 1.0 |
@@ -32,19 +35,27 @@ en los créditos del juego.
 | `amb_paper_draft` | [Papers Flapping; Intense.wav](https://freesound.org/people/RossBell/sounds/389440/) | RossBell | CC0 1.0 |
 | `amb_pigeon_flutter` | [pigeons_fly away_ wing flaps_CsG](https://freesound.org/people/csaszi/sounds/528250/) | csaszi | CC0 1.0 |
 | `amb_pipe_knock` | [Metal Radiator Tapped.aif](https://freesound.org/people/RutgerMuller/sounds/104370/) | RutgerMuller | CC0 1.0 |
+| `amb_pipe_tick` | [button_master 065.aif](https://freesound.org/people/gherat/sounds/139651/) | gherat | CC0 1.0 |
 | `amb_pipes_loop` | [gurgle_water_in_pipe.flac](https://freesound.org/people/Zabuhailo/sounds/194454/) | Zabuhailo | CC BY 4.0 |
 | `amb_pump_loop` | [Pump_engine.wav](https://freesound.org/people/ivolipa/sounds/342414/) | ivolipa | CC0 1.0 |
+| `amb_rats_wall` | [Rats Gnawing, Scratching, Squeaking and Scuttling](https://freesound.org/people/iainmccurdy/sounds/640245/) | iainmccurdy | CC BY 4.0 |
 | `amb_relay_click` | [A relay switch being activated.](https://freesound.org/people/bassmosphere/sounds/384698/) | bassmosphere | CC0 1.0 |
 | `amb_settle_crack` | [Smashing a Wooden Container](https://freesound.org/people/Kreastricon62/sounds/241601/) | Kreastricon62 | CC0 1.0 |
+| `amb_settle_thump` | [Wall Bump 1.wav](https://freesound.org/people/Osiruswaltz/sounds/457741/) | Osiruswaltz | CC0 1.0 |
 | `amb_spark_crackle` | [Electric Sparks](https://freesound.org/people/mikiko850/sounds/849772/) | mikiko850 | CC BY 4.0 |
+| `amb_steps_distant` | [footsteps down long Victorian hospital corridor](https://freesound.org/people/odilonmarcenaro/sounds/274984/) | odilonmarcenaro | CC BY 4.0 |
 | `amb_tone_archive` | [room tone medium quiet library carpeted empty with heavy building ambience +distant sounds.flac](https://freesound.org/people/kyles/sounds/635727/) | kyles | CC0 1.0 |
 | `amb_tone_basement` | [basement room-tone 1635 220811_0491](https://freesound.org/people/klankbeeld/sounds/683491/) | klankbeeld | CC BY 4.0 |
 | `amb_tone_corridor` | [Fluorescent lamps in hospital 01.wav](https://freesound.org/people/Daphne_in_Wonderland/sounds/383486/) | Daphne_in_Wonderland | CC0 1.0 |
+| `amb_tone_hall` | [room-tone empty church in village Bokhoven 357 PM 241220_0967](https://freesound.org/people/klankbeeld/sounds/788451/) | klankbeeld | CC BY 4.0 |
+| `amb_tone_morgue` | [WIND_Winter.Midnight.Residential Area.Wind In The Trees.Cracking.Distant Gusts.Dist Noise 1_EM](https://freesound.org/people/newlocknew/sounds/786004/) | newlocknew | CC BY 4.0 |
 | `amb_tone_or` | [room_before_paradise.mp3](https://freesound.org/people/cormi/sounds/85086/) | cormi | CC0 1.0 |
 | `amb_tone_stairwell` | [Siren ( Concrete Stairwell Direct ).wav](https://freesound.org/people/JohnLaVine333/sounds/405590/) | JohnLaVine333 | CC0 1.0 |
 | `amb_tone_tiled` | [Bathroom ambience, toilet leak, bug flies around.wav](https://freesound.org/people/Daphne_in_Wonderland/sounds/382901/) | Daphne_in_Wonderland | CC0 1.0 |
 | `amb_tone_ward` | [R4_00523_FR_Modern_apartment_atmosphere_with_wall_clock.wav](https://freesound.org/people/kevp888/sounds/701976/) | kevp888 | CC BY 4.0 |
+| `amb_trolley_far` | [Squeaky Wheels.wav](https://freesound.org/people/Shamewap/sounds/389687/) | Shamewap | CC0 1.0 |
 | `amb_vent_loop` | [Air vent (looped)](https://freesound.org/people/lfyaudio/sounds/848969/) | lfyaudio | CC0 1.0 |
+| `amb_vent_rattle` | [Metal Ripple - Gearlike](https://freesound.org/people/exuberate/sounds/581257/) | exuberate | CC0 1.0 |
 | `amb_water_pipes` | [water going through pipping.wav](https://freesound.org/people/bushi3593/sounds/219372/) | bushi3593 | CC0 1.0 |
 | `amb_wind_building` | [Sheep recorded from the inside of a house](https://freesound.org/people/felix.blume/sounds/386451/) | felix.blume | CC0 1.0 |
 | `amb_wind_gust` | [Wind_Whistling_Dorm_Window.aif](https://freesound.org/people/SunnySideSound/sounds/67707/) | SunnySideSound | CC BY 4.0 |
@@ -64,9 +75,12 @@ en los créditos del juego.
 | `combat_amputation` | [rip_tear FLESH!!!!.wav](https://freesound.org/people/aust_paul/sounds/30928/) | aust_paul | CC0 1.0 |
 | `combat_bone_break` | [Necksnap_build.wav](https://freesound.org/people/danielrutterfilms/sounds/134025/) | danielrutterfilms | CC0 1.0 |
 | `combat_pipe_bone` | [ice_cracking_01.flac](https://freesound.org/people/wwstudioswastaken/sounds/624163/) | wwstudioswastaken | CC0 1.0 |
+| `combat_pipe_flesh` | [3 Bat hits](https://freesound.org/people/Slave2theLight/sounds/157020/) | Slave2theLight | CC BY 4.0 |
+| `combat_saw` | [Saw Cutting](https://freesound.org/people/BrainClaim/sounds/267636/) | BrainClaim | CC0 1.0 |
 | `combat_scalpel_slash` | [slashkut.wav](https://freesound.org/people/Abyssmal/sounds/35213/) | Abyssmal | CC0 1.0 |
 | `combat_swing_miss` | [Swinging staff whoosh (low) 03.wav](https://freesound.org/people/Nightflame/sounds/422495/) | Nightflame | CC0 1.0 |
 | `combat_syringe` | [silco_shimmer_syringe_attatchment_from_stapler_01062025](https://freesound.org/people/Artninja/sounds/784311/) | Artninja | CC BY 4.0 |
+| `combat_transition` | [VHS Glitch](https://freesound.org/people/Sassaby/sounds/264935/) | Sassaby | CC0 1.0 |
 | `craft_cloth` | [cloth-foley-3](https://freesound.org/people/Pepossum/sounds/798839/) | Pepossum | CC BY 4.0 |
 | `craft_combine` | [Kitchen_Foley_07](https://freesound.org/people/SignatureSoundsOrg/sounds/868825/) | SignatureSoundsOrg | CC0 1.0 |
 | `craft_generic` | [slide_small_3.wav](https://freesound.org/people/blaukreuz/sounds/459647/) | blaukreuz | CC0 1.0 |
@@ -76,7 +90,11 @@ en los créditos del juego.
 | `drawer_close` | [Closing the metal drawer 006](https://freesound.org/people/AudioPapkin/sounds/816652/) | AudioPapkin | CC0 1.0 |
 | `drawer_open` | [Desk-Drawer-Metal-Open-01.wav](https://freesound.org/people/DWOBoyle/sounds/151575/) | DWOBoyle | CC BY 4.0 |
 | `drip` | [Water_drop_5.wav](https://freesound.org/people/deleted_user_2104797/sounds/166321/) | deleted_user_2104797 | CC0 1.0 |
+| `enfermero_breath` | [BORIERO_Nolwen_2020_2021_Monster breathing.wav](https://freesound.org/people/iut_Paris8/sounds/567723/) | iut_Paris8 | CC0 1.0 |
 | `enfermero_death` | [BODY FALL - V HVY - DIRT](https://freesound.org/people/leonelmail/sounds/504626/) | leonelmail | CC0 1.0 |
+| `enfermero_drag_steps` | [Footstep Drag Indoors .wav](https://freesound.org/people/abbahoot/sounds/221650/) | abbahoot | CC0 1.0 |
+| `enfermero_growl` | [Zombie Growling](https://freesound.org/people/gneube/sounds/315847/) | gneube | CC BY 4.0 |
+| `enfermero_scream` | [Zombie Demon Scream](https://freesound.org/people/Wakerone/sounds/435651/) | Wakerone | CC0 1.0 |
 | `entity_breath` | [Wheezing](https://freesound.org/people/calmingcrunch/sounds/514794/) | calmingcrunch | CC0 1.0 |
 | `entity_dissolve` | [Static Voice](https://freesound.org/people/colorsCrimsonTears/sounds/585798/) | colorsCrimsonTears | CC0 1.0 |
 | `entity_whisper` | [whispers.wav](https://freesound.org/people/SophieMezaM/sounds/446083/) | SophieMezaM | CC BY 3.0 |
@@ -93,6 +111,7 @@ en los créditos del juego.
 | `inv_battery_place` | [Manipuler piles.wav](https://freesound.org/people/FrancoisTJP/sounds/627837/) | FrancoisTJP | CC0 1.0 |
 | `inv_battery_rotate` | [Manipuler piles.wav](https://freesound.org/people/FrancoisTJP/sounds/627837/) | FrancoisTJP | CC0 1.0 |
 | `inv_battery_unequip` | [Manipuler piles.wav](https://freesound.org/people/FrancoisTJP/sounds/627837/) | FrancoisTJP | CC0 1.0 |
+| `inv_category` | [Printer paper tray](https://freesound.org/people/chemicalcrux/sounds/530960/) | chemicalcrux | CC BY 4.0 |
 | `inv_ceramic_drop` | [mug_wood1.wav](https://freesound.org/people/robbeman/sounds/495645/) | robbeman | CC0 1.0 |
 | `inv_ceramic_equip` | [Plate place](https://freesound.org/people/Ixwolf/sounds/830458/) | Ixwolf | CC0 1.0 |
 | `inv_ceramic_pick` | [Pickup and put down Mug on a dish](https://freesound.org/people/toklant/sounds/478580/) | toklant | CC0 1.0 |
@@ -214,8 +233,16 @@ en los créditos del juego.
 | `title_ambience` | [room-tone empty church in village Bokhoven 357 PM 241220_0967](https://freesound.org/people/klankbeeld/sounds/788451/) | klankbeeld | CC BY 4.0 |
 | `title_tube_flicker` | [fluorescent light flickering 1.wav](https://freesound.org/people/TemperMode/sounds/484157/) | TemperMode | CC0 1.0 |
 | `ui_accept` | [vcr_click.wav](https://freesound.org/people/airblock/sounds/407720/) | airblock | CC0 1.0 |
+| `ui_aim_part` | [Paper Scrawling](https://freesound.org/people/jackyyang09/sounds/476840/) | jackyyang09 | CC0 1.0 |
 | `ui_back` | [soft sound plastic button click.mp3](https://freesound.org/people/orginaljun/sounds/150382/) | orginaljun | CC BY 4.0 |
+| `ui_battle_back` | [Remove sheet.wav](https://freesound.org/people/Aquafeniz/sounds/468134/) | Aquafeniz | CC0 1.0 |
+| `ui_battle_confirm` | [Gun Hammer Click](https://freesound.org/people/magnuswaker/sounds/523087/) | magnuswaker | CC0 1.0 |
+| `ui_battle_move` | [paper towel pull.wav](https://freesound.org/people/Saltbearer/sounds/533582/) | Saltbearer | CC0 1.0 |
+| `ui_folder` | [Page Turn 01](https://freesound.org/people/LilMati/sounds/397548/) | LilMati | CC0 1.0 |
 | `ui_move` | [MECHClik_Plastic Button on off remote_SonicAgency.wav](https://freesound.org/people/afectos.de.sonido/sounds/615059/) | afectos.de.sonido | CC0 1.0 |
+| `ui_paper_slide` | [Sliding Envelope.wav](https://freesound.org/people/MTJohnson/sounds/444431/) | MTJohnson | CC0 1.0 |
+| `ui_stamp` | [traditional stamp.wav](https://freesound.org/people/I.fekry/sounds/470710/) | I.fekry | CC0 1.0 |
+| `ui_typewriter` | [typewriter.wav](https://freesound.org/people/BMacZero/sounds/160678/) | BMacZero | CC0 1.0 |
 | `unlock` | [Door - Metal Grate, Lock/Unlock](https://freesound.org/people/colinpoh/sounds/146348/) | colinpoh | CC0 1.0 |
 | `use_bandage_apply` | [Wrapping cloth](https://freesound.org/people/ChuckleNutsDev/sounds/718668/) | ChuckleNutsDev | CC0 1.0 |
 | `use_battery_insert` | [Changing TV remote](https://freesound.org/people/MattyCauldron/sounds/765865/) | MattyCauldron | CC0 1.0 |
