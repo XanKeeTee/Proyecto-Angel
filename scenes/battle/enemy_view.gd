@@ -16,6 +16,10 @@ const PLACEHOLDER_ANIMS: Dictionary[StringName, float] = {
 	&"idle": 2.6, &"windup": 0.45, &"attack": 0.32, &"hit": 0.3, &"stagger": 0.6, &"death": 1.1,
 }
 const BROKEN_TINT: Color = Color(0.78, 0.58, 0.56)
+## Lo que no está en foco al apuntar.
+const FOCUS_DIM: Color = Color(0.3, 0.29, 0.33)
+const FOCUS_COLOR: Color = Color(0.95, 0.3, 0.2)
+const OUTLINE_SHADER: Shader = preload("res://scenes/battle/part_outline.gdshader")
 ## Colores del marcador provisional.
 const C_UNIFORM: Color = Color("aca694")
 const C_UNIFORM_SHADE: Color = Color("6f6a5e")
@@ -37,6 +41,12 @@ const C_OUTLINE: Color = Color("0d0c10")
 var draw_scale: float = 1.0
 ## Parte que se está apuntando (resalta el marcador provisional; en combate hay retícula aparte).
 var highlight_part: StringName = &""
+## Parte en foco al apuntar: el resto del cuerpo se oscurece y esta se recorta con un contorno que
+## late por encima de todo (aunque esté detrás de otra capa). &"" = sin foco.
+var focus_part: StringName = &"":
+	set(value):
+		focus_part = value
+		_apply_focus()
 
 var _sprites: EnemySpriteDef
 var _layers: Dictionary[StringName, Sprite2D] = {}
@@ -51,6 +61,9 @@ var _fps: float = 8.0
 var _dead: bool = false
 var _time: float = 0.0
 var _flash_tween: Tween
+var _focus_overlay: Sprite2D
+var _focus_material: ShaderMaterial
+var _images: Dictionary[StringName, Image] = {}
 
 
 ## Prepara la vista para un enemigo. Busca sus hojas (horneadas o, en desarrollo, en el JSON).
@@ -101,6 +114,30 @@ func sync_parts(combatant: Combatant) -> void:
 	for id: StringName in combatant.part_order:
 		if part_state(id) != combatant.parts[id].state:
 			set_part_state(id, combatant.parts[id].state)
+
+
+## Parte del cuerpo bajo un punto local (pies = 0,0): mira los píxeles de cada capa de delante
+## atrás; si no da con ninguna, la parte cuya ancla esté más cerca (a menos de `radius`). `allowed`
+## limita las partes elegibles (vacío = todas).
+func part_at(point: Vector2, allowed: Array[StringName] = [], radius: float = 34.0) -> StringName:
+	if _sprites != null:
+		var keys: Array[StringName] = []
+		keys.assign(_layers.keys())
+		keys.reverse()
+		for key: StringName in keys:
+			var part: StringName = _part_of_layer(key)
+			if part == &"" or (not allowed.is_empty() and not allowed.has(part)) or not _layers[key].visible:
+				continue
+			if _layer_hit(key, point):
+				return part
+	var best: StringName = &""
+	var best_d: float = radius
+	for id: StringName in (allowed if not allowed.is_empty() else CombatTypes.HUMANOID_PARTS):
+		var d: float = anchor(id).distance_to(point)
+		if d < best_d:
+			best_d = d
+			best = id
+	return best
 
 
 ## Centro de una parte, en coordenadas locales del nodo (pies = 0,0), ya escalado.
@@ -172,6 +209,8 @@ func flash(color: Color = Color(2.4, 2.2, 2.0), seconds: float = 0.18) -> void:
 func _process(delta: float) -> void:
 	_time += delta
 	_anim_time += delta
+	if _focus_material != null and _focus_overlay.visible:
+		_focus_material.set_shader_parameter(&"line_color", Color(FOCUS_COLOR, 0.7 + 0.3 * sin(_time * 7.0)))
 	if _anim_time >= _anim_length:
 		if _anim_loop:
 			_anim_time = fmod(_anim_time, _anim_length)
@@ -227,6 +266,77 @@ func _build_layers() -> void:
 func _apply_frame(index: int) -> void:
 	for sprite: Sprite2D in _layers.values():
 		sprite.frame = clampi(index, 0, sprite.hframes * sprite.vframes - 1)
+	if _focus_overlay != null and _focus_overlay.visible:
+		_focus_overlay.frame = clampi(index, 0, _focus_overlay.hframes * _focus_overlay.vframes - 1)
+
+
+## Parte que dibuja una capa (&"" para la sombra y los muñones).
+func _part_of_layer(key: StringName) -> StringName:
+	for part: StringName in EnemySpriteDef.PART_LAYERS:
+		if EnemySpriteDef.PART_LAYERS[part] == key:
+			return part
+	return &""
+
+
+func _layer_hit(key: StringName, point: Vector2) -> bool:
+	var sprite: Sprite2D = _layers[key]
+	var img: Image = _layer_image(key)
+	if img == null:
+		return false
+	var local: Vector2 = point / draw_scale + Vector2(_sprites.origin)
+	if local.x < 0 or local.y < 0 or local.x >= _sprites.frame.x or local.y >= _sprites.frame.y:
+		return false
+	var cell: Vector2i = Vector2i(sprite.frame % sprite.hframes, floori(float(sprite.frame) / sprite.hframes))
+	var pixel: Vector2i = cell * _sprites.frame + Vector2i(local)
+	if pixel.x >= img.get_width() or pixel.y >= img.get_height():
+		return false
+	return img.get_pixelv(pixel).a > 0.4
+
+
+func _layer_image(key: StringName) -> Image:
+	if _images.has(key):
+		return _images[key]
+	var tex: Texture2D = _sprites.layers.get(key)
+	var img: Image = tex.get_image() if tex != null else null
+	if img != null and img.is_compressed():
+		img.decompress()
+	_images[key] = img
+	return img
+
+
+## Oscurece todo menos la parte en foco y le pone el contorno por encima.
+func _apply_focus() -> void:
+	queue_redraw()
+	if _sprites == null:
+		return
+	var layer: StringName = EnemySpriteDef.PART_LAYERS.get(focus_part, focus_part)
+	for key: StringName in _layers:
+		var dim: bool = focus_part != &"" and key != layer and key != &"shadow"
+		_layers[key].modulate = FOCUS_DIM if dim else Color.WHITE
+	if focus_part == &"" or not _layers.has(layer):
+		if _focus_overlay != null:
+			_focus_overlay.visible = false
+		return
+	if _focus_overlay == null:
+		_focus_material = ShaderMaterial.new()
+		_focus_material.shader = OUTLINE_SHADER
+		_focus_material.set_shader_parameter(&"fill", 0.16)
+		_focus_overlay = Sprite2D.new()
+		_focus_overlay.name = "FocusOutline"
+		_focus_overlay.material = _focus_material
+		_focus_overlay.centered = false
+		_focus_overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		add_child(_focus_overlay)
+	var source: Sprite2D = _layers[layer]
+	var canvas: CanvasTexture = source.texture as CanvasTexture
+	_focus_overlay.texture = canvas.diffuse_texture if canvas != null else source.texture
+	_focus_overlay.hframes = source.hframes
+	_focus_overlay.vframes = source.vframes
+	_focus_overlay.offset = source.offset
+	_focus_overlay.scale = source.scale
+	_focus_overlay.frame = source.frame
+	_focus_overlay.visible = source.visible
+	move_child(_focus_overlay, get_child_count() - 1)
 
 
 # --- marcador provisional -----------------------------------------------------------------------
@@ -304,6 +414,8 @@ func _part_color(part_id: StringName, base: Color) -> Color:
 		color = base.lerp(C_STAIN, 0.18)
 	if highlight_part == part_id:
 		color = color.lightened(0.18)
+	if focus_part != &"" and focus_part != part_id:
+		color = color * FOCUS_DIM
 	return color
 
 

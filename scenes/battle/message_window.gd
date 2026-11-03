@@ -1,13 +1,14 @@
 class_name MessageWindow
 extends Control
-## Ventana de mensajes de arriba, a todo lo ancho, como en un RPG clásico: enseña 1-2 líneas cada
-## vez; cada mensaje se queda un rato y pasa solo al siguiente (o antes, con Intro o un clic).
+## Ventana de mensajes de arriba, en una placa de chapa oxidada: enseña 1-2 líneas cada vez de lo
+## que pasa al resolver; cada mensaje se queda un rato y pasa solo al siguiente (o antes, con Intro
+## o un clic). Lo dicho no se pierde: también va al registro (`BattleLog`).
 ## Cuando no queda nada por contar enseña el mensaje fijo (`set_sticky`): lo que prepara el enemigo
 ## o los datos de la parte apuntada. Todo lo dicho queda en `history`.
 
 const MAX_LINES: int = 2
 const LINE_HEIGHT: float = 16.0
-const PAD: Vector2 = Vector2(10, 5)
+const PAD: Vector2 = Vector2(13, 8)
 const FONT_SIZE: int = UiStyle.SIZE_TEXT
 
 ## Segundos que se queda cada mensaje, más un poco por letra.
@@ -158,4 +159,4 @@ func _escape(text: String) -> String:
 
 
 func _draw() -> void:
-	BattleFrame.draw_box(self, Rect2(Vector2.ZERO, size))
+	BattleSkin.draw_metal(self, Rect2(Vector2.ZERO, size))

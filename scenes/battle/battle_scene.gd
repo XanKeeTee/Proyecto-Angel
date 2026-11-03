@@ -1,29 +1,50 @@
 class_name BattleScene
 extends Control
-## Combate por rondas con mutilaciones, a la manera de *Fear & Hunger*: fondo negro con un foco de
-## luz cenital sobre el suelo; el enemigo, grande, de pie en la luz; el grupo **de espaldas** en
-## primer plano; abajo, dos cajas (órdenes a la izquierda y una fila por miembro con Cuerpo y Mente
-## a la derecha) y arriba una ventana de mensajes de 1-2 líneas. Solo presentación: las reglas
-## están en `Battle`.
+## Pantalla de combate. De *Fear & Hunger* se conserva solo la disposición: fondo negro con un foco
+## cenital, el enemigo grande en el centro sobre la luz y el grupo **de espaldas** en primer plano.
+## Todo lo demás es del hospital de 1987: cajas de chapa oxidada con remaches, fichas de papel
+## clínico a máquina, cinta adhesiva, sellos de caucho y una lámina anatómica para apuntar.
+##
+## - Abajo a la izquierda, el **menú de órdenes** (`BattleOption` en un `BattleFrame`): categorías con
+##   icono; al pasar por una, la **ficha de detalle** (`PaperCard`) cuenta qué hace, su coste, por
+##   qué no se puede y la vista previa.
+## - **Apuntar** es el acto central: el enemigo se oscurece salvo la parte señalada (contorno que
+##   late), la **lámina** (`BodyDiagram`) a la izquierda y la **ficha de la parte** a la derecha
+##   (estado, acierto, daño, qué se consigue y los riesgos). Se elige con flechas, con el ratón sobre
+##   el enemigo o sobre la lámina; al confirmar cae el sello «AUTORIZADO».
+## - Abajo a la derecha, una **ficha de paciente** (`PatientCard`) por miembro (hasta 4).
+## - Arriba: la **nota de observación** (`IntentNote`) con lo que prepara el enemigo, la tira de
+##   **turno** (`TurnStrip`) y la carpeta del **registro** (`BattleLog`). Al resolver, la placa de
+##   mensajes (`MessageWindow`), números flotantes, sangre, iconos de estado y sellos de impacto.
+##
+## Solo presentación: las reglas están en `Battle`; las opciones llegan por `ActionMenuModel`
+## (contrato de la API de opciones, docs/tech/interfaz-combate.md).
 ##
 ## Se puede abrir sola (prototipo: paciente 09 con el tubo contra el enfermero) o desde el mapa con
 ## `setup()` (lo hace EncounterDirector). Al terminar emite `battle_closed`.
 ##
-## Controles: ratón o teclado (flechas + Intro; Esc vuelve atrás; Intro pasa los mensajes).
+## Controles: ratón, teclado o mando. Flechas + Intro; Esc (o clic derecho) vuelve atrás; Tab o
+## Select abre el registro; Intro pasa los mensajes.
 ## Argumentos de depuración (después de "--"):
 ##   --autoplay=N          juega N rondas solo, atacando partes al azar
 ##   --screenshot=RUTA     guarda una captura (al terminar el autoplay, o al elegir órdenes) y cierra
-##   --battle-pick=PARTE   abre la selección de parte apuntando a PARTE (para capturas)
-##   --battle-maim=P,P     empieza con esas partes del enemigo amputadas (para capturas)
+##   --battle-menu=CAT     abre esa categoría (attack, skill, guard, item, other) para la captura
+##   --battle-focus=N      señala la opción N del menú (enseña su ficha de detalle)
+##   --battle-pick=PARTE   apunta a PARTE (lámina y ficha de la parte)
+##   --battle-maim=P,P     empieza con esas partes del enemigo amputadas
 ##   --battle-hurt=P:E     empieza con una parte del enemigo en un estado (1 Herida, 2 Rota)
 ##   --battle-wound=P:E    empieza con una parte propia en un estado (1 Herida, 2 Rota, 3 Amputada)
-##   --battle-wounds       abre la ventanita de heridas del protagonista (para capturas)
+##   --battle-wounds       abre la hoja de lesiones del protagonista
+##   --battle-items        (sola) lleva vendas, analgésicos y sedante en la custodia
+##   --battle-log          abre el registro para la captura
 ##   --battle-seed=N       semilla fija
 ##   --battle-strike=PARTE para la captura: el protagonista arranca esa parte al enemigo
 ##   --battle-say=TEXTO    para la captura: enseña ese mensaje arriba («_» = espacio)
 ##   --battle-shot-delay=S segundos hasta la captura (0,6 por defecto)
 
 signal battle_closed(outcome: Battle.Outcome)
+
+enum Phase { MAIN, SUBMENU, AIM, RESOLVE, END }
 
 const VIEW_SIZE: Vector2 = Vector2(640, 360)
 ## Pies del enemigo: en el centro del foco.
@@ -32,39 +53,56 @@ const ENEMY_FEET: Vector2 = Vector2(320, 250)
 const LIGHT_CENTER: Vector2 = Vector2(320, 255)
 const LIGHT_RADII: Vector2 = Vector2(200, 40)
 ## Pies del grupo, en primer plano y al borde de la luz.
-const PARTY_FEET_Y: float = 306.0
-const PARTY_SOLO_X: float = 226.0
+const PARTY_FEET_Y: float = 310.0
+const PARTY_SOLO_X: float = 238.0
 const PARTY_SPACING: float = 128.0
 ## Cajas de abajo.
-const BOX_Y: float = 255.0
-const BOX_H: float = 100.0
+const BOX_Y: float = 254.0
+const BOX_H: float = 102.0
 const BOX_MARGIN: float = 6.0
-const BOX_GAP: float = 4.0
-const BOX_PAD: float = 5.0
-const MENU_W: float = 118.0
+const BOX_GAP: float = 8.0
+const MENU_W: float = 168.0
 const MENU_W_MAX: float = 212.0
-const OPTION_H: float = 15.0
-## Ventana de mensajes de arriba.
-const MESSAGE_RECT: Rect2 = Rect2(6, 5, 628, 42)
+const OPTION_H: float = 13.0
+## Placa de mensajes de arriba (al resolver).
+const MESSAGE_RECT: Rect2 = Rect2(6, 4, 552, 46)
+## Nota de observación (arriba a la izquierda).
+const INTENT_AT: Vector2 = Vector2(8, 8)
+## Ficha de detalle: ancho y esquina inferior izquierda (sale de detrás del menú).
+const DETAIL_W: float = 186.0
+const DETAIL_AT: Vector2 = Vector2(8, BOX_Y - 14)
+## Ficha de la parte (a la derecha del enemigo) y lámina (a la izquierda).
+const PART_CARD_AT: Vector2 = Vector2(444, 34)
+const PART_CARD_W: float = 188.0
+const DIAGRAM_AT: Vector2 = Vector2(10, 88)
+## Tira de turno (encima de las fichas, a la derecha) y registro (arriba a la derecha).
+const TURN_RECT: Rect2 = Rect2(250, 234, 384, 16)
+const LOG_AT: Vector2 = Vector2(384, 2)
 const STEP_DELAY: float = 0.25
 const AUTOPLAY_DELAY: float = 0.02
+const CONFIRM_DELAY: float = 0.38
 const IMPACT_ABERRATION: float = 2.6
-## Viñeta del filtro mientras dura el combate: más suave, para que las cajas de abajo se lean.
+const IMPACT_AT: Vector2 = Vector2(320, 132)
+## Viñeta del filtro mientras dura el combate: más suave, para que se lea la interfaz.
 const BATTLE_VIGNETTE: float = 0.3
 const IDLE_SOUND_EVERY: Vector2 = Vector2(4.5, 8.0)
 const DEFAULT_PARTY: CombatantDef = preload("res://data/party/paciente_09.tres")
 const DEFAULT_ENEMY: CombatantDef = preload("res://data/enemies/enfermero.tres")
 const DEFAULT_WEAPON: WeaponDef = preload("res://data/weapons/pipe.tres")
 const NOISE_SHADER: Shader = preload("res://shaders/tape_noise.gdshader")
-## Sonidos del combate (nombres de Sfx). Si falta el definitivo, se usa el provisional de la derecha.
+## Objetos de la custodia con `--battle-items` (prototipo).
+const DEBUG_ITEMS: Array[StringName] = [&"venda", &"venda_improvisada", &"analgesicos", &"sedante"]
+## Sonidos (nombres de Sfx). Si falta el definitivo, se usa el provisional de la derecha ("" = nada).
 const SOUND_FALLBACK: Dictionary[String, String] = {
 	"combat_pipe_flesh": "metal_bang", "combat_pipe_bone": "metal_bang", "combat_bone_break": "metal_bang",
 	"combat_amputation": "cloth_tear", "combat_scalpel_slash": "cloth_tear", "combat_saw": "cloth_tear",
 	"combat_syringe": "glass", "combat_swing_miss": "cloth_rustle", "enfermero_breath": "entity_breath",
 	"enfermero_growl": "entity_breath", "enfermero_scream": "entity_whisper", "enfermero_death": "heavy_drag",
 	"enfermero_drag_steps": "heavy_drag", "combat_transition": "pa_static",
+	"ui_battle_move": "ui_move", "ui_battle_confirm": "ui_accept", "ui_battle_back": "ui_back",
+	"ui_battle_denied": "ui_back", "ui_stamp": "ui_accept", "ui_paper_slide": "paper", "ui_folder": "paper",
+	"ui_aim_part": "ui_move", "ui_typewriter": "",
 }
-## Colores de la ventana de mensajes.
 const COLOR_ENEMY_LINE: Color = Color("d9c9b4")
 const COLOR_SUMMARY: Color = Color("e8e1d3")
 
@@ -77,8 +115,7 @@ const COLOR_SUMMARY: Color = Color("e8e1d3")
 var battle: Battle
 ## Personaje del mapa (objetos de la custodia, arma y ropa). Opcional.
 var character: CharacterState
-## Imagen del lugar donde ocurre. Ya no se dibuja (el fondo es negro, como en la referencia); se
-## conserva para no romper `setup()`.
+## Imagen del lugar donde ocurre. No se dibuja (el fondo es negro); se conserva para `setup()`.
 var background_texture: Texture2D
 ## Música del combate (nombre de pista). Opcional.
 var music_name: String = ""
@@ -87,25 +124,36 @@ var vhs: VhsOverlay
 var debug: Dictionary[String, String] = {}
 
 var _embedded: bool = false
+var _phase: Phase = Phase.MAIN
+var _model: ActionMenuModel
 var _orders: Array[CombatAction] = []
 var _member_index: int = -1
 var _events: Array[Dictionary] = []
+## Lo que se está eligiendo: la opción, el objetivo y la parte.
+var _aim_option: ActionOption
+var _aim_target: TargetOption
+var _aim_part: StringName = &""
+var _busy: bool = false
 var _content: Control
 var _stage: Node2D
 var _enemy_views: Array[EnemyView] = []
 var _enemy_marks: Array[EnemyMarks] = []
 var _battlers: Array[PartyBattler] = []
 var _blood: BloodFx
-var _reticle: PartReticle
 var _messages: MessageWindow
 var _command_box: BattleFrame
-var _party_box: BattleFrame
-var _rows: Array[PartyRow] = []
-var _wounds: WoundsPanel
 var _menu_scroll: ScrollContainer
 var _menu: VBoxContainer
-var _impact: Label
-var _impact_tween: Tween
+## Al resolver, la caja de órdenes imprime las últimas líneas del registro (teletipo).
+var _report: Label
+var _cards: Array[PatientCard] = []
+var _wounds: WoundsPanel
+var _detail: PaperCard
+var _part_card: PaperCard
+var _diagram: BodyDiagram
+var _intent: IntentNote
+var _turns: TurnStrip
+var _log: BattleLog
 var _floaters: Node2D
 var _flash: ColorRect
 var _vhs: VhsOverlay
@@ -115,13 +163,12 @@ var _noise_material: ShaderMaterial
 var _music: MusicPlayer
 var _shake_tween: Tween
 var _theme: Theme
-var _picking_enemy: Combatant
+var _bleed_seen: Dictionary[Combatant, int] = {}
 var _autoplay_rounds: int = 0
 var _screenshot_path: String = ""
 var _idle_timer: float = 5.0
 var _closing: bool = false
-## Hay un submenú abierto (Esc vuelve al principal).
-var _submenu: bool = false
+var _cursor_set: bool = false
 
 
 ## Prepara el combate antes de añadir la escena al árbol (desde el mapa).
@@ -144,6 +191,7 @@ func _ready() -> void:
 	if battle == null:
 		battle = _prototype_battle()
 	_apply_debug_state()
+	_model = ActionMenuModel.new(battle, character)
 	_theme = _build_theme()
 	theme = _theme
 	_content = Control.new()
@@ -154,6 +202,7 @@ func _ready() -> void:
 	_build_stage()
 	_build_party()
 	_build_boxes()
+	_build_papers()
 	_build_messages()
 	_build_overlays()
 	battle.logged.connect(_on_logged)
@@ -169,14 +218,20 @@ func _ready() -> void:
 		_vignette_before = float(_vhs.get_param(&"vignette_strength", 0.85))
 		_aberration_before = float(_vhs.get_param(&"aberration_px", 0.0))
 		_vhs.set_param(&"vignette_strength", BATTLE_VIGNETTE)
+	_set_cursor(true)
 	_start_music()
+	for member: Combatant in battle.party:
+		_bleed_seen[member] = member.bleeding
 	for enemy: Combatant in battle.enemies:
+		_bleed_seen[enemy] = enemy.bleeding
 		if enemy.def.intro_text != "":
 			_messages.push(enemy.def.intro_text, COLOR_ENEMY_LINE)
+			_log.add(enemy.def.intro_text, BattleSkin.INK_SOFT)
 	_start_round()
 
 
 func _exit_tree() -> void:
+	_set_cursor(false)
 	if _vhs != null and is_instance_valid(_vhs) and _vignette_before >= 0.0:
 		_vhs.set_param(&"vignette_strength", _vignette_before)
 		_vhs.set_param(&"aberration_px", _aberration_before)
@@ -189,22 +244,50 @@ func _process(delta: float) -> void:
 		for enemy: Combatant in battle.enemies:
 			if enemy.is_active() and enemy.def.sound_idle != "":
 				_sound(enemy.def.sound_idle, -14.0)
+	# Durante las órdenes la placa de mensajes solo se ve mientras cuenta algo (la presentación).
+	if _phase != Phase.RESOLVE and _phase != Phase.END and _messages.is_idle() and _messages.visible:
+		_messages.clear()
+
+
+## El registro abierto se queda las flechas (antes que el menú).
+func _input(event: InputEvent) -> void:
+	if _log == null or not _log.is_open:
+		return
+	if event.is_action_pressed(&"ui_up"):
+		_log.scroll_by(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"ui_down"):
+		_log.scroll_by(-1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"ui_cancel") or _is_log_key(event):
+		_toggle_log()
+		get_viewport().set_input_as_handled()
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"ui_cancel") and _member_index >= 0:
+	if _is_log_key(event):
+		_toggle_log()
 		get_viewport().set_input_as_handled()
-		if _wounds.visible and _wounds.pinned:
-			_wounds.close()
-		elif _submenu:
-			_show_main_menu()
-		elif not _orders.is_empty():
-			_go_back()
+		return
+	var right_click: InputEventMouseButton = event as InputEventMouseButton
+	var back: bool = event.is_action_pressed(&"ui_cancel") or (right_click != null and right_click.pressed
+			and right_click.button_index == MOUSE_BUTTON_RIGHT)
+	if not back or _member_index < 0 or _busy:
+		return
+	get_viewport().set_input_as_handled()
+	if _wounds.visible and _wounds.pinned:
+		_wounds.close()
+	elif _phase == Phase.AIM or _phase == Phase.SUBMENU:
+		_sound("ui_battle_back", -10.0)
+		_show_main_menu()
+	elif not _orders.is_empty():
+		_sound("ui_battle_back", -10.0)
+		_go_back()
 
 
 # --- acceso (pruebas y depuración) -----------------------------------------------------------------
 
-## Ventana de mensajes de arriba.
+## Placa de mensajes de arriba.
 func message_window() -> MessageWindow:
 	return _messages
 
@@ -214,14 +297,9 @@ func command_box() -> BattleFrame:
 	return _command_box
 
 
-## Caja del grupo (abajo a la derecha).
-func party_box() -> BattleFrame:
-	return _party_box
-
-
-## Filas del grupo, una por miembro.
-func party_rows() -> Array[PartyRow]:
-	return _rows
+## Fichas de paciente, una por miembro.
+func party_cards() -> Array[PatientCard]:
+	return _cards
 
 
 ## Figuras del grupo de espaldas.
@@ -229,19 +307,87 @@ func party_battlers() -> Array[PartyBattler]:
 	return _battlers
 
 
-## Ventanita de heridas propias.
+## Hoja de lesiones propia.
 func wounds_panel() -> WoundsPanel:
 	return _wounds
 
 
-## Textos de las opciones que hay ahora en la caja de órdenes.
-func menu_options() -> PackedStringArray:
-	var result: PackedStringArray = []
+## Ficha de detalle de la orden señalada.
+func detail_card() -> PaperCard:
+	return _detail
+
+
+## Ficha de la parte apuntada.
+func part_card() -> PaperCard:
+	return _part_card
+
+
+## Lámina anatómica para apuntar.
+func body_diagram() -> BodyDiagram:
+	return _diagram
+
+
+## Nota de observación (lo que prepara el enemigo).
+func intent_note() -> IntentNote:
+	return _intent
+
+
+func turn_strip() -> TurnStrip:
+	return _turns
+
+
+func battle_log() -> BattleLog:
+	return _log
+
+
+func enemy_views() -> Array[EnemyView]:
+	return _enemy_views
+
+
+func phase() -> Phase:
+	return _phase
+
+
+## Botones que hay ahora en el menú de órdenes.
+func menu_buttons() -> Array[BattleOption]:
+	var result: Array[BattleOption] = []
 	for child: Node in _menu.get_children():
 		var option: BattleOption = child as BattleOption
 		if option != null and not option.is_queued_for_deletion():
-			result.append(option.text + ("  " + option.suffix if option.suffix != "" else ""))
+			result.append(option)
 	return result
+
+
+## Textos de las opciones que hay ahora en el menú.
+func menu_options() -> PackedStringArray:
+	var result: PackedStringArray = []
+	for option: BattleOption in menu_buttons():
+		result.append(option.text + ("  " + option.suffix if option.suffix != "" else ""))
+	return result
+
+
+## Parte apuntada ahora (o &"").
+func aimed_part() -> StringName:
+	return _aim_part if _phase == Phase.AIM else &""
+
+
+## Abre el menú de una categoría (&"attack" apunta directamente).
+func open_category(category: StringName) -> void:
+	_open_category(category)
+
+
+## Apunta a una parte del objetivo actual (como si se señalara con las flechas).
+func aim_at_part(part_id: StringName) -> void:
+	var button: BattleOption = _button_for_part(part_id)
+	if button != null:
+		button.grab_focus()
+	_aim_at_part(part_id)
+
+
+## Confirma la parte apuntada (como Intro).
+func confirm_aim() -> void:
+	if _phase == Phase.AIM and _aim_part != &"":
+		_confirm(_aim_option, _aim_target.combatant if _aim_target != null else null, _aim_part)
 
 
 # --- flujo de la ronda -----------------------------------------------------------------------
@@ -249,7 +395,9 @@ func menu_options() -> PackedStringArray:
 func _start_round() -> void:
 	battle.begin_round()
 	_orders.clear()
+	_model.clear_reservations()
 	_member_index = -1
+	_phase = Phase.MAIN
 	_refresh()
 	_telegraph()
 	if _autoplay_rounds > 0:
@@ -258,17 +406,19 @@ func _start_round() -> void:
 		_resolve()
 		return
 	_next_member()
-	# Depuración (capturas desde el mapa): abre la selección de parte apuntando a una.
+	# Depuración (capturas desde el mapa): apunta a una parte.
 	if _embedded and debug.has("battle-pick") and battle.round_number == 1 and _member_index >= 0:
-		var enemy: Combatant = _present_enemies()[0]
-		_show_part_menu(enemy)
-		_aim_at(enemy, StringName(debug["battle-pick"]))
+		_open_category(ActionMenuModel.ATTACK)
+		aim_at_part(StringName(debug["battle-pick"]))
 	if _screenshot_path != "" and _autoplay_rounds == 0 and not debug.has("autoplay"):
 		_take_screenshot_and_quit()
 
 
-## Aviso del enemigo: anima la preparación del golpe, suena y lo cuenta arriba.
+## Aviso del enemigo: anima la preparación, suena, escribe la nota y señala la parte amenazada en
+## la ficha del paciente.
 func _telegraph() -> void:
+	for card: PatientCard in _cards:
+		card.threat_part = &""
 	for index: int in battle.enemies.size():
 		var enemy: Combatant = battle.enemies[index]
 		var intent: CombatAction = battle.intents.get(enemy)
@@ -277,7 +427,21 @@ func _telegraph() -> void:
 		_enemy_views[index].play(&"windup")
 		if intent.attack != null and intent.attack.sound_windup != "":
 			_sound(intent.attack.sound_windup, -6.0)
-	_messages.set_sticky(_intent_lines())
+		var threat: StringName = _threat_part(intent)
+		var target_index: int = battle.party.find(intent.target)
+		if threat != &"" and target_index >= 0 and target_index < _cards.size():
+			_cards[target_index].threat_part = threat
+	_intent.write(_intent_lines())
+	_intent.position = INTENT_AT
+
+
+## Parte que se ve amenazada por una intención (o &"" si no se sabe).
+func _threat_part(intent: CombatAction) -> StringName:
+	if not battle.party_can_read_intents() or intent.attack == null or intent.target == null:
+		return &""
+	if intent.attack.visibility != CombatTypes.Visibility.FULL or intent.target.is_enemy:
+		return &""
+	return intent.part_id if intent.target.has_part(intent.part_id) else &""
 
 
 func _next_member() -> void:
@@ -292,13 +456,17 @@ func _next_member() -> void:
 
 func _resolve() -> void:
 	_member_index = -1
-	_picking_enemy = null
-	_reticle.visible = false
-	_submenu = false
+	_phase = Phase.RESOLVE
+	_aim_option = null
+	_aim_target = null
+	_busy = false
 	_wounds.close()
+	_close_papers()
+	_intent.close()
 	_clear_menu()
+	_command_box.tab = "INFORME"
 	_set_menu_width(MENU_W)
-	_messages.set_sticky([])
+	_update_report()
 	_events.clear()
 	battle.start_resolution(_orders)
 	_refresh()
@@ -324,7 +492,7 @@ func _resolve() -> void:
 		_show_end_menu()
 
 
-## Espera a que la ventana de mensajes haya contado todo (en rápido no espera).
+## Espera a que la placa de mensajes haya contado todo (en rápido no espera).
 func _wait_messages(fast: bool) -> void:
 	if fast:
 		return
@@ -336,21 +504,49 @@ func _current() -> Combatant:
 	return battle.party[_member_index]
 
 
-func _add_order(type: CombatTypes.ActionType, target: Combatant = null, part_id: StringName = &"",
-		item: Variant = null) -> void:
-	var order: CombatAction = CombatAction.new()
-	order.type = type
-	order.actor = _current()
-	order.target = target if target != null else _current()
-	order.part_id = part_id
-	order.item = item
+## Confirma una opción: sello «AUTORIZADO», la orden queda guardada y pasa al siguiente miembro.
+func _confirm(option: ActionOption, target: Combatant, part_id: StringName) -> void:
+	if _busy or option == null or _member_index < 0:
+		return
+	if not option.enabled:
+		_deny(option.disabled_reason)
+		return
+	var order: CombatAction = _model.make_order(_current(), option, target, part_id)
+	_model.reserve(order)
 	_orders.append(order)
-	_clear_highlights()
+	_busy = true
+	_sound("ui_battle_confirm", -10.0)
+	var paper: PaperCard = _part_card if _part_card.visible else _detail
+	var at: Vector2 = paper.position + paper.size * Vector2(0.55, 0.55) if paper.visible \
+			else _command_box.position + Vector2(_command_box.size.x * 0.5, 30)
+	var fx: StampFx = _stamp(BattleSkin.stamp("autorizado"), at, "AUTORIZADO", 0.18)
+	fx.landed.connect(func() -> void: _sound("ui_stamp", -6.0))
+	await _wait(CONFIRM_DELAY)
+	if not is_inside_tree():
+		return
+	_busy = false
+	_clear_aim()
 	_next_member()
+
+
+## Una opción que no se puede: suena, tiembla la ficha y se sella «DENEGADO».
+func _deny(reason: String) -> void:
+	_sound("ui_battle_denied", -8.0)
+	if _detail.visible:
+		_detail.stamp_texture = BattleSkin.stamp("denegado")
+		_detail.queue_redraw()
+		var home: Vector2 = _detail.position
+		var tween: Tween = create_tween()
+		for i: int in 4:
+			tween.tween_property(_detail, "position", home + Vector2(2.0 if i % 2 == 0 else -2.0, 0), 0.03)
+		tween.tween_property(_detail, "position", home, 0.03)
+	if reason != "" and not _detail.visible:
+		_messages.push(reason, UiStyle.ASH)
 
 
 func _go_back() -> void:
 	var last: CombatAction = _orders.pop_back()
+	_model.release(last)
 	_member_index = battle.party.find(last.actor)
 	_show_main_menu()
 
@@ -359,129 +555,288 @@ func _go_back() -> void:
 
 func _show_main_menu() -> void:
 	var member: Combatant = _current()
-	_picking_enemy = null
-	_submenu = false
-	_reticle.visible = false
-	_clear_highlights()
+	_phase = Phase.MAIN
+	_update_report()
+	_clear_aim()
+	_close_papers()
 	_refresh()
-	_messages.set_sticky(_intent_lines())
 	_clear_menu()
+	_command_box.tab = "ÓRDENES · %s" % member.display_name().to_upper()
 	_set_menu_width(MENU_W)
-	var targets: Array[Combatant] = _present_enemies()
-	_add_option("Atacar", _show_part_menu.bind(targets[0]) if targets.size() == 1 else _show_enemy_menu,
-		not targets.is_empty())
-	_add_option("Habilidades", _show_skill_menu)
-	_add_option("Guardia", _show_guard_menu)
-	var items: int = _item_count()
-	_add_option("Objeto", _show_item_menu, items > 0 and member.can_use_items(), str(items))
-	if member.breakable_status() != null:
-		_add_option("Zafarse", _add_order.bind(CombatTypes.ActionType.BREAK_FREE), true,
-			"%d%%" % battle.break_free_chance(member))
-	if battle.party.size() > 1:
-		_add_option("Huir solo", _add_order.bind(CombatTypes.ActionType.FLEE_SOLO),
-			battle.can_flee and member.can_flee(), "%d%%" % battle.flee_chance_solo(member))
-	_add_option("Huir", _add_order.bind(CombatTypes.ActionType.FLEE_ALL), battle.can_flee and member.can_flee(),
-		"%d%%" % battle.flee_chance_all())
+	var options: Array[ActionOption] = _model.action_menu(member)
+	for category: StringName in [ActionMenuModel.ATTACK, ActionMenuModel.SKILL, ActionMenuModel.GUARD, ActionMenuModel.ITEM]:
+		var group: Array[ActionOption] = ActionMenuModel.of_category(options, category)
+		if group.is_empty() and category != ActionMenuModel.ITEM:
+			continue
+		var enabled: bool = false
+		var amount: int = 0
+		for option: ActionOption in group:
+			enabled = enabled or option.enabled
+			amount += maxi(1, option.quantity) if category == ActionMenuModel.ITEM else 0
+		var icon_key: StringName = group[0].icon_key if category == ActionMenuModel.ATTACK and not group.is_empty() \
+				else ActionMenuModel.CATEGORY_ICONS[category]
+		var button: BattleOption = _add_option(ActionMenuModel.CATEGORY_LABELS[category], _open_category.bind(category),
+			enabled, "×%d" % amount if amount > 0 else "", BattleSkin.order_icon(icon_key))
+		button.category = category
+	for option: ActionOption in ActionMenuModel.of_category(options, ActionMenuModel.OTHER):
+		var chance: int = _model.preview(member, option, null, &"").hit_chance
+		var button: BattleOption = _add_option(option.label, _confirm.bind(option, null, &""), option.enabled,
+			"%d%%" % chance if chance >= 0 else "", BattleSkin.order_icon(option.icon_key))
+		button.option = option
 	if not _orders.is_empty():
-		_add_option("Atrás", _go_back)
+		_add_option("Atrás", _go_back, true, "", BattleSkin.order_icon(&"back"))
 	_focus_first()
 
 
-func _show_enemy_menu() -> void:
-	_submenu = true
+## Abre una categoría: Atacar y Guardia van directas a apuntar (si solo hay una forma); el resto,
+## a un submenú con iconos, cantidades y su ficha.
+func _open_category(category: StringName) -> void:
+	var member: Combatant = _current()
+	var group: Array[ActionOption] = ActionMenuModel.of_category(_model.action_menu(member), category)
+	if group.size() == 1 and group[0].needs_part:
+		_begin_aim(group[0])
+		return
+	_phase = Phase.SUBMENU
+	_close_papers()
 	_clear_menu()
-	for enemy: Combatant in _present_enemies():
-		_add_option(enemy.display_name(), _show_part_menu.bind(enemy))
-	_add_option("Atrás", _show_main_menu)
+	_command_box.tab = ActionMenuModel.CATEGORY_LABELS[category].to_upper()
+	for option: ActionOption in group:
+		var suffix: String = ""
+		if option.quantity > 0:
+			suffix = "×%d" % option.quantity
+		elif option.cost_body > 0 or option.cost_mind > 0:
+			suffix = _cost_text(option)
+		elif option.id == &"breathe":
+			suffix = "+%d M" % (Battle.BREATHE_BASE + member.def.willpower)
+		var icon: Texture2D = BattleSkin.order_icon(option.icon_key)
+		var stack: ItemStack = option.item as ItemStack
+		if stack != null and stack.def.icon != null:
+			icon = stack.def.icon
+		var button: BattleOption = _add_option(option.label, _choose.bind(option), option.enabled, suffix, icon)
+		button.option = option
+	if group.is_empty():
+		var empty: BattleOption = _add_option("Nada que sirva", Callable(), false)
+		empty.option = null
+	_add_option("Atrás", _show_main_menu, true, "", BattleSkin.order_icon(&"back"))
 	_fit_menu_width()
 	_focus_first()
 
 
-## Al atacar, la caja de órdenes lista las partes del enemigo con su probabilidad de acierto.
-func _show_part_menu(enemy: Combatant) -> void:
-	_picking_enemy = enemy
-	_submenu = true
+func _choose(option: ActionOption) -> void:
+	if not option.enabled:
+		_deny(option.disabled_reason)
+	elif option.needs_part:
+		_begin_aim(option)
+	elif option.needs_target:
+		_show_target_menu(option)
+	else:
+		_confirm(option, null, &"")
+
+
+## A quién (objetos con varios miembros, o varios enemigos).
+func _show_target_menu(option: ActionOption) -> void:
+	_phase = Phase.SUBMENU
 	_clear_menu()
-	var first: Button = null
+	_command_box.tab = "¿A QUIÉN?"
+	for target: TargetOption in _model.targets_for(_current(), option):
+		var callback: Callable = _aim.bind(option, target) if option.needs_part else _confirm.bind(option, target.combatant, &"")
+		_add_option(target.combatant.display_name(), callback, target.combatant.is_present())
+	_add_option("Atrás", _show_main_menu, true, "", BattleSkin.order_icon(&"back"))
+	_fit_menu_width()
+	_focus_first()
+
+
+func _begin_aim(option: ActionOption) -> void:
+	var targets: Array[TargetOption] = _model.targets_for(_current(), option)
+	if targets.is_empty():
+		_deny("No hay a quién.")
+		return
+	if targets.size() > 1:
+		_show_target_menu(option)
+		return
+	_aim(option, targets[0])
+
+
+## Apuntar: la lista de partes (con acierto o estado), la lámina, la ficha de la parte y el foco
+## sobre el enemigo.
+func _aim(option: ActionOption, target: TargetOption) -> void:
+	_phase = Phase.AIM
+	_aim_option = option
+	_aim_target = target
+	_close_papers()
+	_clear_menu()
+	var own: bool = target.combatant == _current()
+	_command_box.tab = "CUBRIR" if own else "APUNTAR"
+	var first: BattleOption = null
 	var wanted: StringName = StringName(debug.get("battle-pick", ""))
-	for id: StringName in enemy.part_order:
-		var part: BodyPartState = enemy.parts[id]
-		var chance: String = "—" if part.is_amputated() else "%d%%" % battle.preview_hit_chance(_current(), enemy, id)
-		var option: BattleOption = _add_option(part.def.display_name,
-			_add_order.bind(CombatTypes.ActionType.ATTACK, enemy, id), not part.is_amputated(), chance)
-		option.focus_entered.connect(_aim_at.bind(enemy, id))
-		if not part.is_amputated() and (first == null or id == wanted):
-			first = option
-	_add_option("Atrás", _show_main_menu)
+	for part: PartOption in target.parts:
+		var suffix: String
+		if not part.enabled:
+			suffix = "—"
+		elif own:
+			suffix = "" if part.state == CombatTypes.PartState.HEALTHY else CombatTypes.PART_STATE_NAMES[part.state]
+		else:
+			suffix = "%d%%" % part.hit_chance
+		var button: BattleOption = _add_option(part.label, _confirm.bind(option, target.combatant, part.id),
+			part.enabled, suffix, BattleSkin.status_icon(BattleFrame.part_icon(part.state as CombatTypes.PartState)))
+		button.part_id = part.id
+		button.option = option
+		button.focus_entered.connect(_aim_at_part.bind(part.id))
+		if part.enabled and (first == null or part.id == wanted):
+			first = button
+	_add_option("Atrás", _show_main_menu, true, "", BattleSkin.order_icon(&"back"))
 	_fit_menu_width()
+	var threat: StringName = &""
+	if own:
+		for enemy: Combatant in battle.enemies:
+			var intent: CombatAction = battle.intents.get(enemy)
+			if intent != null and intent.target == target.combatant:
+				threat = _threat_part(intent)
+	_diagram.position = DIAGRAM_AT
+	_diagram.show_parts("LÁMINA · %s" % target.combatant.display_name().to_upper(), target.parts,
+		first.part_id if first != null else &"", threat)
+	_sound("ui_paper_slide", -14.0)
 	if first != null:
+		_aim_at_part(first.part_id)
 		_grab_focus_later(first)
 
 
-## Habilidades: por ahora, Respirar (recupera Mente).
-func _show_skill_menu() -> void:
+## Señala una parte: foco en el enemigo, lámina y ficha de la parte.
+func _aim_at_part(part_id: StringName) -> void:
+	if _aim_target == null:
+		return
+	var part: PartOption = _part_option(part_id)
+	if part == null:
+		return
+	if _aim_part != part_id:
+		_sound("ui_aim_part", -18.0)
+	_aim_part = part_id
+	_diagram.selected = part_id
+	var target: Combatant = _aim_target.combatant
+	for index: int in _enemy_views.size():
+		_enemy_views[index].focus_part = part_id if battle.enemies[index] == target else &""
+	if _member_index < 0:
+		return
+	var preview: ActionPreview = _model.preview(_current(), _aim_option, target, part_id)
+	_part_card.tab = ("PARTE · %s" % target.display_name().to_upper()) if target.is_enemy else "GUARDIA · CUBRIR"
+	_part_card.anchor_point = PART_CARD_AT
+	_part_card.stamp_texture = null
+	_part_card.show_rows(_part_rows(target, part, preview), PART_CARD_W)
+
+
+func _part_option(part_id: StringName) -> PartOption:
+	if _aim_target == null:
+		return null
+	for part: PartOption in _aim_target.parts:
+		if part.id == part_id:
+			return part
+	return null
+
+
+## Filas de la ficha de la parte: nombre, estado, acierto, daño, amputación, lo que se consigue y
+## los riesgos.
+func _part_rows(target: Combatant, part: PartOption, preview: ActionPreview) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	rows.append({"kind": "title", "text": part.label})
+	rows.append({"kind": "state", "text": CombatTypes.PART_STATE_NAMES[part.state],
+		"color": BattleSkin.STATE_INK[part.state], "note": part.disabled_reason})
+	if target.is_enemy and part.enabled:
+		var stats: Array = [["ACIERTO", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)],
+			["DAÑO", "%d–%d" % [preview.damage_min, preview.damage_max], BattleSkin.INK]]
+		if preview.amputation_chance > 0:
+			stats.append(["AMPUT.", "%d %%" % preview.amputation_chance, BattleSkin.INK_RED])
+		rows.append({"kind": "stats", "items": stats})
+	rows.append({"kind": "rule"})
+	for line: String in preview.lines:
+		rows.append({"kind": "bullet", "text": line})
+	for line: String in preview.risk_lines:
+		rows.append({"kind": "risk", "text": line})
+	rows.append({"kind": "text", "text": "Intro / clic: confirmar · Esc: atrás", "color": BattleSkin.INK_SOFT})
+	return rows
+
+
+## Ficha de detalle de lo que se señala en el menú.
+func _show_detail(button: BattleOption) -> void:
+	if _phase == Phase.AIM or _member_index < 0:
+		return
 	var member: Combatant = _current()
-	_submenu = true
-	_clear_menu()
-	_add_option("Respirar", _add_order.bind(CombatTypes.ActionType.BREATHE), member.def.has_mind,
-		"+%d Mente" % (Battle.BREATHE_BASE + member.def.willpower))
-	_add_option("Atrás", _show_main_menu)
-	_fit_menu_width()
-	_focus_first()
+	var option: ActionOption = button.option
+	if option == null and button.category != &"":
+		var group: Array[ActionOption] = ActionMenuModel.of_category(_model.action_menu(member), button.category)
+		if group.size() == 1:
+			option = group[0]
+		else:
+			_detail_rows_for_group(button, group)
+			return
+	if option == null:
+		_detail.close()
+		return
+	var target: Combatant = member if option.category != ActionMenuModel.ATTACK else null
+	var preview: ActionPreview = _model.preview(member, option, target, &"")
+	var rows: Array[Dictionary] = []
+	var icon: Texture2D = button.icon_texture
+	rows.append({"kind": "title", "text": option.label, "icon": icon,
+		"note": ActionMenuModel.CATEGORY_LABELS.get(option.category, "").to_upper()})
+	rows.append({"kind": "rule"})
+	if option.description != "":
+		rows.append({"kind": "text", "text": option.description, "max_lines": 3})
+	var stats: Array = []
+	if preview.hit_chance >= 0:
+		stats.append(["ÉXITO", "%d %%" % preview.hit_chance, _chance_color(preview.hit_chance)])
+	if option.cost_body > 0 or option.cost_mind > 0:
+		stats.append(["COSTE", _cost_text(option), BattleSkin.INK_RED])
+	if option.category == ActionMenuModel.ATTACK:
+		var weapon: WeaponDef = member.current_weapon()
+		stats.append(["PODER", str(weapon.power), BattleSkin.INK])
+		stats.append(["PRECISIÓN", str(weapon.accuracy), BattleSkin.INK])
+	if not stats.is_empty():
+		rows.append({"kind": "stats", "items": stats})
+	for line: String in preview.lines:
+		rows.append({"kind": "bullet", "text": line})
+	for line: String in preview.risk_lines:
+		rows.append({"kind": "risk", "text": line})
+	if not option.enabled:
+		rows.append({"kind": "risk", "text": "NO DISPONIBLE: " + option.disabled_reason})
+	elif option.needs_part:
+		rows.append({"kind": "text", "text": "Intro: elegir la parte.", "color": BattleSkin.INK_SOFT})
+	_detail.stamp_texture = BattleSkin.stamp("denegado") if not option.enabled else null
+	_open_detail(rows)
 
 
-func _show_guard_menu() -> void:
-	var member: Combatant = _current()
-	_submenu = true
-	_clear_menu()
-	for id: StringName in member.part_order:
-		var part: BodyPartState = member.parts[id]
-		var option: BattleOption = _add_option(part.def.display_name,
-			_add_order.bind(CombatTypes.ActionType.GUARD, member, id), not part.is_amputated(),
-			"" if part.state == CombatTypes.PartState.HEALTHY else CombatTypes.PART_STATE_NAMES[part.state])
-		option.focus_entered.connect(_guard_highlight.bind(member, id))
-	_add_option("Atrás", _show_main_menu)
-	_fit_menu_width()
-	_focus_first()
-
-
-func _show_item_menu() -> void:
-	_submenu = true
-	_clear_menu()
-	if character != null:
-		var used: Array[Variant] = []
-		for order: CombatAction in _orders:
-			used.append(order.item)
-		for stack: ItemStack in CombatBridge.combat_items(character):
-			if used.has(stack):
-				continue
-			_add_option(stack.def.display_name, _add_order.bind(CombatTypes.ActionType.ITEM, _current(), &"", stack),
-				true, "×%d" % stack.quantity if stack.quantity > 1 else "")
+func _detail_rows_for_group(button: BattleOption, group: Array[ActionOption]) -> void:
+	var rows: Array[Dictionary] = []
+	rows.append({"kind": "title", "text": button.text, "icon": button.icon_texture,
+		"note": "%d" % group.size() if not group.is_empty() else ""})
+	rows.append({"kind": "rule"})
+	if group.is_empty():
+		rows.append({"kind": "text", "text": "No lleva nada que sirva en un combate."})
+	for option: ActionOption in group:
+		var amount: String = " ×%d" % option.quantity if option.quantity > 0 else ""
+		rows.append({"kind": "risk" if not option.enabled else "bullet", "text": option.label + amount})
+	if not button.disabled and not group.is_empty():
+		rows.append({"kind": "text", "text": "Intro: abrir.", "color": BattleSkin.INK_SOFT})
 	else:
-		for member: Combatant in battle.party:
-			if member.is_present():
-				_add_option("Venda a %s" % member.display_name(), _add_order.bind(CombatTypes.ActionType.ITEM, member))
-	_add_option("Atrás", _show_main_menu)
-	_fit_menu_width()
-	_focus_first()
+		var reason: String = group[0].disabled_reason if not group.is_empty() else "Nada que usar."
+		rows.append({"kind": "risk", "text": "NO DISPONIBLE: " + reason})
+	_detail.stamp_texture = null
+	_open_detail(rows)
 
 
-func _item_count() -> int:
-	if character != null:
-		var count: int = CombatBridge.combat_items(character).size()
-		for order: CombatAction in _orders:
-			if order.type == CombatTypes.ActionType.ITEM:
-				count -= 1
-		return maxi(0, count)
-	var used: int = 0
-	for order: CombatAction in _orders:
-		if order.type == CombatTypes.ActionType.ITEM:
-			used += 1
-	return battle.bandages - used
+func _open_detail(rows: Array[Dictionary]) -> void:
+	var appearing: bool = not _detail.visible
+	_detail.grow_up = true
+	_detail.anchor_point = DETAIL_AT
+	_detail.tab = "FICHA"
+	_detail.show_rows(rows, DETAIL_W)
+	if appearing:
+		_sound("ui_paper_slide", -16.0)
 
 
 func _show_end_menu() -> void:
+	_phase = Phase.END
 	_clear_menu()
+	_report.visible = false
+	_command_box.tab = "FIN"
 	_add_option("Repetir", get_tree().reload_current_scene)
 	_add_option("Salir", get_tree().quit)
 	_focus_first()
@@ -511,128 +866,118 @@ func _present_enemies() -> Array[Combatant]:
 	return result
 
 
-# --- apuntar ---------------------------------------------------------------------------------------
-
-## Marca la parte, discretamente, sobre el propio enemigo y cuenta arriba su acierto y daño estimado.
-func _aim_at(enemy: Combatant, part_id: StringName) -> void:
-	var index: int = battle.enemies.find(enemy)
-	if index < 0:
-		return
-	var view: EnemyView = _enemy_views[index]
-	view.highlight_part = part_id
-	var part: BodyPartState = enemy.parts[part_id]
-	_reticle.point_at(view.position + view.anchor(part_id), PackedStringArray())
-	if _member_index < 0:
-		return
-	var first: String = part.def.display_name
-	if part.is_amputated():
-		_messages.set_sticky([{"text": "%s: ya no está." % first, "color": UiStyle.ASH}])
-		return
-	var chance: int = battle.preview_hit_chance(_current(), enemy, part_id)
-	var damage: Dictionary = battle.preview_damage(_current(), enemy, part_id)
-	var range_body: Vector2i = damage["body"]
-	var state: String = CombatTypes.PART_STATE_NAMES[part.state]
-	var line: String = "%s (%s) · acierto %d %% · daño %d–%d" % [first, state.to_lower(), chance, range_body.x,
-		range_body.y]
-	var lines: Array[Dictionary] = [{"text": line, "color": UiStyle.BONE}]
-	var hint: String = _part_hint(enemy, part)
-	if hint != "":
-		lines.append({"text": hint, "color": BattleFrame.LABEL_BLUE})
-	_messages.set_sticky(lines)
-
-
-## Pista corta de lo que conseguiría golpear ahí.
-func _part_hint(enemy: Combatant, part: BodyPartState) -> String:
-	var weapon: WeaponDef = _current().current_weapon()
-	var blunt: bool = weapon.damage_type == CombatTypes.DamageType.BLUNT
-	if part.state == CombatTypes.PartState.BROKEN:
-		if blunt and part.def.severable_by_blunt:
-			return "Se puede arrancar."
-		if weapon.damage_type == CombatTypes.DamageType.CUT and part.def.amputable:
-			return "Se puede cortar."
-		return "Ya está rota."
-	for attack: EnemyAttackDef in enemy.def.attacks:
-		if attack.required_part == part.def.id and not attack.reaction:
-			return "Si se rompe: sin %s." % attack.display_name.to_lower()
-	if part.def.id == CombatTypes.HEAD and blunt:
-		return "Puede aturdir."
-	return ""
-
-
-func _guard_highlight(member: Combatant, part_id: StringName) -> void:
-	var index: int = battle.party.find(member)
-	if index >= 0 and index < _rows.size():
-		_open_wounds(_rows[index], part_id)
-
-
-func _clear_highlights() -> void:
+func _clear_aim() -> void:
 	for view: EnemyView in _enemy_views:
+		view.focus_part = &""
 		view.highlight_part = &""
-	if _reticle != null:
-		_reticle.visible = false
+	_aim_part = &""
+	if _diagram != null:
+		_diagram.close()
+	if _part_card != null:
+		_part_card.close()
 	if _wounds != null and not _wounds.pinned:
 		_wounds.close()
 
 
-## Ratón sobre el escenario: apunta a la parte más cercana; clic para golpear.
+func _close_papers() -> void:
+	_clear_aim()
+	if _detail != null:
+		_detail.close()
+
+
+static func _cost_text(option: ActionOption) -> String:
+	var bits: PackedStringArray = []
+	if option.cost_body > 0:
+		bits.append("−%d C" % option.cost_body)
+	if option.cost_mind > 0:
+		bits.append("−%d M" % option.cost_mind)
+	return " ".join(bits)
+
+
+static func _chance_color(chance: int) -> Color:
+	if chance >= 70:
+		return Color("3c5a3a")
+	if chance >= 45:
+		return BattleSkin.INK
+	return BattleSkin.INK_RED
+
+
+# --- ratón sobre el escenario ------------------------------------------------------------------
+
+## Ratón sobre el escenario: al apuntar a un enemigo, la parte bajo el puntero (por los píxeles de
+## su capa) se señala; clic para confirmar.
 func _on_stage_input(event: InputEvent) -> void:
-	if _picking_enemy == null:
+	if _phase != Phase.AIM or _aim_target == null or not _aim_target.combatant.is_enemy or _busy:
 		return
-	var motion: InputEventMouse = event as InputEventMouse
-	if motion == null:
+	var mouse: InputEventMouse = event as InputEventMouse
+	if mouse == null:
 		return
-	var index: int = battle.enemies.find(_picking_enemy)
+	var index: int = battle.enemies.find(_aim_target.combatant)
+	if index < 0:
+		return
 	var view: EnemyView = _enemy_views[index]
-	var point: Vector2 = motion.position + Vector2(_stage_input_offset())
-	var best: StringName = &""
-	var best_d: float = 34.0
-	for id: StringName in _picking_enemy.part_order:
-		if _picking_enemy.parts[id].is_amputated():
-			continue
-		var d: float = (view.position + view.anchor(id)).distance_to(point)
-		if d < best_d:
-			best_d = d
-			best = id
+	var point: Vector2 = mouse.position + _stage_input_rect().position - view.position
+	var allowed: Array[StringName] = []
+	for part: PartOption in _aim_target.parts:
+		if part.enabled:
+			allowed.append(part.id)
+	var best: StringName = view.part_at(point, allowed)
 	if best == &"":
 		return
-	var option: BattleOption = _option_for_part(best)
-	if option != null and not option.has_focus():
-		option.grab_focus()
-	else:
-		_aim_at(_picking_enemy, best)
+	if best != _aim_part:
+		aim_at_part(best)
 	var click: InputEventMouseButton = event as InputEventMouseButton
 	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
-		_add_order(CombatTypes.ActionType.ATTACK, _picking_enemy, best)
+		_confirm(_aim_option, _aim_target.combatant, best)
 
 
-func _stage_input_offset() -> Vector2i:
-	return Vector2i(int(MESSAGE_RECT.position.x), int(MESSAGE_RECT.end.y))
+func _stage_input_rect() -> Rect2:
+	return Rect2(Vector2(150, 50), Vector2(290, BOX_Y - 60))
 
 
-func _option_for_part(part_id: StringName) -> BattleOption:
-	if _picking_enemy == null:
-		return null
-	var index: int = _picking_enemy.part_order.find(part_id)
-	if index < 0 or index >= _menu.get_child_count():
-		return null
-	return _menu.get_child(index) as BattleOption
+func _button_for_part(part_id: StringName) -> BattleOption:
+	for button: BattleOption in menu_buttons():
+		if button.part_id == part_id:
+			return button
+	return null
+
+
+func _on_diagram_hovered(part_id: StringName) -> void:
+	if _phase == Phase.AIM and not _busy:
+		aim_at_part(part_id)
+
+
+func _on_diagram_pressed(part_id: StringName) -> void:
+	if _phase == Phase.AIM and not _busy and _aim_target != null:
+		aim_at_part(part_id)
+		_confirm(_aim_option, _aim_target.combatant, part_id)
 
 
 # --- heridas propias -------------------------------------------------------------------------------
 
-func _on_row_details(row: PartyRow, show: bool, pinned: bool) -> void:
+func _on_card_details(card: PatientCard, show: bool, pinned: bool) -> void:
 	if show:
-		_open_wounds(row, &"")
+		var keep: bool = _wounds.pinned
+		_wounds.show_for(card.combatant, Vector2(card.position.x, card.position.y - 12.0), card.threat_part)
+		_wounds.pinned = keep
 		if pinned:
-			_wounds.pinned = not _wounds.pinned or _wounds.combatant != row.combatant
+			_wounds.pinned = not keep or _wounds.combatant != card.combatant
 	elif not _wounds.pinned:
 		_wounds.close()
 
 
-func _open_wounds(row: PartyRow, part_id: StringName) -> void:
-	var pinned: bool = _wounds.pinned
-	_wounds.show_for(row.combatant, Vector2(_party_box.position.x + BOX_PAD, BOX_Y - 2.0), part_id)
-	_wounds.pinned = pinned
+# --- registro -----------------------------------------------------------------------------------
+
+func _is_log_key(event: InputEvent) -> bool:
+	var key: InputEventKey = event as InputEventKey
+	if key != null and key.pressed and not key.echo and key.keycode == KEY_TAB:
+		return true
+	var pad: InputEventJoypadButton = event as InputEventJoypadButton
+	return pad != null and pad.pressed and pad.button_index == JOY_BUTTON_BACK
+
+
+func _toggle_log() -> void:
+	_log.toggle()
 
 
 # --- reproducción de lo que pasa ---------------------------------------------------------------------
@@ -647,6 +992,7 @@ func _play_events(fast: bool) -> void:
 
 
 func _play_action(action: CombatAction, fast: bool) -> void:
+	_turns.set_order(battle.round_number, _turns.order, action.actor, false)
 	if action.actor.is_enemy:
 		var index: int = battle.enemies.find(action.actor)
 		if index >= 0 and action.attack != null:
@@ -692,13 +1038,14 @@ func _play_strike(info: Dictionary, fast: bool) -> void:
 			_float_text(point, "−%d" % int(info["body_damage"]), UiStyle.BONE)
 			if info["critical"]:
 				_float_text(point + Vector2(0, -16), "CRÍTICO", UiStyle.AMBER)
+			_pop_status(point, info, target)
 			_shake(6.0 if info["amputated"] else (3.5 if heavy else 2.0))
 			if target.dead:
 				await _enemy_death(target, view)
 	else:
 		var index: int = battle.party.find(target)
 		var battler: PartyBattler = _battlers[index] if index >= 0 and index < _battlers.size() else null
-		var row: PartyRow = _rows[index] if index >= 0 and index < _rows.size() else null
+		var card: PatientCard = _cards[index] if index >= 0 and index < _cards.size() else null
 		var anchor: Vector2 = battler.chest() if battler != null else Vector2(320, BOX_Y - 20.0)
 		if not hit:
 			_sound("combat_swing_miss", -6.0)
@@ -715,19 +1062,50 @@ func _play_strike(info: Dictionary, fast: bool) -> void:
 				_sound(attack_sound, -2.0)
 			if battler != null:
 				battler.hurt(1.6 if info["amputated"] else 1.0)
-			if row != null:
-				row.hurt(1.0)
+			if card != null:
+				card.hurt(1.0 if info["amputated"] or info["broke"] else clampf(0.4 + amount * 0.04, 0.4, 1.0))
 			if amount > 0:
 				_blood.burst(anchor, 40 if info["amputated"] else 6 + mini(amount, 20), Vector2.UP,
 						220.0 if info["amputated"] else 150.0)
 				_float_text(anchor + Vector2(0, -12), "−%d" % amount, UiStyle.BLOOD.lightened(0.3))
 			if int(info["mind_damage"]) > 0:
 				_float_text(anchor + Vector2(40, -12), "−%d Mente" % int(info["mind_damage"]), BattleFrame.LABEL_BLUE)
+			_pop_status(anchor + Vector2(-26, -20), info, target)
 			_red_flash(0.55 if info["amputated"] else 0.3)
 			_shake(9.0 if info["amputated"] else 4.0 + amount * 0.15)
 	_refresh()
 	if not fast:
 		await _wait(0.32)
+
+
+## Icono del estado que aparece con el golpe (amputada, rota, el estado aplicado o el sangrado),
+## que sube y se desvanece.
+func _pop_status(point: Vector2, info: Dictionary, target: Combatant) -> void:
+	var kinds: Array[StringName] = []
+	if info["amputated"]:
+		kinds.append(BattleFrame.ICON_AMPUTATED)
+	elif info["broke"]:
+		kinds.append(BattleFrame.ICON_BROKEN)
+	if StringName(info.get("status", &"")) != &"":
+		kinds.append(StringName(info["status"]))
+	if target.bleeding > int(_bleed_seen.get(target, 0)):
+		kinds.append(BattleFrame.ICON_BLEED)
+	_bleed_seen[target] = target.bleeding
+	for i: int in kinds.size():
+		var tex: Texture2D = BattleSkin.status_icon(kinds[i])
+		if tex == null:
+			continue
+		var sprite: Sprite2D = Sprite2D.new()
+		sprite.texture = tex
+		sprite.position = point + Vector2(18 + i * 15, -6)
+		sprite.scale = Vector2(0.5, 0.5)
+		_floaters.add_child(sprite)
+		var tween: Tween = create_tween()
+		tween.tween_property(sprite, "scale", Vector2(2, 2), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(sprite, "scale", Vector2(1.5, 1.5), 0.1)
+		tween.tween_property(sprite, "position:y", sprite.position.y - 18.0, 0.9).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(sprite, "modulate:a", 0.0, 0.6).set_delay(0.45)
+		tween.tween_callback(sprite.queue_free)
 
 
 ## Ataque que está ejecutando un enemigo (su intención de esta ronda).
@@ -799,27 +1177,38 @@ func _float_text(point: Vector2, text: String, color: Color) -> void:
 	tween.tween_callback(label.queue_free)
 
 
+## Sello que cae en `at` (en coordenadas de la vista).
+func _stamp(tex: Texture2D, at: Vector2, label: String, hold: float = 0.55, big: float = 1.0) -> StampFx:
+	var fx: StampFx = StampFx.new()
+	_floaters.add_child(fx)
+	fx.stamp(tex, at, label, hold, big)
+	return fx
+
+
 # --- señales de Battle ------------------------------------------------------------------------------
 
 func _on_logged(text: String) -> void:
-	# El número de ronda no se cuenta arriba (no aparece en la referencia), pero queda en el historial.
+	var is_enemy_line: bool = false
+	for enemy: Combatant in battle.enemies:
+		if text.begins_with(enemy.display_name()):
+			is_enemy_line = true
+	_log.add(text, BattleSkin.INK_RED if is_enemy_line else BattleSkin.INK)
+	_update_report()
+	# El número de ronda va al registro (como cabecera), no a la placa.
 	if text.begins_with("—"):
 		_messages.history.append(text)
 		return
-	var color: Color = UiStyle.BONE
-	for enemy: Combatant in battle.enemies:
-		if text.begins_with(enemy.display_name()):
-			color = COLOR_ENEMY_LINE
-	_messages.push(text, color)
+	_messages.push(text, COLOR_ENEMY_LINE if is_enemy_line else UiStyle.BONE)
 
 
 func _on_finished(outcome: Battle.Outcome, summary: String) -> void:
 	_messages.push(summary, COLOR_SUMMARY)
+	_log.add(summary, BattleSkin.INK_SOFT)
 	_refresh()
 	if _music != null:
 		_music.fade_out(2.0)
 	if outcome != Battle.Outcome.ONGOING:
-		_messages.set_sticky([])
+		_intent.close()
 
 
 func _close_after(outcome: Battle.Outcome) -> void:
@@ -831,20 +1220,19 @@ func _close_after(outcome: Battle.Outcome) -> void:
 	battle_closed.emit(outcome)
 
 
+## Rótulo de impacto como sello de caucho en el centro, con aberración del filtro.
 func _show_impact(text: String) -> void:
-	_impact.text = text
-	if _impact_tween != null:
-		_impact_tween.kill()
-	_impact.modulate.a = 1.0
-	_impact.scale = Vector2(1.15, 1.15)
-	_impact_tween = create_tween()
-	_impact_tween.tween_property(_impact, "scale", Vector2.ONE, 0.2)
-	_impact_tween.tween_interval(0.4)
-	_impact_tween.tween_property(_impact, "modulate:a", 0.0, 0.6)
+	var key: String = BattleSkin.stamp_key(text)
+	var tex: Texture2D = BattleSkin.stamp(key) if key != "" else null
+	var fx: StampFx = _stamp(tex, IMPACT_AT, text.trim_suffix("."), 0.6, 1.5)
+	fx.landed.connect(func() -> void:
+		_sound("ui_stamp", -4.0)
+		_shake(2.5))
 	if _vhs != null:
 		_vhs.set_param(&"aberration_px", IMPACT_ABERRATION)
-		_impact_tween.parallel().tween_method(func(v: float) -> void: _vhs.set_param(&"aberration_px", v),
-				IMPACT_ABERRATION, _aberration_before, 0.6)
+		var tween: Tween = create_tween()
+		tween.tween_method(func(v: float) -> void: _vhs.set_param(&"aberration_px", v),
+				IMPACT_ABERRATION, _aberration_before, 0.8)
 
 
 # --- refresco --------------------------------------------------------------------------------------
@@ -852,41 +1240,37 @@ func _show_impact(text: String) -> void:
 func _refresh() -> void:
 	for index: int in battle.enemies.size():
 		_enemy_views[index].sync_parts(battle.enemies[index])
-	for index: int in _rows.size():
-		_rows[index].selected = index == _member_index
-		_rows[index].refresh()
+	for index: int in _cards.size():
+		_cards[index].selected = index == _member_index
+		_cards[index].refresh()
 	for battler: PartyBattler in _battlers:
 		battler.queue_redraw()
-	if _wounds.visible:
-		_wounds.queue_redraw()
+	if _phase != Phase.RESOLVE:
+		var active: Combatant = battle.party[_member_index] if _member_index >= 0 and _member_index < battle.party.size() else null
+		_turns.set_order(battle.round_number, TurnStrip.estimate(battle), active, true)
 
 
-## Aviso de lo que prepara el enemigo, para la ventana de arriba: «El enfermero prepara TAJO →
-## brazo der.» y, debajo, el gesto que lo delata.
+## Lo que prepara cada enemigo, para la nota: «ENFERMERO prepara TAJO», «→ torso» y el gesto.
 func _intent_lines() -> Array[Dictionary]:
 	var lines: Array[Dictionary] = []
 	for enemy: Combatant in battle.enemies:
 		var what: String = battle.intent_text(enemy)
 		if what == "":
 			continue
-		var enemy_name: String = enemy.display_name()
+		var enemy_name: String = enemy.display_name().to_upper()
 		if what == "??? → ???":
-			lines.append({"text": "No ves qué prepara %s." % enemy_name, "color": COLOR_ENEMY_LINE})
+			lines.append({"text": "No se ve qué prepara %s." % enemy.display_name(), "color": BattleSkin.INK_SOFT})
 			continue
 		# Con un solo personaje sobra «de PACIENTE 09».
 		if battle.party.size() == 1:
 			what = what.replace(" de " + battle.party[0].display_name(), "")
 		var bits: PackedStringArray = what.split(" → ")
-		var where: String = bits[1] if bits.size() > 1 else ""
-		var tail: String = (" → " + where) if where != "" else ""
-		if not tail.ends_with("."):
-			tail += "."
-		var plain: String = "%s prepara %s%s" % [enemy_name, bits[0], tail]
-		var rich: String = "%s prepara [color=#%s]%s[/color]%s" % [enemy_name, UiStyle.AMBER.to_html(false), bits[0], tail]
-		lines.append({"text": plain, "bbcode": rich, "color": COLOR_ENEMY_LINE})
+		lines.append({"text": "%s prepara %s" % [enemy_name, bits[0]], "color": BattleSkin.INK_RED, "bold": true})
+		if bits.size() > 1 and bits[1] != "":
+			lines.append({"text": "→ %s" % bits[1].to_lower(), "color": BattleSkin.INK})
 		var telegraph: String = battle.intent_telegraph(enemy)
-		if telegraph != "" and battle.enemies.size() == 1:
-			lines.append({"text": telegraph, "color": UiStyle.BONE_DIM})
+		if telegraph != "":
+			lines.append({"text": "«%s»" % telegraph, "color": BattleSkin.INK_SOFT})
 	return lines
 
 
@@ -902,29 +1286,37 @@ func _prototype_battle() -> Battle:
 	var seed_number: int = int(debug["battle-seed"]) if debug.has("battle-seed") else seed_value
 	var built: Battle = Battle.new(defs, enemy_defs, seed_number)
 	built.bandages = 1
+	if debug.has("battle-items"):
+		GameState.new_game()
+		character = GameState.character
+		for id: StringName in DEBUG_ITEMS:
+			var item: ItemDef = Registry.item(id)
+			if item != null:
+				character.custody.add_item(item, 2 if id == &"venda" else 1)
+		var hero: CharacterState = character
+		built.item_user = func(actor: Combatant, item: Variant) -> String:
+			return CombatBridge.use_item(actor, hero, item as ItemStack)
+		built.bandages = 0
 	return built
 
 
-## Tema de las opciones: texto blanco hueso; la seleccionada, con una franja clara y marco fino.
+## Tema de las opciones: serifa blanco hueso; la elegida, sobre la franja granate.
 func _build_theme() -> Theme:
 	var built: Theme = Theme.new()
 	built.default_font = UiStyle.ui()
 	built.default_font_size = UiStyle.SIZE_TEXT
 	var normal: StyleBoxEmpty = StyleBoxEmpty.new()
-	normal.content_margin_left = 7
+	normal.content_margin_left = BattleOption.LEFT
 	normal.content_margin_right = 6
-	var band: StyleBoxFlat = StyleBoxFlat.new()
-	band.bg_color = BattleFrame.BAND
-	band.border_color = BattleFrame.BAND_BORDER
-	band.set_border_width_all(1)
-	band.content_margin_left = 7
+	var band: StyleBoxTexture = BattleSkin.band_box().duplicate() as StyleBoxTexture
+	band.content_margin_left = BattleOption.LEFT
 	band.content_margin_right = 6
 	built.set_stylebox("normal", "Button", normal)
 	built.set_stylebox("hover", "Button", normal)
 	built.set_stylebox("pressed", "Button", band)
 	built.set_stylebox("focus", "Button", band)
 	built.set_stylebox("disabled", "Button", normal)
-	built.set_color("font_color", "Button", UiStyle.BONE)
+	built.set_color("font_color", "Button", UiStyle.BONE_DIM)
 	built.set_color("font_hover_color", "Button", UiStyle.BONE)
 	built.set_color("font_focus_color", "Button", Color.WHITE)
 	built.set_color("font_pressed_color", "Button", Color.WHITE)
@@ -946,7 +1338,6 @@ func _build_background() -> void:
 	beam.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	beam.draw.connect(_draw_beam.bind(beam))
 	_content.add_child(beam)
-	# Elipse de luz en el suelo, que se difumina hacia fuera.
 	var gradient: Gradient = Gradient.new()
 	gradient.offsets = PackedFloat32Array([0.0, 0.35, 0.7, 1.0])
 	gradient.colors = PackedColorArray([Color(0.6, 0.59, 0.55, 0.8), Color(0.46, 0.45, 0.42, 0.58),
@@ -1009,13 +1400,11 @@ func _build_stage() -> void:
 		marks.setup(_enemy_views[index], battle.enemies[index])
 		_stage.add_child(marks)
 		_enemy_marks.append(marks)
-	_reticle = PartReticle.new()
-	_reticle.font = UiStyle.mono()
-	_reticle.visible = false
-	_stage.add_child(_reticle)
 	var input: Control = Control.new()
-	input.position = Vector2(_stage_input_offset())
-	input.size = Vector2(VIEW_SIZE.x - input.position.x * 2.0, BOX_Y - input.position.y)
+	input.name = "StageInput"
+	var rect: Rect2 = _stage_input_rect()
+	input.position = rect.position
+	input.size = rect.size
 	input.mouse_filter = Control.MOUSE_FILTER_PASS
 	input.gui_input.connect(_on_stage_input)
 	_content.add_child(input)
@@ -1049,59 +1438,56 @@ func _build_boxes() -> void:
 	_menu.add_theme_constant_override("separation", 0)
 	_menu.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_menu_scroll.add_child(_menu)
-	_party_box = BattleFrame.new()
-	_party_box.name = "PartyBox"
-	_content.add_child(_party_box)
-	var rows: VBoxContainer = VBoxContainer.new()
-	rows.name = "Rows"
-	rows.add_theme_constant_override("separation", 1)
-	rows.position = Vector2(BOX_PAD, BOX_PAD)
-	_party_box.add_child(rows)
-	for member: Combatant in battle.party:
-		var row: PartyRow = PartyRow.new()
-		row.setup(member, _weapon_icon(member))
-		row.details_requested.connect(_on_row_details)
-		rows.add_child(row)
-		_rows.append(row)
-	_wounds = WoundsPanel.new()
-	_content.add_child(_wounds)
+	_report = UiStyle.label("", UiStyle.MONO_SMALL, UiStyle.BONE_DIM, UiStyle.mono())
+	_report.name = "Report"
+	_report.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_report.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	_report.clip_text = true
+	_report.visible = false
+	_command_box.add_child(_report)
+	for index: int in battle.party.size():
+		var member: Combatant = battle.party[index]
+		var card: PatientCard = PatientCard.new()
+		card.name = "PatientCard%d" % index
+		var battler: PartyBattler = _battlers[index] if index < _battlers.size() else null
+		card.setup(member, _weapon_icon(member), battler.textures if battler != null else [] as Array[Texture2D],
+			battler.origin if battler != null else Vector2(24, 62))
+		card.details_requested.connect(_on_card_details)
+		_content.add_child(card)
+		_cards.append(card)
 	_set_menu_width(MENU_W)
 
 
-## Coloca las dos cajas: la de órdenes con el ancho pedido y la del grupo con el resto.
+## Coloca la caja de órdenes con el ancho pedido y las fichas de paciente en el resto.
 func _set_menu_width(width: float) -> void:
 	_command_box.position = Vector2(BOX_MARGIN, BOX_Y)
 	_command_box.size = Vector2(width, BOX_H)
-	_menu_scroll.position = Vector2(BOX_PAD, BOX_PAD)
-	_menu_scroll.size = Vector2(width - BOX_PAD * 2.0, BOX_H - BOX_PAD * 2.0)
-	_menu.custom_minimum_size = Vector2(width - BOX_PAD * 2.0, 0)
-	var party_x: float = BOX_MARGIN + width + BOX_GAP
-	_party_box.position = Vector2(party_x, BOX_Y)
-	_party_box.size = Vector2(VIEW_SIZE.x - BOX_MARGIN - party_x, BOX_H)
-	var rows: Control = _party_box.get_node("Rows") as Control
-	var rows_width: float = _party_box.size.x - BOX_PAD * 2.0
-	for row: PartyRow in _rows:
-		row.custom_minimum_size = Vector2(rows_width, PartyRow.HEIGHT)
-		row.size.x = rows_width
-		row.queue_redraw()
-	rows.size = Vector2(rows_width, 0)
-	rows.reset_size()
+	var inset: float = BattleSkin.METAL_INSET
+	_menu_scroll.position = Vector2(inset - 1, inset + 3)
+	_menu_scroll.size = Vector2(width - inset * 2.0 + 2, BOX_H - inset * 2.0 - 4)
+	_menu.custom_minimum_size = Vector2(_menu_scroll.size.x, 0)
+	_report.position = Vector2(inset + 3, inset + 3)
+	_report.size = Vector2(width - inset * 2.0 - 6, BOX_H - inset * 2.0 - 6)
+	var x: float = BOX_MARGIN + width + BOX_GAP
+	var count: int = maxi(1, _cards.size())
+	var gap: float = 6.0
+	var card_w: float = floorf((VIEW_SIZE.x - BOX_MARGIN - x - gap * (count - 1)) / count)
+	for index: int in _cards.size():
+		_cards[index].position = Vector2(x + index * (card_w + gap), BOX_Y + 2)
+		_cards[index].size = Vector2(card_w, BOX_H - 4)
+		_cards[index].queue_redraw()
 	_command_box.queue_redraw()
-	_party_box.queue_redraw()
 
 
 ## Ensancha la caja de órdenes si las opciones no caben (nombres de partes largos).
 func _fit_menu_width() -> void:
 	var font: Font = UiStyle.ui()
 	var widest: float = 0.0
-	for child: Node in _menu.get_children():
-		var option: BattleOption = child as BattleOption
-		if option == null or option.is_queued_for_deletion():
-			continue
+	for option: BattleOption in menu_buttons():
 		var text_w: float = font.get_string_size(option.text, HORIZONTAL_ALIGNMENT_LEFT, -1, UiStyle.SIZE_TEXT).x
 		var suffix_w: float = font.get_string_size(option.suffix, HORIZONTAL_ALIGNMENT_LEFT, -1, UiStyle.SIZE_TEXT).x
-		widest = maxf(widest, text_w + suffix_w + (16.0 if option.suffix != "" else 0.0))
-	_set_menu_width(clampf(ceilf(widest + 13.0 + BOX_PAD * 2.0), MENU_W, MENU_W_MAX))
+		widest = maxf(widest, text_w + suffix_w + (14.0 if option.suffix != "" else 0.0))
+	_set_menu_width(clampf(ceilf(widest + BattleOption.LEFT + 8.0 + BattleSkin.METAL_INSET * 2.0), MENU_W, MENU_W_MAX))
 
 
 ## Icono del arma empuñada: el del objeto que lleva en la mano o, sin custodia, el del objeto que
@@ -1119,6 +1505,40 @@ func _weapon_icon(member: Combatant) -> Texture2D:
 	return null
 
 
+## Fichas de papel: detalle, parte, lámina, nota, tira de turno, lesiones y registro.
+func _build_papers() -> void:
+	_intent = IntentNote.new()
+	_intent.name = "IntentNote"
+	_intent.position = INTENT_AT
+	_intent.typed.connect(func() -> void: _sound("ui_typewriter", -18.0))
+	_content.add_child(_intent)
+	_turns = TurnStrip.new()
+	_turns.name = "TurnStrip"
+	_turns.position = TURN_RECT.position
+	_turns.size = TURN_RECT.size
+	_content.add_child(_turns)
+	_diagram = BodyDiagram.new()
+	_diagram.name = "BodyDiagram"
+	_diagram.position = DIAGRAM_AT
+	_diagram.part_hovered.connect(_on_diagram_hovered)
+	_diagram.part_pressed.connect(_on_diagram_pressed)
+	_content.add_child(_diagram)
+	_part_card = PaperCard.new()
+	_part_card.name = "PartCard"
+	_content.add_child(_part_card)
+	_detail = PaperCard.new()
+	_detail.name = "DetailCard"
+	_content.add_child(_detail)
+	_wounds = WoundsPanel.new()
+	_wounds.name = "WoundsPanel"
+	_content.add_child(_wounds)
+	_log = BattleLog.new()
+	_log.name = "BattleLog"
+	_log.position = LOG_AT
+	_log.toggled.connect(func(_open: bool) -> void: _sound("ui_folder", -12.0))
+	_content.add_child(_log)
+
+
 func _build_messages() -> void:
 	_messages = MessageWindow.new()
 	_messages.name = "MessageWindow"
@@ -1128,26 +1548,13 @@ func _build_messages() -> void:
 		_messages.line_seconds = 0.0
 		_messages.per_char = 0.0
 	_content.add_child(_messages)
+	# El registro, por encima de la placa.
+	_content.move_child(_log, -1)
 
 
 func _build_overlays() -> void:
 	_floaters = Node2D.new()
 	_content.add_child(_floaters)
-	var settings: LabelSettings = LabelSettings.new()
-	settings.font = UiStyle.pixel()
-	settings.font_size = 26
-	settings.font_color = UiStyle.BONE
-	settings.outline_size = 5
-	settings.outline_color = Color.BLACK
-	_impact = Label.new()
-	_impact.label_settings = settings
-	_impact.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_impact.position = Vector2(0, 120)
-	_impact.size = Vector2(VIEW_SIZE.x, 36)
-	_impact.pivot_offset = Vector2(VIEW_SIZE.x / 2.0, 18)
-	_impact.modulate.a = 0.0
-	_impact.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_content.add_child(_impact)
 	_flash = ColorRect.new()
 	_flash.size = VIEW_SIZE
 	_flash.color = Color(0, 0, 0, 0)
@@ -1172,38 +1579,81 @@ func _start_music() -> void:
 	_music.play_any(PackedStringArray([music_name]), -6.0, 2.5)
 
 
+## Puntero propio (plumilla) mientras dura el combate.
+func _set_cursor(on: bool) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if on:
+		var tex: Texture2D = BattleSkin.texture("cursor")
+		if tex != null:
+			Input.set_custom_mouse_cursor(tex, Input.CURSOR_ARROW, Vector2(1, 1))
+			_cursor_set = true
+	elif _cursor_set:
+		Input.set_custom_mouse_cursor(null)
+		_cursor_set = false
+
+
+## Últimas líneas del registro en la caja de órdenes (solo al resolver y al terminar).
+func _update_report() -> void:
+	_report.visible = _phase == Phase.RESOLVE or _phase == Phase.END
+	if not _report.visible:
+		return
+	var lines: PackedStringArray = _log.lines()
+	var tail: PackedStringArray = []
+	for i: int in range(maxi(0, lines.size() - 6), lines.size()):
+		if not lines[i].begins_with("—"):
+			tail.append("· " + lines[i])
+	_report.text = "\n".join(tail)
+
+
 func _clear_menu() -> void:
 	for child: Node in _menu.get_children():
 		_menu.remove_child(child)
 		child.queue_free()
 
 
-func _add_option(text: String, callback: Callable, enabled: bool = true, suffix: String = "") -> BattleOption:
+func _add_option(text: String, callback: Callable, enabled: bool = true, suffix: String = "",
+		icon: Texture2D = null) -> BattleOption:
 	var option: BattleOption = BattleOption.new()
 	option.text = text
 	option.suffix = suffix
+	option.icon_texture = icon
 	option.disabled = not enabled
 	option.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	option.custom_minimum_size = Vector2(0, OPTION_H)
 	option.clip_text = true
 	option.focus_mode = Control.FOCUS_ALL
 	option.pressed.connect(func() -> void:
-		_sound("ui_accept", -10.0)
-		callback.call())
-	option.focus_entered.connect(func() -> void: _sound("ui_move", -16.0))
+		if _busy:
+			return
+		if callback.is_valid():
+			callback.call())
+	option.focus_entered.connect(func() -> void:
+		_sound("ui_battle_move", -16.0)
+		_show_detail(option))
 	option.mouse_entered.connect(func() -> void:
-		if not option.disabled and not option.has_focus():
+		if not option.has_focus() and not _busy:
 			option.grab_focus())
+	# Una opción desactivada también se puede señalar (su ficha dice por qué) y, si se pulsa, se niega.
+	option.gui_input.connect(func(event: InputEvent) -> void:
+		if not option.disabled:
+			return
+		var click: InputEventMouseButton = event as InputEventMouseButton
+		if event.is_action_pressed(&"ui_accept") or (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
+			option.accept_event()
+			_deny(option.option.disabled_reason if option.option != null else ""))
 	_menu.add_child(option)
 	return option
 
 
 func _focus_first() -> void:
-	for child: Node in _menu.get_children():
-		var button: Button = child as Button
-		if button != null and not button.disabled:
+	for button: BattleOption in menu_buttons():
+		if not button.disabled:
 			_grab_focus_later(button)
 			return
+	var all: Array[BattleOption] = menu_buttons()
+	if not all.is_empty():
+		_grab_focus_later(all[0])
 
 
 ## Da el foco al botón en el siguiente fotograma, si para entonces sigue en el menú.
@@ -1224,7 +1674,7 @@ func _sound(sound: String, volume_db: float) -> void:
 	var name: String = sound
 	if not ResourceLoader.exists(Sfx.DIR + sound + ".wav") and SOUND_FALLBACK.has(sound):
 		name = SOUND_FALLBACK[sound]
-	if not ResourceLoader.exists(Sfx.DIR + name + ".wav"):
+	if name == "" or not ResourceLoader.exists(Sfx.DIR + name + ".wav"):
 		return
 	Sfx.ui(self, name, volume_db)
 
@@ -1277,6 +1727,12 @@ func _debug_strike(part_id: StringName) -> void:
 	var enemy: Combatant = battle.enemies[0]
 	if not enemy.parts.has(part_id):
 		return
+	_phase = Phase.RESOLVE
+	_close_papers()
+	_intent.close()
+	_clear_menu()
+	_command_box.tab = "INFORME"
+	_update_report()
 	enemy.parts[part_id].integrity = 0
 	enemy.parts[part_id].state = CombatTypes.PartState.BROKEN
 	battle._amputate(enemy, enemy.parts[part_id])
@@ -1287,14 +1743,27 @@ func _debug_strike(part_id: StringName) -> void:
 
 
 func _take_screenshot_and_quit() -> void:
+	if _member_index >= 0 and _phase != Phase.RESOLVE:
+		if debug.has("battle-menu"):
+			_open_category(StringName(debug["battle-menu"]))
+			await get_tree().process_frame
+		elif debug.has("battle-pick") and _phase != Phase.AIM:
+			_open_category(ActionMenuModel.ATTACK)
+			await get_tree().process_frame
+		if debug.has("battle-pick") and _phase == Phase.AIM:
+			aim_at_part(StringName(debug["battle-pick"]))
+		if debug.has("battle-focus"):
+			await get_tree().process_frame
+			var buttons: Array[BattleOption] = menu_buttons()
+			var index: int = clampi(debug["battle-focus"].to_int(), 0, buttons.size() - 1)
+			if not buttons.is_empty():
+				buttons[index].grab_focus()
 	if debug.has("battle-strike"):
 		_debug_strike(StringName(debug["battle-strike"]))
-	elif debug.has("battle-pick") and _picking_enemy == null and _member_index >= 0:
-		var enemy: Combatant = _present_enemies()[0]
-		_show_part_menu(enemy)
-		_aim_at(enemy, StringName(debug["battle-pick"]))
-	if debug.has("battle-wounds") and not _rows.is_empty():
-		_open_wounds(_rows[0], &"")
+	if debug.has("battle-wounds") and not _cards.is_empty():
+		_on_card_details(_cards[0], true, true)
+	if debug.has("battle-log"):
+		_log.set_open(true)
 	if debug.has("battle-say"):
 		_messages.clear()
 		_messages.push(debug["battle-say"].replace("_", " "), COLOR_ENEMY_LINE)

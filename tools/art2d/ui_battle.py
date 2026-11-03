@@ -120,17 +120,17 @@ def metal_frame() -> Image.Image:
     return big if S == 2 else big.resize((64 * S, 64 * S), Image.Resampling.BOX)
 
 
-def _paper_piece(w: int, h: int, seed: int, mat: str = "paper", base: float = 0.78, stains: int = 2) -> Piece:
+def _paper_piece(w: int, h: int, seed: int, mat: str = "paper", base: float = 0.78, stains: int = 1) -> Piece:
     pc = Piece(w, h, "paper")
     pc.outline = False
     pc.fill([(0, 0), (w, 0), (w, h), (0, h)], mat, base)
-    pc.noise(0.10, 6.0, seed, octaves=3)
-    pc.noise(0.05, 1.5, seed + 1)
-    pc.pores(0.05, 0.05, seed + 2)
+    pc.noise(0.06, 6.0, seed, octaves=3)
+    pc.noise(0.025, 1.5, seed + 1)
+    pc.pores(0.03, 0.02, seed + 2)
     # bordes gastados y algo más oscuros
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     edge = np.minimum(np.minimum(xx, w - 1 - xx), np.minimum(yy, h - 1 - yy))
-    pc.val -= 0.16 * np.clip(1.0 - edge / 5.0, 0, 1)
+    pc.val -= 0.10 * np.clip(1.0 - edge / 4.0, 0, 1)
     rnd = random.Random(seed)
     for i in range(stains):
         c = (rnd.choice([rnd.uniform(4, 14), w - rnd.uniform(4, 14)]), rnd.choice([rnd.uniform(4, 14), h - rnd.uniform(4, 14)]))
@@ -138,25 +138,18 @@ def _paper_piece(w: int, h: int, seed: int, mat: str = "paper", base: float = 0.
     return pc
 
 
-def paper_frame(seed: int = 3, mat: str = "paper", base: float = 0.80) -> Image.Image:
+def paper_frame(seed: int = 3, mat: str = "paper", base: float = 0.80, stains: int = 0) -> Image.Image:
     """Papel de expediente en 9 cortes (48×48): grano, borde gastado, alguna mancha y esquinas
     mordidas."""
     w = h = 48 * S
-    pc = _paper_piece(w, h, seed, mat, base)
+    pc = _paper_piece(w, h, seed, mat, base, stains)
     im = pc.render(outline=False)
     a = np.asarray(im).copy()
-    # esquinas mordidas y borde irregular de 1 px
-    rng = np.random.default_rng(seed)
-    for x in range(w):
-        if rng.random() < 0.18:
-            a[0, x, 3] = 0
-        if rng.random() < 0.18:
-            a[h - 1, x, 3] = 0
-    for y in range(h):
-        if rng.random() < 0.18:
-            a[y, 0, 3] = 0
-        if rng.random() < 0.18:
-            a[y, w - 1, 3] = 0
+    # borde de 1 px un poco más oscuro (el papel se lee contra el negro) y esquinas romas
+    a[0, :, :3] = (a[0, :, :3] * 0.82).astype(np.uint8)
+    a[-1, :, :3] = (a[-1, :, :3] * 0.7).astype(np.uint8)
+    a[:, 0, :3] = (a[:, 0, :3] * 0.82).astype(np.uint8)
+    a[:, -1, :3] = (a[:, -1, :3] * 0.7).astype(np.uint8)
     for cx, cy in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)):
         a[cy, cx, 3] = 0
     return Image.fromarray(a, "RGBA")
@@ -670,7 +663,7 @@ def main() -> None:
     pieces: dict[str, Image.Image] = {
         "frame_metal.png": metal_frame(),
         "frame_paper.png": paper_frame(3),
-        "frame_folder.png": paper_frame(5, "tape", 0.62),
+        "frame_folder.png": paper_frame(5, "paper", 0.64),
         "tab_paper.png": tab_paper(),
         "tape.png": tape(),
         "band.png": band(),
