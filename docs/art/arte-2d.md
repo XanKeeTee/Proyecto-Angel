@@ -1,60 +1,82 @@
-# Arte 2D pintado con código (segunda muestra, para debatir)
+# Arte 2D pintado y reducido (tercera muestra, para debatir)
 
-> Estado: **muestra**. No está integrada en el juego. Imágenes en [`muestras/`](muestras/);
-> código en `tools/art2d/` (los módulos `*_hd.py` son de esta segunda muestra; `px2d.py`,
-> `protagonist.py`, `enemy_nurse.py`, `props2d.py` y `sheets.py` son de la primera).
+> Estado: **muestra**. No está integrada en el juego. Imágenes en [`muestras/`](muestras/); código en
+> `tools/art2d/`. La tercera muestra usa `vec.py` (`hero_battle_v3.py`, `nurse_v3.py`, `hero_map_v3.py`,
+> `sheets_v3.py`); la segunda, `paint.py` y los `*_hd.py` (de ahí salen todavía el menú principal y el
+> escenario); la primera, `px2d.py`.
 
-## Qué pidió el usuario y qué cambia
+## Qué cambia en la tercera muestra
 
-| Petición | Respuesta en esta muestra |
+El usuario vio la segunda y dijo que el personaje era feo, con **las partes del cuerpo separadas**, que la
+**pose de pelea no tenía sentido** y que el enemigo era **muy básico**. El diagnóstico: cada miembro era
+una pieza con su contorno y su sombreado, así que se veían cortes en hombros, codos y rodillas, y las
+formas eran polígonos rectos. Cambio de método:
+
+| Antes (muestra 2) | Ahora (muestra 3) |
 |---|---|
-| Nada de 3D: todo en 2D | Siluetas trazadas a mano punto a punto; el volumen se **pinta** encima (ver *Cómo se dibuja*). No hay esferas, cápsulas ni trazado de rayos. |
-| 8 direcciones | Las 8 se dibujan todas, sin espejo: la pulsera y la vía siempre en su mano, la luz siempre del mismo lado. |
-| Protagonista con mucha más resolución y detalle; humano normal | Fotograma de **112×160** (figura de ~140 px, cabeza de ~23 px). **Sin pieza metálica** (canon actualizado en `docs/lore/prologo.md`): cicatriz cosida en el cráneo, incisión cosida en la columna, pulsera, vía arrancada, pies sucios, cardenales. |
-| Enemigos mucho más detallados y realistas | Enfermero de **400×540** con piel con poros, moteado, venas y cardenales; músculo y hueso marcados; tela con trama, costuras, desgarros y sangre que empapa; porcelana agrietada con brillo; metal con reflejos; cristal de la jeringa con el líquido dentro. |
-| Pose de combate, no un maniquí | De espaldas en guardia: piernas abiertas y flexionadas, peso adelante, hombros alzados, el tubo en alto con las dos manos; respiración de 4 fotogramas y un golpe. |
-| Menú principal con el arte del juego | Maqueta de 1280×720: ilustración del pasillo con la puerta de la 09 al fondo, la camilla con correas bajo el único fluorescente y el protagonista de espaldas; título trabajado; opciones en un marco de chapa oxidada con remaches y una pestaña de expediente. El mismo marco en las cajas del combate. |
+| Polígonos a resolución final, una pieza por miembro con su contorno | **Curvas suaves a ×4-×6** del tamaño final; **una sola capa por material** (toda la piel junta, toda la tela junta) y **un solo contorno** alrededor de la figura |
+| Sombreado por pieza (canto que gira) | **Masas** que dan volumen dentro de la silueta continua (omóplato, gemelos, deltoides, costillas), **luz lateral dura** con el terminador nítido, relleno suave, oclusión en pliegues, **contraluz** de color |
+| Rampas con tramado a escala 1 | **Reducción con filtro de área**, **cuantización a la paleta** con tramado ordenado suave, **limpieza** de píxeles sueltos y **retoques a escala 1** (ojos, puntos de sutura) |
+| Pose de guardia rígida | Pose de un herido que se defiende, comprobada **en silueta negra** |
 
 ## Muestras
 
 | Archivo | Qué enseña |
 |---|---|
-| [antes_despues.png](muestras/antes_despues.png) | Arte 3D actual, muestra 1 y muestra 2 **a la misma escala de pantalla** |
-| [protagonista_8dir.png](muestras/protagonista_8dir.png) · [paso_8dir.gif](muestras/paso_8dir.gif) | Mapa: 8 direcciones, 2 de reposo y 4 de paso, a escala 1 |
-| [protagonista_combate.png](muestras/protagonista_combate.png) · [combate_guardia.gif](muestras/combate_guardia.gif) | Guardia con el tubo (respiración) y golpe |
-| [enfermero.png](muestras/enfermero.png) · [enfermero_reposo.gif](muestras/enfermero_reposo.gif) | Reposo (2), Tajo y muñón del brazo de instrumental |
-| [enfermero_piezas.png](muestras/enfermero_piezas.png) | Piezas separables para las mutilaciones |
-| [escenario.png](muestras/escenario.png) | Taquilla (88×184) cerrada y abierta, tramo de pared (64×192) y suelo (64×64), ×2 |
-| [maqueta_combate.png](muestras/maqueta_combate.png) · [maqueta_combate_ataque.png](muestras/maqueta_combate_ataque.png) | Combate a 1280×720 con el filtro de película y el marco nuevo |
-| [maqueta_menu.png](muestras/maqueta_menu.png) | Menú principal a 1280×720 |
+| [protagonista_combate.png](muestras/protagonista_combate.png) · [combate_guardia.gif](muestras/combate_guardia.gif) · [combate_golpe.gif](muestras/combate_golpe.gif) | De espaldas: guardia (respiración ×4) y golpe ×3 (carga, impacto, retroceso), con sus siluetas |
+| [enfermero.png](muestras/enfermero.png) · [enfermero_reposo.gif](muestras/enfermero_reposo.gif) | Reposo ×2, Tajo (el brazo de bisturíes en alto) y el muñón del brazo de instrumental |
+| [enfermero_piezas.png](muestras/enfermero_piezas.png) | Las piezas separadas del mismo dibujo (`Fig.split`): tronco, cabeza, brazos, piernas |
+| [protagonista_mapa_abajo.png](muestras/protagonista_mapa_abajo.png) · [paso_abajo.gif](muestras/paso_abajo.gif) | Mapa mirando abajo (112×160): reposo y paso ×4, y la silueta (×3) |
+| [maqueta_combate.png](muestras/maqueta_combate.png) · [maqueta_combate_ataque.png](muestras/maqueta_combate_ataque.png) | Combate a 1280×720 con el filtro de película |
+| [antes_despues.png](muestras/antes_despues.png) | Segunda muestra frente a la tercera, a escala 1 |
+| [maqueta_menu.png](muestras/maqueta_menu.png) · [escenario.png](muestras/escenario.png) | De la segunda muestra (sin cambios en esta ronda) |
 
-Regenerarlas (≈1 min; requiere numpy, scipy y Pillow):
+Regenerarlas (≈10 min; requiere numpy, scipy, Pillow y pycairo):
 
 ```bash
-python3 -I tools/art2d/sheets_hd.py docs/art/muestras
+python3 -I tools/art2d/sheets_v3.py docs/art/muestras
 ```
 
-## Cómo se dibuja (`tools/art2d/paint.py`)
+## Método (`tools/art2d/vec.py`)
 
-1. **Silueta a mano.** Polígonos punto a punto; brazos y piernas con `limb(a, b, perfil)` (anchos a cada
-   lado a lo largo del hueso: deltoides, codo, gemelos, tobillo). Las formas siguen siendo planas y angulosas.
-2. **Valor pintado, no geometría.** Cada pieza guarda material y valor (luz) por píxel:
-   - `form`: el canto que gira. Se mide en 2D la distancia al borde y se aclara u oscurece una franja
-     según hacia dónde mira ese borde; el interior queda plano. Es el canto redondeado de un dibujo;
-   - `plane`: zonas de luz o sombra trazadas a mano (hombros al foco, sombra bajo las costillas);
-   - `crease`: pliegues, oclusión y aristas (tendones, costillas, pliegues de la tela);
-   - texturas: `noise` (moteado, mugre a parches), `pores`, `weave` (trama), `veins`, `stain` (manchas
-     que empapan con el cerco oscuro y chorretones), `gloss` (brillo húmedo o pulido), `cast` (sombra arrojada).
-3. **Rampas largas con tramado** (`palette_hd.py`): 6-8 colores clave interpolados a 12-16 tonos; el valor
-   se convierte en tono con tramado ordenado Bayer 4×4. Transiciones suaves con aspecto de píxel.
-4. **Contorno** oscuro de 1 px por pieza (personajes y enemigos); los objetos del mapa sin contorno.
-5. **Montaje** (`compose`): piezas de atrás adelante con sombra de contacto de cada una sobre las de detrás.
-6. **Ocho direcciones** (`protagonist_hd.Rig`): cada articulación tiene posición lateral, altura y profundidad,
-   y para cada dirección se calcula dónde cae en pantalla. Es la maqueta de un muñeco de recortes que gira;
-   las formas que se trazan encima son 2D. Las cabezas mezclan un contorno de frente y otro de perfil; ojos,
-   nariz, boca, orejas y cicatriz se colocan por su ángulo alrededor del cráneo.
-7. **Animación**: poses redibujadas desde el esqueleto (paso, guardia, golpe, ataque del enfermero);
-   la cabeza del enfermero se inclina como recorte (`rotsprite`).
+1. **Trazo en alta resolución.** Cada forma es una curva cerrada que pasa por los puntos que se dan
+   (Catmull-Rom convertida a Bézier cúbicas; `C(x, y)` marca una esquina), rasterizada con cairo a ×k del
+   tamaño final (×6 para el protagonista, ×4 para el enfermero). Los miembros salen de `limb_outline`: un
+   contorno suave que pasa por hombro, codo y muñeca (o cadera, rodilla, tobillo) con su ancho en cada punto,
+   así el brazo es una sola forma que fluye, sin cortes en las articulaciones.
+2. **Una silueta por material.** Todo lo que es piel se rellena en la misma capa (piernas, tronco, cuello,
+   brazos, manos); la bata en otra; el hierro en otra. Lo que va delante se pinta después.
+3. **Volumen pintado a esa escala.**
+   - `mass(región, soft)`: la normal sale de la propia silueta difuminada (no hay geometría 3D);
+     da una luz **dura** (terminador nítido), un relleno suave y la oclusión del borde. Se aplica a la figura
+     entera y luego a masas internas trazadas a mano (omóplatos, gemelos, deltoides, joroba, puños);
+   - `crease`: pliegues de tracción y de peso en la tela, corvas, esternón, costillas, tendones, con su arista
+     de luz al lado;
+   - `rim`: contraluz de color (granate en el enfermero, frío en el protagonista);
+   - texturas: `noise` (moteado, mugre), `pores`, `weave` (trama), `stain` (manchas que empapan con cerco,
+     sangre seca y fresca con brillo húmedo), `veins`, `gloss`.
+4. **Reducción y paleta.** Filtro de área al tamaño final, cuantización a la paleta del juego (rampas de
+   `palette_v3.py` muestreadas a 12 tonos) con tramado Bayer suave, limpieza de píxeles sueltos en la
+   silueta y en el color, y **contorno de un píxel** alrededor de toda la figura (del tono oscuro vecino
+   mezclado con tinta).
+5. **Retoques a escala 1** (`touch`): ojos, brillo húmedo, puntos de sutura.
+6. **Piezas para las mutilaciones**: cada relleno se etiqueta con su pieza (`Fig.cur`) y `Fig.split` separa
+   la imagen final en capas, así el sistema de mutilaciones usa exactamente el mismo dibujo.
+7. **Comprobación en silueta** (`Fig.silhouette`): la pose tiene que leerse en negro, sin detalle.
+
+### Las poses
+
+- **Protagonista en combate**: piernas separadas, la izquierda algo adelantada, rodillas flexionadas y el
+  talón derecho levantado; tronco girado hacia la derecha y encorvado; el tubo cogido con las dos manos
+  juntas por un extremo, como un bate, alzado sobre el hombro derecho (dedos apilados alrededor del tubo y
+  pulgar por encima); la cabeza adelantada. Golpe: **carga** (más enroscado, el tubo detrás de la cabeza),
+  **impacto** (el tubo descarga hacia delante y a la izquierda, el tronco gira), **retroceso** (rebota y baja).
+- **Enfermero**: muy encorvado, la joroba de la columna (con las vértebras marcándose bajo la tela) asoma por
+  encima de la cabeza, que cuelga ladeada sobre el pecho; brazos que llegan a las rodillas; bisturíes en
+  abanico como dedos, sierra por el canto, abrazaderas y grapas donde la carne se funde con el metal; jeringa
+  de cristal con el líquido oscuro; tubos que entran en el pecho con la piel fruncida; desgarro con el
+  esternón y las costillas; mascarilla cosida con puntos que tiran de la piel; máscara de porcelana agrietada
+  con un ojo vivo y húmedo. Luz lateral fría y contraluz granate.
 
 ## Resolución propuesta
 
@@ -126,18 +148,19 @@ con el reescalado *sharp bilinear* para 1080p.
 
 | Tipo | Cómo | Animación |
 |---|---|---|
-| Personajes del mapa | Esqueleto girable + siluetas a mano + pintura; cabezas por azimut | Poses redibujadas |
-| Ropa | Polígonos por prenda anclados al esqueleto, en su propia hoja | La del portador |
-| Enemigos de combate | Piezas separables a tamaño final, pintura rica, muñones | Poses redibujadas + recortes |
-| Muebles y decorado | Vista oblicua, desgaste dibujado, sin contorno, sombra de contacto | Estados como fotogramas |
+| Personajes del mapa | `vec`: curvas a ×6, una capa por material, masas, reducción y paleta | Poses redibujadas desde las articulaciones |
+| Ropa | Formas por prenda sobre las mismas articulaciones, en su propia capa | La del portador |
+| Enemigos de combate | `vec` a ×4, piezas etiquetadas y separadas con `split`, muñones | Poses redibujadas; la cabeza puede inclinarse como recorte |
+| Muebles y decorado | `vec` o `paint` (formas más simples), sin contorno, sombra de contacto | Estados como fotogramas |
 | Suelos y paredes | Baldosas de 64 con juntas a un lado y variantes | — |
 | Interfaz e ilustraciones | Marco pintado reutilizable; ilustraciones a 640×360 dobladas o a 1280×720 | — |
 
 ### Estimación revisada
 
-En sesiones de agente (≈2 h cada una, sin contar las rondas de revisión del equipo). Al doble de
-resolución y con pintura más rica, cada pieza cuesta del orden de 1,5 a 2 veces más que en la primera
-estimación.
+En sesiones de agente (≈2 h cada una, sin contar las rondas de revisión del equipo). Con el método de la
+tercera muestra cada figura cuesta más (diseño de la silueta y de las masas a mano, y varias iteraciones
+mirando la silueta), pero el resultado ya no necesita reconstruirse: la estimación de la segunda ronda se
+mantiene, con el margen alto como más probable.
 
 | Bloque | Sesiones |
 |---|---|
@@ -158,9 +181,10 @@ de quién lo haga.
 
 ## Límites de esta muestra
 
-- El enfermero ya tiene volumen y texturas, pero aún se nota generado: le falta un repaso a mano (manos,
-  cara bajo la máscara, transición entre carne y metal).
-- La pose de guardia se lee bien; el golpe es un primer fotograma, sin anticipación ni estela.
-- Los tres cuartos del mapa salen del esqueleto girable; en el arte final conviene revisar a mano cada
-  dirección.
-- La ilustración del menú está pintada a 640×360 y doblada; la interfaz va a 1280×720 nativa.
+- Solo la dirección «abajo» del mapa está hecha con el método nuevo; las otras siete se harían igual.
+- El protagonista del mapa todavía se ve algo rígido (la bata cae como un saco y la cara a 112×160 tiene
+  pocos píxeles); necesita otra pasada de diseño o el retoque a mano del flujo mixto.
+- El enfermero ya es una figura continua con volumen, anatomía y texturas, pero aún se nota generado:
+  conviene un repaso a mano de la cara bajo la máscara, la mano de la jeringa y la unión de la carne con el metal.
+- Las grietas de la porcelana y las venas se pierden un poco al reducir; se retocarían a escala 1.
+- El menú principal y el escenario son de la segunda muestra.
